@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{2a8e54a8-d381-4d06-8222-5cb6b0fe05d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{58e190e3-06dc-4379-b177-138a0e8fd072}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\eeMath.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eePlatformDefines.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eePlatformMath.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eePlatformTypes.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eePrerequisitesUtilities.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeSTDHeaders.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeVector2.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\eePlatformMath.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeVector2.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
