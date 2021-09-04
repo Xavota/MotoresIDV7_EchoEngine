@@ -15,53 +15,51 @@ namespace eeEngineSDK
 		 *    Trigonometric
 		 */
 		 /****************************************************/
-		static float
+		static FORCEINLINE float
 			Cos(const float& _radian);
-		static float
+		static FORCEINLINE float
 			Sin(const float& _radian);
-		static float
+		static FORCEINLINE float
 			Tan(const float& _radian);
-		static float
+		static FORCEINLINE float
 			Sec(const float& _radian);
-		static float
+		static FORCEINLINE float
 			Csc(const float& _radian);
-		static float
+		static FORCEINLINE float
 			Cot(const float& _radian);
-		static float
+		static FORCEINLINE float
 			ACos(const float& _radian);
-		static float
+		static FORCEINLINE float
 			ASin(const float& _radian);
-		static float
+		static FORCEINLINE float
 			ATan(const float& _radian);
-		static float
+		static FORCEINLINE float
 			ASec(const float& _radian);
-		static float
+		static FORCEINLINE float
 			ACsc(const float& _radian);
-		static float
+		static FORCEINLINE float
 			ACot(const float& _radian);
-		static float
+		static FORCEINLINE float
 			RadToDeg(const float& _radian);
-		static float
+		static FORCEINLINE float
 			DegToRad(const float& _degree);
-		static int
-			Mod(const int& _lval, const int& _rval);
-		static float
+		static FORCEINLINE float
 			FMod(const float& _lval, const float& _rval);
-		static float
+		static FORCEINLINE float
 			Sqrt(const float& _val);
-		static float
+		static FORCEINLINE float
 			Pow(const float& _base, const float& _power);
-		static float 
+		static FORCEINLINE float
 			Round(const float _val);
-		static float
+		static FORCEINLINE float
 			Floor(const float _val);
-		static float
+		static FORCEINLINE float
 			Ceil(const float _val);
 
 
 
-		static float _PI;
-		static float _PIover180;
-		static float _180overPI;
+		static const float kPI;
+		static const float kPIover180;
+		static const float k180overPI;
 	};
 }

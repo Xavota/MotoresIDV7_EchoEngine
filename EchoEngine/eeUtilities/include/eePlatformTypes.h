@@ -4,7 +4,7 @@
 #include "eePlatformDefines.h"
 
 
-namespace muEngineSDK {
+namespace eeEngineSDK {
 	using std::uint8_t;
 	using std::uint16_t;
 	using std::uint32_t;
