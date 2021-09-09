@@ -30,12 +30,24 @@
     <ClInclude Include="include\eeVector2.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\eeVector3.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeVector4.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eePlatformMath.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\eeVector2.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeVector3.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeVector4.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

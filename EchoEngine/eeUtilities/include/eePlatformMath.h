@@ -55,6 +55,8 @@ namespace eeEngineSDK
 			Floor(const float _val);
 		static FORCEINLINE float
 			Ceil(const float _val);
+		static FORCEINLINE float
+			Abs(const float _val);
 
 
 

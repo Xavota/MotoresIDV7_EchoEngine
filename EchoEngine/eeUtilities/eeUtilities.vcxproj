@@ -172,10 +172,14 @@
     <ClInclude Include="include\eePrerequisitesUtilities.h" />
     <ClInclude Include="include\eeSTDHeaders.h" />
     <ClInclude Include="include\eeVector2.h" />
+    <ClInclude Include="include\eeVector3.h" />
+    <ClInclude Include="include\eeVector4.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eePlatformMath.cpp" />
     <ClCompile Include="src\eeVector2.cpp" />
+    <ClCompile Include="src\eeVector3.cpp" />
+    <ClCompile Include="src\eeVector4.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

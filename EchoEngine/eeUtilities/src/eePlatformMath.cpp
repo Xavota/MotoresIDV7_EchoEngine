@@ -87,4 +87,8 @@ namespace eeEngineSDK
 	{		
 		return (_val - static_cast<int32>(_val)) > 0 ? static_cast<int32>(_val + 1) : _val;
 	}
+	float PlatformMath::Abs(const float _val)
+	{
+		return Sqrt(_val * _val);
+	}
 }
