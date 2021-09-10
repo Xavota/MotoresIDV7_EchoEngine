@@ -578,7 +578,7 @@ inline Vector2f::~Vector2f()
 }
 inline float Vector2f::dot(const Vector2f& other) const
 {
-  return this->x * other.x + this->y + other.y;
+  return this->x * other.x + this->y * other.y;
 }
 inline float Vector2f::distance(const Vector2f& other) const
 {
@@ -1297,7 +1297,7 @@ inline Vector2i::~Vector2i()
 }
 inline float Vector2i::dot(const Vector2i& other) const
 {
-	return this->x * other.x + this->y + other.y;
+	return this->x * other.x + this->y * other.y;
 }
 inline float Vector2i::distance(const Vector2i& other) const
 {
@@ -2015,7 +2015,7 @@ inline Vector2u::~Vector2u()
 }
 inline float Vector2u::dot(const Vector2u& other) const
 {
-	return this->x * other.x + this->y + other.y;
+	return this->x * other.x + this->y * other.y;
 }
 inline float Vector2u::distance(const Vector2u& other) const
 {

@@ -595,7 +595,7 @@ inline Vector3f::~Vector3f()
 }
 inline float Vector3f::dot(const Vector3f& other) const
 {
-  return this->x * other.x + this->y + other.y + this->z + other.z;
+  return this->x * other.x + this->y * other.y + this->z * other.z;
 }
 inline Vector3f Vector3f::cross(const Vector3f& other) const
 {
@@ -1341,7 +1341,7 @@ inline Vector3i::~Vector3i()
 }
 inline float Vector3i::dot(const Vector3i& other) const
 {
-  return this->x * other.x + this->y + other.y + this->z + other.z;
+  return this->x * other.x + this->y * other.y + this->z * other.z;
 }
 inline Vector3f Vector3i::cross(const Vector3i& other) const
 {
@@ -1408,9 +1408,7 @@ inline Vector3i Vector3i::operator/(int32 other) const
 }
 inline Vector3i Vector3i::operator%(int32 other) const
 {
-  return Vector3i(Math::FMod(this->x, other),
-                  Math::FMod(this->y, other),
-                  Math::FMod(this->z, other));
+  return Vector3i(this->x % other, this->y % other, this->z % other);
 }
 inline Vector3i Vector3i::operator=(const Vector3i& other)
 {
@@ -2088,13 +2086,13 @@ inline Vector3u::~Vector3u()
 }
 inline float Vector3u::dot(const Vector3u& other) const
 {
-  return this->x * other.x + this->y + other.y + this->z + other.z;
+  return this->x * other.x + this->y * other.y + this->z * other.z;
 }
 inline Vector3f Vector3u::cross(const Vector3u& other) const
 {
   return Vector3f(this->y * other.z + this->z * other.y,
-                 this->z * other.x + this->x * other.z,
-                 this->x * other.y + this->y * other.x);
+                  this->z * other.x + this->x * other.z,
+                  this->x * other.y + this->y * other.x);
 }
 inline float Vector3u::distance(const Vector3u& other) const
 {
@@ -2155,9 +2153,7 @@ inline Vector3u Vector3u::operator/(uint32 other) const
 }
 inline Vector3u Vector3u::operator%(uint32 other) const
 {
-  return Vector3u(Math::FMod(this->x, other),
-                  Math::FMod(this->y, other),
-                  Math::FMod(this->z, other));
+  return Vector3u(this->x % other, this->y % other, this->z % other);
 }
 inline Vector3u Vector3u::operator=(const Vector3u& other)
 {
