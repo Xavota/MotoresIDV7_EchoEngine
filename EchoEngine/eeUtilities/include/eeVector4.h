@@ -550,7 +550,7 @@ class Vector4f
   bool
   operator<=(const Vector4f& other) const;
 
-public:
+ public:
   /**
   * @brief
   * The components of the vector, in a union so they can be taken separetly
@@ -567,86 +567,90 @@ public:
     };
     float xyzw[4];
   };
+
+  static Vector4f ZERO;
 };
 
-inline Vector4f::Vector4f() : x(0.0f), y(0.0f), z(0.0f), w(0.0f)
+Vector4f Vector4f::ZERO = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
+
+FORCEINLINE Vector4f::Vector4f() : x(0.0f), y(0.0f), z(0.0f), w(0.0f)
 {
 }
-inline Vector4f::Vector4f(float _x, float _y, float _z, float _w) : x(_x), y(_y), z(_z), w(_w)
+FORCEINLINE Vector4f::Vector4f(float _x, float _y, float _z, float _w) : x(_x), y(_y), z(_z), w(_w)
 {
 }
-inline Vector4f::~Vector4f()
+FORCEINLINE Vector4f::~Vector4f()
 {
 }
-inline float Vector4f::dot(const Vector4f& other) const
+FORCEINLINE float Vector4f::dot(const Vector4f& other) const
 {
   return this->x * other.x + this->y * other.y + this->z * other.z + this->w * other.w;
 }
-inline float Vector4f::distance(const Vector4f& other) const
+FORCEINLINE float Vector4f::distance(const Vector4f& other) const
 {
   Vector4f d = other - *this;
-  return Math::Sqrt(d.x * d.x + d.y * d.y + d.z * d.z + d.w * d.w);
+  return Math::sqrt(d.x * d.x + d.y * d.y + d.z * d.z + d.w * d.w);
 }
-inline float Vector4f::length() const
+FORCEINLINE float Vector4f::length() const
 {
-  return Math::Sqrt(this->x * this->x + this->y * this->y + this->z * this->z + this->w * this->w);
+  return Math::sqrt(this->x * this->x + this->y * this->y + this->z * this->z + this->w * this->w);
 }
-inline Vector4f Vector4f::normalize() const
+FORCEINLINE Vector4f Vector4f::normalize() const
 {
   return *this / this->length();
 }
-inline Vector4f Vector4f::truncate(float newSize) const
+FORCEINLINE Vector4f Vector4f::truncate(float newSize) const
 {
   Vector4f n = this->normalize();
   return n * newSize;
 }
-inline Vector4f Vector4f::operator+(const Vector4f& other) const
+FORCEINLINE Vector4f Vector4f::operator+(const Vector4f& other) const
 {
   return Vector4f(this->x + other.x, this->y + other.y, this->z + other.z, this->w + other.w);
 }
-inline Vector4f Vector4f::operator-(const Vector4f& other) const
+FORCEINLINE Vector4f Vector4f::operator-(const Vector4f& other) const
 {
   return Vector4f(this->x - other.x, this->y - other.y, this->z - other.z, this->w - other.w);
 }
-inline Vector4f Vector4f::operator*(const Vector4f& other) const
+FORCEINLINE Vector4f Vector4f::operator*(const Vector4f& other) const
 {
   return Vector4f(this->x * other.x, this->y * other.y, this->z * other.z, this->w * other.w);
 }
-inline Vector4f Vector4f::operator/(const Vector4f& other) const
+FORCEINLINE Vector4f Vector4f::operator/(const Vector4f& other) const
 {
   return Vector4f(this->x / other.x, this->y / other.y, this->z / other.z, this->w / other.w);
 }
-inline Vector4f Vector4f::operator%(const Vector4f& other) const
+FORCEINLINE Vector4f Vector4f::operator%(const Vector4f& other) const
 {
-  return Vector4f(Math::FMod(this->x, other.x),
-                  Math::FMod(this->y, other.y),
-                  Math::FMod(this->z, other.z),
-                  Math::FMod(this->w, other.w));
+  return Vector4f(Math::fmod(this->x, other.x),
+                  Math::fmod(this->y, other.y),
+                  Math::fmod(this->z, other.z),
+                  Math::fmod(this->w, other.w));
 }
-inline Vector4f Vector4f::operator+(float other) const
+FORCEINLINE Vector4f Vector4f::operator+(float other) const
 {
   return Vector4f(this->x + other, this->y + other, this->z + other, this->w + other);
 }
-inline Vector4f Vector4f::operator-(float other) const
+FORCEINLINE Vector4f Vector4f::operator-(float other) const
 {
   return Vector4f(this->x - other, this->y - other, this->z - other, this->w - other);
 }
-inline Vector4f Vector4f::operator*(float other) const
+FORCEINLINE Vector4f Vector4f::operator*(float other) const
 {
   return Vector4f(this->x * other, this->y * other, this->z * other, this->w * other);
 }
-inline Vector4f Vector4f::operator/(float other) const
+FORCEINLINE Vector4f Vector4f::operator/(float other) const
 {
   return Vector4f(this->x / other, this->y / other, this->z / other, this->w / other);
 }
-inline Vector4f Vector4f::operator%(float other) const
+FORCEINLINE Vector4f Vector4f::operator%(float other) const
 {
-  return Vector4f(Math::FMod(this->x, other),
-                  Math::FMod(this->y, other),
-                  Math::FMod(this->z, other),
-                  Math::FMod(this->w, other));
+  return Vector4f(Math::fmod(this->x, other),
+                  Math::fmod(this->y, other),
+                  Math::fmod(this->z, other),
+                  Math::fmod(this->w, other));
 }
-inline Vector4f Vector4f::operator=(const Vector4f& other)
+FORCEINLINE Vector4f Vector4f::operator=(const Vector4f& other)
 {
   this->x = other.x;
   this->y = other.y;
@@ -654,80 +658,80 @@ inline Vector4f Vector4f::operator=(const Vector4f& other)
   this->w = other.w;
   return *this;
 }
-inline Vector4f Vector4f::operator+=(const Vector4f& other)
+FORCEINLINE Vector4f Vector4f::operator+=(const Vector4f& other)
 {
   *this = *this + other;
   return *this;
 }
-inline Vector4f Vector4f::operator-=(const Vector4f& other)
+FORCEINLINE Vector4f Vector4f::operator-=(const Vector4f& other)
 {
   *this = *this - other;
   return *this;
 }
-inline Vector4f Vector4f::operator*=(const Vector4f& other)
+FORCEINLINE Vector4f Vector4f::operator*=(const Vector4f& other)
 {
   *this = *this * other;
   return *this;
 }
-inline Vector4f Vector4f::operator/=(const Vector4f& other)
+FORCEINLINE Vector4f Vector4f::operator/=(const Vector4f& other)
 {
   *this = *this / other;
   return *this;
 }
-inline Vector4f Vector4f::operator%=(const Vector4f& other)
+FORCEINLINE Vector4f Vector4f::operator%=(const Vector4f& other)
 {
   *this = *this % other;
   return *this;
 }
-inline Vector4f Vector4f::operator+=(float other)
+FORCEINLINE Vector4f Vector4f::operator+=(float other)
 {
   *this = *this + other;
   return *this;
 }
-inline Vector4f Vector4f::operator-=(float other)
+FORCEINLINE Vector4f Vector4f::operator-=(float other)
 {
   *this = *this - other;
   return *this;
 }
-inline Vector4f Vector4f::operator*=(float other)
+FORCEINLINE Vector4f Vector4f::operator*=(float other)
 {
   *this = *this * other;
   return *this;
 }
-inline Vector4f Vector4f::operator/=(float other)
+FORCEINLINE Vector4f Vector4f::operator/=(float other)
 {
   *this = *this / other;
   return *this;
 }
-inline Vector4f Vector4f::operator%=(float other)
+FORCEINLINE Vector4f Vector4f::operator%=(float other)
 {
   *this = *this % other;
   return *this;
 }
-inline bool Vector4f::operator==(const Vector4f& other) const
+FORCEINLINE bool Vector4f::operator==(const Vector4f& other) const
 {
-  return (Math::Abs(this->x - other.x) < .001f)
-      && (Math::Abs(this->y - other.y) < .001f)
-      && (Math::Abs(this->z - other.z) < .001f)
-      && (Math::Abs(this->w - other.w) < .001f);
+  return (Math::abs(this->x - other.x) < .001f)
+      && (Math::abs(this->y - other.y) < .001f)
+      && (Math::abs(this->z - other.z) < .001f)
+      && (Math::abs(this->w - other.w) < .001f);
 }
-inline bool Vector4f::operator!=(const Vector4f& other) const
+FORCEINLINE bool Vector4f::operator!=(const Vector4f& other) const
 {
   return !(*this == other);
 }
-inline bool Vector4f::operator>(const Vector4f& other) const
+FORCEINLINE bool Vector4f::operator>(const Vector4f& other) const
 {
   return this->length() > other.length();
 }
-inline bool Vector4f::operator>=(const Vector4f& other) const
+FORCEINLINE bool Vector4f::operator>=(const Vector4f& other) const
 {
   return this->length() >= other.length();
 }
-inline bool Vector4f::operator<(const Vector4f& other) const
+FORCEINLINE bool Vector4f::operator<(const Vector4f& other) const
 {
   return this->length() < other.length();
 }
-inline bool Vector4f::operator<=(const Vector4f& other) const
+FORCEINLINE bool Vector4f::operator<=(const Vector4f& other) const
 {
   return this->length() <= other.length();
 }
@@ -1296,31 +1300,35 @@ class Vector4i
     };
     int32 xyzw[4];
   };
+
+  static Vector4i ZERO;
 };
 
-inline Vector4i::Vector4i() : x(0.0f), y(0.0f), z(0.0f), w(0.0f)
+Vector4i Vector4i::ZERO = Vector4i(0, 0, 0, 0);
+
+FORCEINLINE Vector4i::Vector4i() : x(0), y(0), z(0), w(0)
 {
 }
-inline Vector4i::Vector4i(int32 _x, int32 _y, int32 _z, int32 _w) : x(_x), y(_y), z(_z), w(_w)
+FORCEINLINE Vector4i::Vector4i(int32 _x, int32 _y, int32 _z, int32 _w) : x(_x), y(_y), z(_z), w(_w)
 {
 }
-inline Vector4i::~Vector4i()
+FORCEINLINE Vector4i::~Vector4i()
 {
 }
-inline float Vector4i::dot(const Vector4i& other) const
+FORCEINLINE float Vector4i::dot(const Vector4i& other) const
 {
   return this->x * other.x + this->y * other.y + this->z * other.z + this->w * other.w;
 }
-inline float Vector4i::distance(const Vector4i& other) const
+FORCEINLINE float Vector4i::distance(const Vector4i& other) const
 {
   Vector4i d = other - *this;
-  return Math::Sqrt(d.x * d.x + d.y * d.y + d.z * d.z + d.w * d.w);
+  return Math::sqrt(d.x * d.x + d.y * d.y + d.z * d.z + d.w * d.w);
 }
-inline float Vector4i::length() const
+FORCEINLINE float Vector4i::length() const
 {
-  return Math::Sqrt(this->x * this->x + this->y * this->y + this->z * this->z + this->w * this->w);
+  return Math::sqrt(this->x * this->x + this->y * this->y + this->z * this->z + this->w * this->w);
 }
-inline Vector4f Vector4i::normalize() const
+FORCEINLINE Vector4f Vector4i::normalize() const
 {
   return Vector4f(static_cast<float>(this->x),
                   static_cast<float>(this->y),
@@ -1328,52 +1336,52 @@ inline Vector4f Vector4i::normalize() const
                   static_cast<float>(this->w))
                   / this->length();
 }
-inline Vector4f Vector4i::truncate(float newSize) const
+FORCEINLINE Vector4f Vector4i::truncate(float newSize) const
 {
   Vector4f n = this->normalize();
   return n * newSize;
 }
-inline Vector4i Vector4i::operator+(const Vector4i& other) const
+FORCEINLINE Vector4i Vector4i::operator+(const Vector4i& other) const
 {
   return Vector4i(this->x + other.x, this->y + other.y, this->z + other.z, this->w + other.w);
 }
-inline Vector4i Vector4i::operator-(const Vector4i& other) const
+FORCEINLINE Vector4i Vector4i::operator-(const Vector4i& other) const
 {
   return Vector4i(this->x - other.x, this->y - other.y, this->z - other.z, this->w - other.w);
 }
-inline Vector4i Vector4i::operator*(const Vector4i& other) const
+FORCEINLINE Vector4i Vector4i::operator*(const Vector4i& other) const
 {
   return Vector4i(this->x * other.x, this->y * other.y, this->z * other.z, this->w * other.w);
 }
-inline Vector4i Vector4i::operator/(const Vector4i& other) const
+FORCEINLINE Vector4i Vector4i::operator/(const Vector4i& other) const
 {
   return Vector4i(this->x / other.x, this->y / other.y, this->z / other.z, this->w / other.w);
 }
-inline Vector4i Vector4i::operator%(const Vector4i& other) const
+FORCEINLINE Vector4i Vector4i::operator%(const Vector4i& other) const
 {
   return Vector4i(this->x % other.x, this->y % other.y, this->z % other.z, this->w % other.w);
 }
-inline Vector4i Vector4i::operator+(int32 other) const
+FORCEINLINE Vector4i Vector4i::operator+(int32 other) const
 {
   return Vector4i(this->x + other, this->y + other, this->z + other, this->w + other);
 }
-inline Vector4i Vector4i::operator-(int32 other) const
+FORCEINLINE Vector4i Vector4i::operator-(int32 other) const
 {
   return Vector4i(this->x - other, this->y - other, this->z - other, this->w - other);
 }
-inline Vector4i Vector4i::operator*(int32 other) const
+FORCEINLINE Vector4i Vector4i::operator*(int32 other) const
 {
   return Vector4i(this->x * other, this->y * other, this->z * other, this->w * other);
 }
-inline Vector4i Vector4i::operator/(int32 other) const
+FORCEINLINE Vector4i Vector4i::operator/(int32 other) const
 {
   return Vector4i(this->x / other, this->y / other, this->z / other, this->w / other);
 }
-inline Vector4i Vector4i::operator%(int32 other) const
+FORCEINLINE Vector4i Vector4i::operator%(int32 other) const
 {
   return Vector4i(this->x % other, this->y % other, this->z % other, this->w % other);
 }
-inline Vector4i Vector4i::operator=(const Vector4i& other)
+FORCEINLINE Vector4i Vector4i::operator=(const Vector4i& other)
 {
   this->x = other.x;
   this->y = other.y;
@@ -1381,80 +1389,77 @@ inline Vector4i Vector4i::operator=(const Vector4i& other)
   this->w = other.w;
   return *this;
 }
-inline Vector4i Vector4i::operator+=(const Vector4i& other)
+FORCEINLINE Vector4i Vector4i::operator+=(const Vector4i& other)
 {
   *this = *this + other;
   return *this;
 }
-inline Vector4i Vector4i::operator-=(const Vector4i& other)
+FORCEINLINE Vector4i Vector4i::operator-=(const Vector4i& other)
 {
   *this = *this - other;
   return *this;
 }
-inline Vector4i Vector4i::operator*=(const Vector4i& other)
+FORCEINLINE Vector4i Vector4i::operator*=(const Vector4i& other)
 {
   *this = *this * other;
   return *this;
 }
-inline Vector4i Vector4i::operator/=(const Vector4i& other)
+FORCEINLINE Vector4i Vector4i::operator/=(const Vector4i& other)
 {
   *this = *this / other;
   return *this;
 }
-inline Vector4i Vector4i::operator%=(const Vector4i& other)
+FORCEINLINE Vector4i Vector4i::operator%=(const Vector4i& other)
 {
   *this = *this % other;
   return *this;
 }
-inline Vector4i Vector4i::operator+=(int32 other)
+FORCEINLINE Vector4i Vector4i::operator+=(int32 other)
 {
   *this = *this + other;
   return *this;
 }
-inline Vector4i Vector4i::operator-=(int32 other)
+FORCEINLINE Vector4i Vector4i::operator-=(int32 other)
 {
   *this = *this - other;
   return *this;
 }
-inline Vector4i Vector4i::operator*=(int32 other)
+FORCEINLINE Vector4i Vector4i::operator*=(int32 other)
 {
   *this = *this * other;
   return *this;
 }
-inline Vector4i Vector4i::operator/=(int32 other)
+FORCEINLINE Vector4i Vector4i::operator/=(int32 other)
 {
   *this = *this / other;
   return *this;
 }
-inline Vector4i Vector4i::operator%=(int32 other)
+FORCEINLINE Vector4i Vector4i::operator%=(int32 other)
 {
   *this = *this % other;
   return *this;
 }
-inline bool Vector4i::operator==(const Vector4i& other) const
+FORCEINLINE bool Vector4i::operator==(const Vector4i& other) const
 {
-  return (Math::Abs(this->x - other.x) < .001f)
-      && (Math::Abs(this->y - other.y) < .001f)
-      && (Math::Abs(this->z - other.z) < .001f)
-      && (Math::Abs(this->w - other.w) < .001f);
+  return this->x == other.x && this->y == other.y && this->z == other.z && this->w == other.w;
 }
-inline bool Vector4i::operator!=(const Vector4i& other) const
+FORCEINLINE bool Vector4i::operator!=(const Vector4i& other) const
 {
   return !(*this == other);
 }
-inline bool Vector4i::operator>(const Vector4i& other) const
+FORCEINLINE bool Vector4i::operator>(const Vector4i& other) const
 {
   return this->length() > other.length();
 }
-inline bool Vector4i::operator>=(const Vector4i& other) const
+FORCEINLINE bool Vector4i::operator>=(const Vector4i& other) const
 {
   return this->length() >= other.length();
 }
-inline bool Vector4i::operator<(const Vector4i& other) const
+FORCEINLINE bool Vector4i::operator<(const Vector4i& other) const
 {
   return this->length() < other.length();
 }
-inline bool Vector4i::operator<=(const Vector4i& other) const
+FORCEINLINE bool Vector4i::operator<=(const Vector4i& other) const
 {
   return this->length() <= other.length();
 }
@@ -2023,31 +2028,35 @@ class Vector4u
     };
     uint32 xyzw[4];
   };
+
+  static Vector4u ZERO;
 };
 
-inline Vector4u::Vector4u() : x(0.0f), y(0.0f), z(0.0f), w(0.0f)
+Vector4u Vector4u::ZERO = Vector4u(0u, 0u, 0u, 0u);
+
+FORCEINLINE Vector4u::Vector4u() : x(0u), y(0u), z(0u), w(0u)
 {
 }
-inline Vector4u::Vector4u(uint32 _x, uint32 _y, uint32 _z, uint32 _w) : x(_x), y(_y), z(_z), w(_w)
+FORCEINLINE Vector4u::Vector4u(uint32 _x, uint32 _y, uint32 _z, uint32 _w) : x(_x), y(_y), z(_z), w(_w)
 {
 }
-inline Vector4u::~Vector4u()
+FORCEINLINE Vector4u::~Vector4u()
 {
 }
-inline float Vector4u::dot(const Vector4u& other) const
+FORCEINLINE float Vector4u::dot(const Vector4u& other) const
 {
   return this->x * other.x + this->y * other.y + this->z * other.z + this->w * other.w;
 }
-inline float Vector4u::distance(const Vector4u& other) const
+FORCEINLINE float Vector4u::distance(const Vector4u& other) const
 {
   Vector4u d = other - *this;
-  return Math::Sqrt(d.x * d.x + d.y * d.y + d.z * d.z + d.w * d.w);
+  return Math::sqrt(d.x * d.x + d.y * d.y + d.z * d.z + d.w * d.w);
 }
-inline float Vector4u::length() const
+FORCEINLINE float Vector4u::length() const
 {
-  return Math::Sqrt(this->x * this->x + this->y * this->y + this->z * this->z + this->w * this->w);
+  return Math::sqrt(this->x * this->x + this->y * this->y + this->z * this->z + this->w * this->w);
 }
-inline Vector4f Vector4u::normalize() const
+FORCEINLINE Vector4f Vector4u::normalize() const
 {
   return Vector4f(static_cast<float>(this->x),
                   static_cast<float>(this->y),
@@ -2055,52 +2064,52 @@ inline Vector4f Vector4u::normalize() const
                   static_cast<float>(this->w))
                   / this->length();
 }
-inline Vector4f Vector4u::truncate(float newSize) const
+FORCEINLINE Vector4f Vector4u::truncate(float newSize) const
 {
   Vector4f n = this->normalize();
   return n * newSize;
 }
-inline Vector4u Vector4u::operator+(const Vector4u& other) const
+FORCEINLINE Vector4u Vector4u::operator+(const Vector4u& other) const
 {
   return Vector4u(this->x + other.x, this->y + other.y, this->z + other.z, this->w + other.w);
 }
-inline Vector4u Vector4u::operator-(const Vector4u& other) const
+FORCEINLINE Vector4u Vector4u::operator-(const Vector4u& other) const
 {
   return Vector4u(this->x - other.x, this->y - other.y, this->z - other.z, this->w - other.w);
 }
-inline Vector4u Vector4u::operator*(const Vector4u& other) const
+FORCEINLINE Vector4u Vector4u::operator*(const Vector4u& other) const
 {
   return Vector4u(this->x * other.x, this->y * other.y, this->z * other.z, this->w * other.w);
 }
-inline Vector4u Vector4u::operator/(const Vector4u& other) const
+FORCEINLINE Vector4u Vector4u::operator/(const Vector4u& other) const
 {
   return Vector4u(this->x / other.x, this->y / other.y, this->z / other.z, this->w / other.w);
 }
-inline Vector4u Vector4u::operator%(const Vector4u& other) const
+FORCEINLINE Vector4u Vector4u::operator%(const Vector4u& other) const
 {
   return Vector4u(this->x % other.x, this->y % other.y, this->z % other.z, this->w % other.w);
 }
-inline Vector4u Vector4u::operator+(uint32 other) const
+FORCEINLINE Vector4u Vector4u::operator+(uint32 other) const
 {
   return Vector4u(this->x + other, this->y + other, this->z + other, this->w + other);
 }
-inline Vector4u Vector4u::operator-(uint32 other) const
+FORCEINLINE Vector4u Vector4u::operator-(uint32 other) const
 {
   return Vector4u(this->x - other, this->y - other, this->z - other, this->w - other);
 }
-inline Vector4u Vector4u::operator*(uint32 other) const
+FORCEINLINE Vector4u Vector4u::operator*(uint32 other) const
 {
   return Vector4u(this->x * other, this->y * other, this->z * other, this->w * other);
 }
-inline Vector4u Vector4u::operator/(uint32 other) const
+FORCEINLINE Vector4u Vector4u::operator/(uint32 other) const
 {
   return Vector4u(this->x / other, this->y / other, this->z / other, this->w / other);
 }
-inline Vector4u Vector4u::operator%(uint32 other) const
+FORCEINLINE Vector4u Vector4u::operator%(uint32 other) const
 {
   return Vector4u(this->x % other, this->y % other, this->z % other, this->w % other);
 }
-inline Vector4u Vector4u::operator=(const Vector4u& other)
+FORCEINLINE Vector4u Vector4u::operator=(const Vector4u& other)
 {
   this->x = other.x;
   this->y = other.y;
@@ -2108,80 +2117,77 @@ inline Vector4u Vector4u::operator=(const Vector4u& other)
   this->w = other.w;
   return *this;
 }
-inline Vector4u Vector4u::operator+=(const Vector4u& other)
+FORCEINLINE Vector4u Vector4u::operator+=(const Vector4u& other)
 {
   *this = *this + other;
   return *this;
 }
-inline Vector4u Vector4u::operator-=(const Vector4u& other)
+FORCEINLINE Vector4u Vector4u::operator-=(const Vector4u& other)
 {
   *this = *this - other;
   return *this;
 }
-inline Vector4u Vector4u::operator*=(const Vector4u& other)
+FORCEINLINE Vector4u Vector4u::operator*=(const Vector4u& other)
 {
   *this = *this * other;
   return *this;
 }
-inline Vector4u Vector4u::operator/=(const Vector4u& other)
+FORCEINLINE Vector4u Vector4u::operator/=(const Vector4u& other)
 {
   *this = *this / other;
   return *this;
 }
-inline Vector4u Vector4u::operator%=(const Vector4u& other)
+FORCEINLINE Vector4u Vector4u::operator%=(const Vector4u& other)
 {
   *this = *this % other;
   return *this;
 }
-inline Vector4u Vector4u::operator+=(uint32 other)
+FORCEINLINE Vector4u Vector4u::operator+=(uint32 other)
 {
   *this = *this + other;
   return *this;
 }
-inline Vector4u Vector4u::operator-=(uint32 other)
+FORCEINLINE Vector4u Vector4u::operator-=(uint32 other)
 {
   *this = *this - other;
   return *this;
 }
-inline Vector4u Vector4u::operator*=(uint32 other)
+FORCEINLINE Vector4u Vector4u::operator*=(uint32 other)
 {
   *this = *this * other;
   return *this;
 }
-inline Vector4u Vector4u::operator/=(uint32 other)
+FORCEINLINE Vector4u Vector4u::operator/=(uint32 other)
 {
   *this = *this / other;
   return *this;
 }
-inline Vector4u Vector4u::operator%=(uint32 other)
+FORCEINLINE Vector4u Vector4u::operator%=(uint32 other)
 {
   *this = *this % other;
   return *this;
 }
-inline bool Vector4u::operator==(const Vector4u& other) const
+FORCEINLINE bool Vector4u::operator==(const Vector4u& other) const
 {
-  return (Math::Abs(this->x - other.x) < .001f)
-      && (Math::Abs(this->y - other.y) < .001f)
-      && (Math::Abs(this->z - other.z) < .001f)
-      && (Math::Abs(this->w - other.w) < .001f);
+  return this->x == other.x && this->y == other.y && this->z == other.z && this->w == other.w;
 }
-inline bool Vector4u::operator!=(const Vector4u& other) const
+FORCEINLINE bool Vector4u::operator!=(const Vector4u& other) const
 {
   return !(*this == other);
 }
-inline bool Vector4u::operator>(const Vector4u& other) const
+FORCEINLINE bool Vector4u::operator>(const Vector4u& other) const
 {
   return this->length() > other.length();
 }
-inline bool Vector4u::operator>=(const Vector4u& other) const
+FORCEINLINE bool Vector4u::operator>=(const Vector4u& other) const
 {
   return this->length() >= other.length();
 }
-inline bool Vector4u::operator<(const Vector4u& other) const
+FORCEINLINE bool Vector4u::operator<(const Vector4u& other) const
 {
   return this->length() < other.length();
 }
-inline bool Vector4u::operator<=(const Vector4u& other) const
+FORCEINLINE bool Vector4u::operator<=(const Vector4u& other) const
 {
   return this->length() <= other.length();
 }
