@@ -25,6 +25,18 @@ TEST(eeUtilities, Basic_Type_Sizes)
 
   EXPECT_EQ(sizeof(eeEngineSDK::TYPE_OF_NULL), 4);
   EXPECT_EQ(sizeof(eeEngineSDK::SIZE_T), 8);
+
+  EXPECT_EQ(sizeof(eeEngineSDK::Vector2f), 8);
+  EXPECT_EQ(sizeof(eeEngineSDK::Vector2i), 8);
+  EXPECT_EQ(sizeof(eeEngineSDK::Vector2u), 8);
+
+  EXPECT_EQ(sizeof(eeEngineSDK::Vector3f), 12);
+  EXPECT_EQ(sizeof(eeEngineSDK::Vector3i), 12);
+  EXPECT_EQ(sizeof(eeEngineSDK::Vector3u), 12);
+
+  EXPECT_EQ(sizeof(eeEngineSDK::Vector4f), 16);
+  EXPECT_EQ(sizeof(eeEngineSDK::Vector4i), 16);
+  EXPECT_EQ(sizeof(eeEngineSDK::Vector4u), 16);
 }
 
 TEST(eeUtilities, Vector2)
@@ -537,7 +549,7 @@ TEST(eeUtilities, Vector4)
 	EXPECT_TRUE(vf <= vf2);
 
 
-  // TODO: Terminar este Unit test
+
   /* Vector4i */
   // Default constructor
   eeEngineSDK::Vector4i vi;
@@ -616,61 +628,61 @@ TEST(eeUtilities, Vector4)
   EXPECT_EQ(vu, eeEngineSDK::Vector4u::ZERO);
 
   // operator=
-  vu = eeEngineSDK::Vector4u(-7, 4, 6, -4);
-  EXPECT_EQ(vu, eeEngineSDK::Vector4u(-7, 4, 6, -4));
+  vu = eeEngineSDK::Vector4u(6, 6, 6, 8);
+  EXPECT_EQ(vu, eeEngineSDK::Vector4u(6, 6, 6, 8));
 
   // Custom constructor constructor
-  eeEngineSDK::Vector4u vu2(-5, 2, 4, -6);
-  EXPECT_EQ(vu2, eeEngineSDK::Vector4u(-5, 2, 4, -6));
+  eeEngineSDK::Vector4u vu2(5, 2, 4, 6);
+  EXPECT_EQ(vu2, eeEngineSDK::Vector4u(5, 2, 4, 6));
 
   // Functions
-  EXPECT_EQ(vu.dot(vu2), 91.0f);
+  EXPECT_EQ(vu.dot(vu2), 114.0f);
 
-  EXPECT_EQ(vu.distance(vu2), 4.0f);
+  EXPECT_EQ(vu.distance(vu2), 5.0f);
   EXPECT_EQ(vu2.length(), 9.0f);
-  EXPECT_TRUE(vu.normalize() == eeEngineSDK::Vector4f(-0.64715023f, 0.36980013f, 0.55470020f, -0.36980013f));
-  EXPECT_TRUE(vu.truncate(7.0f) == eeEngineSDK::Vector4f(-4.53005160f, 2.58860092f, 3.88290137f, -2.58860092f));
+  EXPECT_TRUE(vu.normalize() == eeEngineSDK::Vector4f(0.45749571f, 0.45749571f, 0.45749571f, 0.60999428f));
+  EXPECT_TRUE(vu.truncate(7.0f) == eeEngineSDK::Vector4f(3.20246998f, 3.20246998f, 3.20246998f, 4.26995997f));
 
   // Operators with other vectors
-  //vu  = {-7,  4,  6, -4}
-  //vu2 = {-5,  2,  4, -6}
-  EXPECT_TRUE(vu + vu2 == eeEngineSDK::Vector4u(-12, 6, 10, -10));
-  EXPECT_TRUE(vu - vu2 == eeEngineSDK::Vector4u(-2, 2, 2, 2));
-  EXPECT_TRUE(vu* vu2 == eeEngineSDK::Vector4u(35, 8, 24, 24));
-  EXPECT_TRUE(vu / vu2 == eeEngineSDK::Vector4u(1, 2, 1, 0));
-  EXPECT_TRUE(vu% vu2 == eeEngineSDK::Vector4u(-2, 0, 2, -4));
+  //vu  = {6, 6, 6, 8}
+  //vu2 = {5, 2, 4, 6}
+  EXPECT_TRUE(vu + vu2 == eeEngineSDK::Vector4u(11, 8, 10, 14));
+  EXPECT_TRUE(vu - vu2 == eeEngineSDK::Vector4u(1, 4, 2, 2));
+  EXPECT_TRUE(vu* vu2 == eeEngineSDK::Vector4u(30, 12, 24, 48));
+  EXPECT_TRUE(vu / vu2 == eeEngineSDK::Vector4u(1, 3, 1, 1));
+  EXPECT_TRUE(vu% vu2 == eeEngineSDK::Vector4u(1, 0, 2, 2));
 
   // Operetors with numbers
-  EXPECT_TRUE(vu + 1 == eeEngineSDK::Vector4u(-6, 5, 7, -3));
-  EXPECT_TRUE(vu - 2 == eeEngineSDK::Vector4u(-9, 2, 4, -6));
-  EXPECT_TRUE(vu * 3 == eeEngineSDK::Vector4u(-21, 12, 18, -12));
-  EXPECT_TRUE(vu / 2 == eeEngineSDK::Vector4u(-3, 2, 3, -2));
-  EXPECT_TRUE(vu % 2 == eeEngineSDK::Vector4u(-1, 0, 0, 0));
+  EXPECT_TRUE(vu + 1 == eeEngineSDK::Vector4u(7, 7, 7, 9));
+  EXPECT_TRUE(vu - 2 == eeEngineSDK::Vector4u(4, 4, 4, 6));
+  EXPECT_TRUE(vu * 3 == eeEngineSDK::Vector4u(18, 18, 18, 24));
+  EXPECT_TRUE(vu / 2 == eeEngineSDK::Vector4u(3, 3, 3, 4));
+  EXPECT_TRUE(vu % 2 == eeEngineSDK::Vector4u(0, 0, 0, 0));
 
 
   // Asign operators with other vectors
   vu += vu2;
-  EXPECT_TRUE(vu == eeEngineSDK::Vector4u(-12, 6, 10, -10));
+  EXPECT_TRUE(vu == eeEngineSDK::Vector4u(11, 8, 10, 14));
   vu -= vu2;
-  EXPECT_TRUE(vu == eeEngineSDK::Vector4u(-7, 4, 6, -4));
+  EXPECT_TRUE(vu == eeEngineSDK::Vector4u(6, 6, 6, 8));
   vu /= vu2;
-  EXPECT_TRUE(vu == eeEngineSDK::Vector4u(1, 2, 1, 0));
+  EXPECT_TRUE(vu == eeEngineSDK::Vector4u(1, 3, 1, 1));
   vu *= vu2;
-  EXPECT_TRUE(vu == eeEngineSDK::Vector4u(-5, 4, 4, 0));
+  EXPECT_TRUE(vu == eeEngineSDK::Vector4u(5, 6, 4, 6));
   vu %= vu2;
   EXPECT_TRUE(vu == eeEngineSDK::Vector4u(0, 0, 0, 0));
 
   // Asign operators with numbers
-  vu += 1;
+  vu += 3;
+  EXPECT_TRUE(vu == eeEngineSDK::Vector4u(3, 3, 3, 3));
+  vu -= 2;
   EXPECT_TRUE(vu == eeEngineSDK::Vector4u(1, 1, 1, 1));
-  vu -= 3;
-  EXPECT_TRUE(vu == eeEngineSDK::Vector4u(-2, -2, -2, -2));
   vu *= 3;
-  EXPECT_TRUE(vu == eeEngineSDK::Vector4u(-6, -6, -6, -6));
+  EXPECT_TRUE(vu == eeEngineSDK::Vector4u(3, 3, 3, 3));
   vu /= 2;
-  EXPECT_TRUE(vu == eeEngineSDK::Vector4u(-3, -3, -3, -3));
+  EXPECT_TRUE(vu == eeEngineSDK::Vector4u(1, 1, 1, 1));
   vu %= 2;
-  EXPECT_TRUE(vu == eeEngineSDK::Vector4u(-1, -1, -1, -1));
+  EXPECT_TRUE(vu == eeEngineSDK::Vector4u(1, 1, 1, 1));
 
 
   // Logic operators
