@@ -5,6 +5,7 @@
 #include "../eeUtilities/include/eeVector2.h"
 #include "../eeUtilities/include/eeVector3.h"
 #include "../eeUtilities/include/eeVector4.h"
+#include "../eeUtilities/include/eeMatrix2.h"
 
 TEST(eeUtilities, Basic_Type_Sizes)
 {
@@ -25,23 +26,14 @@ TEST(eeUtilities, Basic_Type_Sizes)
 
   EXPECT_EQ(sizeof(eeEngineSDK::TYPE_OF_NULL), 4);
   EXPECT_EQ(sizeof(eeEngineSDK::SIZE_T), 8);
-
-  EXPECT_EQ(sizeof(eeEngineSDK::Vector2f), 8);
-  EXPECT_EQ(sizeof(eeEngineSDK::Vector2i), 8);
-  EXPECT_EQ(sizeof(eeEngineSDK::Vector2u), 8);
-
-  EXPECT_EQ(sizeof(eeEngineSDK::Vector3f), 12);
-  EXPECT_EQ(sizeof(eeEngineSDK::Vector3i), 12);
-  EXPECT_EQ(sizeof(eeEngineSDK::Vector3u), 12);
-
-  EXPECT_EQ(sizeof(eeEngineSDK::Vector4f), 16);
-  EXPECT_EQ(sizeof(eeEngineSDK::Vector4i), 16);
-  EXPECT_EQ(sizeof(eeEngineSDK::Vector4u), 16);
 }
 
 TEST(eeUtilities, Vector2)
 {
   /* Vector2f */
+  // Size
+  EXPECT_EQ(sizeof(eeEngineSDK::Vector2f), 8);
+
   // Default constructor
   eeEngineSDK::Vector2f vf;
   EXPECT_EQ(vf, eeEngineSDK::Vector2f::ZERO);
@@ -114,6 +106,9 @@ TEST(eeUtilities, Vector2)
 
 
   /* Vector2i */
+  // Size
+  EXPECT_EQ(sizeof(eeEngineSDK::Vector2i), 8);
+
   // Default constructor
   eeEngineSDK::Vector2i vi;
   EXPECT_EQ(vi, eeEngineSDK::Vector2i::ZERO);
@@ -186,6 +181,9 @@ TEST(eeUtilities, Vector2)
 
 
   /* Vector2u */
+  // Size
+  EXPECT_EQ(sizeof(eeEngineSDK::Vector2u), 8);
+
   // Default constructor
   eeEngineSDK::Vector2u vu;
   EXPECT_EQ(vu, eeEngineSDK::Vector2u::ZERO);
@@ -259,6 +257,9 @@ TEST(eeUtilities, Vector2)
 TEST(eeUtilities, Vector3)
 {
   /* Vector3f */
+  // Size
+  EXPECT_EQ(sizeof(eeEngineSDK::Vector3f), 12);
+
   // Default constructor
   eeEngineSDK::Vector3f vf;
   EXPECT_EQ(vf, eeEngineSDK::Vector3f::ZERO);
@@ -332,6 +333,9 @@ TEST(eeUtilities, Vector3)
 
 
   /* Vector3i */
+  // Size
+  EXPECT_EQ(sizeof(eeEngineSDK::Vector3i), 12);
+
   // Default constructor
   eeEngineSDK::Vector3i vi;
   EXPECT_EQ(vi, eeEngineSDK::Vector3i::ZERO);
@@ -405,6 +409,9 @@ TEST(eeUtilities, Vector3)
 
 
   /* Vector3u */
+  // Size
+  EXPECT_EQ(sizeof(eeEngineSDK::Vector3u), 12);
+
   // Default constructor
   eeEngineSDK::Vector3u vu;
   EXPECT_EQ(vu, eeEngineSDK::Vector3u::ZERO);
@@ -479,6 +486,9 @@ TEST(eeUtilities, Vector3)
 TEST(eeUtilities, Vector4)
 {
 	/* Vector4f */
+  // Size
+  EXPECT_EQ(sizeof(eeEngineSDK::Vector4f), 16);
+
 	// Default constructor
 	eeEngineSDK::Vector4f vf;
 	EXPECT_EQ(vf, eeEngineSDK::Vector4f::ZERO);
@@ -551,6 +561,9 @@ TEST(eeUtilities, Vector4)
 
 
   /* Vector4i */
+  // Size
+  EXPECT_EQ(sizeof(eeEngineSDK::Vector4i), 16);
+
   // Default constructor
   eeEngineSDK::Vector4i vi;
   EXPECT_EQ(vi, eeEngineSDK::Vector4i::ZERO);
@@ -623,6 +636,9 @@ TEST(eeUtilities, Vector4)
 
 
   /* Vector4u */
+  // Size
+  EXPECT_EQ(sizeof(eeEngineSDK::Vector4u), 16);
+
   // Default constructor
   eeEngineSDK::Vector4u vu;
   EXPECT_EQ(vu, eeEngineSDK::Vector4u::ZERO);
@@ -691,6 +707,154 @@ TEST(eeUtilities, Vector4)
   EXPECT_FALSE(vu >= vu2);
   EXPECT_TRUE(vu < vu2);
   EXPECT_TRUE(vu <= vu2);
+}
+
+TEST(eeUtilities, Matrix2)
+{
+  // Size
+  EXPECT_EQ(sizeof(eeEngineSDK::Matrix2f), 16);
+
+  // Default constructor and matrix ZERO
+  eeEngineSDK::Matrix2f deff;
+  EXPECT_TRUE(deff == eeEngineSDK::Matrix2f::ZERO);
+
+  // Custom constructor 1 and matrix ONES
+  float mf[4] = {1.0f,1.0f,1.0f,1.0f};
+  eeEngineSDK::Matrix2f cst1f(mf);
+  EXPECT_TRUE(cst1f == eeEngineSDK::Matrix2f::ONES);
+
+  // Custom constructor 2 and matrix IDENTITY
+  eeEngineSDK::Matrix2f cst2f(eeEngineSDK::Vector2f(1.0f, 0.0f), 
+                              eeEngineSDK::Vector2f(0.0f, 1.0f));
+  EXPECT_TRUE(cst2f == eeEngineSDK::Matrix2f::IDENTITY);
+
+  // Custom constructor 3
+  eeEngineSDK::Matrix2f cst3f(1.0f, 2.0f, 3.0f, 4.0f);
+  EXPECT_TRUE(cst3f == eeEngineSDK::Matrix2f(eeEngineSDK::Vector2f(1.0f, 2.0f),
+                                             eeEngineSDK::Vector2f(3.0f, 4.0f)));
+
+
+  // Functions
+  EXPECT_EQ(cst3f.determinant(), -2.0f);
+  EXPECT_TRUE(cst3f.transpose() == eeEngineSDK::Matrix2f(1.0f, 3.0f, 2.0f, 4.0f));
+  EXPECT_TRUE(cst3f.inverse() == eeEngineSDK::Matrix2f(-2.0f, 1.0f, 1.5f, -0.5f));
+
+
+  // Operators overloads
+  EXPECT_TRUE(cst3f + cst2f == eeEngineSDK::Matrix2f(2.0f, 2.0f, 3.0f, 5.0f));
+  EXPECT_TRUE(cst3f - cst2f == eeEngineSDK::Matrix2f(0.0f, 2.0f, 3.0f, 3.0f));
+  EXPECT_TRUE(cst3f * cst1f == eeEngineSDK::Matrix2f(3.0f, 3.0f, 7.0f, 7.0f));
+  EXPECT_TRUE(cst3f * 2 == eeEngineSDK::Matrix2f(2.0f, 4.0f, 6.0f, 8.0f));
+
+  cst3f = cst2f;
+  EXPECT_TRUE(cst3f == cst2f);
+
+  cst3f += cst1f;
+  EXPECT_TRUE(cst3f == eeEngineSDK::Matrix2f(2.0f, 1.0f, 1.0f, 2.0f));
+  cst3f -= cst1f;
+  EXPECT_TRUE(cst3f == eeEngineSDK::Matrix2f(1.0f, 0.0f, 0.0f, 1.0f));
+  cst3f *= cst1f;
+  EXPECT_TRUE(cst3f == eeEngineSDK::Matrix2f(1.0f, 1.0f, 1.0f, 1.0f));
+  cst3f *= 3;
+  EXPECT_TRUE(cst3f == eeEngineSDK::Matrix2f(3.0f, 3.0f, 3.0f, 3.0f));
+
+  
+
+  // Size
+  EXPECT_EQ(sizeof(eeEngineSDK::Matrix2i), 16);
+
+  // Default constructor and matrix ZERO
+  eeEngineSDK::Matrix2i defi;
+  EXPECT_TRUE(defi == eeEngineSDK::Matrix2i::ZERO);
+
+  // Custom constructor 1 and matrix ONES
+  eeEngineSDK::int32 mi[4] = { 1,1,1,1 };
+  eeEngineSDK::Matrix2i cst1i(mi);
+  EXPECT_TRUE(cst1i == eeEngineSDK::Matrix2i::ONES);
+
+  // Custom constructor 2 and matrix IDENTITY
+  eeEngineSDK::Matrix2i cst2i(eeEngineSDK::Vector2i(1, 0),
+                              eeEngineSDK::Vector2i(0, 1));
+  EXPECT_TRUE(cst2i == eeEngineSDK::Matrix2i::IDENTITY);
+
+  // Custom constructor 3
+  eeEngineSDK::Matrix2i cst3i(1, 2, 3, 4);
+  EXPECT_TRUE(cst3i == eeEngineSDK::Matrix2i(eeEngineSDK::Vector2i(1, 2),
+                                             eeEngineSDK::Vector2i(3, 4)));
+
+
+  // Functions
+  EXPECT_EQ(cst3i.determinant(), -2.0f);
+  EXPECT_TRUE(cst3i.transpose() == eeEngineSDK::Matrix2i(1, 3, 2, 4));
+  EXPECT_TRUE(cst3i.inverse() == eeEngineSDK::Matrix2f(-2.0f, 1.0f, 1.5f, -0.5f));
+
+
+  // Operators overloads
+  EXPECT_TRUE(cst3i + cst2i == eeEngineSDK::Matrix2i(2, 2, 3, 5));
+  EXPECT_TRUE(cst3i - cst2i == eeEngineSDK::Matrix2i(0, 2, 3, 3));
+  EXPECT_TRUE(cst3i * cst1i == eeEngineSDK::Matrix2i(3, 3, 7, 7));
+  EXPECT_TRUE(cst3i * 2 == eeEngineSDK::Matrix2i(2, 4, 6, 8));
+
+  cst3i = cst2i;
+  EXPECT_TRUE(cst3i == cst2i);
+
+  cst3i += cst1i;
+  EXPECT_TRUE(cst3i == eeEngineSDK::Matrix2i(2, 1, 1, 2));
+  cst3i -= cst1i;
+  EXPECT_TRUE(cst3i == eeEngineSDK::Matrix2i(1, 0, 0, 1));
+  cst3i *= cst1i;
+  EXPECT_TRUE(cst3i == eeEngineSDK::Matrix2i(1, 1, 1, 1));
+  cst3i *= 3;
+  EXPECT_TRUE(cst3i == eeEngineSDK::Matrix2i(3, 3, 3, 3));
+
+
+
+  // Size
+  EXPECT_EQ(sizeof(eeEngineSDK::Matrix2u), 16);
+
+  // Default constructor and matrix ZERO
+  eeEngineSDK::Matrix2u defu;
+  EXPECT_TRUE(defu == eeEngineSDK::Matrix2u::ZERO);
+
+  // Custom constructor 1 and matrix ONES
+  eeEngineSDK::uint32 mu[4] = { 1u,1u,1u,1u };
+  eeEngineSDK::Matrix2u cst1u(mu);
+  EXPECT_TRUE(cst1u == eeEngineSDK::Matrix2u::ONES);
+
+  // Custom constructor 2 and matrix IDENTITY
+  eeEngineSDK::Matrix2u cst2u(eeEngineSDK::Vector2u(1u, 0u),
+                              eeEngineSDK::Vector2u(0u, 1u));
+  EXPECT_TRUE(cst2u == eeEngineSDK::Matrix2u::IDENTITY);
+
+  // Custom constructor 3
+  eeEngineSDK::Matrix2u cst3u(1u, 2u, 3u, 4u);
+  EXPECT_TRUE(cst3u == eeEngineSDK::Matrix2u(eeEngineSDK::Vector2u(1u, 2u),
+                                             eeEngineSDK::Vector2u(3u, 4u)));
+
+
+  // Functions
+  EXPECT_EQ(cst3u.determinant(), -2.0f);
+  EXPECT_TRUE(cst3u.transpose() == eeEngineSDK::Matrix2u(1u, 3u, 2u, 4u));
+  EXPECT_TRUE(cst3u.inverse() == eeEngineSDK::Matrix2f(-2.0f, 1.0f, 1.5f, -0.5f));
+
+
+  // Operators overloads
+  EXPECT_TRUE(cst3u + cst2u == eeEngineSDK::Matrix2u(2u, 2u, 3u, 5u));
+  EXPECT_TRUE(cst3u - cst2u == eeEngineSDK::Matrix2u(0u, 2u, 3u, 3u));
+  EXPECT_TRUE(cst3u * cst1u == eeEngineSDK::Matrix2u(3u, 3u, 7u, 7u));
+  EXPECT_TRUE(cst3u * 2 == eeEngineSDK::Matrix2u(2u, 4u, 6u, 8u));
+
+  cst3u = cst2u;
+  EXPECT_TRUE(cst3u == cst2u);
+
+  cst3u += cst1u;
+  EXPECT_TRUE(cst3u == eeEngineSDK::Matrix2u(2u, 1u, 1u, 2u));
+  cst3u -= cst1u;
+  EXPECT_TRUE(cst3u == eeEngineSDK::Matrix2u(1u, 0u, 0u, 1u));
+  cst3u *= cst1u;
+  EXPECT_TRUE(cst3u == eeEngineSDK::Matrix2u(1u, 1u, 1u, 1u));
+  cst3u *= 3;
+  EXPECT_TRUE(cst3u == eeEngineSDK::Matrix2u(3u, 3u, 3u, 3u));
 }
 
 int main(int argc, char** argv) {

@@ -4,7 +4,7 @@
 #include "eeMath.h"
 
 namespace eeEngineSDK {
-class Vector3f
+class EE_UTILITY_EXPORT Vector3f
 {
  public:
   /**
@@ -583,15 +583,19 @@ class Vector3f
     float xyz[3];
   };
 
-  static Vector3f ZERO;
+  static const Vector3f ZERO;
+  static const Vector3f FORWARD;
+  static const Vector3f RIGHT;
+  static const Vector3f UP;
 };
-
-Vector3f Vector3f::ZERO = Vector3f(0.0f, 0.0f, 0.0f);
 
 FORCEINLINE Vector3f::Vector3f() : x(0.0f), y(0.0f), z(0.0f)
 {
 }
-FORCEINLINE Vector3f::Vector3f(float _x, float _y, float _z) : x(_x), y(_y), z(_z)
+FORCEINLINE Vector3f::Vector3f(float _x, float _y, float _z) : 
+  x(_x), 
+  y(_y), 
+  z(_z)
 {
 }
 FORCEINLINE Vector3f::~Vector3f()
@@ -754,7 +758,7 @@ FORCEINLINE bool Vector3f::operator<=(const Vector3f& other) const
 }
 
 
-class Vector3i
+class EE_UTILITY_EXPORT Vector3i
 {
  public:
   /**
@@ -1333,15 +1337,19 @@ class Vector3i
     int32 xyz[3];
   };
 
-  static Vector3i ZERO;
+  static const Vector3i ZERO;
+  static const Vector3i FORWARD;
+  static const Vector3i RIGHT;
+  static const Vector3i UP;
 };
-
-Vector3i Vector3i::ZERO = Vector3i(0, 0, 0);
 
 FORCEINLINE Vector3i::Vector3i() : x(0), y(0), z(0)
 {
 }
-FORCEINLINE Vector3i::Vector3i(int32 _x, int32 _y, int32 _z) : x(_x), y(_y), z(_z)
+FORCEINLINE Vector3i::Vector3i(int32 _x, int32 _y, int32 _z) : 
+  x(_x), 
+  y(_y), 
+  z(_z)
 {
 }
 FORCEINLINE Vector3i::~Vector3i()
@@ -1349,22 +1357,31 @@ FORCEINLINE Vector3i::~Vector3i()
 }
 FORCEINLINE float Vector3i::dot(const Vector3i& other) const
 {
-  return this->x * other.x + this->y * other.y + this->z * other.z;
+  return static_cast<float>(this->x * other.x) + 
+         static_cast<float>(this->y * other.y) + 
+         static_cast<float>(this->z * other.z);
 }
 FORCEINLINE Vector3f Vector3i::cross(const Vector3i& other) const
 {
-  return Vector3f(static_cast<float>(this->y * other.z) - static_cast<float>(this->z * other.y),
-                  static_cast<float>(this->z * other.x) - static_cast<float>(this->x * other.z),
-                  static_cast<float>(this->x * other.y) - static_cast<float>(this->y * other.x));
+  return Vector3f(static_cast<float>(this->y * other.z) - 
+                  static_cast<float>(this->z * other.y),
+                  static_cast<float>(this->z * other.x) - 
+                  static_cast<float>(this->x * other.z),
+                  static_cast<float>(this->x * other.y) - 
+                  static_cast<float>(this->y * other.x));
 }
 FORCEINLINE float Vector3i::distance(const Vector3i& other) const
 {
   Vector3i d = other - *this;
-  return Math::sqrt(d.x * d.x + d.y * d.y + d.z * d.z);
+  return Math::sqrt(static_cast<float>(d.x * d.x) + 
+                    static_cast<float>(d.y * d.y) + 
+                    static_cast<float>(d.z * d.z));
 }
 FORCEINLINE float Vector3i::length() const
 {
-  return Math::sqrt(this->x * this->x + this->y * this->y + this->z * this->z);
+  return Math::sqrt(static_cast<float>(this->x * this->x) + 
+                    static_cast<float>(this->y * this->y) + 
+                    static_cast<float>(this->z * this->z));
 }
 FORCEINLINE Vector3f Vector3i::normalize() const
 {
@@ -1501,7 +1518,7 @@ FORCEINLINE bool Vector3i::operator<=(const Vector3i& other) const
 }
 
 
-class Vector3u
+class EE_UTILITY_EXPORT Vector3u
 {
  public:
   /**
@@ -2080,15 +2097,19 @@ class Vector3u
     uint32 xyz[3];
   };
 
-  static Vector3u ZERO;
+  static const Vector3u ZERO;
+  static const Vector3u FORWARD;
+  static const Vector3u RIGHT;
+  static const Vector3u UP;
 };
-
-Vector3u Vector3u::ZERO = Vector3u(0u, 0u, 0u);
 
 FORCEINLINE Vector3u::Vector3u() : x(0u), y(0u), z(0u)
 {
 }
-FORCEINLINE Vector3u::Vector3u(uint32 _x, uint32 _y, uint32 _z) : x(_x), y(_y), z(_z)
+FORCEINLINE Vector3u::Vector3u(uint32 _x, uint32 _y, uint32 _z) : 
+  x(_x), 
+  y(_y), 
+  z(_z)
 {
 }
 FORCEINLINE Vector3u::~Vector3u()
@@ -2096,22 +2117,31 @@ FORCEINLINE Vector3u::~Vector3u()
 }
 FORCEINLINE float Vector3u::dot(const Vector3u& other) const
 {
-  return this->x * other.x + this->y * other.y + this->z * other.z;
+  return static_cast<float>(this->x * other.x) + 
+         static_cast<float>(this->y * other.y) + 
+         static_cast<float>(this->z * other.z);
 }
 FORCEINLINE Vector3f Vector3u::cross(const Vector3u& other) const
 {
-  return Vector3f(static_cast<float>(this->y * other.z) - static_cast<float>(this->z * other.y),
-                  static_cast<float>(this->z * other.x) - static_cast<float>(this->x * other.z),
-                  static_cast<float>(this->x * other.y) - static_cast<float>(this->y * other.x));
+  return Vector3f(static_cast<float>(this->y * other.z) - 
+                  static_cast<float>(this->z * other.y),
+                  static_cast<float>(this->z * other.x) - 
+                  static_cast<float>(this->x * other.z),
+                  static_cast<float>(this->x * other.y) - 
+                  static_cast<float>(this->y * other.x));
 }
 FORCEINLINE float Vector3u::distance(const Vector3u& other) const
 {
   Vector3u d = other - *this;
-  return Math::sqrt(d.x * d.x + d.y * d.y + d.z * d.z);
+  return Math::sqrt(static_cast<float>(d.x * d.x) + 
+                    static_cast<float>(d.y * d.y) + 
+                    static_cast<float>(d.z * d.z));
 }
 FORCEINLINE float Vector3u::length() const
 {
-  return Math::sqrt(this->x * this->x + this->y * this->y + this->z * this->z);
+  return Math::sqrt(static_cast<float>(this->x * this->x) + 
+                    static_cast<float>(this->y * this->y) + 
+                    static_cast<float>(this->z * this->z));
 }
 FORCEINLINE Vector3f Vector3u::normalize() const
 {

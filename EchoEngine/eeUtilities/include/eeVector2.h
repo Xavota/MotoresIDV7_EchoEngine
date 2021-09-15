@@ -4,7 +4,7 @@
 #include "eeMath.h"
 
 namespace eeEngineSDK {
-class Vector2f
+class EE_UTILITY_EXPORT Vector2f
 {
  public:
   /**
@@ -566,10 +566,8 @@ class Vector2f
 	float xy[2];
   };
 
-  static Vector2f ZERO;
+  static const Vector2f ZERO;
 };
-
-Vector2f Vector2f::ZERO = Vector2f(0.0f, 0.0f);
 
 FORCEINLINE Vector2f::Vector2f() : x(0.0f), y(0.0f)
 {
@@ -727,7 +725,7 @@ FORCEINLINE bool Vector2f::operator<=(const Vector2f& other) const
 }
 
 
-class Vector2i
+class EE_UTILITY_EXPORT Vector2i
 {
  public:
   /**
@@ -1289,10 +1287,8 @@ class Vector2i
     int32 xy[2];
   };
 
-  static Vector2i ZERO;
+  static const Vector2i ZERO;
 };
-
-Vector2i Vector2i::ZERO = Vector2i(0, 0);
 
 FORCEINLINE Vector2i::Vector2i() : x(0), y(0)
 {
@@ -1305,16 +1301,19 @@ FORCEINLINE Vector2i::~Vector2i()
 }
 FORCEINLINE float Vector2i::dot(const Vector2i& other) const
 {
-	return this->x * other.x + this->y * other.y;
+	return static_cast<float>(this->x * other.x) + 
+         static_cast<float>(this->y * other.y);
 }
 FORCEINLINE float Vector2i::distance(const Vector2i& other) const
 {
 	Vector2i d = other - *this;
-	return Math::sqrt(d.x * d.x + d.y * d.y);
+	return Math::sqrt(static_cast<float>(d.x * d.x) + 
+                    static_cast<float>(d.y * d.y));
 }
 FORCEINLINE float Vector2i::length() const
 {
-	return Math::sqrt(this->x * this->x + this->y * this->y);
+	return Math::sqrt(static_cast<float>(this->x * this->x) + 
+                    static_cast<float>(this->y * this->y));
 }
 FORCEINLINE Vector2f Vector2i::normalize() const
 {
@@ -1449,7 +1448,7 @@ FORCEINLINE bool Vector2i::operator<=(const Vector2i& other) const
 }
 
 
-class Vector2u
+class EE_UTILITY_EXPORT Vector2u
 {
  public:
 	/**
@@ -2011,10 +2010,8 @@ class Vector2u
     uint32 xy[2];
   };
   
-  static Vector2u ZERO;
+  static const Vector2u ZERO;
 };
-
-Vector2u Vector2u::ZERO = Vector2u(0u, 0u);
 
 FORCEINLINE Vector2u::Vector2u() : x(0u), y(0u)
 {
@@ -2027,16 +2024,19 @@ FORCEINLINE Vector2u::~Vector2u()
 }
 FORCEINLINE float Vector2u::dot(const Vector2u& other) const
 {
-	return this->x * other.x + this->y * other.y;
+	return static_cast<float>(this->x * other.x) + 
+         static_cast<float>(this->y * other.y);
 }
 FORCEINLINE float Vector2u::distance(const Vector2u& other) const
 {
 	Vector2u d = other - *this;
-	return Math::sqrt(d.x * d.x + d.y * d.y);
+	return Math::sqrt(static_cast<float>(d.x * d.x) + 
+                    static_cast<float>(d.y * d.y));
 }
 FORCEINLINE float Vector2u::length() const
 {
-	return Math::sqrt(this->x * this->x + this->y * this->y);
+	return Math::sqrt(static_cast<float>(this->x * this->x) + 
+                    static_cast<float>(this->y * this->y));
 }
 FORCEINLINE Vector2f Vector2u::normalize() const
 {

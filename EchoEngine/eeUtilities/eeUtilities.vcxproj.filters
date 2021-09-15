@@ -36,7 +36,7 @@
     <ClInclude Include="include\eeVector4.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\Matrix2f.h">
+    <ClInclude Include="include\eeMatrix2.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
@@ -53,7 +53,7 @@
     <ClCompile Include="src\eeVector4.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Matrix2f.cpp">
+    <ClCompile Include="src\eeMatrix2.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
