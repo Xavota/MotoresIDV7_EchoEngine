@@ -287,7 +287,7 @@ class EE_UTILITY_EXPORT Vector4f
   * @return
   * The original vector after the operation.
   */
-  Vector4f
+  Vector4f&
   operator=(const Vector4f& other);
 
   /**
@@ -304,7 +304,7 @@ class EE_UTILITY_EXPORT Vector4f
   * @return
   * The original vector after the operation.
   */
-  Vector4f
+  Vector4f&
   operator+=(const Vector4f& other);
   /**
   * @brief
@@ -320,7 +320,7 @@ class EE_UTILITY_EXPORT Vector4f
   * @return
   * The original vector after the operation.
   */
-  Vector4f
+  Vector4f&
   operator-=(const Vector4f& other);
   /**
   * @brief
@@ -336,7 +336,7 @@ class EE_UTILITY_EXPORT Vector4f
   * @return
   * The original vector after the operation.
   */
-  Vector4f
+  Vector4f&
   operator*=(const Vector4f& other);
   /**
   * @brief
@@ -352,7 +352,7 @@ class EE_UTILITY_EXPORT Vector4f
   * @return
   * The original vector after the operation.
   */
-  Vector4f
+  Vector4f&
   operator/=(const Vector4f& other);
   /**
   * @brief
@@ -368,7 +368,7 @@ class EE_UTILITY_EXPORT Vector4f
   * @return
   * The original vector after the operation.
   */
-  Vector4f
+  Vector4f&
   operator%=(const Vector4f& other);
   /**
   * @brief
@@ -384,7 +384,7 @@ class EE_UTILITY_EXPORT Vector4f
   * @return
   * The original vector after the operation.
   */
-  Vector4f
+  Vector4f&
   operator+=(float other);
   /**
   * @brief
@@ -400,7 +400,7 @@ class EE_UTILITY_EXPORT Vector4f
   * @return
   * The original vector after the operation.
   */
-  Vector4f
+  Vector4f&
   operator-=(float other);
   /**
   * @brief
@@ -416,7 +416,7 @@ class EE_UTILITY_EXPORT Vector4f
   * @return
   * The original vector after the operation.
   */
-  Vector4f
+  Vector4f&
   operator*=(float other);
   /**
   * @brief
@@ -432,7 +432,7 @@ class EE_UTILITY_EXPORT Vector4f
   * @return
   * The original vector after the operation.
   */
-  Vector4f
+  Vector4f&
   operator/=(float other);
   /**
   * @brief
@@ -448,7 +448,7 @@ class EE_UTILITY_EXPORT Vector4f
   * @return
   * The original vector after the operation.
   */
-  Vector4f
+  Vector4f&
   operator%=(float other);
 
   /**
@@ -662,7 +662,7 @@ FORCEINLINE Vector4f Vector4f::operator%(float other) const
                   Math::fmod(this->z, other),
                   Math::fmod(this->w, other));
 }
-FORCEINLINE Vector4f Vector4f::operator=(const Vector4f& other)
+FORCEINLINE Vector4f& Vector4f::operator=(const Vector4f& other)
 {
   this->x = other.x;
   this->y = other.y;
@@ -670,52 +670,52 @@ FORCEINLINE Vector4f Vector4f::operator=(const Vector4f& other)
   this->w = other.w;
   return *this;
 }
-FORCEINLINE Vector4f Vector4f::operator+=(const Vector4f& other)
+FORCEINLINE Vector4f& Vector4f::operator+=(const Vector4f& other)
 {
   *this = *this + other;
   return *this;
 }
-FORCEINLINE Vector4f Vector4f::operator-=(const Vector4f& other)
+FORCEINLINE Vector4f& Vector4f::operator-=(const Vector4f& other)
 {
   *this = *this - other;
   return *this;
 }
-FORCEINLINE Vector4f Vector4f::operator*=(const Vector4f& other)
+FORCEINLINE Vector4f& Vector4f::operator*=(const Vector4f& other)
 {
   *this = *this * other;
   return *this;
 }
-FORCEINLINE Vector4f Vector4f::operator/=(const Vector4f& other)
+FORCEINLINE Vector4f& Vector4f::operator/=(const Vector4f& other)
 {
   *this = *this / other;
   return *this;
 }
-FORCEINLINE Vector4f Vector4f::operator%=(const Vector4f& other)
+FORCEINLINE Vector4f& Vector4f::operator%=(const Vector4f& other)
 {
   *this = *this % other;
   return *this;
 }
-FORCEINLINE Vector4f Vector4f::operator+=(float other)
+FORCEINLINE Vector4f& Vector4f::operator+=(float other)
 {
   *this = *this + other;
   return *this;
 }
-FORCEINLINE Vector4f Vector4f::operator-=(float other)
+FORCEINLINE Vector4f& Vector4f::operator-=(float other)
 {
   *this = *this - other;
   return *this;
 }
-FORCEINLINE Vector4f Vector4f::operator*=(float other)
+FORCEINLINE Vector4f& Vector4f::operator*=(float other)
 {
   *this = *this * other;
   return *this;
 }
-FORCEINLINE Vector4f Vector4f::operator/=(float other)
+FORCEINLINE Vector4f& Vector4f::operator/=(float other)
 {
   *this = *this / other;
   return *this;
 }
-FORCEINLINE Vector4f Vector4f::operator%=(float other)
+FORCEINLINE Vector4f& Vector4f::operator%=(float other)
 {
   *this = *this % other;
   return *this;
@@ -1032,7 +1032,7 @@ class EE_UTILITY_EXPORT Vector4i
   * @return
   * The original vector after the operation.
   */
-  Vector4i
+  Vector4i&
   operator=(const Vector4i& other);
 
   /**
@@ -1049,7 +1049,7 @@ class EE_UTILITY_EXPORT Vector4i
   * @return
   * The original vector after the operation.
   */
-  Vector4i
+  Vector4i&
   operator+=(const Vector4i& other);
   /**
   * @brief
@@ -1065,7 +1065,7 @@ class EE_UTILITY_EXPORT Vector4i
   * @return
   * The original vector after the operation.
   */
-  Vector4i
+  Vector4i&
   operator-=(const Vector4i& other);
   /**
   * @brief
@@ -1081,7 +1081,7 @@ class EE_UTILITY_EXPORT Vector4i
   * @return
   * The original vector after the operation.
   */
-  Vector4i
+  Vector4i&
   operator*=(const Vector4i& other);
   /**
   * @brief
@@ -1097,7 +1097,7 @@ class EE_UTILITY_EXPORT Vector4i
   * @return
   * The original vector after the operation.
   */
-  Vector4i
+  Vector4i&
   operator/=(const Vector4i& other);
   /**
   * @brief
@@ -1113,7 +1113,7 @@ class EE_UTILITY_EXPORT Vector4i
   * @return
   * The original vector after the operation.
   */
-  Vector4i
+  Vector4i&
   operator%=(const Vector4i& other);
   /**
   * @brief
@@ -1129,7 +1129,7 @@ class EE_UTILITY_EXPORT Vector4i
   * @return
   * The original vector after the operation.
   */
-  Vector4i
+  Vector4i&
   operator+=(int32 other);
   /**
   * @brief
@@ -1145,7 +1145,7 @@ class EE_UTILITY_EXPORT Vector4i
   * @return
   * The original vector after the operation.
   */
-  Vector4i
+  Vector4i&
   operator-=(int32 other);
   /**
   * @brief
@@ -1161,7 +1161,7 @@ class EE_UTILITY_EXPORT Vector4i
   * @return
   * The original vector after the operation.
   */
-  Vector4i
+  Vector4i&
   operator*=(int32 other);
   /**
   * @brief
@@ -1177,7 +1177,7 @@ class EE_UTILITY_EXPORT Vector4i
   * @return
   * The original vector after the operation.
   */
-  Vector4i
+  Vector4i&
   operator/=(int32 other);
   /**
   * @brief
@@ -1193,7 +1193,7 @@ class EE_UTILITY_EXPORT Vector4i
   * @return
   * The original vector after the operation.
   */
-  Vector4i
+  Vector4i&
   operator%=(int32 other);
 
   /**
@@ -1414,7 +1414,7 @@ FORCEINLINE Vector4i Vector4i::operator%(int32 other) const
   return Vector4i(this->x % other, this->y % other, 
                   this->z % other, this->w % other);
 }
-FORCEINLINE Vector4i Vector4i::operator=(const Vector4i& other)
+FORCEINLINE Vector4i& Vector4i::operator=(const Vector4i& other)
 {
   this->x = other.x;
   this->y = other.y;
@@ -1422,52 +1422,52 @@ FORCEINLINE Vector4i Vector4i::operator=(const Vector4i& other)
   this->w = other.w;
   return *this;
 }
-FORCEINLINE Vector4i Vector4i::operator+=(const Vector4i& other)
+FORCEINLINE Vector4i& Vector4i::operator+=(const Vector4i& other)
 {
   *this = *this + other;
   return *this;
 }
-FORCEINLINE Vector4i Vector4i::operator-=(const Vector4i& other)
+FORCEINLINE Vector4i& Vector4i::operator-=(const Vector4i& other)
 {
   *this = *this - other;
   return *this;
 }
-FORCEINLINE Vector4i Vector4i::operator*=(const Vector4i& other)
+FORCEINLINE Vector4i& Vector4i::operator*=(const Vector4i& other)
 {
   *this = *this * other;
   return *this;
 }
-FORCEINLINE Vector4i Vector4i::operator/=(const Vector4i& other)
+FORCEINLINE Vector4i& Vector4i::operator/=(const Vector4i& other)
 {
   *this = *this / other;
   return *this;
 }
-FORCEINLINE Vector4i Vector4i::operator%=(const Vector4i& other)
+FORCEINLINE Vector4i& Vector4i::operator%=(const Vector4i& other)
 {
   *this = *this % other;
   return *this;
 }
-FORCEINLINE Vector4i Vector4i::operator+=(int32 other)
+FORCEINLINE Vector4i& Vector4i::operator+=(int32 other)
 {
   *this = *this + other;
   return *this;
 }
-FORCEINLINE Vector4i Vector4i::operator-=(int32 other)
+FORCEINLINE Vector4i& Vector4i::operator-=(int32 other)
 {
   *this = *this - other;
   return *this;
 }
-FORCEINLINE Vector4i Vector4i::operator*=(int32 other)
+FORCEINLINE Vector4i& Vector4i::operator*=(int32 other)
 {
   *this = *this * other;
   return *this;
 }
-FORCEINLINE Vector4i Vector4i::operator/=(int32 other)
+FORCEINLINE Vector4i& Vector4i::operator/=(int32 other)
 {
   *this = *this / other;
   return *this;
 }
-FORCEINLINE Vector4i Vector4i::operator%=(int32 other)
+FORCEINLINE Vector4i& Vector4i::operator%=(int32 other)
 {
   *this = *this % other;
   return *this;
@@ -1782,7 +1782,7 @@ class EE_UTILITY_EXPORT Vector4u
   * @return
   * The original vector after the operation.
   */
-  Vector4u
+  Vector4u&
   operator=(const Vector4u& other);
 
   /**
@@ -1799,7 +1799,7 @@ class EE_UTILITY_EXPORT Vector4u
   * @return
   * The original vector after the operation.
   */
-  Vector4u
+  Vector4u&
   operator+=(const Vector4u& other);
   /**
   * @brief
@@ -1815,7 +1815,7 @@ class EE_UTILITY_EXPORT Vector4u
   * @return
   * The original vector after the operation.
   */
-  Vector4u
+  Vector4u&
   operator-=(const Vector4u& other);
   /**
   * @brief
@@ -1831,7 +1831,7 @@ class EE_UTILITY_EXPORT Vector4u
   * @return
   * The original vector after the operation.
   */
-  Vector4u
+  Vector4u&
   operator*=(const Vector4u& other);
   /**
   * @brief
@@ -1847,7 +1847,7 @@ class EE_UTILITY_EXPORT Vector4u
   * @return
   * The original vector after the operation.
   */
-  Vector4u
+  Vector4u&
   operator/=(const Vector4u& other);
   /**
   * @brief
@@ -1863,7 +1863,7 @@ class EE_UTILITY_EXPORT Vector4u
   * @return
   * The original vector after the operation.
   */
-  Vector4u
+  Vector4u&
   operator%=(const Vector4u& other);
   /**
   * @brief
@@ -1879,7 +1879,7 @@ class EE_UTILITY_EXPORT Vector4u
   * @return
   * The original vector after the operation.
   */
-  Vector4u
+  Vector4u&
   operator+=(uint32 other);
   /**
   * @brief
@@ -1895,7 +1895,7 @@ class EE_UTILITY_EXPORT Vector4u
   * @return
   * The original vector after the operation.
   */
-  Vector4u
+  Vector4u&
   operator-=(uint32 other);
   /**
   * @brief
@@ -1911,7 +1911,7 @@ class EE_UTILITY_EXPORT Vector4u
   * @return
   * The original vector after the operation.
   */
-  Vector4u
+  Vector4u&
   operator*=(uint32 other);
   /**
   * @brief
@@ -1927,7 +1927,7 @@ class EE_UTILITY_EXPORT Vector4u
   * @return
   * The original vector after the operation.
   */
-  Vector4u
+  Vector4u&
   operator/=(uint32 other);
   /**
   * @brief
@@ -1943,7 +1943,7 @@ class EE_UTILITY_EXPORT Vector4u
   * @return
   * The original vector after the operation.
   */
-  Vector4u
+  Vector4u&
   operator%=(uint32 other);
 
   /**
@@ -2164,7 +2164,7 @@ FORCEINLINE Vector4u Vector4u::operator%(uint32 other) const
   return Vector4u(this->x % other, this->y % other, 
                   this->z % other, this->w % other);
 }
-FORCEINLINE Vector4u Vector4u::operator=(const Vector4u& other)
+FORCEINLINE Vector4u& Vector4u::operator=(const Vector4u& other)
 {
   this->x = other.x;
   this->y = other.y;
@@ -2172,52 +2172,52 @@ FORCEINLINE Vector4u Vector4u::operator=(const Vector4u& other)
   this->w = other.w;
   return *this;
 }
-FORCEINLINE Vector4u Vector4u::operator+=(const Vector4u& other)
+FORCEINLINE Vector4u& Vector4u::operator+=(const Vector4u& other)
 {
   *this = *this + other;
   return *this;
 }
-FORCEINLINE Vector4u Vector4u::operator-=(const Vector4u& other)
+FORCEINLINE Vector4u& Vector4u::operator-=(const Vector4u& other)
 {
   *this = *this - other;
   return *this;
 }
-FORCEINLINE Vector4u Vector4u::operator*=(const Vector4u& other)
+FORCEINLINE Vector4u& Vector4u::operator*=(const Vector4u& other)
 {
   *this = *this * other;
   return *this;
 }
-FORCEINLINE Vector4u Vector4u::operator/=(const Vector4u& other)
+FORCEINLINE Vector4u& Vector4u::operator/=(const Vector4u& other)
 {
   *this = *this / other;
   return *this;
 }
-FORCEINLINE Vector4u Vector4u::operator%=(const Vector4u& other)
+FORCEINLINE Vector4u& Vector4u::operator%=(const Vector4u& other)
 {
   *this = *this % other;
   return *this;
 }
-FORCEINLINE Vector4u Vector4u::operator+=(uint32 other)
+FORCEINLINE Vector4u& Vector4u::operator+=(uint32 other)
 {
   *this = *this + other;
   return *this;
 }
-FORCEINLINE Vector4u Vector4u::operator-=(uint32 other)
+FORCEINLINE Vector4u& Vector4u::operator-=(uint32 other)
 {
   *this = *this - other;
   return *this;
 }
-FORCEINLINE Vector4u Vector4u::operator*=(uint32 other)
+FORCEINLINE Vector4u& Vector4u::operator*=(uint32 other)
 {
   *this = *this * other;
   return *this;
 }
-FORCEINLINE Vector4u Vector4u::operator/=(uint32 other)
+FORCEINLINE Vector4u& Vector4u::operator/=(uint32 other)
 {
   *this = *this / other;
   return *this;
 }
-FORCEINLINE Vector4u Vector4u::operator%=(uint32 other)
+FORCEINLINE Vector4u& Vector4u::operator%=(uint32 other)
 {
   *this = *this % other;
   return *this;
