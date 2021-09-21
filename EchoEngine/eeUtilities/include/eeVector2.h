@@ -1,18 +1,29 @@
+/**
+* @brief
+* This file defines the Vector2 in its 3 forms: floats, int32 and uint32,
+* as well as its functions, operators and members.
+*/
+
 #pragma once
 
 #include "eePrerequisitesUtilities.h"
 #include "eeMath.h"
 
 namespace eeEngineSDK {
+ /**
+ * @brief
+ * Two dimensional vector made by floats. 
+ * It can be used as a point or as a direction.
+ */
 class EE_UTILITY_EXPORT Vector2f
 {
  public:
   /**
   * @brief
-  * Initializes the vector with a default vaule of 0.
+  * Initializes the vector with a default value of 0.
   *
   * @description
-  * Initializes x and y with its default vaule of 0, because
+  * Initializes x and y with its default value of 0, because
   * no value was given.
   */
   Vector2f();
@@ -21,7 +32,7 @@ class EE_UTILITY_EXPORT Vector2f
   * Initializes the vector with the values given.
   *
   * @description
-  * Initializes x and y with the vaues _x and _y
+  * Initializes x and y with the values _x and _y
   * given.
   *
   * @param _x
@@ -34,7 +45,8 @@ class EE_UTILITY_EXPORT Vector2f
   * @brief
   * Frees the memory allocated on the vector.
   *
-  * @description Releases and deletes all the posible memory
+  * @description 
+  * Releases and deletes all the possible memory
   * allocated in the vector.
   */
   ~Vector2f();
@@ -71,7 +83,7 @@ class EE_UTILITY_EXPORT Vector2f
   * The distance between the point and the other point.
   */
   float 
-  distance(const Vector2f& other) const;
+  getDistance(const Vector2f& other) const;
   /**
   * @brief
   * The length of the vector.
@@ -83,20 +95,33 @@ class EE_UTILITY_EXPORT Vector2f
   * The length of the vector.
   */
   float
-  length() const;
+  getMagnitud() const;
   /**
   * @brief
   * The normalization of the vector.
   *
   * @description
-  * Returns an unitary vector with the same directon
+  * Returns an unitary vector with the same direction
   * of the original.
   *
   * @return
   * The vector normalized.
   */
   Vector2f
-  normalize() const;
+  getNormalize() const;
+  /**
+  * @brief
+  * Normalizes the vector.
+  *
+  * @description
+  * Modifies the vector to its unitary form, maintaining its direction
+  * and returns this new vector.
+  *
+  * @return
+  * The vector normalized.
+  */
+  Vector2f
+  normalize();
   /**
   * @brief
   * A truncate version of the vector with the new size.
@@ -112,7 +137,23 @@ class EE_UTILITY_EXPORT Vector2f
   * The vector truncated with the new size.
   */
   Vector2f
-  truncate(float newSize) const;
+  getTruncate(float newSize) const;
+  /**
+  * @brief
+  * Changes the magnitud of the vector with the new size.
+  *
+  * @description
+  * Modifies the vector with the same direction as the original
+  * but with the new size given and returns the new vector.
+  *
+  * @param newSize
+  * The desired size of the new vector.
+  *
+  * @return
+  * The vector truncated with the new size.
+  */
+  Vector2f
+  truncate(float newSize);
 
   /**
   * @brief
@@ -132,7 +173,7 @@ class EE_UTILITY_EXPORT Vector2f
   operator+(const Vector2f& other) const;
   /**
   * @brief 
-  * The substraction of two vectors.
+  * The subtraction of two vectors.
   *
   * @description 
   * Returns a vector with the subtraction of every component of 
@@ -142,7 +183,7 @@ class EE_UTILITY_EXPORT Vector2f
   * The other vector for the operation.
   *
   * @return
-  * The substraction of the two vectors.
+  * The subtraction of the two vectors.
   */
   Vector2f
   operator-(const Vector2f& other) const;
@@ -210,17 +251,17 @@ class EE_UTILITY_EXPORT Vector2f
   operator+(float other) const;
   /**
   * @brief 
-  * The substraction of the vector minus a number.
+  * The subtraction of the vector minus a number.
   *
   * @description 
-  * Returns a vector with the substraction of every component of
+  * Returns a vector with the subtraction of every component of
   * the original minus the given number.
   *
   * @param other
   * The number for the operation.
   *
   * @return
-  * The substraction of the vector minus the number.
+  * The subtraction of the vector minus the number.
   */
   Vector2f
   operator-(float other) const;
@@ -287,7 +328,7 @@ class EE_UTILITY_EXPORT Vector2f
   * @return
   * The original vector after the operation.
   */
-  Vector2f
+  Vector2f&
   operator=(const Vector2f& other);
 
   /**
@@ -304,7 +345,7 @@ class EE_UTILITY_EXPORT Vector2f
   * @return
   * The original vector after the operation.
   */
-  Vector2f
+  Vector2f&
   operator+=(const Vector2f& other);
   /**
   * @brief
@@ -315,12 +356,12 @@ class EE_UTILITY_EXPORT Vector2f
   * of it self minus their counterparts of the other vector.
   *
   * @param other
-  * The other vector to whom is gonna be substracted.
+  * The other vector to whom is gonna be subtracted.
   *
   * @return
   * The original vector after the operation.
   */
-  Vector2f
+  Vector2f&
   operator-=(const Vector2f& other);
   /**
   * @brief
@@ -336,7 +377,7 @@ class EE_UTILITY_EXPORT Vector2f
   * @return
   * The original vector after the operation.
   */
-  Vector2f
+  Vector2f&
   operator*=(const Vector2f& other);
   /**
   * @brief
@@ -352,23 +393,23 @@ class EE_UTILITY_EXPORT Vector2f
   * @return
   * The original vector after the operation.
   */
-  Vector2f
+  Vector2f&
   operator/=(const Vector2f& other);
   /**
   * @brief
-  * Makes the original vector equal to the itself moduled by the other.
+  * Makes the original vector equal to the itself module by the other.
   *
   * @description
   * Makes every component of the original vector equal to the components
-  * of it self moduled by their counterparts of the other vector.
+  * of it self module by their counterparts of the other vector.
   *
   * @param other
-  * The other vector to whom is gonna be moduled by.
+  * The other vector to whom is gonna be module by.
   *
   * @return
   * The original vector after the operation.
   */
-  Vector2f
+  Vector2f&
   operator%=(const Vector2f& other);
   /**
   * @brief
@@ -384,7 +425,7 @@ class EE_UTILITY_EXPORT Vector2f
   * @return
   * The original vector after the operation.
   */
-  Vector2f
+  Vector2f&
   operator+=(float other);
   /**
   * @brief
@@ -395,12 +436,12 @@ class EE_UTILITY_EXPORT Vector2f
   * of it self minus the number.
   *
   * @param other
-  * The number to whom is gonna be substracted.
+  * The number to whom is gonna be subtracted.
   *
   * @return
   * The original vector after the operation.
   */
-  Vector2f
+  Vector2f&
   operator-=(float other);
   /**
   * @brief
@@ -416,7 +457,7 @@ class EE_UTILITY_EXPORT Vector2f
   * @return
   * The original vector after the operation.
   */
-  Vector2f
+  Vector2f&
   operator*=(float other);
   /**
   * @brief
@@ -432,23 +473,23 @@ class EE_UTILITY_EXPORT Vector2f
   * @return
   * The original vector after the operation.
   */
-  Vector2f
+  Vector2f&
   operator/=(float other);
   /**
   * @brief
-  * Makes the original vector equal to the itself moduled by a number.
+  * Makes the original vector equal to the itself module by a number.
   *
   * @description
   * Makes every component of the original vector equal to the components
-  * of it self moduled by the number.
+  * of it self module by the number.
   *
   * @param other
-  * The number to whom is gonna be moduled by.
+  * The number to whom is gonna be module by.
   *
   * @return
   * The original vector after the operation.
   */
-  Vector2f
+  Vector2f&
   operator%=(float other);
 
   /**
@@ -483,257 +524,236 @@ class EE_UTILITY_EXPORT Vector2f
   */
   bool
   operator!=(const Vector2f& other) const;
-  /**
-  * @brief
-  * Compares the length of the vector to see if it's greater than the other.
-  *
-  * @description
-  * Compares the length of the two vectors to see if the original is greater
-  * than the other.
-  *
-  * @param other
-  * The other vector to check.
-  *
-  * @return
-  * True if the original vector is greater than the other.
-  */
-  bool
-  operator>(const Vector2f& other) const;
-  /**
-  * @brief
-  * Compares the length of the vector to see if it's greater than or equal to 
-  * the other.
-  *
-  * @description
-  * Compares the length of the two vectors to see if the original is greater
-  * than or equla to the other.
-  *
-  * @param other
-  * The other vector to check.
-  *
-  * @return
-  * True if the original vector is greater than or equal to the other.
-  */
-  bool
-  operator>=(const Vector2f& other) const;
-  /**
-  * @brief
-  * Compares the length of the vector to see if it's less than the other.
-  *
-  * @description
-  * Compares the length of the two vectors to see if the original is less
-  * than the other.
-  *
-  * @param other
-  * The other vector to check.
-  *
-  * @return
-  * True if the original vector is less than the other.
-  */
-  bool
-  operator<(const Vector2f& other) const;
-  /**
-  * @brief
-  * Compares the length of the vector to see if it's less than or equal to
-  * the other.
-  *
-  * @description
-  * Compares the length of the two vectors to see if the original is less
-  * than or equla to the other.
-  *
-  * @param other
-  * The other vector to check.
-  *
-  * @return
-  * True if the original vector is less than or equal to the other.
-  */
-  bool
-  operator<=(const Vector2f& other) const;
 
  public:
   /**
   * @brief
-  * The components of the vector, in a union so they can be taken separetly
-  * or together
+  * The components of the vector, in a union so they can be taken separately
+  * or together.
   */
   union 
   {
     struct 
-	{
-	  float x;
-	  float y;
+	  {
+      /*
+      * The x component of the vector
+      */
+      float x;
+      /*
+      * The y component of the vector
+      */
+      float y; 
     };
+    /*
+    * Both components of the vector in an array
+    */
 	float xy[2];
   };
 
+  /*
+  * A vector with 0.0f on its components
+  */
   static const Vector2f ZERO;
 };
 
-FORCEINLINE Vector2f::Vector2f() : x(0.0f), y(0.0f)
+FORCEINLINE 
+Vector2f::Vector2f() : x(0.0f), y(0.0f)
 {
 }
-FORCEINLINE Vector2f::Vector2f(float _x, float _y) : x(_x), y(_y)
+FORCEINLINE 
+Vector2f::Vector2f(float _x, float _y) : x(_x), y(_y)
 {
 }
-FORCEINLINE Vector2f::~Vector2f()
+FORCEINLINE 
+Vector2f::~Vector2f()
 {
 }
-FORCEINLINE float Vector2f::dot(const Vector2f& other) const
+FORCEINLINE float 
+Vector2f::dot(const Vector2f& other) const
 {
   return this->x * other.x + this->y * other.y;
 }
-FORCEINLINE float Vector2f::distance(const Vector2f& other) const
+FORCEINLINE float 
+Vector2f::getDistance(const Vector2f& other) const
 {
   Vector2f d = other - *this;
   return Math::sqrt(d.x * d.x + d.y * d.y);
 }
-FORCEINLINE float Vector2f::length() const
+FORCEINLINE float 
+Vector2f::getMagnitud() const
 {
   return Math::sqrt(this->x * this->x + this->y * this->y);
 }
-FORCEINLINE Vector2f Vector2f::normalize() const
+FORCEINLINE Vector2f 
+Vector2f::getNormalize() const
 {
-  return *this / this->length();
+  return *this / this->getMagnitud();
 }
-FORCEINLINE Vector2f Vector2f::truncate(float newSize) const
+FORCEINLINE Vector2f 
+Vector2f::normalize()
 {
-  Vector2f n = this->normalize();
+  *this = *this / this->getMagnitud();
+  return *this;
+}
+FORCEINLINE Vector2f 
+Vector2f::getTruncate(float newSize) const
+{
+  Vector2f n = this->getNormalize();
   return n * newSize;
 }
-FORCEINLINE Vector2f Vector2f::operator+(const Vector2f& other) const
+FORCEINLINE Vector2f 
+Vector2f::truncate(float newSize)
+{
+  Vector2f n = this->getNormalize();
+  *this = n * newSize;
+  return *this;
+}
+FORCEINLINE Vector2f 
+Vector2f::operator+(const Vector2f& other) const
 {
   return Vector2f(this->x + other.x, this->y + other.y);
 }
-FORCEINLINE Vector2f Vector2f::operator-(const Vector2f& other) const
+FORCEINLINE Vector2f 
+Vector2f::operator-(const Vector2f& other) const
 {
   return Vector2f(this->x - other.x, this->y - other.y);
 }
-FORCEINLINE Vector2f Vector2f::operator*(const Vector2f& other) const
+FORCEINLINE Vector2f 
+Vector2f::operator*(const Vector2f& other) const
 {
   return Vector2f(this->x * other.x, this->y * other.y);
 }
-FORCEINLINE Vector2f Vector2f::operator/(const Vector2f& other) const
+FORCEINLINE Vector2f 
+Vector2f::operator/(const Vector2f& other) const
 {
   return Vector2f(this->x / other.x, this->y / other.y);
 }
-FORCEINLINE Vector2f Vector2f::operator%(const Vector2f& other) const
+FORCEINLINE Vector2f 
+Vector2f::operator%(const Vector2f& other) const
 {
   return Vector2f(Math::fmod(this->x, other.x), 
                   Math::fmod(this->y, other.y));
 }
-FORCEINLINE Vector2f Vector2f::operator+(float other) const
+FORCEINLINE Vector2f 
+Vector2f::operator+(float other) const
 {
   return Vector2f(this->x + other, this->y + other);
 }
-FORCEINLINE Vector2f Vector2f::operator-(float other) const
+FORCEINLINE Vector2f 
+Vector2f::operator-(float other) const
 {
   return Vector2f(this->x - other, this->y - other);
 }
-FORCEINLINE Vector2f Vector2f::operator*(float other) const
+FORCEINLINE Vector2f 
+Vector2f::operator*(float other) const
 {
   return Vector2f(this->x * other, this->y * other);
 }
-FORCEINLINE Vector2f Vector2f::operator/(float other) const
+FORCEINLINE Vector2f 
+Vector2f::operator/(float other) const
 {
   return Vector2f(this->x / other, this->y / other);
 }
-FORCEINLINE Vector2f Vector2f::operator%(float other) const
+FORCEINLINE Vector2f 
+Vector2f::operator%(float other) const
 {
   return Vector2f(Math::fmod(this->x, other), 
 						Math::fmod(this->y, other));
 }
-FORCEINLINE Vector2f Vector2f::operator=(const Vector2f& other)
+FORCEINLINE Vector2f& 
+Vector2f::operator=(const Vector2f& other)
 {
   this->x = other.x;
   this->y = other.y;
   return *this;
 }
-FORCEINLINE Vector2f Vector2f::operator+=(const Vector2f& other)
+FORCEINLINE Vector2f& 
+Vector2f::operator+=(const Vector2f& other)
 {
   *this = *this + other;
   return *this;
 }
-FORCEINLINE Vector2f Vector2f::operator-=(const Vector2f& other)
+FORCEINLINE Vector2f& 
+Vector2f::operator-=(const Vector2f& other)
 {
   *this = *this - other;
   return *this;
 }
-FORCEINLINE Vector2f Vector2f::operator*=(const Vector2f& other)
+FORCEINLINE Vector2f& 
+Vector2f::operator*=(const Vector2f& other)
 {
   *this = *this * other;
   return *this;
 }
-FORCEINLINE Vector2f Vector2f::operator/=(const Vector2f& other)
+FORCEINLINE Vector2f& 
+Vector2f::operator/=(const Vector2f& other)
 {
   *this = *this / other;
   return *this;
 }
-FORCEINLINE Vector2f Vector2f::operator%=(const Vector2f& other)
+FORCEINLINE Vector2f& 
+Vector2f::operator%=(const Vector2f& other)
 {
   *this = *this % other;
   return *this;
 }
-FORCEINLINE Vector2f Vector2f::operator+=(float other)
+FORCEINLINE Vector2f& 
+Vector2f::operator+=(float other)
 {
   *this = *this + other;
   return *this;
 }
-FORCEINLINE Vector2f Vector2f::operator-=(float other)
+FORCEINLINE Vector2f& 
+Vector2f::operator-=(float other)
 {
   *this = *this - other;
   return *this;
 }
-FORCEINLINE Vector2f Vector2f::operator*=(float other)
+FORCEINLINE Vector2f& 
+Vector2f::operator*=(float other)
 {
   *this = *this * other;
   return *this;
 }
-FORCEINLINE Vector2f Vector2f::operator/=(float other)
+FORCEINLINE Vector2f& 
+Vector2f::operator/=(float other)
 {
   *this = *this / other;
   return *this;
 }
-FORCEINLINE Vector2f Vector2f::operator%=(float other)
+FORCEINLINE Vector2f& 
+Vector2f::operator%=(float other)
 {
   *this = *this % other;
   return *this;
 }
-FORCEINLINE bool Vector2f::operator==(const Vector2f& other) const
+FORCEINLINE bool 
+Vector2f::operator==(const Vector2f& other) const
 {
   return (Math::abs(this->x - other.x) < .001f)
       && (Math::abs(this->y - other.y) < .001f);
 }
-FORCEINLINE bool Vector2f::operator!=(const Vector2f& other) const
+FORCEINLINE bool 
+Vector2f::operator!=(const Vector2f& other) const
 {
   return !(*this == other);
 }
-FORCEINLINE bool Vector2f::operator>(const Vector2f& other) const
-{
-  return this->length() > other.length();
-}
-FORCEINLINE bool Vector2f::operator>=(const Vector2f& other) const
-{
-  return this->length() >= other.length();
-}
-FORCEINLINE bool Vector2f::operator<(const Vector2f& other) const
-{
-  return this->length() < other.length();
-}
-FORCEINLINE bool Vector2f::operator<=(const Vector2f& other) const
-{ 
-  return this->length() <= other.length();
-}
 
 
+/**
+* @brief
+* Two dimensional vector made by int32.
+* It can be used as a point or as a direction.
+*/
 class EE_UTILITY_EXPORT Vector2i
 {
  public:
   /**
   * @brief
-  * Initializes the vector with a default vaule of 0.
+  * Initializes the vector with a default value of 0.
   *
   * @description
-  * Initializes x and y with its default vaule of 0, because
+  * Initializes x and y with its default value of 0, because
   * no value was given.
   */
   Vector2i();
@@ -742,7 +762,7 @@ class EE_UTILITY_EXPORT Vector2i
   * Initializes the vector with the values given.
   *
   * @description
-  * Initializes x and y with the vaues _x and _y
+  * Initializes x and y with the values _x and _y
   * given.
   *
   * @param _x
@@ -755,7 +775,8 @@ class EE_UTILITY_EXPORT Vector2i
   * @brief
   * Frees the memory allocated on the vector.
   *
-  * @description Releases and deletes all the posible memory
+  * @description 
+  * Releases and deletes all the possible memory
   * allocated in the vector.
   */
   ~Vector2i();
@@ -792,7 +813,7 @@ class EE_UTILITY_EXPORT Vector2i
   * The distance between the point and the other point.
   */
   float
-  distance(const Vector2i& other) const;
+  getDistance(const Vector2i& other) const;
   /**
   * @brief
   * The length of the vector.
@@ -804,36 +825,7 @@ class EE_UTILITY_EXPORT Vector2i
   * The length of the vector.
   */
   float
-  length() const;
-  /**
-  * @brief
-  * The normalization of the vector.
-  *
-  * @description
-  * Returns an unitary vector with the same directon
-  * of the original.
-  *
-  * @return
-  * The vector normalized.
-  */
-  Vector2f
-  normalize() const;
-  /**
-  * @brief
-  * A truncate version of the vector with the new size.
-  *
-  * @description
-  * Returns a vector with the same direction as the original
-  * but with the new size given.
-  *
-  * @param newSize
-  * The desired size of the new vector.
-  *
-  * @return
-  * The vector truncated with the new size.
-  */
-  Vector2f
-  truncate(float newSize) const;
+  getMagnitude() const;
      
   /**
   * @brief
@@ -853,7 +845,7 @@ class EE_UTILITY_EXPORT Vector2i
   operator+(const Vector2i& other) const;
   /**
   * @brief
-  * The substraction of two vectors.
+  * The subtraction of two vectors.
   *
   * @description
   * Returns a vector with the subtraction of every component of
@@ -863,7 +855,7 @@ class EE_UTILITY_EXPORT Vector2i
   * The other vector for the operation.
   *
   * @return
-  * The substraction of the two vectors.
+  * The subtraction of the two vectors.
   */
   Vector2i
   operator-(const Vector2i& other) const;
@@ -931,17 +923,17 @@ class EE_UTILITY_EXPORT Vector2i
   operator+(int32 other) const;
   /**
   * @brief
-  * The substraction of the vector minus a number.
+  * The subtraction of the vector minus a number.
   *
   * @description
-  * Returns a vector with the substraction of every component of
+  * Returns a vector with the subtraction of every component of
   * the original minus the given number.
   *
   * @param other
   * The number for the operation.
   *
   * @return
-  * The substraction of the vector minus the number.
+  * The subtraction of the vector minus the number.
   */
   Vector2i
   operator-(int32 other) const;
@@ -1008,7 +1000,7 @@ class EE_UTILITY_EXPORT Vector2i
   * @return
   * The original vector after the operation.
   */
-  Vector2i
+  Vector2i&
   operator=(const Vector2i& other);
      
   /**
@@ -1025,7 +1017,7 @@ class EE_UTILITY_EXPORT Vector2i
   * @return
   * The original vector after the operation.
   */
-  Vector2i
+  Vector2i&
   operator+=(const Vector2i& other);
   /**
   * @brief
@@ -1036,12 +1028,12 @@ class EE_UTILITY_EXPORT Vector2i
   * of it self minus their counterparts of the other vector.
   *
   * @param other
-  * The other vector to whom is gonna be substracted.
+  * The other vector to whom is gonna be subtracted.
   *
   * @return
   * The original vector after the operation.
   */
-  Vector2i
+  Vector2i&
   operator-=(const Vector2i& other);
   /**
   * @brief
@@ -1057,7 +1049,7 @@ class EE_UTILITY_EXPORT Vector2i
   * @return
   * The original vector after the operation.
   */
-  Vector2i
+  Vector2i&
   operator*=(const Vector2i& other);
   /**
   * @brief
@@ -1073,23 +1065,23 @@ class EE_UTILITY_EXPORT Vector2i
   * @return
   * The original vector after the operation.
   */
-  Vector2i
+  Vector2i&
   operator/=(const Vector2i& other);
   /**
   * @brief
-  * Makes the original vector equal to the itself moduled by the other.
+  * Makes the original vector equal to the itself module by the other.
   *
   * @description
   * Makes every component of the original vector equal to the components
-  * of it self moduled by their counterparts of the other vector.
+  * of it self module by their counterparts of the other vector.
   *
   * @param other
-  * The other vector to whom is gonna be moduled by.
+  * The other vector to whom is gonna be module by.
   *
   * @return
   * The original vector after the operation.
   */
-  Vector2i
+  Vector2i&
   operator%=(const Vector2i& other);
   /**
   * @brief
@@ -1105,7 +1097,7 @@ class EE_UTILITY_EXPORT Vector2i
   * @return
   * The original vector after the operation.
   */
-  Vector2i
+  Vector2i&
   operator+=(int32 other);
   /**
   * @brief
@@ -1116,12 +1108,12 @@ class EE_UTILITY_EXPORT Vector2i
   * of it self minus the number.
   *
   * @param other
-  * The number to whom is gonna be substracted.
+  * The number to whom is gonna be subtracted.
   *
   * @return
   * The original vector after the operation.
   */
-  Vector2i
+  Vector2i&
   operator-=(int32 other);
   /**
   * @brief
@@ -1137,7 +1129,7 @@ class EE_UTILITY_EXPORT Vector2i
   * @return
   * The original vector after the operation.
   */
-  Vector2i
+  Vector2i&
   operator*=(int32 other);
   /**
   * @brief
@@ -1153,23 +1145,23 @@ class EE_UTILITY_EXPORT Vector2i
   * @return
   * The original vector after the operation.
   */
-  Vector2i
+  Vector2i&
   operator/=(int32 other);
   /**
   * @brief
-  * Makes the original vector equal to the itself moduled by a number.
+  * Makes the original vector equal to the itself module by a number.
   *
   * @description
   * Makes every component of the original vector equal to the components
-  * of it self moduled by the number.
+  * of it self module by the number.
   *
   * @param other
-  * The number to whom is gonna be moduled by.
+  * The number to whom is gonna be module by.
   *
   * @return
   * The original vector after the operation.
   */
-  Vector2i
+  Vector2i&
   operator%=(int32 other);
      
   /**
@@ -1204,250 +1196,203 @@ class EE_UTILITY_EXPORT Vector2i
   */
   bool
   operator!=(const Vector2i& other) const;
-  /**
-  * @brief
-  * Compares the length of the vector to see if it's greater than the other.
-  *
-  * @description
-  * Compares the length of the two vectors to see if the original is greater
-  * than the other.
-  *
-  * @param other
-  * The other vector to check.
-  *
-  * @return
-  * True if the original vector is greater than the other.
-  */
-  bool
-  operator>(const Vector2i& other) const;
-  /**
-  * @brief
-  * Compares the length of the vector to see if it's greater than or equal to
-  * the other.
-  *
-  * @description
-  * Compares the length of the two vectors to see if the original is greater
-  * than or equla to the other.
-  *
-  * @param other
-  * The other vector to check.
-  *
-  * @return
-  * True if the original vector is greater than or equal to the other.
-  */
-  bool
-  operator>=(const Vector2i& other) const;
-  /**
-  * @brief
-  * Compares the length of the vector to see if it's less than the other.
-  *
-  * @description
-  * Compares the length of the two vectors to see if the original is less
-  * than the other.
-  *
-  * @param other
-  * The other vector to check.
-  *
-  * @return
-  * True if the original vector is less than the other.
-  */
-  bool
-  operator<(const Vector2i& other) const;
-  /**
-  * @brief
-  * Compares the length of the vector to see if it's less than or equal to
-  * the other.
-  *
-  * @description
-  * Compares the length of the two vectors to see if the original is less
-  * than or equla to the other.
-  *
-  * @param other
-  * The other vector to check.
-  *
-  * @return
-  * True if the original vector is less than or equal to the other.
-  */
-  bool
-  operator<=(const Vector2i& other) const;
      
  public:
   /**
   * @brief
-  * The components of the vector, in a union so they can be taken separetly
+  * The components of the vector, in a union so they can be taken separately
   * or together
   */
   union
   {
     struct
     {
+      /*
+      * The x component of the vector
+      */
       int32 x;
+      /*
+      * The y component of the vector
+      */
       int32 y;
     };
+    /*
+    * Both components of the vector in an array
+    */
     int32 xy[2];
   };
 
+  /*
+  * A vector with 0 on its components
+  */
   static const Vector2i ZERO;
 };
 
-FORCEINLINE Vector2i::Vector2i() : x(0), y(0)
+FORCEINLINE 
+Vector2i::Vector2i() : x(0), y(0)
 {
 }
-FORCEINLINE Vector2i::Vector2i(int32 _x, int32 _y) : x(_x), y(_y)
+FORCEINLINE 
+Vector2i::Vector2i(int32 _x, int32 _y) : x(_x), y(_y)
 {
 }
-FORCEINLINE Vector2i::~Vector2i()
+FORCEINLINE 
+Vector2i::~Vector2i()
 {
 }
-FORCEINLINE float Vector2i::dot(const Vector2i& other) const
+FORCEINLINE float 
+Vector2i::dot(const Vector2i& other) const
 {
 	return static_cast<float>(this->x * other.x) + 
          static_cast<float>(this->y * other.y);
 }
-FORCEINLINE float Vector2i::distance(const Vector2i& other) const
+FORCEINLINE float 
+Vector2i::getDistance(const Vector2i& other) const
 {
 	Vector2i d = other - *this;
 	return Math::sqrt(static_cast<float>(d.x * d.x) + 
                     static_cast<float>(d.y * d.y));
 }
-FORCEINLINE float Vector2i::length() const
+FORCEINLINE float 
+Vector2i::getMagnitude() const
 {
 	return Math::sqrt(static_cast<float>(this->x * this->x) + 
                     static_cast<float>(this->y * this->y));
 }
-FORCEINLINE Vector2f Vector2i::normalize() const
-{
-	return Vector2f(static_cast<float>(this->x), 
-	                static_cast<float>(this->y)) 
-		            / this->length();
-}
-FORCEINLINE Vector2f Vector2i::truncate(float newSize) const
-{
-	Vector2f n = this->normalize();
-	return n * newSize;
-}
-FORCEINLINE Vector2i Vector2i::operator+(const Vector2i& other) const
+FORCEINLINE Vector2i 
+Vector2i::operator+(const Vector2i& other) const
 {
 	return Vector2i(this->x + other.x, this->y + other.y);
 }
-FORCEINLINE Vector2i Vector2i::operator-(const Vector2i& other) const
+FORCEINLINE Vector2i 
+Vector2i::operator-(const Vector2i& other) const
 {
 	return Vector2i(this->x - other.x, this->y - other.y);
 }
-FORCEINLINE Vector2i Vector2i::operator*(const Vector2i& other) const
+FORCEINLINE Vector2i 
+Vector2i::operator*(const Vector2i& other) const
 {
 	return Vector2i(this->x * other.x, this->y * other.y);
 }
-FORCEINLINE Vector2i Vector2i::operator/(const Vector2i& other) const
+FORCEINLINE Vector2i 
+Vector2i::operator/(const Vector2i& other) const
 {
 	return Vector2i(this->x / other.x, this->y / other.y);
 }
-FORCEINLINE Vector2i Vector2i::operator%(const Vector2i& other) const
+FORCEINLINE Vector2i 
+Vector2i::operator%(const Vector2i& other) const
 {
 	return Vector2i(this->x % other.x, this->y % other.y);
 }
-FORCEINLINE Vector2i Vector2i::operator+(int32 other) const
+FORCEINLINE Vector2i 
+Vector2i::operator+(int32 other) const
 {
 	return Vector2i(this->x + other, this->y + other);
 }
-FORCEINLINE Vector2i Vector2i::operator-(int32 other) const
+FORCEINLINE Vector2i 
+Vector2i::operator-(int32 other) const
 {
 	return Vector2i(this->x - other, this->y - other);
 }
-FORCEINLINE Vector2i Vector2i::operator*(int32 other) const
+FORCEINLINE Vector2i 
+Vector2i::operator*(int32 other) const
 {
 	return Vector2i(this->x * other, this->y * other);
 }
-FORCEINLINE Vector2i Vector2i::operator/(int32 other) const
+FORCEINLINE Vector2i 
+Vector2i::operator/(int32 other) const
 {
 	return Vector2i(this->x / other, this->y / other);
 }
-FORCEINLINE Vector2i Vector2i::operator%(int32 other) const
+FORCEINLINE Vector2i 
+Vector2i::operator%(int32 other) const
 {
 	return Vector2i(this->x % other, this->y % other);
 }
-FORCEINLINE Vector2i Vector2i::operator=(const Vector2i& other)
+FORCEINLINE Vector2i& 
+Vector2i::operator=(const Vector2i& other)
 {
 	this->x = other.x;
 	this->y = other.y;
 	return *this;
 }
-FORCEINLINE Vector2i Vector2i::operator+=(const Vector2i& other)
+FORCEINLINE Vector2i& 
+Vector2i::operator+=(const Vector2i& other)
 {
 	*this = *this + other;
 	return *this;
 }
-FORCEINLINE Vector2i Vector2i::operator-=(const Vector2i& other)
+FORCEINLINE Vector2i& 
+Vector2i::operator-=(const Vector2i& other)
 {
 	*this = *this - other;
 	return *this;
 }
-FORCEINLINE Vector2i Vector2i::operator*=(const Vector2i& other)
+FORCEINLINE Vector2i& 
+Vector2i::operator*=(const Vector2i& other)
 {
 	*this = *this * other;
 	return *this;
 }
-FORCEINLINE Vector2i Vector2i::operator/=(const Vector2i& other)
+FORCEINLINE Vector2i& 
+Vector2i::operator/=(const Vector2i& other)
 {
 	*this = *this / other;
 	return *this;
 }
-FORCEINLINE Vector2i Vector2i::operator%=(const Vector2i& other)
+FORCEINLINE Vector2i& 
+Vector2i::operator%=(const Vector2i& other)
 {
 	*this = *this % other;
 	return *this;
 }
-FORCEINLINE Vector2i Vector2i::operator+=(int32 other)
+FORCEINLINE Vector2i& 
+Vector2i::operator+=(int32 other)
 {
 	*this = *this + other;
 	return *this;
 }
-FORCEINLINE Vector2i Vector2i::operator-=(int32 other)
+FORCEINLINE Vector2i& 
+Vector2i::operator-=(int32 other)
 {
 	*this = *this - other;
 	return *this;
 }
-FORCEINLINE Vector2i Vector2i::operator*=(int32 other)
+FORCEINLINE Vector2i& 
+Vector2i::operator*=(int32 other)
 {
 	*this = *this * other;
 	return *this;
 }
-FORCEINLINE Vector2i Vector2i::operator/=(int32 other)
+FORCEINLINE Vector2i& 
+Vector2i::operator/=(int32 other)
 {
 	*this = *this / other;
 	return *this;
 }
-FORCEINLINE Vector2i Vector2i::operator%=(int32 other)
+FORCEINLINE Vector2i& 
+Vector2i::operator%=(int32 other)
 {
 	*this = *this % other;
 	return *this;
 }
-FORCEINLINE bool Vector2i::operator==(const Vector2i& other) const
+FORCEINLINE bool 
+Vector2i::operator==(const Vector2i& other) const
 {
 	return this->x == other.x && this->y == other.y;
 }
-FORCEINLINE bool Vector2i::operator!=(const Vector2i& other) const
+FORCEINLINE bool 
+Vector2i::operator!=(const Vector2i& other) const
 {
 	return !(*this == other);
 }
-FORCEINLINE bool Vector2i::operator>(const Vector2i& other) const
-{
-	return this->length() > other.length();
-}
-FORCEINLINE bool Vector2i::operator>=(const Vector2i& other) const
-{
-	return this->length() >= other.length();
-}
-FORCEINLINE bool Vector2i::operator<(const Vector2i& other) const
-{
-	return this->length() < other.length();
-}
-FORCEINLINE bool Vector2i::operator<=(const Vector2i& other) const
-{
-	return this->length() <= other.length();
-}
 
 
+/**
+* @brief
+* Two dimensional vector made by uint32.
+* It can be used as a point or as a direction.
+*/
 class EE_UTILITY_EXPORT Vector2u
 {
  public:
@@ -1478,7 +1423,8 @@ class EE_UTILITY_EXPORT Vector2u
 	* @brief
 	* Frees the memory allocated on the vector.
 	*
-	* @description Releases and deletes all the possible memory
+	* @description 
+  * Releases and deletes all the possible memory
 	* allocated in the vector.
 	*/
 	~Vector2u();
@@ -1515,7 +1461,7 @@ class EE_UTILITY_EXPORT Vector2u
 	* The distance between the point and the other point.
 	*/
 	float
-	distance(const Vector2u& other) const;
+	getDistance(const Vector2u& other) const;
 	/**
 	* @brief
 	* The length of the vector.
@@ -1527,36 +1473,7 @@ class EE_UTILITY_EXPORT Vector2u
 	* The length of the vector.
 	*/
 	float
-	magnitud() const;
-	/**
-	* @brief
-	* The normalization of the vector.
-	*
-	* @description
-	* Returns an unitary vector with the same direction
-	* of the original.
-	*
-	* @return
-	* The vector normalized.
-	*/
-	Vector2f
-	getNormalize() const;
-	/**
-	* @brief
-	* A truncate version of the vector with the new size.
-	*
-	* @description
-	* Returns a vector with the same direction as the original
-	* but with the new size given.
-	*
-	* @param newSize
-	* The desired size of the new vector.
-	*
-	* @return
-	* The vector truncated with the new size.
-	*/
-	Vector2f
-	getTruncate(float newSize) const;
+	getMagnitud() const;
 
 	/**
 	* @brief
@@ -1731,7 +1648,7 @@ class EE_UTILITY_EXPORT Vector2u
 	* @return
 	* The original vector after the operation.
 	*/
-	Vector2u
+	Vector2u&
 	operator=(const Vector2u& other);
 
 	/**
@@ -1748,7 +1665,7 @@ class EE_UTILITY_EXPORT Vector2u
 	* @return
 	* The original vector after the operation.
 	*/
-	Vector2u
+	Vector2u&
 	operator+=(const Vector2u& other);
 	/**
 	* @brief
@@ -1764,7 +1681,7 @@ class EE_UTILITY_EXPORT Vector2u
 	* @return
 	* The original vector after the operation.
 	*/
-	Vector2u
+	Vector2u&
 	operator-=(const Vector2u& other);
 	/**
 	* @brief
@@ -1780,7 +1697,7 @@ class EE_UTILITY_EXPORT Vector2u
 	* @return
 	* The original vector after the operation.
 	*/
-	Vector2u
+	Vector2u&
 	operator*=(const Vector2u& other);
 	/**
 	* @brief
@@ -1796,23 +1713,23 @@ class EE_UTILITY_EXPORT Vector2u
 	* @return
 	* The original vector after the operation.
 	*/
-	Vector2u
+	Vector2u&
 	operator/=(const Vector2u& other);
 	/**
 	* @brief
-	* Makes the original vector equal to the itself moduled by the other.
+	* Makes the original vector equal to the itself module by the other.
 	*
 	* @description
 	* Makes every component of the original vector equal to the components
-	* of it self moduled by their counterparts of the other vector.
+	* of it self module by their counterparts of the other vector.
 	*
 	* @param other
-	* The other vector to whom is gonna be moduled by.
+	* The other vector to whom is gonna be module by.
 	*
 	* @return
 	* The original vector after the operation.
 	*/
-	Vector2u
+	Vector2u&
 	operator%=(const Vector2u& other);
 	/**
 	* @brief
@@ -1828,7 +1745,7 @@ class EE_UTILITY_EXPORT Vector2u
 	* @return
 	* The original vector after the operation.
 	*/
-	Vector2u
+	Vector2u&
 	operator+=(uint32 other);
 	/**
 	* @brief
@@ -1844,7 +1761,7 @@ class EE_UTILITY_EXPORT Vector2u
 	* @return
 	* The original vector after the operation.
 	*/
-	Vector2u
+	Vector2u&
 	operator-=(uint32 other);
 	/**
 	* @brief
@@ -1860,7 +1777,7 @@ class EE_UTILITY_EXPORT Vector2u
 	* @return
 	* The original vector after the operation.
 	*/
-	Vector2u
+	Vector2u&
 	operator*=(uint32 other);
 	/**
 	* @brief
@@ -1876,23 +1793,23 @@ class EE_UTILITY_EXPORT Vector2u
 	* @return
 	* The original vector after the operation.
 	*/
-	Vector2u
+	Vector2u&
 	operator/=(uint32 other);
 	/**
 	* @brief
-	* Makes the original vector equal to the itself moduled by a number.
+	* Makes the original vector equal to the itself module by a number.
 	*
 	* @description
 	* Makes every component of the original vector equal to the components
-	* of it self moduled by the number.
+	* of it self module by the number.
 	*
 	* @param other
-	* The number to whom is gonna be moduled by.
+	* The number to whom is gonna be module by.
 	*
 	* @return
 	* The original vector after the operation.
 	*/
-	Vector2u
+	Vector2u&
 	operator%=(uint32 other);
 
 	/**
@@ -1952,12 +1869,24 @@ class EE_UTILITY_EXPORT Vector2u
   {
     struct
     {
+      /*
+      * The x component of the vector
+      */
       uint32 x;
+      /*
+      * The y component of the vector
+      */
       uint32 y;
     };
+    /*
+    * Both components of the vector in an array
+    */
     uint32 xy[2];
   };
-  
+
+  /*
+  * A vector with 0u on its components
+  */
   static const Vector2u ZERO;
 };
 
@@ -1980,30 +1909,17 @@ Vector2u::dot(const Vector2u& other) const
          static_cast<float>(this->y * other.y);
 }
 FORCEINLINE float 
-Vector2u::distance(const Vector2u& other) const
+Vector2u::getDistance(const Vector2u& other) const
 {
 	Vector2u d = other - *this;
 	return Math::sqrt(static_cast<float>(d.x * d.x) + 
                     static_cast<float>(d.y * d.y));
 }
 FORCEINLINE float 
-Vector2u::magnitud() const
+Vector2u::getMagnitud() const
 {
 	return Math::sqrt(static_cast<float>(this->x * this->x) + 
                     static_cast<float>(this->y * this->y));
-}
-FORCEINLINE Vector2f 
-Vector2u::getNormalize() const
-{
-	return Vector2f(static_cast<float>(this->x),
-		static_cast<float>(this->y))
-		/ this->magnitud();
-}
-FORCEINLINE Vector2f 
-Vector2u::getTruncate(float newSize) const
-{
-	Vector2f n = this->getNormalize();
-	return n * newSize;
 }
 FORCEINLINE Vector2u 
 Vector2u::operator+(const Vector2u& other) const
@@ -2055,68 +1971,68 @@ Vector2u::operator%(uint32 other) const
 {
 	return Vector2u(this->x % other, this->y % other);
 }
-FORCEINLINE Vector2u 
+FORCEINLINE Vector2u& 
 Vector2u::operator=(const Vector2u& other)
 {
 	this->x = other.x;
 	this->y = other.y;
 	return *this;
 }
-FORCEINLINE Vector2u 
+FORCEINLINE Vector2u& 
 Vector2u::operator+=(const Vector2u& other)
 {
 	*this = *this + other;
 	return *this;
 }
-FORCEINLINE Vector2u 
+FORCEINLINE Vector2u& 
 Vector2u::operator-=(const Vector2u& other)
 {
 	*this = *this - other;
 	return *this;
 }
-FORCEINLINE Vector2u 
+FORCEINLINE Vector2u& 
 Vector2u::operator*=(const Vector2u& other)
 {
 	*this = *this * other;
 	return *this;
 }
-FORCEINLINE Vector2u 
+FORCEINLINE Vector2u& 
 Vector2u::operator/=(const Vector2u& other)
 {
 	*this = *this / other;
 	return *this;
 }
-FORCEINLINE Vector2u 
+FORCEINLINE Vector2u& 
 Vector2u::operator%=(const Vector2u& other)
 {
 	*this = *this % other;
 	return *this;
 }
-FORCEINLINE Vector2u 
+FORCEINLINE Vector2u& 
 Vector2u::operator+=(uint32 other)
 {
 	*this = *this + other;
 	return *this;
 }
-FORCEINLINE Vector2u 
+FORCEINLINE Vector2u& 
 Vector2u::operator-=(uint32 other)
 {
 	*this = *this - other;
 	return *this;
 }
-FORCEINLINE Vector2u 
+FORCEINLINE Vector2u& 
 Vector2u::operator*=(uint32 other)
 {
 	*this = *this * other;
 	return *this;
 }
-FORCEINLINE Vector2u 
+FORCEINLINE Vector2u& 
 Vector2u::operator/=(uint32 other)
 {
 	*this = *this / other;
 	return *this;
 }
-FORCEINLINE Vector2u 
+FORCEINLINE Vector2u& 
 Vector2u::operator%=(uint32 other)
 {
 	*this = *this % other;
