@@ -78,7 +78,8 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * The determinant of the matrix.
   */
-  float determinant();
+  float 
+  determinant();
   /**
   * @brief
   * Calculates the transpose of the matrix.
@@ -89,7 +90,8 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * The transpose of the matrix.
   */
-  Matrix2f transpose();
+  Matrix2f 
+  transpose();
   /**
   * @brief
   * Calculates the inverse of the matrix.
@@ -100,7 +102,8 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * The inverse of the matrix.
   */
-  Matrix2f inverse();
+  Matrix2f 
+  inverse();
 
   /**
   * @brief
@@ -115,7 +118,8 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * The sum of the two matrices.
   */
-  Matrix2f operator+(const Matrix2f& other);
+  Matrix2f 
+  operator+(const Matrix2f& other);
   /**
   * @brief
   * The operator '-' with other matrix.
@@ -129,7 +133,8 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * The substraction of the two matrices.
   */
-  Matrix2f operator-(const Matrix2f& other);
+  Matrix2f 
+  operator-(const Matrix2f& other);
   /**
   * @brief
   * The operator '*' with other matrix.
@@ -143,7 +148,8 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * The multiplication of the two matrices.
   */
-  Matrix2f operator*(const Matrix2f& other);
+  Matrix2f 
+  operator*(const Matrix2f& other);
   /**
   * @brief
   * The operator '*' with a number.
@@ -157,7 +163,8 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * The multiplication of the values of the matrix, time the number.
   */
-  Matrix2f operator*(float k);
+  Matrix2f 
+  operator*(float k);
 
   /**
   * @brief
@@ -173,7 +180,8 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * This matrix with its values changed.
   */
-  Matrix2f operator=(const Matrix2f& other);
+  Matrix2f 
+  operator=(const Matrix2f& other);
 
   /**
   * @brief
@@ -189,7 +197,8 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * This matrix with its values changed.
   */
-  Matrix2f operator+=(const Matrix2f& other);
+  Matrix2f 
+  operator+=(const Matrix2f& other);
   /**
   * @brief
   * The operator '-=' with other matrix.
@@ -204,7 +213,8 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * This matrix with its values changed.
   */
-  Matrix2f operator-=(const Matrix2f& other);
+  Matrix2f 
+  operator-=(const Matrix2f& other);
   /**
   * @brief
   * The operator '*=' with other matrix.
@@ -219,7 +229,8 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * This matrix with its values changed.
   */
-  Matrix2f operator*=(const Matrix2f& other);
+  Matrix2f 
+  operator*=(const Matrix2f& other);
   /**
   * @brief
   * The operator '*=' with a value.
@@ -234,7 +245,8 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * This matrix with its values changed.
   */
-  Matrix2f operator*=(float k);
+  Matrix2f 
+  operator*=(float k);
 
   /**
   * @brief
@@ -249,7 +261,8 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * True if the two matrices are equal.
   */
-  bool operator==(const Matrix2f& other);
+  bool 
+  operator==(const Matrix2f& other);
 
  public:
   union
