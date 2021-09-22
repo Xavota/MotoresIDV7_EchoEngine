@@ -8,7 +8,8 @@
 #include "../eeUtilities/include/eeVector4.h"
 #include "../eeUtilities/include/eeMatrix2.h"
 #include "../eeUtilities/include/eeMatrix3.h"
-
+#include "../eeUtilities/include/eeMatrix4.h"
+	
 using eeEngineSDK::Math;
 using eeEngineSDK::int32;
 using eeEngineSDK::uint32;
@@ -32,6 +33,10 @@ using eeEngineSDK::Matrix2u;
 using eeEngineSDK::Matrix3f;
 using eeEngineSDK::Matrix3i;
 using eeEngineSDK::Matrix3u;
+
+using eeEngineSDK::Matrix4f;
+using eeEngineSDK::Matrix4i;
+using eeEngineSDK::Matrix4u;
 
 TEST(eeUtilities, Basic_Type_Sizes)
 {
@@ -350,11 +355,11 @@ TEST(eeUtilities, Vector3)
   EXPECT_TRUE(vf == Vector3f( 1.0f,  1.0f,  1.0f));
   vf -= 3.0f;
   EXPECT_TRUE(vf == Vector3f(-2.0f, -2.0f, -2.0f));
-  vf *= 3.0f;									 	    
+  vf *= 3.0f;
   EXPECT_TRUE(vf == Vector3f(-6.0f, -6.0f, -6.0f));
-  vf /= 2.0f;									 	    
+  vf /= 2.0f;
   EXPECT_TRUE(vf == Vector3f(-3.0f, -3.0f, -3.0f));
-  vf %= 2.0f;									 	    
+  vf %= 2.0f;
   EXPECT_TRUE(vf == Vector3f(-1.0f, -1.0f, -1.0f));
   
   
@@ -406,13 +411,13 @@ TEST(eeUtilities, Vector3)
   // Assign operators with other vectors
   vi += vi2;
   EXPECT_TRUE(vi == Vector3i( 1,  4, -8));
-  vi -= vi2;							   	   
+  vi -= vi2;
   EXPECT_TRUE(vi == Vector3i( 2,  2, -6));
-  vi /= vi2;							   	   
+  vi /= vi2;
   EXPECT_TRUE(vi == Vector3i(-2,  1,  3));
-  vi *= vi2;							   	   
+  vi *= vi2;
   EXPECT_TRUE(vi == Vector3i( 2,  2, -6));
-  vi %= vi2;							   	   
+  vi %= vi2;
   EXPECT_TRUE(vi == Vector3i( 0,  0,  0));
 
   // Assign operators with numbers
@@ -504,82 +509,82 @@ TEST(eeUtilities, Vector3)
 
 TEST(eeUtilities, Vector4)
 {
-	/* Vector4f */
+  /* Vector4f */
   // Size
   EXPECT_EQ(sizeof(Vector4f), 16);
 
-	// Default constructor
-	Vector4f vf;
-	EXPECT_EQ(vf, Vector4f::ZERO);
+  // Default constructor
+  Vector4f vf;
+  EXPECT_EQ(vf, Vector4f::ZERO);
 
-	// operator=
-	vf = Vector4f(-7.0f, 4.0f, 6.0f, -4.0f);
-	EXPECT_EQ(vf, Vector4f(-7.0f, 4.0f, 6.0f, -4.0f));
+  // operator=
+  vf = Vector4f(-7.0f, 4.0f, 6.0f, -4.0f);
+  EXPECT_EQ(vf, Vector4f(-7.0f, 4.0f, 6.0f, -4.0f));
 
-	// Custom constructor constructor
-	Vector4f vf2(-5.0f, 2.0f, 4.0f, -6.0f);
-	EXPECT_EQ(vf2, Vector4f(-5.0f, 2.0f, 4.0f, -6.0f));
+  // Custom constructor constructor
+  Vector4f vf2(-5.0f, 2.0f, 4.0f, -6.0f);
+  EXPECT_EQ(vf2, Vector4f(-5.0f, 2.0f, 4.0f, -6.0f));
 
-	// Functions
-	EXPECT_EQ(vf.dot(vf2), 91.0f);
+  // Functions
+  EXPECT_EQ(vf.dot(vf2), 91.0f);
 
-	EXPECT_EQ(vf.getDistance(vf2), 4.0f);
-	EXPECT_EQ(vf2.getMagnitude(), 9.0f);
+  EXPECT_EQ(vf.getDistance(vf2), 4.0f);
+  EXPECT_EQ(vf2.getMagnitude(), 9.0f);
 
   float mag = vf.getMagnitude();
-	EXPECT_TRUE(vf.getNormalize() == Vector4f(-0.64715023f,  
+  EXPECT_TRUE(vf.getNormalize() == Vector4f(-0.64715023f,  
                                                           0.36980013f,  
                                                           0.55470020f, 
                                                          -0.36980013f));
   vf.normalize();
-	EXPECT_TRUE(vf == Vector4f(-0.64715023f,  
+  EXPECT_TRUE(vf == Vector4f(-0.64715023f,  
                                            0.36980013f,  
                                            0.55470020f, 
                                           -0.36980013f));
 
-	EXPECT_TRUE(vf.getTruncate(7.0f) == Vector4f(-4.53005160f, 
+  EXPECT_TRUE(vf.getTruncate(7.0f) == Vector4f(-4.53005160f, 
                                                              2.58860092f, 
                                                              3.88290137f, 
                                                             -2.58860092f));
   vf.truncate(7.0f);
-	EXPECT_TRUE(vf == Vector4f(-4.53005160f, 
+  EXPECT_TRUE(vf == Vector4f(-4.53005160f, 
                                            2.58860092f, 
                                            3.88290137f, 
                                           -2.58860092f));
   vf.truncate(mag);
 
-	// Operators with other vectors
-	//vf  = {-7.0f,  4.0f,  6.0f, -4.0f}
-	//vf2 = {-5.0f,  2.0f,  4.0f, -6.0f}
-	EXPECT_TRUE(vf + vf2 == Vector4f(-12.0f,  6.0f,  
+  // Operators with other vectors
+  //vf  = {-7.0f,  4.0f,  6.0f, -4.0f}
+  //vf2 = {-5.0f,  2.0f,  4.0f, -6.0f}
+  EXPECT_TRUE(vf + vf2 == Vector4f(-12.0f,  6.0f,  
                                                  10.0f, -10.0f));
-	EXPECT_TRUE(vf - vf2 == Vector4f(-2.0f,   2.0f,  
+  EXPECT_TRUE(vf - vf2 == Vector4f(-2.0f,   2.0f,  
                                                  2.0f,   2.0f));
-	EXPECT_TRUE(vf * vf2 == Vector4f( 35.0f,  8.0f,  
+  EXPECT_TRUE(vf * vf2 == Vector4f( 35.0f,  8.0f,  
                                                  24.0f,  24.0f));
-	EXPECT_TRUE(vf / vf2 == Vector4f( 1.4f,   2.0f,  
+  EXPECT_TRUE(vf / vf2 == Vector4f( 1.4f,   2.0f,  
                                                  1.5f,   0.66666667f));
-	EXPECT_TRUE(vf % vf2 == Vector4f(-2.0f,   0.0f,  
+  EXPECT_TRUE(vf % vf2 == Vector4f(-2.0f,   0.0f,  
                                                  2.0f,  -4.0f));
 
-	// Operetors with numbers
-	EXPECT_TRUE(vf + 1.0f == Vector4f(-6.0f,   5.0f,   
+  // Operetors with numbers
+  EXPECT_TRUE(vf + 1.0f == Vector4f(-6.0f,   5.0f,   
                                                   7.0f,  -3.0f));
-	EXPECT_TRUE(vf - 2.0f == Vector4f(-9.0f,   2.0f,   
+  EXPECT_TRUE(vf - 2.0f == Vector4f(-9.0f,   2.0f,   
                                                   4.0f,  -6.0f));
-	EXPECT_TRUE(vf * 3.0f == Vector4f(-21.0f,  12.0f,  
+  EXPECT_TRUE(vf * 3.0f == Vector4f(-21.0f,  12.0f,  
                                                   18.0f, -12.0f));
-	EXPECT_TRUE(vf / 2.0f == Vector4f(-3.5f,   2.0f,   
+  EXPECT_TRUE(vf / 2.0f == Vector4f(-3.5f,   2.0f,   
                                                   3.0f,  -2.0f));
-	EXPECT_TRUE(vf % 1.5f == Vector4f(-1.0f,   1.0f,   
+  EXPECT_TRUE(vf % 1.5f == Vector4f(-1.0f,   1.0f,   
                                                   0.0f,  -1.0f));
 
 
-	// Asign operators with other vectors
-	vf += vf2;
-	EXPECT_TRUE(vf == Vector4f(-12.0f,  6.0f,  10.0f, -10.0f));
-	vf -= vf2;
-	EXPECT_TRUE(vf == Vector4f(-7.0f,   4.0f,  6.0f,  -4.0f));
+  // Asign operators with other vectors
+  vf += vf2;
+  EXPECT_TRUE(vf == Vector4f(-12.0f,  6.0f,  10.0f, -10.0f));
+  vf -= vf2;
+  EXPECT_TRUE(vf == Vector4f(-7.0f,   4.0f,  6.0f,  -4.0f));
   vf /= vf2;
   EXPECT_TRUE(vf == Vector4f( 1.4f,   2.0f,  1.5f,   0.6666667f));
   vf *= vf2;
@@ -587,11 +592,11 @@ TEST(eeUtilities, Vector4)
   vf %= vf2;
   EXPECT_TRUE(vf == Vector4f(-2.0f,   0.0f,  2.0f,  -4.0f));
 
-	// Assign operators with numbers
-	vf += 1.0f;
-	EXPECT_TRUE(vf == Vector4f(-1.0f,   1.0f,  3.0f,  -3.0f));
-	vf -= 3.0f;
-	EXPECT_TRUE(vf == Vector4f(-4.0f,  -2.0f,  0.0f,  -6.0f));
+  // Assign operators with numbers
+  vf += 1.0f;
+  EXPECT_TRUE(vf == Vector4f(-1.0f,   1.0f,  3.0f,  -3.0f));
+  vf -= 3.0f;
+  EXPECT_TRUE(vf == Vector4f(-4.0f,  -2.0f,  0.0f,  -6.0f));
   vf *= 3.0f;
   EXPECT_TRUE(vf == Vector4f(-12.0f, -6.0f,  0.0f,  -18.0f));
   vf /= 2.0f;
@@ -600,8 +605,8 @@ TEST(eeUtilities, Vector4)
   EXPECT_TRUE(vf == Vector4f(-0.0f,  -1.0f,  0.0f,  -1.0f));
 
 
-	// Logic operators
-	EXPECT_TRUE(vf != vf2);
+  // Logic operators
+  EXPECT_TRUE(vf != vf2);
 
 
 
@@ -1184,6 +1189,339 @@ TEST(eeUtilities, Matrix3)
   EXPECT_TRUE(cst3u == Matrix3u(3u, 3u, 3u,
                                 3u, 3u, 3u,
                                 3u, 3u, 3u));
+}
+
+TEST(eeUtilities, Matrix4)
+{
+  /* Matrix4f */
+  // Size
+  EXPECT_EQ(sizeof(Matrix4f), 64);
+
+  // Default constructor and matrix ZERO
+  Matrix4f deff;
+  EXPECT_TRUE(deff == Matrix4f::ZERO);
+
+  // Custom constructor 1 and matrix ONES
+  float mf[16] = { 1.0f, 1.0f, 1.0f, 1.0f,
+                   1.0f, 1.0f, 1.0f, 1.0f,
+                   1.0f, 1.0f, 1.0f, 1.0f,
+                   1.0f, 1.0f, 1.0f, 1.0f };
+  Matrix4f cst1f(mf);
+  EXPECT_TRUE(cst1f == Matrix4f::ONES);
+
+  // Custom constructor 2 and matrix IDENTITY
+  Matrix4f cst2f(Vector4f(1.0f, 0.0f, 0.0f, 0.0f),
+                 Vector4f(0.0f, 1.0f, 0.0f, 0.0f),
+                 Vector4f(0.0f, 0.0f, 1.0f, 0.0f),
+                 Vector4f(0.0f, 0.0f, 0.0f, 1.0f));
+  EXPECT_TRUE(cst2f == Matrix4f::IDENTITY);
+
+  // Custom constructor 3
+  Matrix4f cst3f(1.0f, 2.0f, 3.0f, 5.0f,
+                 4.0f, 6.0f, 7.0f, 8.0f,
+                 8.0f, 7.0f, 6.0f, 5.0f,
+                 4.0f, 3.0f, 2.0f, 1.0f);
+  EXPECT_TRUE(cst3f == Matrix4f(Vector4f(1.0f, 2.0f, 3.0f, 5.0f),
+                                Vector4f(4.0f, 6.0f, 7.0f, 8.0f),
+                                Vector4f(8.0f, 7.0f, 6.0f, 5.0f),
+                                Vector4f(4.0f, 3.0f, 2.0f, 1.0f)));
+
+
+  // Functions
+  EXPECT_EQ(cst3f.getDeterminant(), -4.0f);
+  EXPECT_TRUE(cst3f.getTranspose() == Matrix4f(1.0f, 4.0f, 8.0f, 4.0f,
+                                               2.0f, 6.0f, 7.0f, 3.0f,
+                                               3.0f, 7.0f, 6.0f, 2.0f,
+                                               5.0f, 8.0f, 5.0f, 1.0f));
+  EXPECT_TRUE(cst3f.getInverse() == Matrix4f( 0.0f, -1.0f,  2.25f, -3.25f ,
+                                              1.0f,  2.0f, -6.25f,  10.25f,
+                                             -2.0f, -1.0f,  5.5f , -9.5f  ,
+                                              1.0f,  0.0f, -1.25f,  2.25f  ));
+
+  Matrix4f temp(1.0f, 2.0f, 3.0f, 5.0f,
+                4.0f, 6.0f, 7.0f, 8.0f,
+                8.0f, 7.0f, 6.0f, 5.0f,
+                4.0f, 3.0f, 2.0f, 1.0f);
+  temp.transpose();
+  EXPECT_TRUE(temp == Matrix4f(1.0f, 4.0f, 8.0f, 4.0f,
+                               2.0f, 6.0f, 7.0f, 3.0f,
+                               3.0f, 7.0f, 6.0f, 2.0f,
+                               5.0f, 8.0f, 5.0f, 1.0f));
+  temp.inverse();
+  EXPECT_TRUE(temp == Matrix4f( 0.0f ,  1.0f  , -2.0f,  1.0f ,
+                               -1.0f ,  2.0f  , -1.0f,  0.0f ,
+                                2.25f, -6.25f ,  5.5f, -1.25f,
+                               -3.25f,  10.25f, -9.5f,  2.25f ));
+
+
+  Matrix4f transform;
+  transform = Matrix4f::TranslationMatrix(Vector3f(1.0f, 2.0f, 3.0f));
+  EXPECT_TRUE(transform == Matrix4f(1.0f, 0.0f, 0.0f, 1.0f,
+                                    0.0f, 1.0f, 0.0f, 2.0f,
+                                    0.0f, 0.0f, 1.0f, 3.0f,
+                                    0.0f, 0.0f, 0.0f, 1.0f));
+  transform = Matrix4f::RotationMatrix(Vector3f(Math::kPI * 0.5f,
+                                                Math::kPI,
+                                                Math::kPI / 3.0f));
+  EXPECT_TRUE(transform == Matrix4f(-0.5f      ,  0.0f,  0.8660254f, 0.0f,
+                                    -0.8660254f,  0.0f, -0.5f      , 0.0f,
+                                     0.0f      , -1.0f,  0.0f      , 0.0f,
+                                     0.0f      ,  0.0f,  0.0f      , 1.0f));
+  transform = Matrix4f::ScaleMatrix(Vector3f(1.0f, 3.0f, 5.0f));
+  EXPECT_TRUE(transform == Matrix4f(1.0f, 0.0f, 0.0f, 0.0f,
+                                    0.0f, 3.0f, 0.0f, 0.0f,
+                                    0.0f, 0.0f, 5.0f, 0.0f,
+                                    0.0f, 0.0f, 0.0f, 1.0f));
+
+  transform = Matrix4f::IDENTITY;
+  transform.translate(Vector3f(2.0f, 4.0f, 1.0f));
+  EXPECT_TRUE(transform == Matrix4f(1.0f, 0.0f, 0.0f, 2.0f,
+                                    0.0f, 1.0f, 0.0f, 4.0f,
+                                    0.0f, 0.0f, 1.0f, 1.0f,
+                                    0.0f, 0.0f, 0.0f, 1.0f));
+  transform.scale(Vector3f(3.0f, 2.0f, 4.0f));
+  EXPECT_TRUE(transform == Matrix4f(3.0f, 0.0f, 0.0f, 2.0f,
+                                    0.0f, 2.0f, 0.0f, 4.0f,
+                                    0.0f, 0.0f, 4.0f, 1.0f,
+                                    0.0f, 0.0f, 0.0f, 1.0f));
+  transform.rotate(Vector3f(Math::kPI * 0.5f, Math::kPI, Math::kPI / 3.0f));
+  EXPECT_TRUE(transform == Matrix4f(-1.5f      ,  0.0f,  2.5980762f, 2.0f,
+                                    -1.7320508f,  0.0f, -1.0f      , 4.0f,
+                                     0.0f      , -4.0f,  0.0f      , 1.0f,
+                                     0.0f      ,  0.0f,  0.0f      , 1.0f));
+
+
+  // Operators overloads
+  EXPECT_TRUE(cst3f + cst2f == Matrix4f(2.0f, 2.0f, 3.0f, 5.0f,
+                                        4.0f, 7.0f, 7.0f, 8.0f,
+                                        8.0f, 7.0f, 7.0f, 5.0f,
+                                        4.0f, 3.0f, 2.0f, 2.0f));
+  EXPECT_TRUE(cst3f - cst1f == Matrix4f(0.0f, 1.0f, 2.0f, 4.0f,
+                                        3.0f, 5.0f, 6.0f, 7.0f,
+                                        7.0f, 6.0f, 5.0f, 4.0f,
+                                        3.0f, 2.0f, 1.0f, 0.0f));
+  EXPECT_TRUE(cst3f * cst1f == Matrix4f(11.0f, 11.0f, 11.0f, 11.0f,
+                                        25.0f, 25.0f, 25.0f, 25.0f,
+                                        26.0f, 26.0f, 26.0f, 26.0f,
+                                        10.0f, 10.0f, 10.0f, 10.0f));
+  EXPECT_TRUE(cst3f * 2 == Matrix4f( 2.0f,  4.0f,  6.0f, 10.0f,
+                                     8.0f, 12.0f, 14.0f, 16.0f,
+                                    16.0f, 14.0f, 12.0f, 10.0f,
+                                     8.0f,  6.0f,  4.0f, 2.0f));
+
+  cst3f = cst2f;
+  EXPECT_TRUE(cst3f == cst2f);
+
+  cst3f += cst1f;
+  EXPECT_TRUE(cst3f == Matrix4f(2.0f, 1.0f, 1.0f, 1.0f,
+                                1.0f, 2.0f, 1.0f, 1.0f,
+                                1.0f, 1.0f, 2.0f, 1.0f,
+                                1.0f, 1.0f, 1.0f, 2.0f));
+  cst3f -= cst1f;
+  EXPECT_TRUE(cst3f == Matrix4f(1.0f, 0.0f, 0.0f, 0.0f,
+                                0.0f, 1.0f, 0.0f, 0.0f,
+                                0.0f, 0.0f, 1.0f, 0.0f,
+                                0.0f, 0.0f, 0.0f, 1.0f));
+  cst3f *= cst1f;
+  EXPECT_TRUE(cst3f == Matrix4f(1.0f, 1.0f, 1.0f, 1.0f,
+                                1.0f, 1.0f, 1.0f, 1.0f,
+                                1.0f, 1.0f, 1.0f, 1.0f,
+                                1.0f, 1.0f, 1.0f, 1.0f));
+  cst3f *= 3;
+  EXPECT_TRUE(cst3f == Matrix4f(3.0f, 3.0f, 3.0f, 3.0f,
+                                3.0f, 3.0f, 3.0f, 3.0f,
+                                3.0f, 3.0f, 3.0f, 3.0f,
+                                3.0f, 3.0f, 3.0f, 3.0f));
+
+
+  /* Matrix4i */
+  // Size
+  EXPECT_EQ(sizeof(Matrix4i), 64);
+
+  // Default constructor and matrix ZERO
+  Matrix4i defi;
+  EXPECT_TRUE(defi == Matrix4i::ZERO);
+
+  // Custom constructor 1 and matrix ONES
+  int32 mi[16] = { 1, 1, 1, 1,
+                   1, 1, 1, 1,
+                   1, 1, 1, 1,
+                   1, 1, 1, 1 };
+  Matrix4i cst1i(mi);
+  EXPECT_TRUE(cst1i == Matrix4i::ONES);
+
+  // Custom constructor 2 and matrix IDENTITY
+  Matrix4i cst2i(Vector4i(1, 0, 0, 0),
+                 Vector4i(0, 1, 0, 0),
+                 Vector4i(0, 0, 1, 0),
+                 Vector4i(0, 0, 0, 1));
+  EXPECT_TRUE(cst2i == Matrix4i::IDENTITY);
+
+  // Custom constructor 3
+  Matrix4i cst3i(1, 2, 3, 5,
+                 4, 6, 7, 8,
+                 8, 7, 6, 5,
+                 4, 3, 2, 1);
+  EXPECT_TRUE(cst3i == Matrix4i(Vector4i(1, 2, 3, 5),
+                                Vector4i(4, 6, 7, 8),
+                                Vector4i(8, 7, 6, 5),
+                                Vector4i(4, 3, 2, 1)));
+
+
+  // Functions
+  EXPECT_EQ(cst3i.getDeterminant(), -4.0f);
+  EXPECT_TRUE(cst3i.getTranspose() == Matrix4i(1, 4, 8, 4,
+                                               2, 6, 7, 3,
+                                               3, 7, 6, 2,
+                                               5, 8, 5, 1));
+
+  Matrix4i tempi(1, 2, 3, 5,
+                 4, 6, 7, 8,
+                 8, 7, 6, 5,
+                 4, 3, 2, 1);
+  tempi.transpose();
+  EXPECT_TRUE(tempi == Matrix4i(1, 4, 8, 4,
+                                2, 6, 7, 3,
+                                3, 7, 6, 2,
+                                5, 8, 5, 1));
+
+
+  // Operators overloads
+  EXPECT_TRUE(cst3i + cst2i == Matrix4i(2, 2, 3, 5,
+                                        4, 7, 7, 8,
+                                        8, 7, 7, 5,
+                                        4, 3, 2, 2));
+  EXPECT_TRUE(cst3i - cst1i == Matrix4i(0, 1, 2, 4,
+                                        3, 5, 6, 7,
+                                        7, 6, 5, 4,
+                                        3, 2, 1, 0));
+  EXPECT_TRUE(cst3i* cst1i == Matrix4i(11, 11, 11, 11,
+                                       25, 25, 25, 25,
+                                       26, 26, 26, 26,
+                                       10, 10, 10, 10));
+  EXPECT_TRUE(cst3i * 2 == Matrix4i( 2,  4,  6, 10,
+                                     8, 12, 14, 16,
+                                    16, 14, 12, 10,
+                                     8,  6,  4,  2));
+
+  cst3i = cst2i;
+  EXPECT_TRUE(cst3i == cst2i);
+
+  cst3i += cst1i;
+  EXPECT_TRUE(cst3i == Matrix4i(2, 1, 1, 1,
+                                1, 2, 1, 1,
+                                1, 1, 2, 1,
+                                1, 1, 1, 2));
+  cst3i -= cst1i;
+  EXPECT_TRUE(cst3i == Matrix4i(1, 0, 0, 0,
+                                0, 1, 0, 0,
+                                0, 0, 1, 0,
+                                0, 0, 0, 1));
+  cst3i *= cst1i;
+  EXPECT_TRUE(cst3i == Matrix4i(1, 1, 1, 1,
+                                1, 1, 1, 1,
+                                1, 1, 1, 1,
+                                1, 1, 1, 1));
+  cst3i *= 3;
+  EXPECT_TRUE(cst3i == Matrix4i(3, 3, 3, 3,
+                                3, 3, 3, 3,
+                                3, 3, 3, 3,
+                                3, 3, 3, 3));
+
+
+  /* Matrix4u */
+  // Size
+  EXPECT_EQ(sizeof(Matrix4u), 64);
+
+  // Default constructor and matrix ZERO
+  Matrix4u defu;
+  EXPECT_TRUE(defu == Matrix4u::ZERO);
+
+  // Custom constructor 1 and matrix ONES
+  uint32 mu[16] = { 1u, 1u, 1u, 1u,
+                    1u, 1u, 1u, 1u,
+                    1u, 1u, 1u, 1u,
+                    1u, 1u, 1u, 1u };
+  Matrix4u cst1u(mu);
+  EXPECT_TRUE(cst1u == Matrix4u::ONES);
+
+  // Custom constructor 2 and matrix IDENTITY
+  Matrix4u cst2u(Vector4u(1u, 0u, 0u, 0u),
+                 Vector4u(0u, 1u, 0u, 0u),
+                 Vector4u(0u, 0u, 1u, 0u),
+                 Vector4u(0u, 0u, 0u, 1u));
+  EXPECT_TRUE(cst2u == Matrix4u::IDENTITY);
+
+  // Custom constructor 3
+  Matrix4u cst3u(1u, 2u, 3u, 5u,
+                 4u, 6u, 7u, 8u,
+                 8u, 7u, 6u, 5u,
+                 4u, 3u, 2u, 1u);
+  EXPECT_TRUE(cst3u == Matrix4u(Vector4u(1u, 2u, 3u, 5u),
+                                Vector4u(4u, 6u, 7u, 8u),
+                                Vector4u(8u, 7u, 6u, 5u),
+                                Vector4u(4u, 3u, 2u, 1u)));
+
+
+  // Functions
+  EXPECT_EQ(cst3u.getDeterminant(), -4.0f);
+  EXPECT_TRUE(cst3u.getTranspose() == Matrix4u(1u, 4u, 8u, 4u,
+                                               2u, 6u, 7u, 3u,
+                                               3u, 7u, 6u, 2u,
+                                               5u, 8u, 5u, 1u));
+
+  Matrix4u tempu(1u, 2u, 3u, 5u,
+                 4u, 6u, 7u, 8u,
+                 8u, 7u, 6u, 5u,
+                 4u, 3u, 2u, 1u);
+  tempu.transpose();
+  EXPECT_TRUE(tempu == Matrix4u(1u, 4u, 8u, 4u,
+                                2u, 6u, 7u, 3u,
+                                3u, 7u, 6u, 2u,
+                                5u, 8u, 5u, 1u));
+
+
+  // Operators overloads
+  EXPECT_TRUE(cst3u + cst2u == Matrix4u(2u, 2u, 3u, 5u,
+                                        4u, 7u, 7u, 8u,
+                                        8u, 7u, 7u, 5u,
+                                        4u, 3u, 2u, 2u));
+  EXPECT_TRUE(cst3u - cst1u == Matrix4u(0u, 1u, 2u, 4u,
+                                        3u, 5u, 6u, 7u,
+                                        7u, 6u, 5u, 4u,
+                                        3u, 2u, 1u, 0u));
+  EXPECT_TRUE(cst3u* cst1u == Matrix4u(11u, 11u, 11u, 11u,
+                                       25u, 25u, 25u, 25u,
+                                       26u, 26u, 26u, 26u,
+                                       10u, 10u, 10u, 10u));
+  EXPECT_TRUE(cst3u * 2 == Matrix4u( 2u,  4u,  6u, 10u,
+                                     8u, 12u, 14u, 16u,
+                                    16u, 14u, 12u, 10u,
+                                     8u,  6u,  4u,  2u));
+
+  cst3u = cst2u;
+  EXPECT_TRUE(cst3u == cst2u);
+
+  cst3u += cst1u;
+  EXPECT_TRUE(cst3u == Matrix4u(2u, 1u, 1u, 1u,
+                                1u, 2u, 1u, 1u,
+                                1u, 1u, 2u, 1u,
+                                1u, 1u, 1u, 2u));
+  cst3u -= cst1u;
+  EXPECT_TRUE(cst3u == Matrix4u(1u, 0u, 0u, 0u,
+                                0u, 1u, 0u, 0u,
+                                0u, 0u, 1u, 0u,
+                                0u, 0u, 0u, 1u));
+  cst3u *= cst1u;
+  EXPECT_TRUE(cst3u == Matrix4u(1u, 1u, 1u, 1u,
+                                1u, 1u, 1u, 1u,
+                                1u, 1u, 1u, 1u,
+                                1u, 1u, 1u, 1u));
+  cst3u *= 3;
+  EXPECT_TRUE(cst3u == Matrix4u(3u, 3u, 3u, 3u,
+                                3u, 3u, 3u, 3u,
+                                3u, 3u, 3u, 3u,
+                                3u, 3u, 3u, 3u));
 }
 
 int main(int argc, char** argv) {

@@ -165,10 +165,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\eeCollitionDetector.h" />
     <ClInclude Include="include\eeMath.h" />
     <ClInclude Include="include\eeMatrix2.h" />
     <ClInclude Include="include\eeMatrix3.h" />
     <ClInclude Include="include\eeMatrix4.h" />
+    <ClInclude Include="include\eePlane.h" />
     <ClInclude Include="include\eePlatformDefines.h" />
     <ClInclude Include="include\eePlatformMath.h" />
     <ClInclude Include="include\eePlatformTypes.h" />
@@ -177,15 +179,21 @@
     <ClInclude Include="include\eeVector2.h" />
     <ClInclude Include="include\eeVector3.h" />
     <ClInclude Include="include\eeVector4.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\eeCollitionDetector.cpp" />
     <ClCompile Include="src\eeMatrix2.cpp" />
     <ClCompile Include="src\eeMatrix3.cpp" />
     <ClCompile Include="src\eeMatrix4.cpp" />
+    <ClCompile Include="src\eePlane.cpp" />
     <ClCompile Include="src\eePlatformMath.cpp" />
     <ClCompile Include="src\eeVector2.cpp" />
     <ClCompile Include="src\eeVector3.cpp" />
     <ClCompile Include="src\eeVector4.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="eeUtilities.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

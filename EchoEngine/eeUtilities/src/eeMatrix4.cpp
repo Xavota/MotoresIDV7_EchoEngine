@@ -132,10 +132,22 @@ Matrix4f::~Matrix4f()
 float
 Matrix4f::getDeterminant() const
 {
-  return m_00 * m_11 * m_22 * m_33 + m_01 * m_12 * m_23 * m_30 + 
+  /*return m_00 * m_11 * m_22 * m_33 + m_01 * m_12 * m_23 * m_30 +
          m_02 * m_13 * m_20 * m_31 + m_03 * m_10 * m_21 * m_32 - 
          m_03 * m_12 * m_21 * m_30 - m_00 * m_13 * m_22 * m_31 - 
-         m_01 * m_10 * m_23 * m_32 - m_02 * m_11 * m_20 * m_33;
+         m_01 * m_10 * m_23 * m_32 - m_02 * m_11 * m_20 * m_33;*/
+  return m_00 * Matrix3f(m_11, m_12, m_13,
+                         m_21, m_22, m_23,
+                         m_31, m_32, m_33).getDeterminant() -
+         m_01 * Matrix3f(m_10, m_12, m_13,
+                         m_20, m_22, m_23,
+                         m_30, m_32, m_33).getDeterminant() +
+         m_02 * Matrix3f(m_10, m_11, m_13,
+                         m_20, m_21, m_23,
+                         m_30, m_31, m_33).getDeterminant() -
+         m_03 * Matrix3f(m_10, m_11, m_12,
+                         m_20, m_21, m_22,
+                         m_30, m_31, m_32).getDeterminant();
 }
 Matrix4f
 Matrix4f::getTranspose() const
@@ -399,6 +411,566 @@ Matrix4f::operator==(const Matrix4f& other)
   for (int i = 0; i < 16; ++i)
   {
     if (Math::abs(this->m[i] - other.m[i]) > .001f)
+    {
+      return false;
+    }
+  }
+  return true;
+}
+
+
+
+Matrix4i::Matrix4i() : m_00(0), m_01(0), m_02(0), m_03(0),
+                       m_10(0), m_11(0), m_12(0), m_13(0),
+                       m_20(0), m_21(0), m_22(0), m_23(0),
+                       m_30(0), m_31(0), m_32(0), m_33(0)
+{
+}
+Matrix4i::Matrix4i(int32 src[16])
+{
+  memcpy(m, src, sizeof(int32) * 16);
+}
+Matrix4i::Matrix4i(const Vector4i& r0, const Vector4i& r1,
+                   const Vector4i& r2, const Vector4i& r3)
+{
+  m_r0 = r0;
+  m_r1 = r1;
+  m_r2 = r2;
+  m_r3 = r3;
+}
+Matrix4i::Matrix4i(int32 _00, int32 _01, int32 _02, int32 _03,
+                   int32 _10, int32 _11, int32 _12, int32 _13,
+                   int32 _20, int32 _21, int32 _22, int32 _23,
+                   int32 _30, int32 _31, int32 _32, int32 _33)
+{
+  m_00 = _00;
+  m_01 = _01;
+  m_02 = _02;
+  m_03 = _03;
+
+  m_10 = _10;
+  m_11 = _11;
+  m_12 = _12;
+  m_13 = _13;
+
+  m_20 = _20;
+  m_21 = _21;
+  m_22 = _22;
+  m_23 = _23;
+
+  m_30 = _30;
+  m_31 = _31;
+  m_32 = _32;
+  m_33 = _33;
+}
+Matrix4i::~Matrix4i()
+{
+}
+float
+Matrix4i::getDeterminant() const
+{
+  /*return static_cast<float>(m_00 * m_11 * m_22 * m_33) +
+         static_cast<float>(m_01 * m_12 * m_23 * m_30) + 
+         static_cast<float>(m_02 * m_13 * m_20 * m_31) + 
+         static_cast<float>(m_03 * m_10 * m_21 * m_32) -
+         static_cast<float>(m_03 * m_12 * m_21 * m_30) - 
+         static_cast<float>(m_00 * m_13 * m_22 * m_31) - 
+         static_cast<float>(m_01 * m_10 * m_23 * m_32) - 
+         static_cast<float>(m_02 * m_11 * m_20 * m_33);*/
+  return m_00 * Matrix3f(static_cast<float>(m_11), 
+                         static_cast<float>(m_12), 
+                         static_cast<float>(m_13),
+                         static_cast<float>(m_21), 
+                         static_cast<float>(m_22), 
+                         static_cast<float>(m_23),
+                         static_cast<float>(m_31),
+                         static_cast<float>(m_32), 
+                         static_cast<float>(m_33)).getDeterminant() -
+         m_01 * Matrix3f(static_cast<float>(m_10), 
+                         static_cast<float>(m_12), 
+                         static_cast<float>(m_13),
+                         static_cast<float>(m_20), 
+                         static_cast<float>(m_22), 
+                         static_cast<float>(m_23),
+                         static_cast<float>(m_30), 
+                         static_cast<float>(m_32), 
+                         static_cast<float>(m_33)).getDeterminant() +
+         m_02 * Matrix3f(static_cast<float>(m_10), 
+                         static_cast<float>(m_11), 
+                         static_cast<float>(m_13),
+                         static_cast<float>(m_20), 
+                         static_cast<float>(m_21), 
+                         static_cast<float>(m_23),
+                         static_cast<float>(m_30), 
+                         static_cast<float>(m_31), 
+                         static_cast<float>(m_33)).getDeterminant() -
+         m_03 * Matrix3f(static_cast<float>(m_10), 
+                         static_cast<float>(m_11), 
+                         static_cast<float>(m_12),
+                         static_cast<float>(m_20), 
+                         static_cast<float>(m_21), 
+                         static_cast<float>(m_22),
+                         static_cast<float>(m_30), 
+                         static_cast<float>(m_31), 
+                         static_cast<float>(m_32)).getDeterminant();
+}
+Matrix4i
+Matrix4i::getTranspose() const
+{
+  return Matrix4i(m_00, m_10, m_20, m_30,
+                  m_01, m_11, m_21, m_31,
+                  m_02, m_12, m_22, m_32,
+                  m_03, m_13, m_23, m_33);
+}
+Matrix4i&
+Matrix4i::transpose()
+{
+  *this = getTranspose();
+  return *this;
+}
+Matrix4i
+Matrix4i::operator+(const Matrix4i& other) const
+{
+  return Matrix4i(this->m_00 + other.m_00,
+                  this->m_01 + other.m_01,
+                  this->m_02 + other.m_02,
+                  this->m_03 + other.m_03,
+                  
+                  this->m_10 + other.m_10,
+                  this->m_11 + other.m_11,
+                  this->m_12 + other.m_12,
+                  this->m_13 + other.m_13,
+                  
+                  this->m_20 + other.m_20,
+                  this->m_21 + other.m_21,
+                  this->m_22 + other.m_22,
+                  this->m_23 + other.m_23,
+                  
+                  this->m_30 + other.m_30,
+                  this->m_31 + other.m_31,
+                  this->m_32 + other.m_32,
+                  this->m_33 + other.m_33);
+}
+Matrix4i
+Matrix4i::operator-(const Matrix4i& other) const
+{
+  return Matrix4i(this->m_00 - other.m_00,
+                  this->m_01 - other.m_01,
+                  this->m_02 - other.m_02,
+                  this->m_03 - other.m_03,
+                  
+                  this->m_10 - other.m_10,
+                  this->m_11 - other.m_11,
+                  this->m_12 - other.m_12,
+                  this->m_13 - other.m_13,
+                  
+                  this->m_20 - other.m_20,
+                  this->m_21 - other.m_21,
+                  this->m_22 - other.m_22,
+                  this->m_23 - other.m_23,
+                  
+                  this->m_30 - other.m_30,
+                  this->m_31 - other.m_31,
+                  this->m_32 - other.m_32,
+                  this->m_33 - other.m_33);
+}
+Matrix4i
+Matrix4i::operator*(const Matrix4i& other) const
+{
+  return Matrix4i(
+    this->m_00 * other.m_00 + this->m_01 * other.m_10
+    + this->m_02 * other.m_20 + this->m_03 * other.m_30,
+    this->m_00 * other.m_01 + this->m_01 * other.m_11
+    + this->m_02 * other.m_21 + this->m_03 * other.m_31,
+    this->m_00 * other.m_02 + this->m_01 * other.m_12
+    + this->m_02 * other.m_22 + this->m_03 * other.m_32,
+    this->m_00 * other.m_03 + this->m_01 * other.m_13
+    + this->m_02 * other.m_23 + this->m_03 * other.m_33,
+
+    this->m_10 * other.m_00 + this->m_11 * other.m_10
+    + this->m_12 * other.m_20 + this->m_13 * other.m_30,
+    this->m_10 * other.m_01 + this->m_11 * other.m_11
+    + this->m_12 * other.m_21 + this->m_13 * other.m_31,
+    this->m_10 * other.m_02 + this->m_11 * other.m_12
+    + this->m_12 * other.m_22 + this->m_13 * other.m_32,
+    this->m_10 * other.m_03 + this->m_11 * other.m_13
+    + this->m_12 * other.m_23 + this->m_13 * other.m_33,
+
+    this->m_20 * other.m_00 + this->m_21 * other.m_10
+    + this->m_22 * other.m_20 + this->m_23 * other.m_30,
+    this->m_20 * other.m_01 + this->m_21 * other.m_11
+    + this->m_22 * other.m_21 + this->m_23 * other.m_31,
+    this->m_20 * other.m_02 + this->m_21 * other.m_12
+    + this->m_22 * other.m_22 + this->m_23 * other.m_32,
+    this->m_20 * other.m_03 + this->m_21 * other.m_13
+    + this->m_22 * other.m_23 + this->m_23 * other.m_33,
+
+    this->m_30 * other.m_00 + this->m_31 * other.m_10
+    + this->m_32 * other.m_20 + this->m_33 * other.m_30,
+    this->m_30 * other.m_01 + this->m_31 * other.m_11
+    + this->m_32 * other.m_21 + this->m_33 * other.m_31,
+    this->m_30 * other.m_02 + this->m_31 * other.m_12
+    + this->m_32 * other.m_22 + this->m_33 * other.m_32,
+    this->m_30 * other.m_03 + this->m_31 * other.m_13
+    + this->m_32 * other.m_23 + this->m_33 * other.m_33);
+}
+Matrix4i
+Matrix4i::operator*(int32 k) const
+{
+  return Matrix4i(this->m_00 * k,
+                  this->m_01 * k,
+                  this->m_02 * k,
+                  this->m_03 * k,
+                  
+                  this->m_10 * k,
+                  this->m_11 * k,
+                  this->m_12 * k,
+                  this->m_13 * k,
+                  
+                  this->m_20 * k,
+                  this->m_21 * k,
+                  this->m_22 * k,
+                  this->m_23 * k,
+                  
+                  this->m_30 * k,
+                  this->m_31 * k,
+                  this->m_32 * k,
+                  this->m_33 * k);
+}
+Matrix4i&
+Matrix4i::operator=(const Matrix4i& other)
+{
+  this->m_00 = other.m_00;
+  this->m_01 = other.m_01;
+  this->m_02 = other.m_02;
+  this->m_03 = other.m_03;
+
+  this->m_10 = other.m_10;
+  this->m_11 = other.m_11;
+  this->m_12 = other.m_12;
+  this->m_13 = other.m_13;
+
+  this->m_20 = other.m_20;
+  this->m_21 = other.m_21;
+  this->m_22 = other.m_22;
+  this->m_23 = other.m_23;
+
+  this->m_30 = other.m_30;
+  this->m_31 = other.m_31;
+  this->m_32 = other.m_32;
+  this->m_33 = other.m_33;
+  return *this;
+}
+Matrix4i&
+Matrix4i::operator+=(const Matrix4i& other)
+{
+  *this = *this + other;
+  return *this;
+}
+Matrix4i&
+Matrix4i::operator-=(const Matrix4i& other)
+{
+  *this = *this - other;
+  return *this;
+}
+Matrix4i&
+Matrix4i::operator*=(const Matrix4i& other)
+{
+  *this = *this * other;
+  return *this;
+}
+Matrix4i&
+Matrix4i::operator*=(int32 k)
+{
+  *this = *this * k;
+  return *this;
+}
+bool
+Matrix4i::operator==(const Matrix4i& other)
+{
+  for (int i = 0; i < 16; ++i)
+  {
+    if (this->m[i] != other.m[i])
+    {
+      return false;
+    }
+  }
+  return true;
+}
+
+
+
+Matrix4u::Matrix4u() : m_00(0u), m_01(0u), m_02(0u), m_03(0u),
+                       m_10(0u), m_11(0u), m_12(0u), m_13(0u),
+                       m_20(0u), m_21(0u), m_22(0u), m_23(0u),
+                       m_30(0u), m_31(0u), m_32(0u), m_33(0u)
+{
+}
+Matrix4u::Matrix4u(uint32 src[16])
+{
+  memcpy(m, src, sizeof(uint32) * 16);
+}
+Matrix4u::Matrix4u(const Vector4u& r0, const Vector4u& r1,
+                   const Vector4u& r2, const Vector4u& r3)
+{
+  m_r0 = r0;
+  m_r1 = r1;
+  m_r2 = r2;
+  m_r3 = r3;
+}
+Matrix4u::Matrix4u(uint32 _00, uint32 _01, uint32 _02, uint32 _03,
+                   uint32 _10, uint32 _11, uint32 _12, uint32 _13,
+                   uint32 _20, uint32 _21, uint32 _22, uint32 _23,
+                   uint32 _30, uint32 _31, uint32 _32, uint32 _33)
+{
+  m_00 = _00;
+  m_01 = _01;
+  m_02 = _02;
+  m_03 = _03;
+
+  m_10 = _10;
+  m_11 = _11;
+  m_12 = _12;
+  m_13 = _13;
+
+  m_20 = _20;
+  m_21 = _21;
+  m_22 = _22;
+  m_23 = _23;
+
+  m_30 = _30;
+  m_31 = _31;
+  m_32 = _32;
+  m_33 = _33;
+}
+Matrix4u::~Matrix4u()
+{
+}
+float
+Matrix4u::getDeterminant() const
+{
+  /*return static_cast<float>(m_00 * m_11 * m_22 * m_33) +
+         static_cast<float>(m_01 * m_12 * m_23 * m_30) +
+         static_cast<float>(m_02 * m_13 * m_20 * m_31) +
+         static_cast<float>(m_03 * m_10 * m_21 * m_32) -
+         static_cast<float>(m_03 * m_12 * m_21 * m_30) -
+         static_cast<float>(m_00 * m_13 * m_22 * m_31) -
+         static_cast<float>(m_01 * m_10 * m_23 * m_32) -
+         static_cast<float>(m_02 * m_11 * m_20 * m_33);*/
+  return m_00 * Matrix3f(static_cast<float>(m_11),
+                         static_cast<float>(m_12),
+                         static_cast<float>(m_13),
+                         static_cast<float>(m_21),
+                         static_cast<float>(m_22),
+                         static_cast<float>(m_23),
+                         static_cast<float>(m_31),
+                         static_cast<float>(m_32),
+                         static_cast<float>(m_33)).getDeterminant() -
+         m_01 * Matrix3f(static_cast<float>(m_10),
+                         static_cast<float>(m_12),
+                         static_cast<float>(m_13),
+                         static_cast<float>(m_20),
+                         static_cast<float>(m_22),
+                         static_cast<float>(m_23),
+                         static_cast<float>(m_30),
+                         static_cast<float>(m_32),
+                         static_cast<float>(m_33)).getDeterminant() +
+         m_02 * Matrix3f(static_cast<float>(m_10),
+                         static_cast<float>(m_11),
+                         static_cast<float>(m_13),
+                         static_cast<float>(m_20),
+                         static_cast<float>(m_21),
+                         static_cast<float>(m_23),
+                         static_cast<float>(m_30),
+                         static_cast<float>(m_31),
+                         static_cast<float>(m_33)).getDeterminant() -
+         m_03 * Matrix3f(static_cast<float>(m_10),
+                         static_cast<float>(m_11),
+                         static_cast<float>(m_12),
+                         static_cast<float>(m_20),
+                         static_cast<float>(m_21),
+                         static_cast<float>(m_22),
+                         static_cast<float>(m_30),
+                         static_cast<float>(m_31),
+                         static_cast<float>(m_32)).getDeterminant();
+}
+Matrix4u
+Matrix4u::getTranspose() const
+{
+  return Matrix4u(m_00, m_10, m_20, m_30,
+                  m_01, m_11, m_21, m_31,
+                  m_02, m_12, m_22, m_32,
+                  m_03, m_13, m_23, m_33);
+}
+Matrix4u&
+Matrix4u::transpose()
+{
+  *this = getTranspose();
+  return *this;
+}
+Matrix4u
+Matrix4u::operator+(const Matrix4u& other) const
+{
+  return Matrix4u(this->m_00 + other.m_00,
+                  this->m_01 + other.m_01,
+                  this->m_02 + other.m_02,
+                  this->m_03 + other.m_03,
+                  
+                  this->m_10 + other.m_10,
+                  this->m_11 + other.m_11,
+                  this->m_12 + other.m_12,
+                  this->m_13 + other.m_13,
+                  
+                  this->m_20 + other.m_20,
+                  this->m_21 + other.m_21,
+                  this->m_22 + other.m_22,
+                  this->m_23 + other.m_23,
+                  
+                  this->m_30 + other.m_30,
+                  this->m_31 + other.m_31,
+                  this->m_32 + other.m_32,
+                  this->m_33 + other.m_33);
+}
+Matrix4u
+Matrix4u::operator-(const Matrix4u& other) const
+{
+  return Matrix4u(this->m_00 - other.m_00,
+                  this->m_01 - other.m_01,
+                  this->m_02 - other.m_02,
+                  this->m_03 - other.m_03,
+                  
+                  this->m_10 - other.m_10,
+                  this->m_11 - other.m_11,
+                  this->m_12 - other.m_12,
+                  this->m_13 - other.m_13,
+                  
+                  this->m_20 - other.m_20,
+                  this->m_21 - other.m_21,
+                  this->m_22 - other.m_22,
+                  this->m_23 - other.m_23,
+                  
+                  this->m_30 - other.m_30,
+                  this->m_31 - other.m_31,
+                  this->m_32 - other.m_32,
+                  this->m_33 - other.m_33);
+}
+Matrix4u
+Matrix4u::operator*(const Matrix4u& other) const
+{
+  return Matrix4u(
+    this->m_00 * other.m_00 + this->m_01 * other.m_10
+    + this->m_02 * other.m_20 + this->m_03 * other.m_30,
+    this->m_00 * other.m_01 + this->m_01 * other.m_11
+    + this->m_02 * other.m_21 + this->m_03 * other.m_31,
+    this->m_00 * other.m_02 + this->m_01 * other.m_12
+    + this->m_02 * other.m_22 + this->m_03 * other.m_32,
+    this->m_00 * other.m_03 + this->m_01 * other.m_13
+    + this->m_02 * other.m_23 + this->m_03 * other.m_33,
+
+    this->m_10 * other.m_00 + this->m_11 * other.m_10
+    + this->m_12 * other.m_20 + this->m_13 * other.m_30,
+    this->m_10 * other.m_01 + this->m_11 * other.m_11
+    + this->m_12 * other.m_21 + this->m_13 * other.m_31,
+    this->m_10 * other.m_02 + this->m_11 * other.m_12
+    + this->m_12 * other.m_22 + this->m_13 * other.m_32,
+    this->m_10 * other.m_03 + this->m_11 * other.m_13
+    + this->m_12 * other.m_23 + this->m_13 * other.m_33,
+
+    this->m_20 * other.m_00 + this->m_21 * other.m_10
+    + this->m_22 * other.m_20 + this->m_23 * other.m_30,
+    this->m_20 * other.m_01 + this->m_21 * other.m_11
+    + this->m_22 * other.m_21 + this->m_23 * other.m_31,
+    this->m_20 * other.m_02 + this->m_21 * other.m_12
+    + this->m_22 * other.m_22 + this->m_23 * other.m_32,
+    this->m_20 * other.m_03 + this->m_21 * other.m_13
+    + this->m_22 * other.m_23 + this->m_23 * other.m_33,
+
+    this->m_30 * other.m_00 + this->m_31 * other.m_10
+    + this->m_32 * other.m_20 + this->m_33 * other.m_30,
+    this->m_30 * other.m_01 + this->m_31 * other.m_11
+    + this->m_32 * other.m_21 + this->m_33 * other.m_31,
+    this->m_30 * other.m_02 + this->m_31 * other.m_12
+    + this->m_32 * other.m_22 + this->m_33 * other.m_32,
+    this->m_30 * other.m_03 + this->m_31 * other.m_13
+    + this->m_32 * other.m_23 + this->m_33 * other.m_33);
+}
+Matrix4u
+Matrix4u::operator*(uint32 k) const
+{
+  return Matrix4u(this->m_00 * k,
+                  this->m_01 * k,
+                  this->m_02 * k,
+                  this->m_03 * k,
+                  
+                  this->m_10 * k,
+                  this->m_11 * k,
+                  this->m_12 * k,
+                  this->m_13 * k,
+                  
+                  this->m_20 * k,
+                  this->m_21 * k,
+                  this->m_22 * k,
+                  this->m_23 * k,
+                  
+                  this->m_30 * k,
+                  this->m_31 * k,
+                  this->m_32 * k,
+                  this->m_33 * k);
+}
+Matrix4u&
+Matrix4u::operator=(const Matrix4u& other)
+{
+  this->m_00 = other.m_00;
+  this->m_01 = other.m_01;
+  this->m_02 = other.m_02;
+  this->m_03 = other.m_03;
+
+  this->m_10 = other.m_10;
+  this->m_11 = other.m_11;
+  this->m_12 = other.m_12;
+  this->m_13 = other.m_13;
+
+  this->m_20 = other.m_20;
+  this->m_21 = other.m_21;
+  this->m_22 = other.m_22;
+  this->m_23 = other.m_23;
+
+  this->m_30 = other.m_30;
+  this->m_31 = other.m_31;
+  this->m_32 = other.m_32;
+  this->m_33 = other.m_33;
+  return *this;
+}
+Matrix4u&
+Matrix4u::operator+=(const Matrix4u& other)
+{
+  *this = *this + other;
+  return *this;
+}
+Matrix4u&
+Matrix4u::operator-=(const Matrix4u& other)
+{
+  *this = *this - other;
+  return *this;
+}
+Matrix4u&
+Matrix4u::operator*=(const Matrix4u& other)
+{
+  *this = *this * other;
+  return *this;
+}
+Matrix4u&
+Matrix4u::operator*=(uint32 k)
+{
+  *this = *this * k;
+  return *this;
+}
+bool
+Matrix4u::operator==(const Matrix4u& other)
+{
+  for (int i = 0; i < 16; ++i)
+  {
+    if (this->m[i] != other.m[i])
     {
       return false;
     }

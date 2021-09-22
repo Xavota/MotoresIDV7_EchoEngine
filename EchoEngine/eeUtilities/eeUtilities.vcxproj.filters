@@ -42,7 +42,16 @@
     <ClInclude Include="include\eeMatrix3.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\eeMatrix4.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="include\eeMatrix4.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eePlane.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeCollitionDetector.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eePlatformMath.cpp">
@@ -66,5 +75,14 @@
     <ClCompile Include="src\eeMatrix4.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\eePlane.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeCollitionDetector.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="eeUtilities.rc" />
   </ItemGroup>
 </Project>
