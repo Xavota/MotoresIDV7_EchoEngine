@@ -1,16 +1,17 @@
 #pragma once
 #include "eePrerequisitesUtilities.h"
-#include "eeVector2.h"
+#include "eeVector3.h"
+#include "eeVector4.h"
 
 namespace eeEngineSDK {
 /**
 * @brief
-* Matrix 2x2. Holds 2 rows and 2 columns of floats.
+* Matrix 4x4. Holds 4 rows and 4 columns of floats.
 * Has all the possible operations for matrices.
 */
-class EE_UTILITY_EXPORT Matrix2f
+class EE_UTILITY_EXPORT Matrix4f
 {
- public:
+public:
   /**
   * @brief
   * The default constructor.
@@ -18,7 +19,7 @@ class EE_UTILITY_EXPORT Matrix2f
   * @description
   * Initializes every value in 0.
   */
-  Matrix2f();
+  Matrix4f();
   /**
   * @brief
   * Custom constructor.
@@ -30,7 +31,7 @@ class EE_UTILITY_EXPORT Matrix2f
   * @param src
   * The source from where the data is taken.
   */
-  Matrix2f(float src[4]);
+  Matrix4f(float src[16]);
   /**
   * @brief
   * Custom constructor.
@@ -43,14 +44,20 @@ class EE_UTILITY_EXPORT Matrix2f
   * The first row of the matrix.
   * @param r1
   * The second row of the matrix.
+  * @param r2
+  * The third row of the matrix.
+  * @param r3
+  * The fourth row of the matrix.
   */
-  Matrix2f(const Vector2f& r0, const Vector2f& r1);
+  Matrix4f(const Vector4f& r0, const Vector4f& r1,
+           const Vector4f& r2, const Vector4f& r3);
   /**
   * @brief
   * Custom constructor.
   *
   * @description
-  * Initializes the matrix with values. Representing each value in the matrix.
+  * Initializes the matrix with values. Representing each value in the 
+  * matrix.
   * Name '_xy'
   * x: row
   * y: column
@@ -59,12 +66,39 @@ class EE_UTILITY_EXPORT Matrix2f
   * First row, first column.
   * @param _01
   * First row, second column.
+  * @param _02
+  * First row, third column.
+  * @param _03
+  * First row, fourth column.
   * @param _10
   * Second row, first column.
   * @param _11
   * Second row, second column.
+  * @param _12
+  * Second row, third column.
+  * @param _13
+  * Second row, fourth column.
+  * @param _20
+  * Third row, first column.
+  * @param _21
+  * Third row, second column.
+  * @param _22
+  * Third row, third column.
+  * @param _23
+  * Third row, fourth column.
+  * @param _30
+  * Fourth row, first column.
+  * @param _31
+  * Fourth row, second column.
+  * @param _32
+  * Fourth row, third column.
+  * @param _33
+  * Fourth row, fourth column.
   */
-  Matrix2f(float _00, float _01, float _10, float _11);
+  Matrix4f(float _00, float _01, float _02, float _03,
+           float _10, float _11, float _12, float _13,
+           float _20, float _21, float _22, float _23,
+           float _30, float _31, float _32, float _33);
   /**
   * @brief
   * The destructor.
@@ -72,7 +106,7 @@ class EE_UTILITY_EXPORT Matrix2f
   * @description
   * Frees allocated memory.
   */
-  ~Matrix2f();
+  ~Matrix4f();
 
   /**
   * @brief
@@ -84,7 +118,7 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * The determinant of the matrix.
   */
-  float 
+  float
   getDeterminant() const;
   /**
   * @brief
@@ -96,7 +130,7 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * The transpose of the matrix.
   */
-  Matrix2f 
+  Matrix4f
   getTranspose() const;
   /**
   * @brief
@@ -108,7 +142,7 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * The transpose of the matrix.
   */
-  Matrix2f&
+  Matrix4f&
   transpose();
   /**
   * @brief
@@ -120,7 +154,7 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * The inverse of the matrix.
   */
-  Matrix2f 
+  Matrix4f
   getInverse() const;
   /**
   * @brief
@@ -132,8 +166,59 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * The matrix inverted.
   */
-  Matrix2f&
+  Matrix4f&
   inverse();
+
+
+  /**
+  * @brief
+  * Translates the matrix.
+  *
+  * @description
+  * Multiplies the matrix with a translation matrix, to combine the
+  * transformations.
+  *
+  * @param move
+  * The vector indicating how much you want to move.
+  *
+  * @return
+  * The translation matrix.
+  */
+  Matrix4f&
+  translate(const Vector3f& move);
+  /**
+  * @brief
+  * Rotates the matrix.
+  *
+  * @description
+  * Multiplies the matrix with a rotation matrix, to combine the
+  * transformations.
+  *
+  * @param angle
+  * The vector indicating how much you want to rotate, angles in radians.
+  *
+  * @return
+  * The rotation matrix.
+  */
+  Matrix4f&
+  rotate(const Vector3f& angle);
+  /**
+  * @brief
+  * Scales the matrix.
+  *
+  * @description
+  * Multiplies the matrix with a scale matrix, to combine the
+  * transformations.
+  *
+  * @param scale
+  * The vector indicating how much you want to scale.
+  *
+  * @return
+  * The scale matrix.
+  */
+  Matrix4f&
+  scale(const Vector3f& scale);
+
 
   /**
   * @brief
@@ -148,8 +233,8 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * The sum of the two matrices.
   */
-  Matrix2f 
-  operator+(const Matrix2f& other) const;
+  Matrix4f
+  operator+(const Matrix4f& other) const;
   /**
   * @brief
   * The operator '-' with other matrix.
@@ -163,8 +248,8 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * The subtraction of the two matrices.
   */
-  Matrix2f 
-  operator-(const Matrix2f& other) const;
+  Matrix4f
+  operator-(const Matrix4f& other) const;
   /**
   * @brief
   * The operator '*' with other matrix.
@@ -178,8 +263,8 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * The multiplication of the two matrices.
   */
-  Matrix2f 
-  operator*(const Matrix2f& other) const;
+  Matrix4f
+  operator*(const Matrix4f& other) const;
   /**
   * @brief
   * The operator '*' with a number.
@@ -193,7 +278,7 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * The multiplication of the values of the matrix, time the number.
   */
-  Matrix2f 
+  Matrix4f
   operator*(float k) const;
 
   /**
@@ -210,8 +295,8 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * This matrix with its values changed.
   */
-  Matrix2f&
-  operator=(const Matrix2f& other);
+  Matrix4f&
+  operator=(const Matrix4f& other);
 
   /**
   * @brief
@@ -227,8 +312,8 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * This matrix with its values changed.
   */
-  Matrix2f&
-  operator+=(const Matrix2f& other);
+  Matrix4f&
+  operator+=(const Matrix4f& other);
   /**
   * @brief
   * The operator '-=' with other matrix.
@@ -243,8 +328,8 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * This matrix with its values changed.
   */
-  Matrix2f&
-  operator-=(const Matrix2f& other);
+  Matrix4f&
+  operator-=(const Matrix4f& other);
   /**
   * @brief
   * The operator '*=' with other matrix.
@@ -259,8 +344,8 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * This matrix with its values changed.
   */
-  Matrix2f&
-  operator*=(const Matrix2f& other);
+  Matrix4f&
+  operator*=(const Matrix4f& other);
   /**
   * @brief
   * The operator '*=' with a value.
@@ -275,7 +360,7 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * This matrix with its values changed.
   */
-  Matrix2f&
+  Matrix4f&
   operator*=(float k);
 
   /**
@@ -291,10 +376,60 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * True if the two matrices are equal.
   */
-  bool 
-  operator==(const Matrix2f& other);
+  bool
+  operator==(const Matrix4f& other);
 
- public:
+public:
+  /**
+  * @brief
+  * Calculates a translation matrix.
+  *
+  * @description
+  * Gives a translation matrix that moves a point the given space.
+  *
+  * @param move
+  * The vector indicating how much you want to move.
+  *
+  * @return
+  * The translation matrix.
+  */
+  static Matrix4f
+  TranslationMatrix(const Vector3f& move);
+  /**
+  * @brief
+  * Calculates a rotation matrix.
+  *
+  * @description
+  * Gives a rotation matrix that rotates a point from the origin, the given
+  * angles in the 3 axis, in radians.
+  *
+  * @param angle
+  * The vector indicating how much you want to rotate, angles in radians.
+  *
+  * @return
+  * The rotation matrix.
+  */
+  static Matrix4f
+  RotationMatrix(const Vector3f& angle);
+  /**
+  * @brief
+  * Calculates a scale matrix.
+  *
+  * @description
+  * Gives a scale matrix that moves a point away from the origin, to increase
+  * the size of its object.
+  *
+  * @param scale
+  * The vector indicating how much you want to scale.
+  *
+  * @return
+  * The scale matrix.
+  */
+  static Matrix4f
+  ScaleMatrix(const Vector3f& scale);
+
+
+
   union
   {
     struct
@@ -308,6 +443,14 @@ class EE_UTILITY_EXPORT Matrix2f
       */
       float m_01;
       /*
+      * Component r0c2 of the matrix.
+      */
+      float m_02;
+      /*
+      * Component r0c3 of the matrix.
+      */
+      float m_03;
+      /*
       * Component r1c0 of the matrix.
       */
       float m_10;
@@ -315,47 +458,96 @@ class EE_UTILITY_EXPORT Matrix2f
       * Component r1c1 of the matrix.
       */
       float m_11;
+      /*
+      * Component r1c2 of the matrix.
+      */
+      float m_12;
+      /*
+      * Component r1c3 of the matrix.
+      */
+      float m_13;
+      /*
+      * Component r2c0 of the matrix.
+      */
+      float m_20;
+      /*
+      * Component r2c1 of the matrix.
+      */
+      float m_21;
+      /*
+      * Component r2c2 of the matrix.
+      */
+      float m_22;
+      /*
+      * Component r2c3 of the matrix.
+      */
+      float m_23;
+      /*
+      * Component r3c0 of the matrix.
+      */
+      float m_30;
+      /*
+      * Component r3c1 of the matrix.
+      */
+      float m_31;
+      /*
+      * Component r3c2 of the matrix.
+      */
+      float m_32;
+      /*
+      * Component r3c3 of the matrix.
+      */
+      float m_33;
     };
     struct
     {
       /*
       * The first row.
       */
-      Vector2f m_r0;
+      Vector4f m_r0;
       /*
       * The second row.
       */
-      Vector2f m_r1;
+      Vector4f m_r1;
+      /*
+      * The third row.
+      */
+      Vector4f m_r2;
+      /*
+      * The fouth row.
+      */
+      Vector4f m_r3;
     };
     /*
     * The entire matrix on an array.
     */
-    float m[4];
+    float m[16];
   };
 
   /*
   * Matrix filled with zeros.
   */
-  static Matrix2f ZERO;
+  static Matrix4f ZERO;
   /*
   * Matrix filled with ones.
   */
-  static Matrix2f ONES;
+  static Matrix4f ONES;
   /*
   * The identity matrix.
   */
-  static Matrix2f IDENTITY;
+  static Matrix4f IDENTITY;
 };
+
 
 
 /**
 * @brief
-* Matrix 2x2. Holds 2 rows and 2 columns of int32.
+* Matrix 4x4. Holds 4 rows and 4 columns of int32.
 * Has all the possible operations for matrices.
 */
-class EE_UTILITY_EXPORT Matrix2i
+class EE_UTILITY_EXPORT Matrix4i
 {
- public:
+public:
   /**
   * @brief
   * The default constructor.
@@ -363,7 +555,7 @@ class EE_UTILITY_EXPORT Matrix2i
   * @description
   * Initializes every value in 0.
   */
-  Matrix2i();
+  Matrix4i();
   /**
   * @brief
   * Custom constructor.
@@ -375,7 +567,7 @@ class EE_UTILITY_EXPORT Matrix2i
   * @param src
   * The source from where the data is taken.
   */
-  Matrix2i(int32 src[4]);
+  Matrix4i(int32 src[16]);
   /**
   * @brief
   * Custom constructor.
@@ -388,14 +580,20 @@ class EE_UTILITY_EXPORT Matrix2i
   * The first row of the matrix.
   * @param r1
   * The second row of the matrix.
+  * @param r2
+  * The third row of the matrix.
+  * @param r3
+  * The fourth row of the matrix.
   */
-  Matrix2i(const Vector2i& r0, const Vector2i& r1);
+  Matrix4i(const Vector4i& r0, const Vector4i& r1,
+           const Vector4i& r2, const Vector4i& r3);
   /**
   * @brief
   * Custom constructor.
   *
   * @description
-  * Initializes the matrix with values. Representing each value in the matrix.
+  * Initializes the matrix with values. Representing each value in the
+  * matrix.
   * Name '_xy'
   * x: row
   * y: column
@@ -404,12 +602,39 @@ class EE_UTILITY_EXPORT Matrix2i
   * First row, first column.
   * @param _01
   * First row, second column.
+  * @param _02
+  * First row, third column.
+  * @param _03
+  * First row, fourth column.
   * @param _10
   * Second row, first column.
   * @param _11
   * Second row, second column.
+  * @param _12
+  * Second row, third column.
+  * @param _13
+  * Second row, fourth column.
+  * @param _20
+  * Third row, first column.
+  * @param _21
+  * Third row, second column.
+  * @param _22
+  * Third row, third column.
+  * @param _23
+  * Third row, fourth column.
+  * @param _30
+  * Fourth row, first column.
+  * @param _31
+  * Fourth row, second column.
+  * @param _32
+  * Fourth row, third column.
+  * @param _33
+  * Fourth row, fourth column.
   */
-  Matrix2i(int32 _00, int32 _01, int32 _10, int32 _11);
+  Matrix4i(int32 _00, int32 _01, int32 _02, int32 _03,
+           int32 _10, int32 _11, int32 _12, int32 _13,
+           int32 _20, int32 _21, int32 _22, int32 _23,
+           int32 _30, int32 _31, int32 _32, int32 _33);
   /**
   * @brief
   * The destructor.
@@ -417,7 +642,7 @@ class EE_UTILITY_EXPORT Matrix2i
   * @description
   * Frees allocated memory.
   */
-  ~Matrix2i();
+  ~Matrix4i();
 
   /**
   * @brief
@@ -429,7 +654,7 @@ class EE_UTILITY_EXPORT Matrix2i
   * @return
   * The determinant of the matrix.
   */
-  float 
+  float
   getDeterminant() const;
   /**
   * @brief
@@ -441,7 +666,7 @@ class EE_UTILITY_EXPORT Matrix2i
   * @return
   * The transpose of the matrix.
   */
-  Matrix2i 
+  Matrix4i
   getTranspose() const;
   /**
   * @brief
@@ -453,8 +678,9 @@ class EE_UTILITY_EXPORT Matrix2i
   * @return
   * The transpose of the matrix.
   */
-  Matrix2i&
+  Matrix4i&
   transpose();
+
 
   /**
   * @brief
@@ -469,8 +695,8 @@ class EE_UTILITY_EXPORT Matrix2i
   * @return
   * The sum of the two matrices.
   */
-  Matrix2i 
-  operator+(const Matrix2i& other) const;
+  Matrix4i
+  operator+(const Matrix4i& other) const;
   /**
   * @brief
   * The operator '-' with other matrix.
@@ -484,8 +710,8 @@ class EE_UTILITY_EXPORT Matrix2i
   * @return
   * The subtraction of the two matrices.
   */
-  Matrix2i 
-  operator-(const Matrix2i& other) const;
+  Matrix4i
+  operator-(const Matrix4i& other) const;
   /**
   * @brief
   * The operator '*' with other matrix.
@@ -499,8 +725,8 @@ class EE_UTILITY_EXPORT Matrix2i
   * @return
   * The multiplication of the two matrices.
   */
-  Matrix2i 
-  operator*(const Matrix2i& other) const;
+  Matrix4i
+  operator*(const Matrix4i& other) const;
   /**
   * @brief
   * The operator '*' with a number.
@@ -514,7 +740,7 @@ class EE_UTILITY_EXPORT Matrix2i
   * @return
   * The multiplication of the values of the matrix, time the number.
   */
-  Matrix2i 
+  Matrix4i
   operator*(int32 k) const;
 
   /**
@@ -531,8 +757,8 @@ class EE_UTILITY_EXPORT Matrix2i
   * @return
   * This matrix with its values changed.
   */
-  Matrix2i& 
-  operator=(const Matrix2i& other);
+  Matrix4i&
+  operator=(const Matrix4i& other);
 
   /**
   * @brief
@@ -548,8 +774,8 @@ class EE_UTILITY_EXPORT Matrix2i
   * @return
   * This matrix with its values changed.
   */
-  Matrix2i& 
-  operator+=(const Matrix2i& other);
+  Matrix4i&
+  operator+=(const Matrix4i& other);
   /**
   * @brief
   * The operator '-=' with other matrix.
@@ -564,8 +790,8 @@ class EE_UTILITY_EXPORT Matrix2i
   * @return
   * This matrix with its values changed.
   */
-  Matrix2i& 
-  operator-=(const Matrix2i& other);
+  Matrix4i&
+  operator-=(const Matrix4i& other);
   /**
   * @brief
   * The operator '*=' with other matrix.
@@ -580,8 +806,8 @@ class EE_UTILITY_EXPORT Matrix2i
   * @return
   * This matrix with its values changed.
   */
-  Matrix2i& 
-  operator*=(const Matrix2i& other);
+  Matrix4i&
+  operator*=(const Matrix4i& other);
   /**
   * @brief
   * The operator '*=' with a value.
@@ -596,7 +822,7 @@ class EE_UTILITY_EXPORT Matrix2i
   * @return
   * This matrix with its values changed.
   */
-  Matrix2i& 
+  Matrix4i&
   operator*=(int32 k);
 
   /**
@@ -612,10 +838,10 @@ class EE_UTILITY_EXPORT Matrix2i
   * @return
   * True if the two matrices are equal.
   */
-  bool 
-  operator==(const Matrix2i& other);
+  bool
+  operator==(const Matrix4i& other);
 
- public:
+public:
   union
   {
     struct
@@ -629,6 +855,14 @@ class EE_UTILITY_EXPORT Matrix2i
       */
       int32 m_01;
       /*
+      * Component r0c2 of the matrix.
+      */
+      int32 m_02;
+      /*
+      * Component r0c3 of the matrix.
+      */
+      int32 m_03;
+      /*
       * Component r1c0 of the matrix.
       */
       int32 m_10;
@@ -636,47 +870,96 @@ class EE_UTILITY_EXPORT Matrix2i
       * Component r1c1 of the matrix.
       */
       int32 m_11;
+      /*
+      * Component r1c2 of the matrix.
+      */
+      int32 m_12;
+      /*
+      * Component r1c3 of the matrix.
+      */
+      int32 m_13;
+      /*
+      * Component r2c0 of the matrix.
+      */
+      int32 m_20;
+      /*
+      * Component r2c1 of the matrix.
+      */
+      int32 m_21;
+      /*
+      * Component r2c2 of the matrix.
+      */
+      int32 m_22;
+      /*
+      * Component r2c3 of the matrix.
+      */
+      int32 m_23;
+      /*
+      * Component r3c0 of the matrix.
+      */
+      int32 m_30;
+      /*
+      * Component r3c1 of the matrix.
+      */
+      int32 m_31;
+      /*
+      * Component r3c2 of the matrix.
+      */
+      int32 m_32;
+      /*
+      * Component r3c3 of the matrix.
+      */
+      int32 m_33;
     };
     struct
     {
       /*
       * The first row.
       */
-      Vector2i m_r0;
+      Vector4i m_r0;
       /*
       * The second row.
       */
-      Vector2i m_r1;
+      Vector4i m_r1;
+      /*
+      * The third row.
+      */
+      Vector4i m_r2;
+      /*
+      * The fouth row.
+      */
+      Vector4i m_r3;
     };
     /*
     * The entire matrix on an array.
     */
-    int32 m[4];
+    int32 m[16];
   };
 
   /*
   * Matrix filled with zeros.
   */
-  static Matrix2i ZERO;
+  static Matrix4i ZERO;
   /*
   * Matrix filled with ones.
   */
-  static Matrix2i ONES;
+  static Matrix4i ONES;
   /*
   * The identity matrix.
   */
-  static Matrix2i IDENTITY;
+  static Matrix4i IDENTITY;
 };
+
 
 
 /**
 * @brief
-* Matrix 2x2. Holds 2 rows and 2 columns of uint32.
+* Matrix 4x4. Holds 4 rows and 4 columns of uint32.
 * Has all the possible operations for matrices.
 */
-class EE_UTILITY_EXPORT Matrix2u
+class EE_UTILITY_EXPORT Matrix4u
 {
- public:
+public:
   /**
   * @brief
   * The default constructor.
@@ -684,7 +967,7 @@ class EE_UTILITY_EXPORT Matrix2u
   * @description
   * Initializes every value in 0.
   */
-  Matrix2u();
+  Matrix4u();
   /**
   * @brief
   * Custom constructor.
@@ -696,7 +979,7 @@ class EE_UTILITY_EXPORT Matrix2u
   * @param src
   * The source from where the data is taken.
   */
-  Matrix2u(uint32 src[4]);
+  Matrix4u(uint32 src[16]);
   /**
   * @brief
   * Custom constructor.
@@ -709,14 +992,20 @@ class EE_UTILITY_EXPORT Matrix2u
   * The first row of the matrix.
   * @param r1
   * The second row of the matrix.
+  * @param r2
+  * The third row of the matrix.
+  * @param r3
+  * The fourth row of the matrix.
   */
-  Matrix2u(const Vector2u& r0, const Vector2u& r1);
+  Matrix4u(const Vector4u& r0, const Vector4u& r1,
+           const Vector4u& r2, const Vector4u& r3);
   /**
   * @brief
   * Custom constructor.
   *
   * @description
-  * Initializes the matrix with values. Representing each value in the matrix.
+  * Initializes the matrix with values. Representing each value in the
+  * matrix.
   * Name '_xy'
   * x: row
   * y: column
@@ -725,12 +1014,39 @@ class EE_UTILITY_EXPORT Matrix2u
   * First row, first column.
   * @param _01
   * First row, second column.
+  * @param _02
+  * First row, third column.
+  * @param _03
+  * First row, fourth column.
   * @param _10
   * Second row, first column.
   * @param _11
   * Second row, second column.
+  * @param _12
+  * Second row, third column.
+  * @param _13
+  * Second row, fourth column.
+  * @param _20
+  * Third row, first column.
+  * @param _21
+  * Third row, second column.
+  * @param _22
+  * Third row, third column.
+  * @param _23
+  * Third row, fourth column.
+  * @param _30
+  * Fourth row, first column.
+  * @param _31
+  * Fourth row, second column.
+  * @param _32
+  * Fourth row, third column.
+  * @param _33
+  * Fourth row, fourth column.
   */
-  Matrix2u(uint32 _00, uint32 _01, uint32 _10, uint32 _11);
+  Matrix4u(uint32 _00, uint32 _01, uint32 _02, uint32 _03,
+           uint32 _10, uint32 _11, uint32 _12, uint32 _13,
+           uint32 _20, uint32 _21, uint32 _22, uint32 _23,
+           uint32 _30, uint32 _31, uint32 _32, uint32 _33);
   /**
   * @brief
   * The destructor.
@@ -738,7 +1054,7 @@ class EE_UTILITY_EXPORT Matrix2u
   * @description
   * Frees allocated memory.
   */
-  ~Matrix2u();
+  ~Matrix4u();
 
   /**
   * @brief
@@ -750,7 +1066,7 @@ class EE_UTILITY_EXPORT Matrix2u
   * @return
   * The determinant of the matrix.
   */
-  float 
+  float
   getDeterminant() const;
   /**
   * @brief
@@ -762,7 +1078,7 @@ class EE_UTILITY_EXPORT Matrix2u
   * @return
   * The transpose of the matrix.
   */
-  Matrix2u 
+  Matrix4u
   getTranspose() const;
   /**
   * @brief
@@ -774,8 +1090,9 @@ class EE_UTILITY_EXPORT Matrix2u
   * @return
   * The transpose of the matrix.
   */
-  Matrix2u&
+  Matrix4u&
   transpose();
+
 
   /**
   * @brief
@@ -790,8 +1107,8 @@ class EE_UTILITY_EXPORT Matrix2u
   * @return
   * The sum of the two matrices.
   */
-  Matrix2u 
-  operator+(const Matrix2u& other) const;
+  Matrix4u
+  operator+(const Matrix4u& other) const;
   /**
   * @brief
   * The operator '-' with other matrix.
@@ -805,8 +1122,8 @@ class EE_UTILITY_EXPORT Matrix2u
   * @return
   * The subtraction of the two matrices.
   */
-  Matrix2u 
-  operator-(const Matrix2u& other) const;
+  Matrix4u
+  operator-(const Matrix4u& other) const;
   /**
   * @brief
   * The operator '*' with other matrix.
@@ -820,8 +1137,8 @@ class EE_UTILITY_EXPORT Matrix2u
   * @return
   * The multiplication of the two matrices.
   */
-  Matrix2u 
-  operator*(const Matrix2u& other) const;
+  Matrix4u
+  operator*(const Matrix4u& other) const;
   /**
   * @brief
   * The operator '*' with a number.
@@ -835,7 +1152,7 @@ class EE_UTILITY_EXPORT Matrix2u
   * @return
   * The multiplication of the values of the matrix, time the number.
   */
-  Matrix2u 
+  Matrix4u
   operator*(uint32 k) const;
 
   /**
@@ -852,8 +1169,8 @@ class EE_UTILITY_EXPORT Matrix2u
   * @return
   * This matrix with its values changed.
   */
-  Matrix2u& 
-  operator=(const Matrix2u& other);
+  Matrix4u&
+  operator=(const Matrix4u& other);
 
   /**
   * @brief
@@ -869,8 +1186,8 @@ class EE_UTILITY_EXPORT Matrix2u
   * @return
   * This matrix with its values changed.
   */
-  Matrix2u& 
-  operator+=(const Matrix2u& other);
+  Matrix4u&
+  operator+=(const Matrix4u& other);
   /**
   * @brief
   * The operator '-=' with other matrix.
@@ -885,8 +1202,8 @@ class EE_UTILITY_EXPORT Matrix2u
   * @return
   * This matrix with its values changed.
   */
-  Matrix2u& 
-  operator-=(const Matrix2u& other);
+  Matrix4u&
+  operator-=(const Matrix4u& other);
   /**
   * @brief
   * The operator '*=' with other matrix.
@@ -901,8 +1218,8 @@ class EE_UTILITY_EXPORT Matrix2u
   * @return
   * This matrix with its values changed.
   */
-  Matrix2u& 
-  operator*=(const Matrix2u& other);
+  Matrix4u&
+  operator*=(const Matrix4u& other);
   /**
   * @brief
   * The operator '*=' with a value.
@@ -917,7 +1234,7 @@ class EE_UTILITY_EXPORT Matrix2u
   * @return
   * This matrix with its values changed.
   */
-  Matrix2u&
+  Matrix4u&
   operator*=(uint32 k);
 
   /**
@@ -933,10 +1250,10 @@ class EE_UTILITY_EXPORT Matrix2u
   * @return
   * True if the two matrices are equal.
   */
-  bool 
-  operator==(const Matrix2u& other);
+  bool
+  operator==(const Matrix4u& other);
 
- public:
+public:
   union
   {
     struct
@@ -950,6 +1267,14 @@ class EE_UTILITY_EXPORT Matrix2u
       */
       uint32 m_01;
       /*
+      * Component r0c2 of the matrix.
+      */
+      uint32 m_02;
+      /*
+      * Component r0c3 of the matrix.
+      */
+      uint32 m_03;
+      /*
       * Component r1c0 of the matrix.
       */
       uint32 m_10;
@@ -957,35 +1282,83 @@ class EE_UTILITY_EXPORT Matrix2u
       * Component r1c1 of the matrix.
       */
       uint32 m_11;
+      /*
+      * Component r1c2 of the matrix.
+      */
+      uint32 m_12;
+      /*
+      * Component r1c3 of the matrix.
+      */
+      uint32 m_13;
+      /*
+      * Component r2c0 of the matrix.
+      */
+      uint32 m_20;
+      /*
+      * Component r2c1 of the matrix.
+      */
+      uint32 m_21;
+      /*
+      * Component r2c2 of the matrix.
+      */
+      uint32 m_22;
+      /*
+      * Component r2c3 of the matrix.
+      */
+      uint32 m_23;
+      /*
+      * Component r3c0 of the matrix.
+      */
+      uint32 m_30;
+      /*
+      * Component r3c1 of the matrix.
+      */
+      uint32 m_31;
+      /*
+      * Component r3c2 of the matrix.
+      */
+      uint32 m_32;
+      /*
+      * Component r3c3 of the matrix.
+      */
+      uint32 m_33;
     };
     struct
     {
       /*
       * The first row.
       */
-      Vector2u m_r0;
+      Vector4u m_r0;
       /*
       * The second row.
       */
-      Vector2u m_r1;
+      Vector4u m_r1;
+      /*
+      * The third row.
+      */
+      Vector4u m_r2;
+      /*
+      * The fouth row.
+      */
+      Vector4u m_r3;
     };
     /*
     * The entire matrix on an array.
     */
-    uint32 m[4];
+    uint32 m[16];
   };
 
   /*
   * Matrix filled with zeros.
   */
-  static Matrix2u ZERO;
+  static Matrix4u ZERO;
   /*
   * Matrix filled with ones.
   */
-  static Matrix2u ONES;
+  static Matrix4u ONES;
   /*
   * The identity matrix.
   */
-  static Matrix2u IDENTITY;
+  static Matrix4u IDENTITY;
 };
 }

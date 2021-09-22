@@ -10,6 +10,8 @@
 #include "../eeUtilities/include/eeMatrix3.h"
 
 using eeEngineSDK::Math;
+using eeEngineSDK::int32;
+using eeEngineSDK::uint32;
 
 using eeEngineSDK::Vector2f;
 using eeEngineSDK::Vector2i;
@@ -742,6 +744,7 @@ TEST(eeUtilities, Vector4)
 
 TEST(eeUtilities, Matrix2)
 {
+  /* Matrix2f */
   // Size
   EXPECT_EQ(sizeof(Matrix2f), 16);
 
@@ -802,6 +805,7 @@ TEST(eeUtilities, Matrix2)
 
   
 
+  /* Matrix2i */
   // Size
   EXPECT_EQ(sizeof(Matrix2i), 16);
 
@@ -853,6 +857,7 @@ TEST(eeUtilities, Matrix2)
 
 
 
+  /* Matrix2u */
   // Size
   EXPECT_EQ(sizeof(Matrix2u), 16);
 
@@ -905,6 +910,7 @@ TEST(eeUtilities, Matrix2)
 
 TEST(eeUtilities, Matrix3)
 {
+  /* Matrix3f */
   // Size
   EXPECT_EQ(sizeof(Matrix3f), 36);
 
@@ -964,13 +970,27 @@ TEST(eeUtilities, Matrix3)
   transform = Matrix3f::RotationMatrix(Vector3f(Math::kPI * 0.5f, 
                                                 Math::kPI, 
                                                 Math::kPI / 3.0f));
-  EXPECT_TRUE(transform == Matrix3f(0.0f, -0.5f, 0.8660254f,
-                                    -1.0f, 0.0f, 0.0f,
-                                    0.0f, -0.8660254f, -0.5f));
+  EXPECT_TRUE(transform == Matrix3f(-0.5f      ,  0.0f,  0.8660254f,
+                                    -0.8660254f,  0.0f, -0.5f,
+                                     0.0f      , -1.0f,  0.0f));
   transform = Matrix3f::ScaleMatrix(Vector3f(1.0f, 3.0f, 5.0f));
   EXPECT_TRUE(transform == Matrix3f(1.0f, 0.0f, 0.0f,
                                     0.0f, 3.0f, 0.0f,
                                     0.0f, 0.0f, 5.0f));
+
+  transform = Matrix3f::IDENTITY;
+  transform.translate(Vector3f(2.0f, 4.0f, 1.0f));
+  EXPECT_TRUE(transform == Matrix3f(1.0f, 0.0f, 2.0f,
+                                    0.0f, 1.0f, 4.0f,
+                                    0.0f, 0.0f, 1.0f));
+  transform.scale(Vector3f(3.0f, 2.0f, 4.0f));
+  EXPECT_TRUE(transform == Matrix3f(3.0f, 0.0f, 8.0f,
+                                    0.0f, 2.0f, 16.0f,
+                                    0.0f, 0.0f, 4.0f));
+  transform.rotate(Vector3f(Math::kPI * 0.5f, Math::kPI, Math::kPI / 3.0f));
+  EXPECT_TRUE(transform == Matrix3f(-1.5f      , -8.0f ,  2.5980762f,
+                                    -1.7320508f, -16.0f, -1.0f,
+                                     0.0f      , -4.0f ,  0.0f));
 
 
   // Operators overloads
@@ -1006,6 +1026,164 @@ TEST(eeUtilities, Matrix3)
   EXPECT_TRUE(cst3f == Matrix3f(3.0f, 3.0f, 3.0f,
                                 3.0f, 3.0f, 3.0f,
                                 3.0f, 3.0f, 3.0f));
+
+
+
+  /* Matrix3i */
+  // Size
+  EXPECT_EQ(sizeof(Matrix3i), 36);
+
+  // Default constructor and matrix ZERO
+  Matrix3i defi;
+  EXPECT_TRUE(defi == Matrix3i::ZERO);
+
+  // Custom constructor 1 and matrix ONES
+  int32 mi[9] = { 1, 1, 1,
+                  1, 1, 1,
+                  1, 1, 1 };
+  Matrix3i cst1i(mi);
+  EXPECT_TRUE(cst1i == Matrix3i::ONES);
+
+  // Custom constructor 2 and matrix IDENTITY
+  Matrix3i cst2i(Vector3i(1, 0, 0),
+                 Vector3i(0, 1, 0),
+                 Vector3i(0, 0, 1));
+  EXPECT_TRUE(cst2i == Matrix3i::IDENTITY);
+
+  // Custom constructor 3
+  Matrix3i cst3i(1, 2, 7,
+                 4, 5, 6,
+                 3, 8, 9);
+  EXPECT_TRUE(cst3i == Matrix3i(Vector3i(1, 2, 7),
+                                Vector3i(4, 5, 6),
+                                Vector3i(3, 8, 9)));
+
+
+  // Functions
+  EXPECT_EQ(cst3i.getDeterminant(), 80.0f);
+  EXPECT_TRUE(cst3i.getTranspose() == Matrix3i(1, 4, 3,
+                                               2, 5, 8,
+                                               7, 6, 9));
+
+  cst3i.transpose();
+  EXPECT_TRUE(cst3i == Matrix3i(1, 4, 3,
+                                2, 5, 8,
+                                7, 6, 9));
+  cst3i.transpose();
+
+
+  // Operators overloads
+  EXPECT_TRUE(cst3i + cst2i == Matrix3i(2, 2, 7,
+                                        4, 6, 6,
+                                        3, 8, 10));
+  EXPECT_TRUE(cst3i - cst2i == Matrix3i(0, 2, 7,
+                                        4, 4, 6,
+                                        3, 8, 8));
+  EXPECT_TRUE(cst3i * cst1i == Matrix3i(10, 10, 10,
+                                        15, 15, 15,
+                                        20, 20, 20));
+  EXPECT_TRUE(cst3i * 2 == Matrix3i(2, 4 , 14,
+                                    8, 10, 12,
+                                    6, 16, 18));
+
+  cst3i = cst2i;
+  EXPECT_TRUE(cst3i == cst2i);
+
+  cst3i += cst1i;
+  EXPECT_TRUE(cst3i == Matrix3i(2, 1, 1,
+                                1, 2, 1,
+                                1, 1, 2));
+  cst3i -= cst1i;
+  EXPECT_TRUE(cst3i == Matrix3i(1, 0, 0,
+                                0, 1, 0,
+                                0, 0, 1));
+  cst3i *= cst1i;
+  EXPECT_TRUE(cst3i == Matrix3i(1, 1, 1,
+                                1, 1, 1,
+                                1, 1, 1));
+  cst3i *= 3;
+  EXPECT_TRUE(cst3i == Matrix3i(3, 3, 3,
+                                3, 3, 3,
+                                3, 3, 3));
+
+
+
+  /* Matrix3u */
+  // Size
+  EXPECT_EQ(sizeof(Matrix3u), 36);
+
+  // Default constructor and matrix ZERO
+  Matrix3u defu;
+  EXPECT_TRUE(defu == Matrix3u::ZERO);
+
+  // Custom constructor 1 and matrix ONES
+  uint32 mu[9] = { 1u, 1u, 1u,
+                   1u, 1u, 1u,
+                   1u, 1u, 1u };
+  Matrix3u cst1u(mu);
+  EXPECT_TRUE(cst1u == Matrix3u::ONES);
+
+  // Custom constructor 2 and matrix IDENTITY
+  Matrix3u cst2u(Vector3u(1u, 0u, 0u),
+                 Vector3u(0u, 1u, 0u),
+                 Vector3u(0u, 0u, 1u));
+  EXPECT_TRUE(cst2u == Matrix3u::IDENTITY);
+
+  // Custom constructor 3
+  Matrix3u cst3u(1u, 2u, 7u,
+                 4u, 5u, 6u,
+                 3u, 8u, 9u);
+  EXPECT_TRUE(cst3u == Matrix3u(Vector3u(1u, 2u, 7u),
+                                Vector3u(4u, 5u, 6u),
+                                Vector3u(3u, 8u, 9u)));
+
+
+  // Functions
+  EXPECT_EQ(cst3u.getDeterminant(), 80.0f);
+  EXPECT_TRUE(cst3u.getTranspose() == Matrix3u(1u, 4u, 3u,
+                                               2u, 5u, 8u,
+                                               7u, 6u, 9u));
+
+  cst3u.transpose();
+  EXPECT_TRUE(cst3u == Matrix3u(1u, 4u, 3u,
+                                2u, 5u, 8u,
+                                7u, 6u, 9u));
+  cst3u.transpose();
+
+
+  // Operators overloads
+  EXPECT_TRUE(cst3u + cst2u == Matrix3u(2u, 2u, 7u,
+                                        4u, 6u, 6u,
+                                        3u, 8u, 10u));
+  EXPECT_TRUE(cst3u - cst2u == Matrix3u(0u, 2u, 7u,
+                                        4u, 4u, 6u,
+                                        3u, 8u, 8u));
+  EXPECT_TRUE(cst3u * cst1u == Matrix3u(10u, 10u, 10u,
+                                        15u, 15u, 15u,
+                                        20u, 20u, 20u));
+  EXPECT_TRUE(cst3u * 2 == Matrix3u(2u, 4u,  14u,
+                                    8u, 10u, 12u,
+                                    6u, 16u, 18u));
+
+  cst3u = cst2u;
+  EXPECT_TRUE(cst3u == cst2u);
+
+  cst3u += cst1u;
+  EXPECT_TRUE(cst3u == Matrix3u(2u, 1u, 1u,
+                                1u, 2u, 1u,
+                                1u, 1u, 2u));
+  cst3u -= cst1u;
+  EXPECT_TRUE(cst3u == Matrix3u(1u, 0u, 0u,
+                                0u, 1u, 0u,
+                                0u, 0u, 1u));
+  cst3u *= cst1u;
+  EXPECT_TRUE(cst3u == Matrix3u(1u, 1u, 1u,
+                                1u, 1u, 1u,
+                                1u, 1u, 1u));
+  cst3u *= 3;
+  EXPECT_TRUE(cst3u == Matrix3u(3u, 3u, 3u,
+                                3u, 3u, 3u,
+                                3u, 3u, 3u));
 }
 
 int main(int argc, char** argv) {

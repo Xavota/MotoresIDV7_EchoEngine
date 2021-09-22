@@ -13,6 +13,28 @@ Matrix3f Matrix3f::IDENTITY = Matrix3f(1.0f, 0.0f, 0.0f,
                                        0.0f, 0.0f, 1.0f);
 
 
+Matrix3i Matrix3i::ZERO = Matrix3i(0, 0, 0,
+                                   0, 0, 0,
+                                   0, 0, 0);
+Matrix3i Matrix3i::ONES = Matrix3i(1, 1, 1,
+                                   1, 1, 1,
+                                   1, 1, 1);
+Matrix3i Matrix3i::IDENTITY = Matrix3i(1, 0, 0,
+                                       0, 1, 0,
+                                       0, 0, 1);
+
+
+Matrix3u Matrix3u::ZERO = Matrix3u(0u, 0u, 0u,
+                                   0u, 0u, 0u,
+                                   0u, 0u, 0u);
+Matrix3u Matrix3u::ONES = Matrix3u(1u, 1u, 1u,
+                                   1u, 1u, 1u,
+                                   1u, 1u, 1u);
+Matrix3u Matrix3u::IDENTITY = Matrix3u(1u, 0u, 0u,
+                                       0u, 1u, 0u,
+                                       0u, 0u, 1u);
+
+
 
 Matrix3f 
 Matrix3f::TranslationMatrix(const Vector3f& move)
@@ -24,16 +46,18 @@ Matrix3f::TranslationMatrix(const Vector3f& move)
 Matrix3f 
 Matrix3f::RotationMatrix(const Vector3f& angle)
 {
-  Matrix3f rx(1.0f, 0.0f,                0.0f,
-              0.0f, Math::cos(angle.x), -Math::sin(angle.x),
-              0.0f, Math::sin(angle.x),  Math::cos(angle.x));
+  Matrix3f rx( 1.0f, 0.0f,                0.0f,
+               0.0f, Math::cos(angle.x), -Math::sin(angle.x),
+               0.0f, Math::sin(angle.x),  Math::cos(angle.x));
   Matrix3f ry( Math::cos(angle.y), 0.0f, Math::sin(angle.y),
                0.0f,               1.0f, 0.0f,
               -Math::sin(angle.y), 0.0f, Math::cos(angle.y));
-  Matrix3f rz(Math::cos(angle.z), -Math::sin(angle.z), 0.0f,
-              Math::sin(angle.z),  Math::cos(angle.z), 0.0f,
-              0.0f,                0.0f,               1.0f);
-  return rz * ry * rx;
+  Matrix3f rz( Math::cos(angle.z), -Math::sin(angle.z), 0.0f,
+               Math::sin(angle.z),  Math::cos(angle.z), 0.0f,
+               0.0f,                0.0f,               1.0f);
+
+  Matrix3f rzy = rz * ry;
+  return rzy * rx;
 }
 Matrix3f 
 Matrix3f::ScaleMatrix(const Vector3f& scale)
