@@ -2,8 +2,13 @@
 
 #include "eePrerequisitesUtilities.h"
 
-namespace eeEngineSDK
-{
+namespace eeEngineSDK {
+  /**
+  * @brief
+  * All math that will be needed on the engine. Wraps all the 
+  * math functions so that the only changes made will be in here,
+  * if needed.
+  */
 class EE_UTILITY_EXPORT PlatformMath
 {
 public:
@@ -21,7 +26,7 @@ public:
   * The cosine function.
   *
   * @description
-  * Returns the cosine operatation for the angle pased, in radians.
+  * Returns the cosine operation for the angle passed, in radians.
   *
   * @param _radian
   * The angle for the function in radians.
@@ -36,7 +41,7 @@ public:
   * The cosine function for degrees.
   *
   * @description
-  * Returns the cosine operatation for the angle pased, in degrees.
+  * Returns the cosine operation for the angle passed, in degrees.
   *
   * @param _radian
   * The angle for the function in degrees.
@@ -51,7 +56,7 @@ public:
   * The sine function.
   *
   * @description
-  * Returns the sine operatation for the angle pased, in radians.
+  * Returns the sine operation for the angle passed, in radians.
   *
   * @param _radian
   * The angle for the function in radians.
@@ -66,7 +71,7 @@ public:
   * The sine function for degrees.
   *
   * @description
-  * Returns the sine operatation for the angle pased, in degrees.
+  * Returns the sine operation for the angle passed, in degrees.
   *
   * @param _radian
   * The angle for the function in degrees.
@@ -81,7 +86,7 @@ public:
   * The tangent function.
   *
   * @description
-  * Returns the tangent operatation for the angle pased, in radians.
+  * Returns the tangent operation for the angle passed, in radians.
   *
   * @param _radian
   * The angle for the function in radians.
@@ -96,7 +101,7 @@ public:
   * The tangent function for degrees.
   *
   * @description
-  * Returns the tangent operatation for the angle pased, in degrees.
+  * Returns the tangent operation for the angle passed, in degrees.
   *
   * @param _radian
   * The angle for the function in degrees.
@@ -111,7 +116,7 @@ public:
   * The secant function.
   *
   * @description
-  * Returns the secant operatation for the angle pased, in radians.
+  * Returns the secant operation for the angle passed, in radians.
   *
   * @param _radian
   * The angle for the function in radians.
@@ -126,7 +131,7 @@ public:
   * The secant function for degrees.
   *
   * @description
-  * Returns the secant operatation for the angle pased, in degrees.
+  * Returns the secant operation for the angle passed, in degrees.
   *
   * @param _radian
   * The angle for the function in degrees.
@@ -141,7 +146,7 @@ public:
   * The cosecant function.
   *
   * @description
-  * Returns the cosecant operatation for the angle pased, in radians.
+  * Returns the cosecant operation for the angle passed, in radians.
   *
   * @param _radian
   * The angle for the function in radians.
@@ -156,7 +161,7 @@ public:
   * The cosecant function for degrees.
   *
   * @description
-  * Returns the cosecant operatation for the angle pased, in degrees.
+  * Returns the cosecant operation for the angle passed, in degrees.
   *
   * @param _radian
   * The angle for the function in degrees.
@@ -171,7 +176,7 @@ public:
   * The cotangent function.
   *
   * @description
-  * Returns the cotangent operatation for the angle pased, in radians.
+  * Returns the cotangent operation for the angle passed, in radians.
   *
   * @param _radian
   * The angle for the function in radians.
@@ -186,7 +191,7 @@ public:
   * The cotangent function for degrees.
   *
   * @description
-  * Returns the cotangent operatation for the angle pased, in degrees.
+  * Returns the cotangent operation for the angle passed, in degrees.
   *
   * @param _radian
   * The angle for the function in degrees.
@@ -201,7 +206,7 @@ public:
   * The arccosine function.
   *
   * @description
-  * Returns the arccosine operatation for the value pased, in radians.
+  * Returns the arccosine operation for the value passed, in radians.
   *
   * @param _radian
   * The value for the function.
@@ -216,7 +221,7 @@ public:
   * The arccosine function, for degrees.
   *
   * @description
-  * Returns the arccosine operatation for the value pased, in degrees.
+  * Returns the arccosine operation for the value passed, in degrees.
   *
   * @param _radian
   * The value for the function.
@@ -231,7 +236,7 @@ public:
   * The arcsine function.
   *
   * @description
-  * Returns the arcsine operatation for the value pased, in radians.
+  * Returns the arcsine operation for the value passed, in radians.
   *
   * @param _radian
   * The value for the function.
@@ -246,7 +251,7 @@ public:
   * The arcsine function, for degrees.
   *
   * @description
-  * Returns the arcsine operatation for the value pased, in degrees.
+  * Returns the arcsine operation for the value passed, in degrees.
   *
   * @param _radian
   * The value for the function.
@@ -261,7 +266,7 @@ public:
   * The arctangent function.
   *
   * @description
-  * Returns the arctangent operatation for the value pased, in radians.
+  * Returns the arctangent operation for the value passed, in radians.
   *
   * @param _radian
   * The value for the function.
@@ -276,7 +281,7 @@ public:
   * The arctangent function, for degrees.
   *
   * @description
-  * Returns the arctangent operatation for the value pased, in degrees.
+  * Returns the arctangent operation for the value passed, in degrees.
   *
   * @param _radian
   * The value for the function.
@@ -291,7 +296,7 @@ public:
   * The arcsecant function.
   *
   * @description
-  * Returns the arcsecant operatation for the value pased, in radians.
+  * Returns the arcsecant operation for the value passed, in radians.
   *
   * @param _radian
   * The value for the function.
@@ -306,7 +311,7 @@ public:
   * The arcsecant function, for degrees.
   *
   * @description
-  * Returns the arcsecant operatation for the value pased, in degrees.
+  * Returns the arcsecant operation for the value passed, in degrees.
   *
   * @param _radian
   * The value for the function.
@@ -321,7 +326,7 @@ public:
   * The arccosecant function.
   *
   * @description
-  * Returns the arccosecant operatation for the value pased, in radians.
+  * Returns the arccosecant operation for the value passed, in radians.
   *
   * @param _radian
   * The value for the function.
@@ -336,7 +341,7 @@ public:
   * The arccosecant function, for degrees.
   *
   * @description
-  * Returns the arccosecant operatation for the value pased, in degrees.
+  * Returns the arccosecant operation for the value passed, in degrees.
   *
   * @param _radian
   * The value for the function.
@@ -351,7 +356,7 @@ public:
   * The arccotangent function.
   *
   * @description
-  * Returns the arccotangent operatation for the value pased, in radians.
+  * Returns the arccotangent operation for the value passed, in radians.
   *
   * @param _radian
   * The value for the function.
@@ -366,7 +371,7 @@ public:
   * The arccotangent function, for degrees.
   *
   * @description
-  * Returns the arccotangent operatation for the value pased, in degrees.
+  * Returns the arccotangent operation for the value passed, in degrees.
   *
   * @param _radian
   * The value for the function.
@@ -384,7 +389,7 @@ public:
   * Gets radians and transforms them into degrees.
   *
   * @param _radian
-  * The radians to tranform.
+  * The radians to transform.
   *
   * @return
   * The degrees result.
@@ -399,7 +404,7 @@ public:
   * Gets degrees and transforms them into radians.
   *
   * @param _degree
-  * The degree to tranform.
+  * The degree to transform.
   *
   * @return
   * The radians result.
@@ -416,7 +421,7 @@ public:
   * @param _lval
   * The value who's gonna be divided.
   * @param _rval
-  * The value who'sgonna divide.
+  * The value who's gonna divide.
   *
   * @return
   * The result of the module.
@@ -431,7 +436,7 @@ public:
   * Returns the square root of the value.
   *
   * @param _val
-  * The value for teh square root.
+  * The value for the square root.
   *
   * @return
   * The result of the square root.

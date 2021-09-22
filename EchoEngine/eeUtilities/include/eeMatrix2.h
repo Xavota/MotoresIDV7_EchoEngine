@@ -1,7 +1,13 @@
 #pragma once
 #include "eePrerequisitesUtilities.h"
+#include "eeVector2.h"
 
 namespace eeEngineSDK {
+  /**
+  * @brief
+  * Matrix 2x2. Holds 2 rows and 2 columns of floats.
+  * Has all the possible operations for matrices.
+  */
 class EE_UTILITY_EXPORT Matrix2f
 {
  public:
@@ -79,7 +85,7 @@ class EE_UTILITY_EXPORT Matrix2f
   * The determinant of the matrix.
   */
   float 
-  determinant();
+  getDeterminant() const;
   /**
   * @brief
   * Calculates the transpose of the matrix.
@@ -91,6 +97,18 @@ class EE_UTILITY_EXPORT Matrix2f
   * The transpose of the matrix.
   */
   Matrix2f 
+  getTranspose() const;
+  /**
+  * @brief
+  * Transpose the matrix.
+  *
+  * @description
+  * Modifies the matrix to its transposed form.
+  *
+  * @return
+  * The transpose of the matrix.
+  */
+  Matrix2f&
   transpose();
   /**
   * @brief
@@ -103,6 +121,18 @@ class EE_UTILITY_EXPORT Matrix2f
   * The inverse of the matrix.
   */
   Matrix2f 
+  getInverse() const;
+  /**
+  * @brief
+  * Inverse the matrix.
+  *
+  * @description
+  * Modify the matrix to its inverse form with its current values.
+  *
+  * @return
+  * The matrix inverted.
+  */
+  Matrix2f&
   inverse();
 
   /**
@@ -119,22 +149,22 @@ class EE_UTILITY_EXPORT Matrix2f
   * The sum of the two matrices.
   */
   Matrix2f 
-  operator+(const Matrix2f& other);
+  operator+(const Matrix2f& other) const;
   /**
   * @brief
   * The operator '-' with other matrix.
   *
   * @description
-  * Substracts every value with its counterpart on the other matrix.
+  * Subtracts every value with its counterpart on the other matrix.
   *
   * @param other
-  * The other matrix to substract.
+  * The other matrix to subtract.
   *
   * @return
-  * The substraction of the two matrices.
+  * The subtraction of the two matrices.
   */
   Matrix2f 
-  operator-(const Matrix2f& other);
+  operator-(const Matrix2f& other) const;
   /**
   * @brief
   * The operator '*' with other matrix.
@@ -149,7 +179,7 @@ class EE_UTILITY_EXPORT Matrix2f
   * The multiplication of the two matrices.
   */
   Matrix2f 
-  operator*(const Matrix2f& other);
+  operator*(const Matrix2f& other) const;
   /**
   * @brief
   * The operator '*' with a number.
@@ -164,14 +194,14 @@ class EE_UTILITY_EXPORT Matrix2f
   * The multiplication of the values of the matrix, time the number.
   */
   Matrix2f 
-  operator*(float k);
+  operator*(float k) const;
 
   /**
   * @brief
   * The operator '=' with other matrix.
   *
   * @description
-  * Makes every component of the matrxi equal to its counterpart
+  * Makes every component of the matrix equal to its counterpart
   * on the other matrix.
   *
   * @param other
@@ -180,7 +210,7 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * This matrix with its values changed.
   */
-  Matrix2f 
+  Matrix2f&
   operator=(const Matrix2f& other);
 
   /**
@@ -197,23 +227,23 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * This matrix with its values changed.
   */
-  Matrix2f 
+  Matrix2f&
   operator+=(const Matrix2f& other);
   /**
   * @brief
   * The operator '-=' with other matrix.
   *
   * @description
-  * Makes this matrix equal to the substraction of it minus the
+  * Makes this matrix equal to the subtraction of it minus the
   * other matrix.
   *
   * @param other
-  * The other matrix to substract.
+  * The other matrix to subtract.
   *
   * @return
   * This matrix with its values changed.
   */
-  Matrix2f 
+  Matrix2f&
   operator-=(const Matrix2f& other);
   /**
   * @brief
@@ -229,7 +259,7 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * This matrix with its values changed.
   */
-  Matrix2f 
+  Matrix2f&
   operator*=(const Matrix2f& other);
   /**
   * @brief
@@ -245,7 +275,7 @@ class EE_UTILITY_EXPORT Matrix2f
   * @return
   * This matrix with its values changed.
   */
-  Matrix2f 
+  Matrix2f&
   operator*=(float k);
 
   /**
@@ -269,25 +299,60 @@ class EE_UTILITY_EXPORT Matrix2f
   {
     struct
     {
-      float m_00; // Component r0c0 of the matrix.
-      float m_01; // Component r0c1 of the matrix.
-      float m_10; // Component r1c0 of the matrix.
-      float m_11; // Component r1c1 of the matrix.
+      /*
+      * Component r0c0 of the matrix.
+      */
+      float m_00;
+      /*
+      * Component r0c1 of the matrix.
+      */
+      float m_01;
+      /*
+      * Component r1c0 of the matrix.
+      */
+      float m_10;
+      /*
+      * Component r1c1 of the matrix.
+      */
+      float m_11;
     };
-    /*struct
+    struct
     {
-      Vector2f r0;
-      Vector2f r1;
-    };/**/
-    float m[4]; // The entire matrix on an array. 
+      /*
+      * The first row.
+      */
+      Vector2f m_r0;
+      /*
+      * The second row.
+      */
+      Vector2f m_r1;
+    };
+    /*
+    * The entire matrix on an array.
+    */
+    float m[4];
   };
 
-  static Matrix2f ZERO; // Matrix filled with zeros
-  static Matrix2f ONES; // Matrix filled with ones
-  static Matrix2f IDENTITY; // The identity matrix
+  /*
+  * Matrix filled with zeros.
+  */
+  static Matrix2f ZERO;
+  /*
+  * Matrix filled with ones.
+  */
+  static Matrix2f ONES;
+  /*
+  * The identity matrix.
+  */
+  static Matrix2f IDENTITY;
 };
 
 
+/**
+* @brief
+* Matrix 2x2. Holds 2 rows and 2 columns of int32.
+* Has all the possible operations for matrices.
+*/
 class EE_UTILITY_EXPORT Matrix2i
 {
  public:
@@ -364,7 +429,8 @@ class EE_UTILITY_EXPORT Matrix2i
   * @return
   * The determinant of the matrix.
   */
-  float determinant();
+  float 
+  getDeterminant() const;
   /**
   * @brief
   * Calculates the transpose of the matrix.
@@ -375,18 +441,20 @@ class EE_UTILITY_EXPORT Matrix2i
   * @return
   * The transpose of the matrix.
   */
-  Matrix2i transpose();
+  Matrix2i 
+  getTranspose() const;
   /**
   * @brief
-  * Calculates the inverse of the matrix.
+  * Transpose the matrix.
   *
   * @description
-  * Returns the inverse of the matrix with its current values.
+  * Modifies the matrix to its transposed form.
   *
   * @return
-  * The inverse of the matrix.
+  * The transpose of the matrix.
   */
-  Matrix2f inverse();
+  Matrix2i&
+  transpose();
 
   /**
   * @brief
@@ -401,21 +469,23 @@ class EE_UTILITY_EXPORT Matrix2i
   * @return
   * The sum of the two matrices.
   */
-  Matrix2i operator+(const Matrix2i& other);
+  Matrix2i 
+  operator+(const Matrix2i& other) const;
   /**
   * @brief
   * The operator '-' with other matrix.
   *
   * @description
-  * Substracts every value with its counterpart on the other matrix.
+  * Subtracts every value with its counterpart on the other matrix.
   *
   * @param other
-  * The other matrix to substract.
+  * The other matrix to subtract.
   *
   * @return
-  * The substraction of the two matrices.
+  * The subtraction of the two matrices.
   */
-  Matrix2i operator-(const Matrix2i& other);
+  Matrix2i 
+  operator-(const Matrix2i& other) const;
   /**
   * @brief
   * The operator '*' with other matrix.
@@ -429,7 +499,8 @@ class EE_UTILITY_EXPORT Matrix2i
   * @return
   * The multiplication of the two matrices.
   */
-  Matrix2i operator*(const Matrix2i& other);
+  Matrix2i 
+  operator*(const Matrix2i& other) const;
   /**
   * @brief
   * The operator '*' with a number.
@@ -443,14 +514,15 @@ class EE_UTILITY_EXPORT Matrix2i
   * @return
   * The multiplication of the values of the matrix, time the number.
   */
-  Matrix2i operator*(int32 k);
+  Matrix2i 
+  operator*(int32 k) const;
 
   /**
   * @brief
   * The operator '=' with other matrix.
   *
   * @description
-  * Makes every component of the matrxi equal to its counterpart
+  * Makes every component of the matrix equal to its counterpart
   * on the other matrix.
   *
   * @param other
@@ -459,7 +531,8 @@ class EE_UTILITY_EXPORT Matrix2i
   * @return
   * This matrix with its values changed.
   */
-  Matrix2i operator=(const Matrix2i& other);
+  Matrix2i& 
+  operator=(const Matrix2i& other);
 
   /**
   * @brief
@@ -475,22 +548,24 @@ class EE_UTILITY_EXPORT Matrix2i
   * @return
   * This matrix with its values changed.
   */
-  Matrix2i operator+=(const Matrix2i& other);
+  Matrix2i& 
+  operator+=(const Matrix2i& other);
   /**
   * @brief
   * The operator '-=' with other matrix.
   *
   * @description
-  * Makes this matrix equal to the substraction of it minus the
+  * Makes this matrix equal to the subtraction of it minus the
   * other matrix.
   *
   * @param other
-  * The other matrix to substract.
+  * The other matrix to subtract.
   *
   * @return
   * This matrix with its values changed.
   */
-  Matrix2i operator-=(const Matrix2i& other);
+  Matrix2i& 
+  operator-=(const Matrix2i& other);
   /**
   * @brief
   * The operator '*=' with other matrix.
@@ -505,7 +580,8 @@ class EE_UTILITY_EXPORT Matrix2i
   * @return
   * This matrix with its values changed.
   */
-  Matrix2i operator*=(const Matrix2i& other);
+  Matrix2i& 
+  operator*=(const Matrix2i& other);
   /**
   * @brief
   * The operator '*=' with a value.
@@ -520,7 +596,8 @@ class EE_UTILITY_EXPORT Matrix2i
   * @return
   * This matrix with its values changed.
   */
-  Matrix2i operator*=(int32 k);
+  Matrix2i& 
+  operator*=(int32 k);
 
   /**
   * @brief
@@ -535,32 +612,68 @@ class EE_UTILITY_EXPORT Matrix2i
   * @return
   * True if the two matrices are equal.
   */
-  bool operator==(const Matrix2i& other);
+  bool 
+  operator==(const Matrix2i& other);
 
  public:
   union
   {
     struct
     {
-      int32 m_00; // Component r0c0 of the matrix.
-      int32 m_01; // Component r0c1 of the matrix.
-      int32 m_10; // Component r1c0 of the matrix.
-      int32 m_11; // Component r1c1 of the matrix.
+      /*
+      * Component r0c0 of the matrix.
+      */
+      int32 m_00;
+      /*
+      * Component r0c1 of the matrix.
+      */
+      int32 m_01;
+      /*
+      * Component r1c0 of the matrix.
+      */
+      int32 m_10;
+      /*
+      * Component r1c1 of the matrix.
+      */
+      int32 m_11;
     };
-    /*struct
+    struct
     {
-      Vector2f r0;
-      Vector2f r1;
-    };/**/
-    int32 m[4]; // The entire matrix on an array. 
+      /*
+      * The first row.
+      */
+      Vector2i m_r0;
+      /*
+      * The second row.
+      */
+      Vector2i m_r1;
+    };
+    /*
+    * The entire matrix on an array.
+    */
+    int32 m[4];
   };
 
-  static Matrix2i ZERO; // Matrix filled with zeros
-  static Matrix2i ONES; // Matrix filled with ones
-  static Matrix2i IDENTITY; // The identity matrix
+  /*
+  * Matrix filled with zeros.
+  */
+  static Matrix2i ZERO;
+  /*
+  * Matrix filled with ones.
+  */
+  static Matrix2i ONES;
+  /*
+  * The identity matrix.
+  */
+  static Matrix2i IDENTITY;
 };
 
 
+/**
+* @brief
+* Matrix 2x2. Holds 2 rows and 2 columns of uint32.
+* Has all the possible operations for matrices.
+*/
 class EE_UTILITY_EXPORT Matrix2u
 {
  public:
@@ -637,7 +750,8 @@ class EE_UTILITY_EXPORT Matrix2u
   * @return
   * The determinant of the matrix.
   */
-  float determinant();
+  float 
+  getDeterminant() const;
   /**
   * @brief
   * Calculates the transpose of the matrix.
@@ -648,18 +762,20 @@ class EE_UTILITY_EXPORT Matrix2u
   * @return
   * The transpose of the matrix.
   */
-  Matrix2u transpose();
+  Matrix2u 
+  getTranspose() const;
   /**
   * @brief
-  * Calculates the inverse of the matrix.
+  * Transpose the matrix.
   *
   * @description
-  * Returns the inverse of the matrix with its current values.
+  * Modifies the matrix to its transposed form.
   *
   * @return
-  * The inverse of the matrix.
+  * The transpose of the matrix.
   */
-  Matrix2f inverse();
+  Matrix2u&
+  transpose();
 
   /**
   * @brief
@@ -674,21 +790,23 @@ class EE_UTILITY_EXPORT Matrix2u
   * @return
   * The sum of the two matrices.
   */
-  Matrix2u operator+(const Matrix2u& other);
+  Matrix2u 
+  operator+(const Matrix2u& other) const;
   /**
   * @brief
   * The operator '-' with other matrix.
   *
   * @description
-  * Substracts every value with its counterpart on the other matrix.
+  * Subtracts every value with its counterpart on the other matrix.
   *
   * @param other
-  * The other matrix to substract.
+  * The other matrix to subtract.
   *
   * @return
-  * The substraction of the two matrices.
+  * The subtraction of the two matrices.
   */
-  Matrix2u operator-(const Matrix2u& other);
+  Matrix2u 
+  operator-(const Matrix2u& other) const;
   /**
   * @brief
   * The operator '*' with other matrix.
@@ -702,7 +820,8 @@ class EE_UTILITY_EXPORT Matrix2u
   * @return
   * The multiplication of the two matrices.
   */
-  Matrix2u operator*(const Matrix2u& other);
+  Matrix2u 
+  operator*(const Matrix2u& other) const;
   /**
   * @brief
   * The operator '*' with a number.
@@ -716,14 +835,15 @@ class EE_UTILITY_EXPORT Matrix2u
   * @return
   * The multiplication of the values of the matrix, time the number.
   */
-  Matrix2u operator*(uint32 k);
+  Matrix2u 
+  operator*(uint32 k) const;
 
   /**
   * @brief
   * The operator '=' with other matrix.
   *
   * @description
-  * Makes every component of the matrxi equal to its counterpart
+  * Makes every component of the matrix equal to its counterpart
   * on the other matrix.
   *
   * @param other
@@ -732,7 +852,8 @@ class EE_UTILITY_EXPORT Matrix2u
   * @return
   * This matrix with its values changed.
   */
-  Matrix2u operator=(const Matrix2u& other);
+  Matrix2u& 
+  operator=(const Matrix2u& other);
 
   /**
   * @brief
@@ -748,22 +869,24 @@ class EE_UTILITY_EXPORT Matrix2u
   * @return
   * This matrix with its values changed.
   */
-  Matrix2u operator+=(const Matrix2u& other);
+  Matrix2u& 
+  operator+=(const Matrix2u& other);
   /**
   * @brief
   * The operator '-=' with other matrix.
   *
   * @description
-  * Makes this matrix equal to the substraction of it minus the
+  * Makes this matrix equal to the subtraction of it minus the
   * other matrix.
   *
   * @param other
-  * The other matrix to substract.
+  * The other matrix to subtract.
   *
   * @return
   * This matrix with its values changed.
   */
-  Matrix2u operator-=(const Matrix2u& other);
+  Matrix2u& 
+  operator-=(const Matrix2u& other);
   /**
   * @brief
   * The operator '*=' with other matrix.
@@ -778,7 +901,8 @@ class EE_UTILITY_EXPORT Matrix2u
   * @return
   * This matrix with its values changed.
   */
-  Matrix2u operator*=(const Matrix2u& other);
+  Matrix2u& 
+  operator*=(const Matrix2u& other);
   /**
   * @brief
   * The operator '*=' with a value.
@@ -793,7 +917,8 @@ class EE_UTILITY_EXPORT Matrix2u
   * @return
   * This matrix with its values changed.
   */
-  Matrix2u operator*=(uint32 k);
+  Matrix2u&
+  operator*=(uint32 k);
 
   /**
   * @brief
@@ -808,28 +933,59 @@ class EE_UTILITY_EXPORT Matrix2u
   * @return
   * True if the two matrices are equal.
   */
-  bool operator==(const Matrix2u& other);
+  bool 
+  operator==(const Matrix2u& other);
 
  public:
   union
   {
     struct
     {
-      uint32 m_00; // Component r0c0 of the matrix.
-      uint32 m_01; // Component r0c1 of the matrix.
-      uint32 m_10; // Component r1c0 of the matrix.
-      uint32 m_11; // Component r1c1 of the matrix.
+      /*
+      * Component r0c0 of the matrix.
+      */
+      uint32 m_00;
+      /*
+      * Component r0c1 of the matrix.
+      */
+      uint32 m_01;
+      /*
+      * Component r1c0 of the matrix.
+      */
+      uint32 m_10;
+      /*
+      * Component r1c1 of the matrix.
+      */
+      uint32 m_11;
     };
-    /*struct
+    struct
     {
-      Vector2f r0;
-      Vector2f r1;
-    };/**/
-    uint32 m[4]; // The entire matrix on an array. 
+      /*
+      * The first row.
+      */
+      Vector2u m_r0;
+      /*
+      * The second row.
+      */
+      Vector2u m_r1;
+    };
+    /*
+    * The entire matrix on an array.
+    */
+    uint32 m[4];
   };
 
-  static Matrix2u ZERO; // Matrix filled with zeros
-  static Matrix2u ONES; // Matrix filled with ones
-  static Matrix2u IDENTITY; // The identity matrix
+  /*
+  * Matrix filled with zeros.
+  */
+  static Matrix2u ZERO;
+  /*
+  * Matrix filled with ones.
+  */
+  static Matrix2u ONES;
+  /*
+  * The identity matrix.
+  */
+  static Matrix2u IDENTITY;
 };
 }

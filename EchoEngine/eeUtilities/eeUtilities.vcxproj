@@ -167,6 +167,7 @@
   <ItemGroup>
     <ClInclude Include="include\eeMath.h" />
     <ClInclude Include="include\eeMatrix2.h" />
+    <ClInclude Include="include\eeMatrix3.h" />
     <ClInclude Include="include\eePlatformDefines.h" />
     <ClInclude Include="include\eePlatformMath.h" />
     <ClInclude Include="include\eePlatformTypes.h" />
@@ -178,6 +179,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeMatrix2.cpp" />
+    <ClCompile Include="src\eeMatrix3.cpp" />
     <ClCompile Include="src\eePlatformMath.cpp" />
     <ClCompile Include="src\eeVector2.cpp" />
     <ClCompile Include="src\eeVector3.cpp" />

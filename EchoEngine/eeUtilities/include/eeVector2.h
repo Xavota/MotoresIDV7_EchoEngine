@@ -140,7 +140,7 @@ class EE_UTILITY_EXPORT Vector2f
   getTruncate(float newSize) const;
   /**
   * @brief
-  * Changes the magnitud of the vector with the new size.
+  * Changes the magnitude of the vector with the new size.
   *
   * @description
   * Modifies the vector with the same direction as the original
