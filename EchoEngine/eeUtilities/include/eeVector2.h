@@ -1,17 +1,10 @@
-/**
-* @file
-* @author
-* @date
-* @brief
-* 
-*/
 /************************************************************************/
 /**
  * @file eeVector2.h
  * @author Diego Castellanos
- * @date 2021/09/11
- * @brief This file defines the Vector2 in its 3 forms: floats, int32 and uint32,
- *        as well as its functions, operators and members.
+ * @date 6/09/21
+ * @brief This file defines the Vector2 in its 3 forms: floats, int32 and 
+ *        uint32, as well as its functions, operators and members.
  *
  * @bug Not bug Known.
  */
@@ -570,7 +563,7 @@ class EE_UTILITY_EXPORT Vector2f
 };
 
 FORCEINLINE 
-Vector2f::Vector2f() : x(0.0f), y(0.0f)
+Vector2f::Vector2f()
 {
 }
 FORCEINLINE 
@@ -1242,7 +1235,7 @@ class EE_UTILITY_EXPORT Vector2i
 };
 
 FORCEINLINE 
-Vector2i::Vector2i() : x(0), y(0)
+Vector2i::Vector2i()
 {
 }
 FORCEINLINE 
@@ -1904,7 +1897,7 @@ class EE_UTILITY_EXPORT Vector2u
 };
 
 FORCEINLINE 
-Vector2u::Vector2u() : x(0u), y(0u)
+Vector2u::Vector2u()
 {
 }
 FORCEINLINE 

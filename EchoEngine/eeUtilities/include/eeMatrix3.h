@@ -1,8 +1,14 @@
+/************************************************************************/
 /**
-* @brief
-* This file defines the Matrix2 in its 3 forms: floats, int32 and uint32,
-* as well as its functions, operators and members.
-*/
+ * @file eeMatrix3.h
+ * @author Diego Castellanos
+ * @date 16/09/21
+ * @brief This file defines the Matrix3 in its 3 forms: floats, int32 and
+ *        uint32, as well as its functions, operators and members.
+ *
+ * @bug Not bug Known.
+ */
+ /************************************************************************/
 
 #pragma once
 #include "eePrerequisitesUtilities.h"
@@ -481,15 +487,15 @@ public:
   /*
   * Matrix filled with zeros.
   */
-  const static Matrix3f ZERO;
+  static const Matrix3f ZERO;
   /*
   * Matrix filled with ones.
   */
-  const static Matrix3f ONES;
+  static const Matrix3f ONES;
   /*
   * The identity matrix.
   */
-  const static Matrix3f IDENTITY;
+  static const Matrix3f IDENTITY;
 };
 
 
@@ -841,15 +847,15 @@ public:
   /*
   * Matrix filled with zeros.
   */
-  const static Matrix3i ZERO;
+  static const Matrix3i ZERO;
   /*
   * Matrix filled with ones.
   */
-  const static Matrix3i ONES;
+  static const Matrix3i ONES;
   /*
   * The identity matrix.
   */
-  const static Matrix3i IDENTITY;
+  static const Matrix3i IDENTITY;
 };
 
 
@@ -1201,14 +1207,14 @@ public:
   /*
   * Matrix filled with zeros.
   */
-  const static Matrix3u ZERO;
+  static const Matrix3u ZERO;
   /*
   * Matrix filled with ones.
   */
-  const static Matrix3u ONES;
+  static const Matrix3u ONES;
   /*
   * The identity matrix.
   */
-  const static Matrix3u IDENTITY;
+  static const Matrix3u IDENTITY;
 };
 }

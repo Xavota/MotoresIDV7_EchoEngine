@@ -69,9 +69,7 @@ Matrix3f::scaleMatrix(const Vector3f& scale)
 
 
 
-Matrix3f::Matrix3f() : m_00(0.0f), m_01(0.0f), m_02(0.0f),
-                       m_10(0.0f), m_11(0.0f), m_12(0.0f),
-                       m_20(0.0f), m_21(0.0f), m_22(0.0f)
+Matrix3f::Matrix3f()
 {
 }
 Matrix3f::Matrix3f(float src[9])
@@ -81,26 +79,16 @@ Matrix3f::Matrix3f(float src[9])
   std::copy(m, m + 9, src);
 }
 Matrix3f::Matrix3f(const Vector3f& r0, const Vector3f& r1, const Vector3f& r2)
+                  : m_r0(r0), m_r1(r1), m_r2(r2)
 {
-  m_r0 = r0;
-  m_r1 = r1;
-  m_r2 = r2;
 }
 Matrix3f::Matrix3f(float _00, float _01, float _02, 
                    float _10, float _11, float _12, 
-                   float _20, float _21, float _22)
+                   float _20, float _21, float _22) 
+                  : m_00(_00), m_01(_01), m_02(_02),
+                    m_10(_10), m_11(_11), m_12(_12),
+                    m_20(_20), m_21(_21), m_22(_22)
 {
-  m_00 = _00;
-  m_01 = _01;
-  m_02 = _02;
-
-  m_10 = _10;
-  m_11 = _11;
-  m_12 = _12;
-
-  m_20 = _20;
-  m_21 = _21;
-  m_22 = _22;
 }
 Matrix3f::~Matrix3f()
 {
@@ -151,19 +139,19 @@ Matrix3f::inverse()
 Matrix3f&
 Matrix3f::translate(const Vector3f& move)
 {
-  *this *= TranslationMatrix(move);
+  *this *= translationMatrix(move);
   return *this;
 }
 Matrix3f &
 Matrix3f::rotate(const Vector3f& angle)
 {
-  *this *= RotationMatrix(angle);
+  *this *= rotationMatrix(angle);
   return *this;
 }
 Matrix3f&
 Matrix3f::scale(const Vector3f& scale)
 {
-  *this *= ScaleMatrix(scale);
+  *this *= scaleMatrix(scale);
   return *this;
 }
 Matrix3f
@@ -283,9 +271,7 @@ Matrix3f::operator==(const Matrix3f& other)
 
 
 
-Matrix3i::Matrix3i() : m_00(0), m_01(0), m_02(0),
-                       m_10(0), m_11(0), m_12(0),
-                       m_20(0), m_21(0), m_22(0)
+Matrix3i::Matrix3i()
 {
 }
 Matrix3i::Matrix3i(int32 src[9])
@@ -295,26 +281,16 @@ Matrix3i::Matrix3i(int32 src[9])
   std::copy(m, m + 9, src);
 }
 Matrix3i::Matrix3i(const Vector3i& r0, const Vector3i& r1, const Vector3i& r2)
+                  : m_r0(r0), m_r1(r1), m_r2(r2)
 {
-  m_r0 = r0;
-  m_r1 = r1;
-  m_r2 = r2;
 }
 Matrix3i::Matrix3i(int32 _00, int32 _01, int32 _02,
                    int32 _10, int32 _11, int32 _12,
                    int32 _20, int32 _21, int32 _22)
+                  : m_00(_00), m_01(_01), m_02(_02),
+                    m_10(_10), m_11(_11), m_12(_12),
+                    m_20(_20), m_21(_21), m_22(_22)
 {
-  m_00 = _00;
-  m_01 = _01;
-  m_02 = _02;
-
-  m_10 = _10;
-  m_11 = _11;
-  m_12 = _12;
-
-  m_20 = _20;
-  m_21 = _21;
-  m_22 = _22;
 }
 Matrix3i::~Matrix3i()
 {
@@ -458,9 +434,7 @@ Matrix3i::operator==(const Matrix3i& other)
 
 
 
-Matrix3u::Matrix3u() : m_00(0u), m_01(0u), m_02(0u),
-                       m_10(0u), m_11(0u), m_12(0u),
-                       m_20(0u), m_21(0u), m_22(0u)
+Matrix3u::Matrix3u()
 {
 }
 Matrix3u::Matrix3u(uint32 src[9])
@@ -470,26 +444,16 @@ Matrix3u::Matrix3u(uint32 src[9])
   std::copy(m, m + 9, src);
 }
 Matrix3u::Matrix3u(const Vector3u& r0, const Vector3u& r1, const Vector3u& r2)
+                  : m_r0(r0), m_r1(r1), m_r2(r2)
 {
-  m_r0 = r0;
-  m_r1 = r1;
-  m_r2 = r2;
 }
 Matrix3u::Matrix3u(uint32 _00, uint32 _01, uint32 _02,
                    uint32 _10, uint32 _11, uint32 _12,
                    uint32 _20, uint32 _21, uint32 _22)
+                   : m_00(_00), m_01(_01), m_02(_02),
+                     m_10(_10), m_11(_11), m_12(_12),
+                     m_20(_20), m_21(_21), m_22(_22)
 {
-  m_00 = _00;
-  m_01 = _01;
-  m_02 = _02;
-
-  m_10 = _10;
-  m_11 = _11;
-  m_12 = _12;
-
-  m_20 = _20;
-  m_21 = _21;
-  m_22 = _22;
 }
 Matrix3u::~Matrix3u()
 {

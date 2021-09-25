@@ -49,6 +49,10 @@
     <ClInclude Include="include\eePlane.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\eeSphere.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeBox.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eePlatformMath.cpp">
@@ -75,6 +79,11 @@
     <ClCompile Include="src\eePlane.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\eeSphere.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eePlatformMathIndependent.cpp" />
+    <ClCompile Include="src\eeBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="eeUtilities.rc" />

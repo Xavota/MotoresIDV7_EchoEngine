@@ -165,6 +165,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\eeBox.h" />
     <ClInclude Include="include\eeMath.h" />
     <ClInclude Include="include\eeMatrix2.h" />
     <ClInclude Include="include\eeMatrix3.h" />
@@ -174,6 +175,7 @@
     <ClInclude Include="include\eePlatformMath.h" />
     <ClInclude Include="include\eePlatformTypes.h" />
     <ClInclude Include="include\eePrerequisitesUtilities.h" />
+    <ClInclude Include="include\eeSphere.h" />
     <ClInclude Include="include\eeSTDHeaders.h" />
     <ClInclude Include="include\eeVector2.h" />
     <ClInclude Include="include\eeVector3.h" />
@@ -181,11 +183,14 @@
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\eeBox.cpp" />
     <ClCompile Include="src\eeMatrix2.cpp" />
     <ClCompile Include="src\eeMatrix3.cpp" />
     <ClCompile Include="src\eeMatrix4.cpp" />
     <ClCompile Include="src\eePlane.cpp" />
     <ClCompile Include="src\eePlatformMath.cpp" />
+    <ClCompile Include="src\eePlatformMathIndependent.cpp" />
+    <ClCompile Include="src\eeSphere.cpp" />
     <ClCompile Include="src\eeVector2.cpp" />
     <ClCompile Include="src\eeVector3.cpp" />
     <ClCompile Include="src\eeVector4.cpp" />

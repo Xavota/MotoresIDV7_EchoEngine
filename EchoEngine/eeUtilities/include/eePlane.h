@@ -1,24 +1,37 @@
+/************************************************************************/
+/**
+ * @file eePlane.h
+ * @author Diego Castellanos
+ * @date 21/09/21
+ * @brief A plane. Build by a point and a normal vector.
+ *        It's a two dimensional surface that extends infinitely.
+ *
+ * @bug Not bug Known.
+ */
+/************************************************************************/
+
 #pragma once
 #include "eePrerequisitesUtilities.h"
 #include "eeVector3.h"
 
+class Sphere;
 
 namespace eeEngineSDK {
-  /**
-  * @brief
-  * A plane. Build by a point and a normal vector.
-  * It's a two dimensional surface that extends infinitely.
-  */
-class Plane
+/**
+* @brief
+* A plane. Build by a point and a normal vector.
+* It's a two dimensional surface that extends infinitely.
+*/
+class EE_UTILITY_EXPORT Plane
 {
  public:
-   /**
-   * @brief
-   * Default constructor.
-   *
-   * @description
-   * Makes the plane equal to de XY axis plane
-   */
+  /**
+  * @brief
+  * Default constructor.
+  *
+  * @description
+  * Makes the plane equal to de XY axis plane
+  */
   Plane();
   /**
   * @brief
@@ -69,7 +82,8 @@ class Plane
   * @param movement
   * The direction and magnitud of where it's gonna move.
   */
-  void move(const Vector3f& movement);
+  void
+  move(const Vector3f& movement);
   /**
   * @brief
   * Rotates the plane.
@@ -82,7 +96,8 @@ class Plane
   * The angles, in radians, indicating how is gonna rotate
   * in the 3 axis.
   */
-  void rotate(const Vector3f& rotation);
+  void
+  rotate(const Vector3f& rotation);
 
   /**
   * @brief
@@ -94,7 +109,8 @@ class Plane
   * @return
   * The point that defines the plane.
   */
-  FORCEINLINE const Vector3f& getPoint() const 
+  FORCEINLINE const Vector3f& 
+  getPoint() const 
   {
     return m_point;
   }
@@ -108,7 +124,8 @@ class Plane
   * @param point
   * The new point for the plane.
   */
-  FORCEINLINE void setPoint(const Vector3f& point)
+  FORCEINLINE void 
+  setPoint(const Vector3f& point)
   {
     m_point = point;
   }
@@ -122,7 +139,8 @@ class Plane
   * @return
   * The normal vector that defines the plane.
   */
-  FORCEINLINE const Vector3f& getNormal() const
+  FORCEINLINE const Vector3f& 
+  getNormal() const
   {
     return m_normal;
   }
@@ -137,13 +155,72 @@ class Plane
   * @param normal
   * The new normal vector for the plane.
   */
-  FORCEINLINE void setNormal(const Vector3f& normal)
+  FORCEINLINE void 
+  setNormal(const Vector3f& normal)
   {
     m_normal = normal.getNormalize();
   }
 
+
+  /**
+  * @brief
+  * Checks intersection plane-point.
+  *
+  * @description
+  * Returns true if the point is on the plane.
+  *
+  * @param point
+  * The point to check if it's on the plane.
+  *
+  * @return
+  * Whether it's intersacting or not.
+  */
+  //bool
+  //intersects(const Vector3f& point);
+  /**
+  * @brief
+  * Checks intersection plane-sphere.
+  *
+  * @description
+  * Returns true if the sphere intersects the plane.
+  *
+  * @param sphere
+  * The sphere to check if it's touching the plane.
+  *
+  * @return
+  * Whether it's intersacting or not.
+  */
+  //bool
+  //intersects(const Sphere& sphere);
+
+
+
+  /**
+  * @brief
+  * A plane oriented to the XY plane.
+  */
+  static const Plane XY;
+  /**
+  * @brief
+  * A plane oriented to the XZ plane.
+  */
+  static const Plane XZ;
+  /**
+  * @brief
+  * A plane oriented to the YZ plane.
+  */
+  static const Plane YZ;
+
  private:
+   /**
+   * @brief
+   * A point that's on the plane, indicates where the plane is.
+   */
   Vector3f m_point;
+  /**
+  * @brief
+  * The normal vector to wich is gonna be facing.
+  */
   Vector3f m_normal;
 };
 }

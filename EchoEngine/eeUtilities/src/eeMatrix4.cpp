@@ -83,10 +83,7 @@ Matrix4f
 
 
 
-Matrix4f::Matrix4f() : m_00(0.0f), m_01(0.0f), m_02(0.0f), m_03(0.0f),
-                       m_10(0.0f), m_11(0.0f), m_12(0.0f), m_13(0.0f),
-                       m_20(0.0f), m_21(0.0f), m_22(0.0f), m_23(0.0f),
-                       m_30(0.0f), m_31(0.0f), m_32(0.0f), m_33(0.0f)
+Matrix4f::Matrix4f() 
 {
 }
 Matrix4f::Matrix4f(float src[16])
@@ -97,36 +94,18 @@ Matrix4f::Matrix4f(float src[16])
 }
 Matrix4f::Matrix4f(const Vector4f& r0, const Vector4f& r1, 
                    const Vector4f& r2, const Vector4f& r3)
+                  : m_r0(r0), m_r1(r1), m_r2(r2), m_r3(r3)
 {
-  m_r0 = r0;
-  m_r1 = r1;
-  m_r2 = r2;
-  m_r3 = r3;
 }
 Matrix4f::Matrix4f(float _00, float _01, float _02, float _03,
                    float _10, float _11, float _12, float _13,
                    float _20, float _21, float _22, float _23,
                    float _30, float _31, float _32, float _33)
+                  : m_00(_00), m_01(_01), m_02(_02), m_03(_03),
+                    m_10(_10), m_11(_11), m_12(_12), m_13(_13),
+                    m_20(_20), m_21(_21), m_22(_22), m_23(_23),
+                    m_30(_30), m_31(_31), m_32(_32), m_33(_33)
 {
-  m_00 = _00;
-  m_01 = _01;
-  m_02 = _02;
-  m_03 = _03;
-
-  m_10 = _10;
-  m_11 = _11;
-  m_12 = _12;
-  m_13 = _13;
-
-  m_20 = _20;
-  m_21 = _21;
-  m_22 = _22;
-  m_23 = _23;
-
-  m_30 = _30;
-  m_31 = _31;
-  m_32 = _32;
-  m_33 = _33;
 }
 Matrix4f::~Matrix4f()
 {
@@ -235,19 +214,19 @@ Matrix4f::inverse()
 Matrix4f&
 Matrix4f::translate(const Vector3f& move)
 {
-  *this *= TranslationMatrix(move);
+  *this *= translationMatrix(move);
   return *this;
 }
 Matrix4f&
 Matrix4f::rotate(const Vector3f& angle)
 {
-  *this *= RotationMatrix(angle);
+  *this *= rotationMatrix(angle);
   return *this;
 }
 Matrix4f&
   Matrix4f::scale(const Vector3f& scale)
 {
-  *this *= ScaleMatrix(scale);
+  *this *= scaleMatrix(scale);
   return *this;
 }
 Matrix4f
@@ -423,10 +402,7 @@ Matrix4f::operator==(const Matrix4f& other)
 
 
 
-Matrix4i::Matrix4i() : m_00(0), m_01(0), m_02(0), m_03(0),
-                       m_10(0), m_11(0), m_12(0), m_13(0),
-                       m_20(0), m_21(0), m_22(0), m_23(0),
-                       m_30(0), m_31(0), m_32(0), m_33(0)
+Matrix4i::Matrix4i()
 {
 }
 Matrix4i::Matrix4i(int32 src[16])
@@ -437,36 +413,18 @@ Matrix4i::Matrix4i(int32 src[16])
 }
 Matrix4i::Matrix4i(const Vector4i& r0, const Vector4i& r1,
                    const Vector4i& r2, const Vector4i& r3)
+                  : m_r0(r0), m_r1(r1), m_r2(r2), m_r3(r3)
 {
-  m_r0 = r0;
-  m_r1 = r1;
-  m_r2 = r2;
-  m_r3 = r3;
 }
 Matrix4i::Matrix4i(int32 _00, int32 _01, int32 _02, int32 _03,
                    int32 _10, int32 _11, int32 _12, int32 _13,
                    int32 _20, int32 _21, int32 _22, int32 _23,
                    int32 _30, int32 _31, int32 _32, int32 _33)
+                  : m_00(_00), m_01(_01), m_02(_02), m_03(_03),
+                    m_10(_10), m_11(_11), m_12(_12), m_13(_13),
+                    m_20(_20), m_21(_21), m_22(_22), m_23(_23),
+                    m_30(_30), m_31(_31), m_32(_32), m_33(_33)
 {
-  m_00 = _00;
-  m_01 = _01;
-  m_02 = _02;
-  m_03 = _03;
-
-  m_10 = _10;
-  m_11 = _11;
-  m_12 = _12;
-  m_13 = _13;
-
-  m_20 = _20;
-  m_21 = _21;
-  m_22 = _22;
-  m_23 = _23;
-
-  m_30 = _30;
-  m_31 = _31;
-  m_32 = _32;
-  m_33 = _33;
 }
 Matrix4i::~Matrix4i()
 {
@@ -705,10 +663,7 @@ Matrix4i::operator==(const Matrix4i& other)
 
 
 
-Matrix4u::Matrix4u() : m_00(0u), m_01(0u), m_02(0u), m_03(0u),
-                       m_10(0u), m_11(0u), m_12(0u), m_13(0u),
-                       m_20(0u), m_21(0u), m_22(0u), m_23(0u),
-                       m_30(0u), m_31(0u), m_32(0u), m_33(0u)
+Matrix4u::Matrix4u()
 {
 }
 Matrix4u::Matrix4u(uint32 src[16])
@@ -719,36 +674,18 @@ Matrix4u::Matrix4u(uint32 src[16])
 }
 Matrix4u::Matrix4u(const Vector4u& r0, const Vector4u& r1,
                    const Vector4u& r2, const Vector4u& r3)
+                  : m_r0(r0), m_r1(r1), m_r2(r2), m_r3(r3)
 {
-  m_r0 = r0;
-  m_r1 = r1;
-  m_r2 = r2;
-  m_r3 = r3;
 }
 Matrix4u::Matrix4u(uint32 _00, uint32 _01, uint32 _02, uint32 _03,
                    uint32 _10, uint32 _11, uint32 _12, uint32 _13,
                    uint32 _20, uint32 _21, uint32 _22, uint32 _23,
                    uint32 _30, uint32 _31, uint32 _32, uint32 _33)
+                   : m_00(_00), m_01(_01), m_02(_02), m_03(_03),
+                     m_10(_10), m_11(_11), m_12(_12), m_13(_13),
+                     m_20(_20), m_21(_21), m_22(_22), m_23(_23),
+                     m_30(_30), m_31(_31), m_32(_32), m_33(_33)
 {
-  m_00 = _00;
-  m_01 = _01;
-  m_02 = _02;
-  m_03 = _03;
-
-  m_10 = _10;
-  m_11 = _11;
-  m_12 = _12;
-  m_13 = _13;
-
-  m_20 = _20;
-  m_21 = _21;
-  m_22 = _22;
-  m_23 = _23;
-
-  m_30 = _30;
-  m_31 = _31;
-  m_32 = _32;
-  m_33 = _33;
 }
 Matrix4u::~Matrix4u()
 {

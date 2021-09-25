@@ -1,8 +1,14 @@
+/************************************************************************/
 /**
-* @brief
-* This file defines the Vector4 in its 3 forms: floats, int32 and uint32,
-* as well as its functions, operators and members.
-*/
+ * @file eeVector4.h
+ * @author Diego Castellanos
+ * @date 12/09/21
+ * @brief This file defines the Vector4 in its 3 forms: floats, int32 and 
+ *        uint32, as well as its functions, operators and members.
+ *
+ * @bug Not bug Known.
+ */
+ /************************************************************************/
 
 #pragma once
 
@@ -560,11 +566,11 @@ class EE_UTILITY_EXPORT Vector4f
   /*
   * A vector with 0.0f on its components
   */
-  static Vector4f ZERO;
+  static const Vector4f ZERO;
 };
 
 FORCEINLINE 
-Vector4f::Vector4f() : x(0.0f), y(0.0f), z(0.0f), w(0.0f)
+Vector4f::Vector4f()
 {
 }
 FORCEINLINE 
@@ -1261,11 +1267,11 @@ class EE_UTILITY_EXPORT Vector4i
   /*
   * A vector with 0 on its components
   */
-  static Vector4i ZERO;
+  static const Vector4i ZERO;
 };
 
 FORCEINLINE 
-Vector4i::Vector4i() : x(0), y(0), z(0), w(0)
+Vector4i::Vector4i()
 {
 }
 FORCEINLINE 
@@ -1939,11 +1945,11 @@ class EE_UTILITY_EXPORT Vector4u
   /*
   * A vector with 0u on its components
   */
-  static Vector4u ZERO;
+  static const Vector4u ZERO;
 };
 
 FORCEINLINE 
-Vector4u::Vector4u() : x(0u), y(0u), z(0u), w(0u)
+Vector4u::Vector4u()
 {
 }
 FORCEINLINE 

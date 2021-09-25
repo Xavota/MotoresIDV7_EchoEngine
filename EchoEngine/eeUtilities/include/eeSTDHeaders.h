@@ -21,6 +21,6 @@ using SPtr = std::shared_ptr<T>;
 //template<typename T, typename O>
 //using Move = std::move<T,O>;
 
-template<typename _Inlt, typename _Outlt>
-using Copy = std::copy<_Inlt, _Outlt>;
+//template<typename _Inlt, typename _Outlt>
+//using Copy = std::copy<_Inlt, _Outlt>;
 }

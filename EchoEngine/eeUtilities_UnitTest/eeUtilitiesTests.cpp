@@ -968,17 +968,17 @@ TEST(eeUtilities, Matrix3)
 
 
   Matrix3f transform;
-  transform = Matrix3f::TranslationMatrix(Vector3f(1.0f, 2.0f, 3.0f));
+  transform = Matrix3f::translationMatrix(Vector3f(1.0f, 2.0f, 3.0f));
   EXPECT_TRUE(transform == Matrix3f(1.0f, 0.0f, 1.0f,
                                     0.0f, 1.0f, 2.0f,
                                     0.0f, 0.0f, 3.0f));
-  transform = Matrix3f::RotationMatrix(Vector3f(Math::kPI * 0.5f, 
+  transform = Matrix3f::rotationMatrix(Vector3f(Math::kPI * 0.5f, 
                                                 Math::kPI, 
                                                 Math::kPI / 3.0f));
   EXPECT_TRUE(transform == Matrix3f(-0.5f      ,  0.0f,  0.8660254f,
                                     -0.8660254f,  0.0f, -0.5f,
                                      0.0f      , -1.0f,  0.0f));
-  transform = Matrix3f::ScaleMatrix(Vector3f(1.0f, 3.0f, 5.0f));
+  transform = Matrix3f::scaleMatrix(Vector3f(1.0f, 3.0f, 5.0f));
   EXPECT_TRUE(transform == Matrix3f(1.0f, 0.0f, 0.0f,
                                     0.0f, 3.0f, 0.0f,
                                     0.0f, 0.0f, 5.0f));
@@ -1255,19 +1255,19 @@ TEST(eeUtilities, Matrix4)
 
 
   Matrix4f transform;
-  transform = Matrix4f::TranslationMatrix(Vector3f(1.0f, 2.0f, 3.0f));
+  transform = Matrix4f::translationMatrix(Vector3f(1.0f, 2.0f, 3.0f));
   EXPECT_TRUE(transform == Matrix4f(1.0f, 0.0f, 0.0f, 1.0f,
                                     0.0f, 1.0f, 0.0f, 2.0f,
                                     0.0f, 0.0f, 1.0f, 3.0f,
                                     0.0f, 0.0f, 0.0f, 1.0f));
-  transform = Matrix4f::RotationMatrix(Vector3f(Math::kPI * 0.5f,
+  transform = Matrix4f::rotationMatrix(Vector3f(Math::kPI * 0.5f,
                                                 Math::kPI,
                                                 Math::kPI / 3.0f));
   EXPECT_TRUE(transform == Matrix4f(-0.5f      ,  0.0f,  0.8660254f, 0.0f,
                                     -0.8660254f,  0.0f, -0.5f      , 0.0f,
                                      0.0f      , -1.0f,  0.0f      , 0.0f,
                                      0.0f      ,  0.0f,  0.0f      , 1.0f));
-  transform = Matrix4f::ScaleMatrix(Vector3f(1.0f, 3.0f, 5.0f));
+  transform = Matrix4f::scaleMatrix(Vector3f(1.0f, 3.0f, 5.0f));
   EXPECT_TRUE(transform == Matrix4f(1.0f, 0.0f, 0.0f, 0.0f,
                                     0.0f, 3.0f, 0.0f, 0.0f,
                                     0.0f, 0.0f, 5.0f, 0.0f,
