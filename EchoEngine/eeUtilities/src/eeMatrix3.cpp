@@ -76,7 +76,7 @@ Matrix3f::Matrix3f(float src[9])
 {
   //memcpy(m, src, sizeof(float) * 9);
   //Copy(m, m + 9, src);
-  std::copy(m, m + 9, src);
+  std::copy(src, src + 9, m);
 }
 Matrix3f::Matrix3f(const Vector3f& r0, const Vector3f& r1, const Vector3f& r2)
                   : m_r0(r0), m_r1(r1), m_r2(r2)
@@ -278,7 +278,7 @@ Matrix3i::Matrix3i(int32 src[9])
 {
   //memcpy(m, src, sizeof(int32) * 9);
   //Copy(m, m + 9, src);
-  std::copy(m, m + 9, src);
+  std::copy(src, src + 9, m);
 }
 Matrix3i::Matrix3i(const Vector3i& r0, const Vector3i& r1, const Vector3i& r2)
                   : m_r0(r0), m_r1(r1), m_r2(r2)
@@ -441,7 +441,7 @@ Matrix3u::Matrix3u(uint32 src[9])
 {
   //memcpy(m, src, sizeof(uint32) * 9);
   //Copy(m, m + 9, src);
-  std::copy(m, m + 9, src);
+  std::copy(src, src + 9, m);
 }
 Matrix3u::Matrix3u(const Vector3u& r0, const Vector3u& r1, const Vector3u& r2)
                   : m_r0(r0), m_r1(r1), m_r2(r2)

@@ -66,7 +66,7 @@ TEST(eeUtilities, Vector2)
   EXPECT_EQ(sizeof(Vector2f), 8);
 
   // Default constructor
-  Vector2f vf;
+  Vector2f vf = Vector2f::ZERO;
   EXPECT_EQ(vf, Vector2f::ZERO);
 
   // operator=
@@ -146,7 +146,7 @@ TEST(eeUtilities, Vector2)
   EXPECT_EQ(sizeof(Vector2i), 8);
 
   // Default constructor
-  Vector2i vi;
+  Vector2i vi = Vector2i::ZERO;
   EXPECT_EQ(vi, Vector2i::ZERO);
 
   // operator=
@@ -215,7 +215,7 @@ TEST(eeUtilities, Vector2)
   EXPECT_EQ(sizeof(Vector2u), 8);
 
   // Default constructor
-  Vector2u vu;
+  Vector2u vu = Vector2u::ZERO;
   EXPECT_EQ(vu, Vector2u::ZERO);
 
   // operator=
@@ -285,7 +285,7 @@ TEST(eeUtilities, Vector3)
   EXPECT_EQ(sizeof(Vector3f), 12);
 
   // Default constructor
-  Vector3f vf;
+  Vector3f vf = Vector3f::ZERO;
   EXPECT_EQ(vf, Vector3f::ZERO);
   
   // operator=
@@ -373,7 +373,7 @@ TEST(eeUtilities, Vector3)
   EXPECT_EQ(sizeof(Vector3i), 12);
 
   // Default constructor
-  Vector3i vi;
+  Vector3i vi = Vector3i::ZERO;
   EXPECT_EQ(vi, Vector3i::ZERO);
 
   // operator=
@@ -443,7 +443,7 @@ TEST(eeUtilities, Vector3)
   EXPECT_EQ(sizeof(Vector3u), 12);
 
   // Default constructor
-  Vector3u vu;
+  Vector3u vu = Vector3u::ZERO;
   EXPECT_EQ(vu, Vector3u::ZERO);
 
   // operator=
@@ -514,7 +514,7 @@ TEST(eeUtilities, Vector4)
   EXPECT_EQ(sizeof(Vector4f), 16);
 
   // Default constructor
-  Vector4f vf;
+  Vector4f vf = Vector4f::ZERO;
   EXPECT_EQ(vf, Vector4f::ZERO);
 
   // operator=
@@ -615,7 +615,7 @@ TEST(eeUtilities, Vector4)
   EXPECT_EQ(sizeof(Vector4i), 16);
 
   // Default constructor
-  Vector4i vi;
+  Vector4i vi = Vector4i::ZERO;
   EXPECT_EQ(vi, Vector4i::ZERO);
 
   // operator=
@@ -684,7 +684,7 @@ TEST(eeUtilities, Vector4)
   EXPECT_EQ(sizeof(Vector4u), 16);
 
   // Default constructor
-  Vector4u vu;
+  Vector4u vu = Vector4u::ZERO;
   EXPECT_EQ(vu, Vector4u::ZERO);
 
   // operator=
@@ -754,7 +754,7 @@ TEST(eeUtilities, Matrix2)
   EXPECT_EQ(sizeof(Matrix2f), 16);
 
   // Default constructor and matrix ZERO
-  Matrix2f deff;
+  Matrix2f deff = Matrix2f::ZERO;
   EXPECT_TRUE(deff == Matrix2f::ZERO);
 
   // Custom constructor 1 and matrix ONES
@@ -769,9 +769,8 @@ TEST(eeUtilities, Matrix2)
 
   // Custom constructor 3
   Matrix2f cst3f(1.0f, 2.0f, 3.0f, 4.0f);
-  EXPECT_TRUE(cst3f == 
-              Matrix2f(Vector2f(1.0f, 2.0f),
-                                    Vector2f(3.0f, 4.0f)));
+  EXPECT_TRUE(cst3f == Matrix2f(Vector2f(1.0f, 2.0f),
+                                Vector2f(3.0f, 4.0f)));
 
 
   // Functions
@@ -815,7 +814,7 @@ TEST(eeUtilities, Matrix2)
   EXPECT_EQ(sizeof(Matrix2i), 16);
 
   // Default constructor and matrix ZERO
-  Matrix2i defi;
+  Matrix2i defi = Matrix2i::ZERO;
   EXPECT_TRUE(defi == Matrix2i::ZERO);
 
   // Custom constructor 1 and matrix ONES
@@ -867,7 +866,7 @@ TEST(eeUtilities, Matrix2)
   EXPECT_EQ(sizeof(Matrix2u), 16);
 
   // Default constructor and matrix ZERO
-  Matrix2u defu;
+  Matrix2u defu = Matrix2u::ZERO;
   EXPECT_TRUE(defu == Matrix2u::ZERO);
 
   // Custom constructor 1 and matrix ONES
@@ -920,7 +919,7 @@ TEST(eeUtilities, Matrix3)
   EXPECT_EQ(sizeof(Matrix3f), 36);
 
   // Default constructor and matrix ZERO
-  Matrix3f deff;
+  Matrix3f deff = Matrix3f::ZERO;
   EXPECT_TRUE(deff == Matrix3f::ZERO);
 
   // Custom constructor 1 and matrix ONES
@@ -1039,7 +1038,7 @@ TEST(eeUtilities, Matrix3)
   EXPECT_EQ(sizeof(Matrix3i), 36);
 
   // Default constructor and matrix ZERO
-  Matrix3i defi;
+  Matrix3i defi = Matrix3i::ZERO;
   EXPECT_TRUE(defi == Matrix3i::ZERO);
 
   // Custom constructor 1 and matrix ONES
@@ -1118,7 +1117,7 @@ TEST(eeUtilities, Matrix3)
   EXPECT_EQ(sizeof(Matrix3u), 36);
 
   // Default constructor and matrix ZERO
-  Matrix3u defu;
+  Matrix3u defu = Matrix3u::ZERO;
   EXPECT_TRUE(defu == Matrix3u::ZERO);
 
   // Custom constructor 1 and matrix ONES
@@ -1198,7 +1197,7 @@ TEST(eeUtilities, Matrix4)
   EXPECT_EQ(sizeof(Matrix4f), 64);
 
   // Default constructor and matrix ZERO
-  Matrix4f deff;
+  Matrix4f deff = Matrix4f::ZERO;
   EXPECT_TRUE(deff == Matrix4f::ZERO);
 
   // Custom constructor 1 and matrix ONES
@@ -1339,7 +1338,7 @@ TEST(eeUtilities, Matrix4)
   EXPECT_EQ(sizeof(Matrix4i), 64);
 
   // Default constructor and matrix ZERO
-  Matrix4i defi;
+  Matrix4i defi = Matrix4i::ZERO;
   EXPECT_TRUE(defi == Matrix4i::ZERO);
 
   // Custom constructor 1 and matrix ONES
@@ -1434,7 +1433,7 @@ TEST(eeUtilities, Matrix4)
   EXPECT_EQ(sizeof(Matrix4u), 64);
 
   // Default constructor and matrix ZERO
-  Matrix4u defu;
+  Matrix4u defu = Matrix4u::ZERO;
   EXPECT_TRUE(defu == Matrix4u::ZERO);
 
   // Custom constructor 1 and matrix ONES
