@@ -1,3 +1,9 @@
+/**
+* @brief
+* This file defines the Matrix2 in its 3 forms: floats, int32 and uint32,
+* as well as its functions, operators and members.
+*/
+
 #pragma once
 #include "eePrerequisitesUtilities.h"
 #include "eeVector3.h"
@@ -394,7 +400,7 @@ public:
   * The translation matrix.
   */
   static Matrix4f
-  TranslationMatrix(const Vector3f& move);
+  translationMatrix(const Vector3f& move);
   /**
   * @brief
   * Calculates a rotation matrix.
@@ -410,7 +416,7 @@ public:
   * The rotation matrix.
   */
   static Matrix4f
-  RotationMatrix(const Vector3f& angle);
+  rotationMatrix(const Vector3f& angle);
   /**
   * @brief
   * Calculates a scale matrix.
@@ -426,7 +432,7 @@ public:
   * The scale matrix.
   */
   static Matrix4f
-  ScaleMatrix(const Vector3f& scale);
+  scaleMatrix(const Vector3f& scale);
 
 
 
@@ -527,15 +533,15 @@ public:
   /*
   * Matrix filled with zeros.
   */
-  static Matrix4f ZERO;
+  const static Matrix4f ZERO;
   /*
   * Matrix filled with ones.
   */
-  static Matrix4f ONES;
+  const static Matrix4f ONES;
   /*
   * The identity matrix.
   */
-  static Matrix4f IDENTITY;
+  const static Matrix4f IDENTITY;
 };
 
 
@@ -926,7 +932,7 @@ public:
       */
       Vector4i m_r2;
       /*
-      * The fouth row.
+      * The fourth row.
       */
       Vector4i m_r3;
     };
@@ -939,15 +945,15 @@ public:
   /*
   * Matrix filled with zeros.
   */
-  static Matrix4i ZERO;
+  const static Matrix4i ZERO;
   /*
   * Matrix filled with ones.
   */
-  static Matrix4i ONES;
+  const static Matrix4i ONES;
   /*
   * The identity matrix.
   */
-  static Matrix4i IDENTITY;
+  const static Matrix4i IDENTITY;
 };
 
 
@@ -1338,7 +1344,7 @@ public:
       */
       Vector4u m_r2;
       /*
-      * The fouth row.
+      * The fourth row.
       */
       Vector4u m_r3;
     };
@@ -1351,14 +1357,14 @@ public:
   /*
   * Matrix filled with zeros.
   */
-  static Matrix4u ZERO;
+  const static Matrix4u ZERO;
   /*
   * Matrix filled with ones.
   */
-  static Matrix4u ONES;
+  const static Matrix4u ONES;
   /*
   * The identity matrix.
   */
-  static Matrix4u IDENTITY;
+  const static Matrix4u IDENTITY;
 };
 }

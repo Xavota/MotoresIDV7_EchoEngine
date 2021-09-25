@@ -2,49 +2,49 @@
 #include "eeMatrix2.h"
 
 namespace eeEngineSDK {
-Matrix3f Matrix3f::ZERO = Matrix3f(0.0f, 0.0f, 0.0f,
-                                   0.0f, 0.0f, 0.0f, 
-                                   0.0f, 0.0f, 0.0f );
-Matrix3f Matrix3f::ONES = Matrix3f(1.0f, 1.0f, 1.0f,
-                                   1.0f, 1.0f, 1.0f, 
-                                   1.0f, 1.0f, 1.0f );
-Matrix3f Matrix3f::IDENTITY = Matrix3f(1.0f, 0.0f, 0.0f,
-                                       0.0f, 1.0f, 0.0f, 
-                                       0.0f, 0.0f, 1.0f);
+const Matrix3f Matrix3f::ZERO = Matrix3f(0.0f, 0.0f, 0.0f,
+                                         0.0f, 0.0f, 0.0f, 
+                                         0.0f, 0.0f, 0.0f );
+const Matrix3f Matrix3f::ONES = Matrix3f(1.0f, 1.0f, 1.0f,
+                                         1.0f, 1.0f, 1.0f, 
+                                         1.0f, 1.0f, 1.0f );
+const Matrix3f Matrix3f::IDENTITY = Matrix3f(1.0f, 0.0f, 0.0f,
+                                             0.0f, 1.0f, 0.0f, 
+                                             0.0f, 0.0f, 1.0f);
 
 
-Matrix3i Matrix3i::ZERO = Matrix3i(0, 0, 0,
-                                   0, 0, 0,
-                                   0, 0, 0);
-Matrix3i Matrix3i::ONES = Matrix3i(1, 1, 1,
-                                   1, 1, 1,
-                                   1, 1, 1);
-Matrix3i Matrix3i::IDENTITY = Matrix3i(1, 0, 0,
-                                       0, 1, 0,
-                                       0, 0, 1);
+const Matrix3i Matrix3i::ZERO = Matrix3i(0, 0, 0,
+                                         0, 0, 0,
+                                         0, 0, 0);
+const Matrix3i Matrix3i::ONES = Matrix3i(1, 1, 1,
+                                         1, 1, 1,
+                                         1, 1, 1);
+const Matrix3i Matrix3i::IDENTITY = Matrix3i(1, 0, 0,
+                                             0, 1, 0,
+                                             0, 0, 1);
 
 
-Matrix3u Matrix3u::ZERO = Matrix3u(0u, 0u, 0u,
-                                   0u, 0u, 0u,
-                                   0u, 0u, 0u);
-Matrix3u Matrix3u::ONES = Matrix3u(1u, 1u, 1u,
-                                   1u, 1u, 1u,
-                                   1u, 1u, 1u);
-Matrix3u Matrix3u::IDENTITY = Matrix3u(1u, 0u, 0u,
-                                       0u, 1u, 0u,
-                                       0u, 0u, 1u);
+const Matrix3u Matrix3u::ZERO = Matrix3u(0u, 0u, 0u,
+                                         0u, 0u, 0u,
+                                         0u, 0u, 0u);
+const Matrix3u Matrix3u::ONES = Matrix3u(1u, 1u, 1u,
+                                         1u, 1u, 1u,
+                                         1u, 1u, 1u);
+const Matrix3u Matrix3u::IDENTITY = Matrix3u(1u, 0u, 0u,
+                                             0u, 1u, 0u,
+                                             0u, 0u, 1u);
 
 
 
 Matrix3f 
-Matrix3f::TranslationMatrix(const Vector3f& move)
+Matrix3f::translationMatrix(const Vector3f& move)
 {
   return Matrix3f(1.0f, 0.0f, move.x, 
                   0.0f, 1.0f, move.y, 
                   0.0f, 0.0f, move.z);
 }
 Matrix3f 
-Matrix3f::RotationMatrix(const Vector3f& angle)
+Matrix3f::rotationMatrix(const Vector3f& angle)
 {
   Matrix3f rx( 1.0f, 0.0f,                0.0f,
                0.0f, Math::cos(angle.x), -Math::sin(angle.x),
@@ -60,7 +60,7 @@ Matrix3f::RotationMatrix(const Vector3f& angle)
   return rzy * rx;
 }
 Matrix3f 
-Matrix3f::ScaleMatrix(const Vector3f& scale)
+Matrix3f::scaleMatrix(const Vector3f& scale)
 {
   return Matrix3f(scale.x, 0.0f,    0.0f,
                   0.0f,    scale.y, 0.0f,
@@ -76,7 +76,9 @@ Matrix3f::Matrix3f() : m_00(0.0f), m_01(0.0f), m_02(0.0f),
 }
 Matrix3f::Matrix3f(float src[9])
 {
-  memcpy(m, src, sizeof(float) * 9);
+  //memcpy(m, src, sizeof(float) * 9);
+  //Copy(m, m + 9, src);
+  std::copy(m, m + 9, src);
 }
 Matrix3f::Matrix3f(const Vector3f& r0, const Vector3f& r1, const Vector3f& r2)
 {
@@ -270,7 +272,8 @@ Matrix3f::operator==(const Matrix3f& other)
 {
   for (int i = 0; i < 9; ++i)
   {
-    if (Math::abs(this->m[i] - other.m[i]) > .001f)
+    if (Math::abs(this->m[i] - other.m[i]) > 
+        Math::kFLOAT_EQUAL_SMALL_DIFFERENCE)
     {
       return false;
     }
@@ -287,7 +290,9 @@ Matrix3i::Matrix3i() : m_00(0), m_01(0), m_02(0),
 }
 Matrix3i::Matrix3i(int32 src[9])
 {
-  memcpy(m, src, sizeof(int32) * 9);
+  //memcpy(m, src, sizeof(int32) * 9);
+  //Copy(m, m + 9, src);
+  std::copy(m, m + 9, src);
 }
 Matrix3i::Matrix3i(const Vector3i& r0, const Vector3i& r1, const Vector3i& r2)
 {
@@ -460,7 +465,9 @@ Matrix3u::Matrix3u() : m_00(0u), m_01(0u), m_02(0u),
 }
 Matrix3u::Matrix3u(uint32 src[9])
 {
-  memcpy(m, src, sizeof(uint32) * 9);
+  //memcpy(m, src, sizeof(uint32) * 9);
+  //Copy(m, m + 9, src);
+  std::copy(m, m + 9, src);
 }
 Matrix3u::Matrix3u(const Vector3u& r0, const Vector3u& r1, const Vector3u& r2)
 {

@@ -1,3 +1,9 @@
+/**
+* @brief
+* This file defines the Matrix2 in its 3 forms: floats, int32 and uint32,
+* as well as its functions, operators and members.
+*/
+
 #pragma once
 #include "eePrerequisitesUtilities.h"
 #include "eeVector3.h"
@@ -374,7 +380,7 @@ public:
   * The translation matrix.
   */
   static Matrix3f
-  TranslationMatrix(const Vector3f& move);
+  translationMatrix(const Vector3f& move);
   /**
   * @brief
   * Calculates a rotation matrix.
@@ -390,7 +396,7 @@ public:
   * The rotation matrix.
   */
   static Matrix3f
-  RotationMatrix(const Vector3f& angle);
+  rotationMatrix(const Vector3f& angle);
   /**
   * @brief
   * Calculates a scale matrix.
@@ -406,7 +412,7 @@ public:
   * The scale matrix.
   */
   static Matrix3f
-  ScaleMatrix(const Vector3f& scale);
+  scaleMatrix(const Vector3f& scale);
 
 
 
@@ -475,15 +481,15 @@ public:
   /*
   * Matrix filled with zeros.
   */
-  static Matrix3f ZERO;
+  const static Matrix3f ZERO;
   /*
   * Matrix filled with ones.
   */
-  static Matrix3f ONES;
+  const static Matrix3f ONES;
   /*
   * The identity matrix.
   */
-  static Matrix3f IDENTITY;
+  const static Matrix3f IDENTITY;
 };
 
 
@@ -835,15 +841,15 @@ public:
   /*
   * Matrix filled with zeros.
   */
-  static Matrix3i ZERO;
+  const static Matrix3i ZERO;
   /*
   * Matrix filled with ones.
   */
-  static Matrix3i ONES;
+  const static Matrix3i ONES;
   /*
   * The identity matrix.
   */
-  static Matrix3i IDENTITY;
+  const static Matrix3i IDENTITY;
 };
 
 
@@ -1195,14 +1201,14 @@ public:
   /*
   * Matrix filled with zeros.
   */
-  static Matrix3u ZERO;
+  const static Matrix3u ZERO;
   /*
   * Matrix filled with ones.
   */
-  static Matrix3u ONES;
+  const static Matrix3u ONES;
   /*
   * The identity matrix.
   */
-  static Matrix3u IDENTITY;
+  const static Matrix3u IDENTITY;
 };
 }

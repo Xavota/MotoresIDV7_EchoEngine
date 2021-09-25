@@ -1,3 +1,9 @@
+/**
+* @brief
+* This file defines the Matrix2 in its 3 forms: floats, int32 and uint32,
+* as well as its functions, operators and members.
+*/
+
 #pragma once
 #include "eePrerequisitesUtilities.h"
 #include "eeVector2.h"
@@ -336,15 +342,15 @@ class EE_UTILITY_EXPORT Matrix2f
   /*
   * Matrix filled with zeros.
   */
-  static Matrix2f ZERO;
+  const static Matrix2f ZERO;
   /*
   * Matrix filled with ones.
   */
-  static Matrix2f ONES;
+  const static Matrix2f ONES;
   /*
   * The identity matrix.
   */
-  static Matrix2f IDENTITY;
+  const static Matrix2f IDENTITY;
 };
 
 
@@ -657,15 +663,15 @@ class EE_UTILITY_EXPORT Matrix2i
   /*
   * Matrix filled with zeros.
   */
-  static Matrix2i ZERO;
+  const static Matrix2i ZERO;
   /*
   * Matrix filled with ones.
   */
-  static Matrix2i ONES;
+  const static Matrix2i ONES;
   /*
   * The identity matrix.
   */
-  static Matrix2i IDENTITY;
+  const static Matrix2i IDENTITY;
 };
 
 
@@ -978,14 +984,14 @@ class EE_UTILITY_EXPORT Matrix2u
   /*
   * Matrix filled with zeros.
   */
-  static Matrix2u ZERO;
+  const static Matrix2u ZERO;
   /*
   * Matrix filled with ones.
   */
-  static Matrix2u ONES;
+  const static Matrix2u ONES;
   /*
   * The identity matrix.
   */
-  static Matrix2u IDENTITY;
+  const static Matrix2u IDENTITY;
 };
 }

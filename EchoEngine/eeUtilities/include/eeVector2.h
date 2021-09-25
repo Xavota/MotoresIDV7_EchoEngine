@@ -1,8 +1,21 @@
 /**
+* @file
+* @author
+* @date
 * @brief
-* This file defines the Vector2 in its 3 forms: floats, int32 and uint32,
-* as well as its functions, operators and members.
+* 
 */
+/************************************************************************/
+/**
+ * @file eeVector2.h
+ * @author Diego Castellanos
+ * @date 2021/09/11
+ * @brief This file defines the Vector2 in its 3 forms: floats, int32 and uint32,
+ *        as well as its functions, operators and members.
+ *
+ * @bug Not bug Known.
+ */
+ /************************************************************************/
 
 #pragma once
 
@@ -730,8 +743,8 @@ Vector2f::operator%=(float other)
 FORCEINLINE bool 
 Vector2f::operator==(const Vector2f& other) const
 {
-  return (Math::abs(this->x - other.x) < .001f)
-      && (Math::abs(this->y - other.y) < .001f);
+  return (Math::abs(this->x - other.x) < Math::kFLOAT_EQUAL_SMALL_DIFFERENCE)
+      && (Math::abs(this->y - other.y) < Math::kFLOAT_EQUAL_SMALL_DIFFERENCE);
 }
 FORCEINLINE bool 
 Vector2f::operator!=(const Vector2f& other) const

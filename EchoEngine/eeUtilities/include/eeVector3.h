@@ -775,9 +775,9 @@ Vector3f::operator%=(float other)
 FORCEINLINE bool 
 Vector3f::operator==(const Vector3f& other) const
 {
-  return (Math::abs(this->x - other.x) < .001f) 
-      && (Math::abs(this->y - other.y) < .001f) 
-      && (Math::abs(this->z - other.z) < .001f);
+  return (Math::abs(this->x - other.x) < Math::kFLOAT_EQUAL_SMALL_DIFFERENCE)
+      && (Math::abs(this->y - other.y) < Math::kFLOAT_EQUAL_SMALL_DIFFERENCE)
+      && (Math::abs(this->z - other.z) < Math::kFLOAT_EQUAL_SMALL_DIFFERENCE);
 }
 FORCEINLINE bool 
 Vector3f::operator!=(const Vector3f& other) const

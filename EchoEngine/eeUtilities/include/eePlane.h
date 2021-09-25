@@ -139,7 +139,7 @@ class Plane
   */
   FORCEINLINE void setNormal(const Vector3f& normal)
   {
-    m_normal = normal;
+    m_normal = normal.getNormalize();
   }
 
  private:

@@ -6,7 +6,7 @@ Plane::Plane() : m_point(0.0f, 0.0f, 0.0f), m_normal(0.0f, 0.0f, 1.0f)
 Plane::Plane(const Vector3f& point, const Vector3f& normal)
 {
   m_point = point;
-  m_normal = normal;
+  m_normal = normal.getNormalize();
 }
 Plane::Plane(const Vector3f& pA, const Vector3f& pB, const Vector3f& pC)
 {

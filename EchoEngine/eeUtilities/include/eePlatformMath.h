@@ -1,14 +1,23 @@
+/**
+* @brief
+* All math that will be needed on the engine. Wraps all the
+* math functions so that the only changes made will be in here,
+* if needed.
+*/
+
 #pragma once
 
 #include "eePrerequisitesUtilities.h"
+#include "eeVector3.h"
+#include "eePlane.h"
 
 namespace eeEngineSDK {
-  /**
-  * @brief
-  * All math that will be needed on the engine. Wraps all the 
-  * math functions so that the only changes made will be in here,
-  * if needed.
-  */
+/**
+* @brief
+* All math that will be needed on the engine. Wraps all the 
+* math functions so that the only changes made will be in here,
+* if needed.
+*/
 class EE_UTILITY_EXPORT PlatformMath
 {
 public:
@@ -411,6 +420,16 @@ public:
   */
   static FORCEINLINE float
   degToRad(const float& _degree);
+
+
+
+  /****************************************************/
+  /*
+   *    Arithmetic
+   */
+   /****************************************************/
+
+
   /**
   * @brief
   * The module operation, for floats.
@@ -469,12 +488,25 @@ public:
   ceil(const float _val);
   static FORCEINLINE float
   abs(const float _val);
-  
+
+
+
+  /****************************************************/
+  /*
+   *    Intersections
+   */
+   /****************************************************/
+
+  static bool 
+  isColliding(Vector3f _point, Plane _plane);
+  static bool 
+  isColliding(Plane _plane, Vector3f _point);
   
   
   static const float kPI;
   static const float kPI_OVER_180;
   static const float k180_OVER_PI;
+  static const float kFLOAT_EQUAL_SMALL_DIFFERENCE;
 };
 
 

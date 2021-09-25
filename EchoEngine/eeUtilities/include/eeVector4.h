@@ -757,10 +757,10 @@ Vector4f::operator%=(float other)
 FORCEINLINE bool 
 Vector4f::operator==(const Vector4f& other) const
 {
-  return (Math::abs(this->x - other.x) < .001f)
-      && (Math::abs(this->y - other.y) < .001f)
-      && (Math::abs(this->z - other.z) < .001f)
-      && (Math::abs(this->w - other.w) < .001f);
+  return (Math::abs(this->x - other.x) < Math::kFLOAT_EQUAL_SMALL_DIFFERENCE)
+      && (Math::abs(this->y - other.y) < Math::kFLOAT_EQUAL_SMALL_DIFFERENCE)
+      && (Math::abs(this->z - other.z) < Math::kFLOAT_EQUAL_SMALL_DIFFERENCE)
+      && (Math::abs(this->w - other.w) < Math::kFLOAT_EQUAL_SMALL_DIFFERENCE);
 }
 FORCEINLINE bool 
 Vector4f::operator!=(const Vector4f& other) const

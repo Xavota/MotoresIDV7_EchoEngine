@@ -1,17 +1,18 @@
 #include "eeMatrix2.h"
 
 namespace eeEngineSDK {
-Matrix2f Matrix2f::ZERO = Matrix2f(0.0f, 0.0f, 0.0f, 0.0f);
-Matrix2f Matrix2f::ONES = Matrix2f(1.0f, 1.0f, 1.0f, 1.0f);
-Matrix2f Matrix2f::IDENTITY = Matrix2f(1.0f, 0.0f, 0.0f, 1.0f);
+const Matrix2f Matrix2f::ZERO = Matrix2f(0.0f, 0.0f, 0.0f, 0.0f);
+const Matrix2f Matrix2f::ONES = Matrix2f(1.0f, 1.0f, 1.0f, 1.0f);
+const Matrix2f Matrix2f::IDENTITY = Matrix2f(1.0f, 0.0f, 0.0f, 1.0f);
 
-Matrix2f::Matrix2f() : m_00(0.0f), m_01(0.0f), m_10(0.0f), m_11(0.0f)
+Matrix2f::Matrix2f()
 {
 }
 
 Matrix2f::Matrix2f(float src[4])
 {
-  memcpy(m, src, sizeof(float) * 4);
+  //Copy(m, m + 4, src);
+  std::copy(m, m + 4, src);
 }
 
 Matrix2f::Matrix2f(const Vector2f& r0, const Vector2f& r1)
@@ -20,7 +21,10 @@ Matrix2f::Matrix2f(const Vector2f& r0, const Vector2f& r1)
   m_r1 = r1;
 }
 
-Matrix2f::Matrix2f(float _00, float _01, float _10, float _11)
+Matrix2f::Matrix2f(float _00, float _01, float _10, float _11) : m_00(_00), 
+                                                                 m_01(_01), 
+                                                                 m_10(_10), 
+                                                                 m_11(_11)
 {
   m_00 = _00;
   m_01 = _01;
@@ -139,7 +143,8 @@ Matrix2f::operator==(const Matrix2f& other)
 {
   for (int i = 0; i < 4; ++i)
   {
-    if (Math::abs(this->m[i] - other.m[i]) > .001f)
+    if (Math::abs(this->m[i] - other.m[i]) > 
+        Math::kFLOAT_EQUAL_SMALL_DIFFERENCE)
     {
       return false;
     }
@@ -149,9 +154,9 @@ Matrix2f::operator==(const Matrix2f& other)
 
 
 
-Matrix2i Matrix2i::ZERO = Matrix2i(0, 0, 0, 0);
-Matrix2i Matrix2i::ONES = Matrix2i(1, 1, 1, 1);
-Matrix2i Matrix2i::IDENTITY = Matrix2i(1, 0, 0, 1);
+const Matrix2i Matrix2i::ZERO = Matrix2i(0, 0, 0, 0);
+const Matrix2i Matrix2i::ONES = Matrix2i(1, 1, 1, 1);
+const Matrix2i Matrix2i::IDENTITY = Matrix2i(1, 0, 0, 1);
 
 Matrix2i::Matrix2i() : m_00(0), m_01(0), m_10(0), m_11(0)
 {
@@ -159,7 +164,9 @@ Matrix2i::Matrix2i() : m_00(0), m_01(0), m_10(0), m_11(0)
 
 Matrix2i::Matrix2i(int32 src[4])
 {
-  memcpy(m, src, sizeof(int32) * 4);
+  //memcpy(m, src, sizeof(int32) * 4);
+  //Copy(m, m + 4, src);
+  std::copy(m, m + 4, src);
 }
 
 Matrix2i::Matrix2i(const Vector2i& r0, const Vector2i& r1)
@@ -282,9 +289,9 @@ Matrix2i::operator==(const Matrix2i& other)
 
 
 
-Matrix2u Matrix2u::ZERO = Matrix2u(0u, 0u, 0u, 0u);
-Matrix2u Matrix2u::ONES = Matrix2u(1u, 1u, 1u, 1u);
-Matrix2u Matrix2u::IDENTITY = Matrix2u(1u, 0u, 0u, 1u);
+const Matrix2u Matrix2u::ZERO = Matrix2u(0u, 0u, 0u, 0u);
+const Matrix2u Matrix2u::ONES = Matrix2u(1u, 1u, 1u, 1u);
+const Matrix2u Matrix2u::IDENTITY = Matrix2u(1u, 0u, 0u, 1u);
 
 Matrix2u::Matrix2u() : m_00(0u), m_01(0u), m_10(0u), m_11(0u)
 {
@@ -292,7 +299,9 @@ Matrix2u::Matrix2u() : m_00(0u), m_01(0u), m_10(0u), m_11(0u)
 
 Matrix2u::Matrix2u(uint32 src[4])
 {
-  memcpy(m, src, sizeof(uint32) * 4);
+  //memcpy(m, src, sizeof(uint32) * 4);
+  //Copy(m, m + 4, src);
+  std::copy(m, m + 4, src);
 }
 
 Matrix2u::Matrix2u(const Vector2u& r0, const Vector2u& r1)

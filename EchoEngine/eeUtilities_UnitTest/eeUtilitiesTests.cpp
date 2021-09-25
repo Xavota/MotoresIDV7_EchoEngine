@@ -2,13 +2,13 @@
 
 #include <gtest/gtest.h>
 
-#include "../eeUtilities/include/eeMath.h"
-#include "../eeUtilities/include/eeVector2.h"
-#include "../eeUtilities/include/eeVector3.h"
-#include "../eeUtilities/include/eeVector4.h"
-#include "../eeUtilities/include/eeMatrix2.h"
-#include "../eeUtilities/include/eeMatrix3.h"
-#include "../eeUtilities/include/eeMatrix4.h"
+#include "eeMath.h"
+#include "eeVector2.h"
+#include "eeVector3.h"
+#include "eeVector4.h"
+#include "eeMatrix2.h"
+#include "eeMatrix3.h"
+#include "eeMatrix4.h"
 	
 using eeEngineSDK::Math;
 using eeEngineSDK::int32;

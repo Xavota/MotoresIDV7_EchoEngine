@@ -2,51 +2,51 @@
 #include "eeMatrix3.h"
 
 namespace eeEngineSDK {
-Matrix4f Matrix4f::ZERO = Matrix4f(0.0f, 0.0f, 0.0f, 0.0f,
-                                   0.0f, 0.0f, 0.0f, 0.0f,
-                                   0.0f, 0.0f, 0.0f, 0.0f,
-                                   0.0f, 0.0f, 0.0f, 0.0f);
-Matrix4f Matrix4f::ONES = Matrix4f(1.0f, 1.0f, 1.0f, 1.0f,
-                                   1.0f, 1.0f, 1.0f, 1.0f,
-                                   1.0f, 1.0f, 1.0f, 1.0f,
-                                   1.0f, 1.0f, 1.0f, 1.0f);
-Matrix4f Matrix4f::IDENTITY = Matrix4f(1.0f, 0.0f, 0.0f, 0.0f,
-                                       0.0f, 1.0f, 0.0f, 0.0f,
-                                       0.0f, 0.0f, 1.0f, 0.0f,
-                                       0.0f, 0.0f, 0.0f, 1.0f);
+const Matrix4f Matrix4f::ZERO = Matrix4f(0.0f, 0.0f, 0.0f, 0.0f,
+                                         0.0f, 0.0f, 0.0f, 0.0f,
+                                         0.0f, 0.0f, 0.0f, 0.0f,
+                                         0.0f, 0.0f, 0.0f, 0.0f);
+const Matrix4f Matrix4f::ONES = Matrix4f(1.0f, 1.0f, 1.0f, 1.0f,
+                                         1.0f, 1.0f, 1.0f, 1.0f,
+                                         1.0f, 1.0f, 1.0f, 1.0f,
+                                         1.0f, 1.0f, 1.0f, 1.0f);
+const Matrix4f Matrix4f::IDENTITY = Matrix4f(1.0f, 0.0f, 0.0f, 0.0f,
+                                             0.0f, 1.0f, 0.0f, 0.0f,
+                                             0.0f, 0.0f, 1.0f, 0.0f,
+                                             0.0f, 0.0f, 0.0f, 1.0f);
 
 
-Matrix4i Matrix4i::ZERO = Matrix4i(0, 0, 0, 0,
-                                   0, 0, 0, 0,
-                                   0, 0, 0, 0,
-                                   0, 0, 0, 0);
-Matrix4i Matrix4i::ONES = Matrix4i(1, 1, 1, 1,
-                                   1, 1, 1, 1,
-                                   1, 1, 1, 1,
-                                   1, 1, 1, 1);
-Matrix4i Matrix4i::IDENTITY = Matrix4i(1, 0, 0, 0,
-                                       0, 1, 0, 0,
-                                       0, 0, 1, 0,
-                                       0, 0, 0, 1);
+const Matrix4i Matrix4i::ZERO = Matrix4i(0, 0, 0, 0,
+                                         0, 0, 0, 0,
+                                         0, 0, 0, 0,
+                                         0, 0, 0, 0);
+const Matrix4i Matrix4i::ONES = Matrix4i(1, 1, 1, 1,
+                                         1, 1, 1, 1,
+                                         1, 1, 1, 1,
+                                         1, 1, 1, 1);
+const Matrix4i Matrix4i::IDENTITY = Matrix4i(1, 0, 0, 0,
+                                             0, 1, 0, 0,
+                                             0, 0, 1, 0,
+                                             0, 0, 0, 1);
 
 
-Matrix4u Matrix4u::ZERO = Matrix4u(0u, 0u, 0u, 0u,
-                                   0u, 0u, 0u, 0u,
-                                   0u, 0u, 0u, 0u,
-                                   0u, 0u, 0u, 0u);
-Matrix4u Matrix4u::ONES = Matrix4u(1u, 1u, 1u, 1u,
-                                   1u, 1u, 1u, 1u,
-                                   1u, 1u, 1u, 1u,
-                                   1u, 1u, 1u, 1u);
-Matrix4u Matrix4u::IDENTITY = Matrix4u(1u, 0u, 0u, 0u,
-                                       0u, 1u, 0u, 0u,
-                                       0u, 0u, 1u, 0u,
-                                       0u, 0u, 0u, 1u);
+const Matrix4u Matrix4u::ZERO = Matrix4u(0u, 0u, 0u, 0u,
+                                         0u, 0u, 0u, 0u,
+                                         0u, 0u, 0u, 0u,
+                                         0u, 0u, 0u, 0u);
+const Matrix4u Matrix4u::ONES = Matrix4u(1u, 1u, 1u, 1u,
+                                         1u, 1u, 1u, 1u,
+                                         1u, 1u, 1u, 1u,
+                                         1u, 1u, 1u, 1u);
+const Matrix4u Matrix4u::IDENTITY = Matrix4u(1u, 0u, 0u, 0u,
+                                             0u, 1u, 0u, 0u,
+                                             0u, 0u, 1u, 0u,
+                                             0u, 0u, 0u, 1u);
 
 
 
 Matrix4f
-Matrix4f::TranslationMatrix(const Vector3f& move)
+Matrix4f::translationMatrix(const Vector3f& move)
 {
   return Matrix4f(1.0f, 0.0f, 0.0f, move.x,
                   0.0f, 1.0f, 0.0f, move.y,
@@ -54,7 +54,7 @@ Matrix4f::TranslationMatrix(const Vector3f& move)
                   0.0f, 0.0f, 0.0f, 1.0f);
 }
 Matrix4f
-Matrix4f::RotationMatrix(const Vector3f& angle)
+Matrix4f::rotationMatrix(const Vector3f& angle)
 {
   Matrix4f rx( 1.0f, 0.0f,                0.0f,               0.0f,
                0.0f, Math::cos(angle.x), -Math::sin(angle.x), 0.0f,
@@ -73,7 +73,7 @@ Matrix4f::RotationMatrix(const Vector3f& angle)
   return rzy * rx;
 }
 Matrix4f
-  Matrix4f::ScaleMatrix(const Vector3f& scale)
+  Matrix4f::scaleMatrix(const Vector3f& scale)
 {
   return Matrix4f(scale.x, 0.0f,    0.0f,    0.0f,
                   0.0f,    scale.y, 0.0f,    0.0f,
@@ -91,7 +91,9 @@ Matrix4f::Matrix4f() : m_00(0.0f), m_01(0.0f), m_02(0.0f), m_03(0.0f),
 }
 Matrix4f::Matrix4f(float src[16])
 {
-  memcpy(m, src, sizeof(float) * 16);
+  //memcpy(m, src, sizeof(float) * 16);
+  //Copy(m, m + 16, src);
+  std::copy(m, m + 16, src);
 }
 Matrix4f::Matrix4f(const Vector4f& r0, const Vector4f& r1, 
                    const Vector4f& r2, const Vector4f& r3)
@@ -410,7 +412,8 @@ Matrix4f::operator==(const Matrix4f& other)
 {
   for (int i = 0; i < 16; ++i)
   {
-    if (Math::abs(this->m[i] - other.m[i]) > .001f)
+    if (Math::abs(this->m[i] - other.m[i]) > 
+        Math::kFLOAT_EQUAL_SMALL_DIFFERENCE)
     {
       return false;
     }
@@ -428,7 +431,9 @@ Matrix4i::Matrix4i() : m_00(0), m_01(0), m_02(0), m_03(0),
 }
 Matrix4i::Matrix4i(int32 src[16])
 {
-  memcpy(m, src, sizeof(int32) * 16);
+  //memcpy(m, src, sizeof(int32) * 16);
+  //Copy(m, m + 16, src);
+  std::copy(m, m + 16, src);
 }
 Matrix4i::Matrix4i(const Vector4i& r0, const Vector4i& r1,
                    const Vector4i& r2, const Vector4i& r3)
@@ -708,7 +713,9 @@ Matrix4u::Matrix4u() : m_00(0u), m_01(0u), m_02(0u), m_03(0u),
 }
 Matrix4u::Matrix4u(uint32 src[16])
 {
-  memcpy(m, src, sizeof(uint32) * 16);
+  //memcpy(m, src, sizeof(uint32) * 16);
+  //Copy(m, m + 16, src);
+  std::copy(m, m + 16, src);
 }
 Matrix4u::Matrix4u(const Vector4u& r0, const Vector4u& r1,
                    const Vector4u& r2, const Vector4u& r3)

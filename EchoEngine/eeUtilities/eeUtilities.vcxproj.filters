@@ -49,9 +49,6 @@
     <ClInclude Include="include\eePlane.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\eeCollitionDetector.h">
-      <Filter>include</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eePlatformMath.cpp">
@@ -76,9 +73,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\eePlane.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\eeCollitionDetector.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

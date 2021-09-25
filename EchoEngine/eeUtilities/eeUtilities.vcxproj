@@ -165,7 +165,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\eeCollitionDetector.h" />
     <ClInclude Include="include\eeMath.h" />
     <ClInclude Include="include\eeMatrix2.h" />
     <ClInclude Include="include\eeMatrix3.h" />
@@ -182,7 +181,6 @@
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\eeCollitionDetector.cpp" />
     <ClCompile Include="src\eeMatrix2.cpp" />
     <ClCompile Include="src\eeMatrix3.cpp" />
     <ClCompile Include="src\eeMatrix4.cpp" />

@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eeUtilities", "eeUtilities\eeUtilities.vcxproj", "{3D0C2046-53A4-46DA-AE64-3B8AB0A0E2AD}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eeUtilities_UnitTest", "eeUtilities_UnitTest\eeUtilities_UnitTest.vcxproj", "{7B0DD403-1146-4611-A637-3E750BA8D53A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3D0C2046-53A4-46DA-AE64-3B8AB0A0E2AD} = {3D0C2046-53A4-46DA-AE64-3B8AB0A0E2AD}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
