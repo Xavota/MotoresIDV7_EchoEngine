@@ -22,9 +22,9 @@ namespace eeEngineSDK {
 class EE_UTILITY_EXPORT BoxAAB
 {
  public:
-  BoxAAB();
+  BoxAAB() = default;
   BoxAAB(const Vector3f A, const Vector3f B);
-  ~BoxAAB();
+  ~BoxAAB() = default;
 
   FORCEINLINE void 
   move(const Vector3f& movement)
