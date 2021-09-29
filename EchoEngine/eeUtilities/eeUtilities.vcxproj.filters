@@ -54,6 +54,12 @@
     <ClInclude Include="include\eeBox.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="eeCapsule.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="eeRectangle.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eePlatformMath.cpp">
@@ -87,6 +93,12 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\eePlatformMathIndependent.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="eeCapsule.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="eeRectangle.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

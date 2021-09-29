@@ -14,9 +14,6 @@
 #pragma once
 
 #include "eePrerequisitesUtilities.h"
-#include "eeVector3.h"
-#include "eePlane.h"
-#include "eeSphere.h"
 
 
 namespace eeEngineSDK {
@@ -551,6 +548,40 @@ public:
   */
   static FORCEINLINE float
   abs(const float _val);
+  /**
+  * @brief
+  * The maximum value.
+  *
+  * @description
+  * Returns the maximum value between the first and the second value.
+  *
+  * @param _val1
+  * The first number to check.
+  * @param _val2
+  * The second number to check.
+  *
+  * @return
+  * The maximum value between the first and the second value.
+  */
+  static FORCEINLINE float
+  max(const float _val1, const float _val2);
+  /**
+  * @brief
+  * The minimum value.
+  *
+  * @description
+  * Returns the minimum value between the first and the second value.
+  *
+  * @param _val1
+  * The first number to check.
+  * @param _val2
+  * The second number to check.
+  *
+  * @return
+  * The minimum value between the first and the second value.
+  */
+  static FORCEINLINE float
+  min(const float _val1, const float _val2);
 
 
 
@@ -577,6 +608,23 @@ public:
   */
   static bool 
   intersectionPlanePoint(const Plane& _plane, const Vector3f& _point);
+  /**
+  * @brief
+  * Intersection between a two planes.
+  *
+  * @description
+  * Returns true if the first plane intersects the second.
+  *
+  * @param _plane1
+  * The first plane to check.
+  * @param _plane2
+  * The second plane to check.
+  *
+  * @return
+  * True if the first plane intersects the second.
+  */
+  static bool
+  intersectionPlanePlane(const Plane& _plane1, const Plane& _plane2);
   /**
   * @brief
   * Intersection between a sphere and a point.
@@ -611,6 +659,176 @@ public:
   */
   static bool
   intersectionSpherePlane(const Sphere& _sphere, const Plane& _plane);
+  /**
+  * @brief
+  * Intersection between a two spheres.
+  *
+  * @description
+  * Returns true if the first sphere intersects the second.
+  *
+  * @param _sphere1
+  * The first sphere to check.
+  * @param _sphere2
+  * The second sphere to check.
+  *
+  * @return
+  * True if the first sphere intersects the second.
+  */
+  static bool
+  intersectionSphereSphere(const Sphere& _sphere1, const Sphere& _sphere2);
+  /**
+  * @brief
+  * Intersection between a box and a point.
+  *
+  * @description
+  * Returns true if the point is in the box.
+  *
+  * @param _box
+  * The box to check.
+  * @param _point
+  * The point to check.
+  *
+  * @return
+  * True if the point is in the box.
+  */
+  static bool
+  intersectionBoxPoint(const BoxAAB& _box, const Vector3f& _point);
+  /**
+  * @brief
+  * Intersection between a box and a plane.
+  *
+  * @description
+  * Returns true if the plane intersects the box.
+  *
+  * @param _box
+  * The box to check.
+  * @param _plane
+  * The plane to check.
+  *
+  * @return
+  * True if the plane intersects the box.
+  */
+  static bool
+  intersectionBoxPlane(const BoxAAB& _box, const Plane& _plane);
+  /**
+  * @brief
+  * Intersection between a box and a sphere.
+  *
+  * @description
+  * Returns true if the sphere intersects the box.
+  *
+  * @param _box
+  * The box to check.
+  * @param _sphere
+  * The sphere to check.
+  *
+  * @return
+  * True if the sphere intersects the box.
+  */
+  static bool
+  intersectionBoxSphere(const BoxAAB& _box, const Sphere& _sphere);
+  /**
+  * @brief
+  * Intersection between two boxes.
+  *
+  * @description
+  * Returns true if the first box intersects the second.
+  *
+  * @param _box1
+  * The first box to check.
+  * @param _box2
+  * The second box to check.
+  *
+  * @return
+  * True if the first box intersects the second.
+  */
+  static bool
+  intersectionBoxBox(const BoxAAB& _box1, const BoxAAB& _box2);
+  /**
+  * @brief
+  * Intersection between a capsule and a point.
+  *
+  * @description
+  * Returns true if the point is in the capsule.
+  *
+  * @param _capsule
+  * The capsule to check.
+  * @param _point
+  * The point to check.
+  *
+  * @return
+  * True if the point is in the capsule.
+  */
+  static bool
+  intersectionCapsulePoint(const Capsule& _capsule, const Vector3f& _point);
+  /**
+  * @brief
+  * Intersection between a capsule and a plane.
+  *
+  * @description
+  * Returns true if the plane intersects the capsule.
+  *
+  * @param _capsule
+  * The capsule to check.
+  * @param _plane
+  * The plane to check.
+  *
+  * @return
+  * True if the plane intersects the capsule.
+  */
+  static bool
+  intersectionCapsulePlane(const Capsule& _capsule, const Plane& _plane);
+  /**
+  * @brief
+  * Intersection between a capsule and a sphere.
+  *
+  * @description
+  * Returns true if the sphere intersects the capsule.
+  *
+  * @param _capsule
+  * The capsule to check.
+  * @param _sphere
+  * The sphere to check.
+  *
+  * @return
+  * True if the sphere intersects the capsule.
+  */
+  static bool
+  intersectionCapsuleSphere(const Capsule& _capsule, const Sphere& _sphere);
+  /**
+  * @brief
+  * Intersection between a capsule and a box.
+  *
+  * @description
+  * Returns true if the box intersects the capsule.
+  *
+  * @param _capsule
+  * The capsule to check.
+  * @param _box
+  * The box to check.
+  *
+  * @return
+  * True if the box intersects the capsule.
+  */
+  static bool
+  intersectionCapsuleBox(const Capsule& _capsule, const BoxAAB& _box);
+  /**
+  * @brief
+  * Intersection between two capsules.
+  *
+  * @description
+  * Returns true if the first capsule intersects the second.
+  *
+  * @param _capsule1
+  * The first capsule to check.
+  * @param _capsule2
+  * The second capsule to check.
+  *
+  * @return
+  * True if the first capsule intersects the second.
+  */
+  static bool
+  intersectionCapsuleBox(const Capsule& _capsule1, const Capsule& _capsule2);
 
 
 
@@ -622,17 +840,17 @@ public:
 
   /**
   * @brief
-  * The aproximate value of pi.
+  * The approximate value of pi.
   */
   static const float kPI;
   /**
   * @brief
-  * Pi devided by 180.
+  * Pi divided by 180.
   */
   static const float kPI_OVER_180;
   /**
   * @brief
-  * 180 devided by pi.
+  * 180 divided by pi.
   */
   static const float k180_OVER_PI;
 
@@ -644,7 +862,7 @@ public:
 
   /**
   * @brief
-  * The maximum diference for two floats to be considered equal to
+  * The maximum difference for two floats to be considered equal to
   * each other.
   */
   static const float kFLOAT_EQUAL_SMALL_DIFFERENCE;
@@ -660,12 +878,12 @@ public:
   static const float kBIG_FLOAT;
   /**
   * @brief
-  * The minimum integer of 32 bits posible.
+  * The minimum integer of 32 bits possible.
   */
   static const int32 kSMALL_INT;
   /**
   * @brief
-  * The maximum integer of 32 bits posible.
+  * The maximum integer of 32 bits possible.
   */
   static const int32 kBIG_INT;
 };
@@ -835,5 +1053,13 @@ FORCEINLINE float
 PlatformMath::abs(const float _val)
 {
   return sqrt(_val * _val);
+}
+inline float PlatformMath::max(const float _val1, const float _val2)
+{
+  return _val1 > _val2 ? _val1 : _val2;
+}
+inline float PlatformMath::min(const float _val1, const float _val2)
+{
+  return _val1 < _val2 ? _val1 : _val2;
 }
 }

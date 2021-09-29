@@ -14,7 +14,6 @@
 #include "eePrerequisitesUtilities.h"
 #include "eeVector3.h"
 
-class Sphere;
 
 namespace eeEngineSDK {
 /**
@@ -30,7 +29,7 @@ class EE_UTILITY_EXPORT Plane
   * Default constructor.
   *
   * @description
-  * Makes the plane equal to de XY axis plane
+  * Makes the plane equal to the XY axis plane
   */
   Plane();
   /**
@@ -173,10 +172,10 @@ class EE_UTILITY_EXPORT Plane
   * The point to check if it's on the plane.
   *
   * @return
-  * Whether it's intersacting or not.
+  * Whether it's intersecting or not.
   */
-  //bool
-  //intersects(const Vector3f& point);
+  bool
+  intersects(const Vector3f& point);
   /**
   * @brief
   * Checks intersection plane-sphere.
@@ -188,10 +187,10 @@ class EE_UTILITY_EXPORT Plane
   * The sphere to check if it's touching the plane.
   *
   * @return
-  * Whether it's intersacting or not.
+  * Whether it's intersecting or not.
   */
-  //bool
-  //intersects(const Sphere& sphere);
+  bool
+  intersects(const Sphere& sphere);
 
 
 
@@ -219,7 +218,7 @@ class EE_UTILITY_EXPORT Plane
   Vector3f m_point;
   /**
   * @brief
-  * The normal vector to wich is gonna be facing.
+  * The normal vector to which is gonna be facing.
   */
   Vector3f m_normal;
 };

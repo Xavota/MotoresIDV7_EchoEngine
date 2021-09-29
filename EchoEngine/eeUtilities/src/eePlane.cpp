@@ -40,14 +40,14 @@ Plane::rotate(const Vector3f& rotation)
 {
   //TODO: Multiplications of Matrix*Vector
 }
-/*bool
+bool
 Plane::intersects(const Vector3f& point)
 {
-  return Math::intersectionPointPlane(*this, point);
+  return Math::intersectionPlanePoint(*this, point);
 }
 bool
 Plane::intersects(const Sphere& sphere)
 {
   return Math::intersectionSpherePlane(sphere, *this);
-}*/
+}
 }
