@@ -1,6 +1,8 @@
 #pragma once
 #include <cassert>
 
+#include <iostream>
+
 #include <vector>
 #include <string>
 #include <memory>
@@ -19,9 +21,8 @@ using WString = std::wstring;
 
 template<typename T>
 using SPtr = std::shared_ptr<T>;
-//template<typename T, typename O>
-//using Move = std::move<T,O>;
 
-//template<typename _Inlt, typename _Outlt>
-//using Copy = std::copy<_Inlt, _Outlt>;
+//using Cout = std::cout;
+//const std::ostream& Cout = std::cout;
+//const std::basic_ostream& Endl = std::endl;
 }

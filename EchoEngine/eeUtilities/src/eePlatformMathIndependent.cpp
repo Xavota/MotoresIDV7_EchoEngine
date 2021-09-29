@@ -4,7 +4,8 @@
 #include "eePlane.h"
 #include "eeSphere.h"
 #include "eeBox.h"
-#include "eeCapsule.h
+#include "eeCapsule.h"
+#include "eeRectangle.h"
 
 namespace eeEngineSDK
 {
@@ -202,8 +203,21 @@ bool PlatformMath::intersectionCapsuleBox(const Capsule& _capsule, const BoxAAB&
 {
   return false;
 }
-bool PlatformMath::intersectionCapsuleBox(const Capsule& _capsule1, const Capsule& _capsule2)
+bool PlatformMath::intersectionCapsuleCapsule(const Capsule& _capsule1, const Capsule& _capsule2)
 {
+  return false;
+}
+bool PlatformMath::intersectionRectanglePoint2D(const Rectangle& _rectangle, const Vector2f& _point2D)
+{
+  Vector2f A = _rectangle.getA();
+  Vector2f B = _rectangle.getB();
+  return _point2D.x >= A.x && _point2D.x <= B.x
+      && _point2D.y >= B.y && _point2D.y <= A.y;
+}
+bool PlatformMath::intersectionRectangleRectangle(const Rectangle& _rectangle1, const Rectangle& _rectangle2)
+{
+  Vector2f A = _rectangle1.getA();
+  Vector2f B = _rectangle1.getB();
   return false;
 }
 }

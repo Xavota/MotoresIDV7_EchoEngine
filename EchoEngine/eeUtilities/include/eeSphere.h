@@ -14,7 +14,6 @@
 #include "eePrerequisitesUtilities.h"
 #include "eeVector3.h"
 
-class Plane;
 
 namespace eeEngineSDK {
 /**
@@ -25,13 +24,13 @@ namespace eeEngineSDK {
 class EE_UTILITY_EXPORT Sphere
 {
  public:
-   /**
-   * @brief
-   * Default constructor.
-   *
-   * @description
-   */
-  Sphere() = default;
+  /**
+  * @brief
+  * Default constructor.
+  *
+  * @description
+  */
+  Sphere();
   /**
   * @brief
   * Custom constructor.
@@ -74,21 +73,6 @@ class EE_UTILITY_EXPORT Sphere
 
   /**
   * @brief
-  * The setter of the center of the sphere.
-  *
-  * @description
-  * Sets the center of the sphere to it's given new position.
-  *
-  * @param center
-  * The new center of the sphere.
-  */
-  FORCEINLINE void
-  setCenter(const Vector3f& center)
-  {
-    m_center = center;
-  }
-  /**
-  * @brief
   * The getter of the center of the sphere.
   *
   * @description
@@ -104,18 +88,18 @@ class EE_UTILITY_EXPORT Sphere
   }
   /**
   * @brief
-  * The setter of the radious of the sphere.
+  * The setter of the center of the sphere.
   *
   * @description
-  * Sets the radious of the sphere to it's given new radious.
+  * Sets the center of the sphere to it's given new position.
   *
-  * @param radious
-  * The new radious of the sphere.
+  * @param center
+  * The new center of the sphere.
   */
   FORCEINLINE void
-  setRadious(float radious)
+  setCenter(const Vector3f& center)
   {
-    m_radious = radious;
+    m_center = center;
   }
   /**
   * @brief
@@ -133,38 +117,98 @@ class EE_UTILITY_EXPORT Sphere
   {
     return m_radious;
   }
+  /**
+  * @brief
+  * The setter of the radious of the sphere.
+  *
+  * @description
+  * Sets the radious of the sphere to it's given new radious.
+  *
+  * @param radious
+  * The new radious of the sphere.
+  */
+  FORCEINLINE void
+  setRadious(float radious)
+  {
+    m_radious = radious;
+  }
 
 
   /**
   * @brief
-  * Checks intersection plane-point.
+  * Checks intersection sphere-point.
   *
   * @description
-  * Returns true if the point is on the plane.
+  * Returns true if the point is in the sphere.
   *
   * @param point
-  * The point to check if it's on the plane.
+  * The point to check if it's in the sphere.
   *
   * @return
   * Whether it's intersacting or not.
   */
-  //bool
-  //intersects(const Vector3f& point) const;
+  bool
+  intersects(const Vector3f& point) const;
   /**
   * @brief
-  * Checks intersection plane-sphere.
+  * Checks intersection sphere-plane.
   *
   * @description
-  * Returns true if the sphere intersects the plane.
+  * Returns true if the plane intersects the sphere.
   *
-  * @param sphere
-  * The sphere to check if it's touching the plane.
+  * @param plane
+  * The plane to check if it's touching the sphere.
   *
   * @return
   * Whether it's intersacting or not.
   */
-  //bool
-  //intersects(const Plane& plane) const;
+  bool
+  intersects(const Plane& plane) const;
+  /**
+  * @brief
+  * Checks intersection sphere-sphere.
+  *
+  * @description
+  * Returns true if the firts sphere intersects the second.
+  *
+  * @param sphere
+  * The second sphere to check if it's touching the first.
+  *
+  * @return
+  * Whether it's intersecting or not.
+  */
+  bool
+  intersects(const Sphere& sphere);
+  /**
+  * @brief
+  * Checks intersection sphere-box.
+  *
+  * @description
+  * Returns true if the box intersects the sphere.
+  *
+  * @param box
+  * The box to check if it's touching the sphere.
+  *
+  * @return
+  * Whether it's intersecting or not.
+  */
+  bool
+  intersects(const BoxAAB& box);
+  /**
+  * @brief
+  * Checks intersection sphere-capsule.
+  *
+  * @description
+  * Returns true if the capsule intersects the sphere.
+  *
+  * @param capsule
+  * The capsule to check if it's touching the sphere.
+  *
+  * @return
+  * Whether it's intersecting or not.
+  */
+  bool
+  intersects(const Capsule& capsule);
 
 
   /**

@@ -54,10 +54,10 @@
     <ClInclude Include="include\eeBox.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="eeCapsule.h">
+    <ClInclude Include="include\eeRectangle.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="eeRectangle.h">
+    <ClInclude Include="include\eeCapsule.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
@@ -95,10 +95,10 @@
     <ClCompile Include="src\eePlatformMathIndependent.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="eeCapsule.cpp">
+    <ClCompile Include="src\eeCapsule.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="eeRectangle.cpp">
+    <ClCompile Include="src\eeRectangle.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

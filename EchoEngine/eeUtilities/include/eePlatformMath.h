@@ -828,7 +828,41 @@ public:
   * True if the first capsule intersects the second.
   */
   static bool
-  intersectionCapsuleBox(const Capsule& _capsule1, const Capsule& _capsule2);
+  intersectionCapsuleCapsule(const Capsule& _capsule1, const Capsule& _capsule2);
+  /**
+  * @brief
+  * Intersection between a rectangle and a 2D point.
+  *
+  * @description
+  * Returns true if the point is in the rectangle.
+  *
+  * @param _rectangle
+  * The rectangle to check.
+  * @param _point2D
+  * The point to check.
+  *
+  * @return
+  * True if the point is in the rectangle.
+  */
+  static bool
+  intersectionRectanglePoint2D(const Rectangle& _rectangle, const Vector2f& _point2D);
+  /**
+  * @brief
+  * Intersection between two rectangles.
+  *
+  * @description
+  * Returns true if the first rectangle intersects the second.
+  *
+  * @param _rectangle1
+  * The first rectangle to check.
+  * @param _rectangle2
+  * The second rectangle to check.
+  *
+  * @return
+  * True if the first rectangle intersects the second.
+  */
+  static bool
+  intersectionRectangleRectangle(const Rectangle& _rectangle1, const Rectangle& _rectangle2);
 
 
 

@@ -21,7 +21,7 @@ namespace eeEngineSDK {
 * A plane. Build by a point and a normal vector.
 * It's a two dimensional surface that extends infinitely.
 */
-class EE_UTILITY_EXPORT Plane
+class EE_UTILITY_EXPORT Plane : public Vector3f
 {
  public:
   /**
@@ -166,7 +166,7 @@ class EE_UTILITY_EXPORT Plane
   * Checks intersection plane-point.
   *
   * @description
-  * Returns true if the point is on the plane.
+  * Returns true if the point os in the plane.
   *
   * @param point
   * The point to check if it's on the plane.
@@ -176,6 +176,21 @@ class EE_UTILITY_EXPORT Plane
   */
   bool
   intersects(const Vector3f& point);
+  /**
+  * @brief
+  * Checks intersection plane-plane.
+  *
+  * @description
+  * Returns true if the first plane intersects the second.
+  *
+  * @param plane
+  * The second plane to check if it's touching the firts.
+  *
+  * @return
+  * Whether it's intersecting or not.
+  */
+  bool
+  intersects(const Plane& plane);
   /**
   * @brief
   * Checks intersection plane-sphere.
@@ -191,6 +206,36 @@ class EE_UTILITY_EXPORT Plane
   */
   bool
   intersects(const Sphere& sphere);
+  /**
+  * @brief
+  * Checks intersection plane-box.
+  *
+  * @description
+  * Returns true if the box intersects the plane.
+  *
+  * @param box
+  * The box to check if it's touching the plane.
+  *
+  * @return
+  * Whether it's intersecting or not.
+  */
+  bool
+  intersects(const BoxAAB& box);
+  /**
+  * @brief
+  * Checks intersection plane-capsule.
+  *
+  * @description
+  * Returns true if the capsule intersects the plane.
+  *
+  * @param capsule
+  * The capsule to check if it's touching the plane.
+  *
+  * @return
+  * Whether it's intersecting or not.
+  */
+  bool
+  intersects(const Capsule& capsule);
 
 
 
