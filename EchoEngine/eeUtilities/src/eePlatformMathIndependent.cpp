@@ -137,87 +137,183 @@ PlatformMath::intersectionBoxSphere(const BoxAAB& _box, const Sphere& _sphere)
 bool 
 PlatformMath::intersectionBoxBox(const BoxAAB& _box1, const BoxAAB& _box2)
 {
-  const Vector3f& A = _box1.getA();
-  if (intersectionBoxPoint(_box2, A))
+  const Vector3f& A1 = _box1.getA();
+  if (intersectionBoxPoint(_box2, A1))
+  {
+    return true;
+  }
+  const Vector3f& A2 = _box2.getA();
+  if (intersectionBoxPoint(_box1, A2))
   {
     return true;
   }
 
-  const Vector3f& B = _box1.getB();
-  if (intersectionBoxPoint(_box2, B))
+  const Vector3f& B1 = _box1.getB();
+  if (intersectionBoxPoint(_box2, B1))
+  {
+    return true;
+  }
+  const Vector3f& B2 = _box2.getB();
+  if (intersectionBoxPoint(_box1, B2))
   {
     return true;
   }
 
-  const Vector3f& C = Vector3f(A.x, A.y, B.z);
-  if (intersectionBoxPoint(_box2, C))
+  const Vector3f& C1 = Vector3f(A1.x, A1.y, B1.z);
+  if (intersectionBoxPoint(_box2, C1))
+  {
+    return true;
+  }
+  const Vector3f& C2 = Vector3f(A2.x, A2.y, B2.z);
+  if (intersectionBoxPoint(_box1, C2))
   {
     return true;
   }
 
-  const Vector3f& D = Vector3f(A.x, B.y, A.z);
-  if (intersectionBoxPoint(_box2, D))
+  const Vector3f& D1 = Vector3f(A1.x, B1.y, A1.z);
+  if (intersectionBoxPoint(_box2, D1))
+  {
+    return true;
+  }
+  const Vector3f& D2 = Vector3f(A2.x, B2.y, A2.z);
+  if (intersectionBoxPoint(_box1, D2))
   {
     return true;
   }
 
-  const Vector3f& E = Vector3f(A.x, B.y, B.z);
-  if (intersectionBoxPoint(_box2, E))
+  const Vector3f& E1 = Vector3f(A1.x, B1.y, B1.z);
+  if (intersectionBoxPoint(_box2, E1))
+  {
+    return true;
+  }
+  const Vector3f& E2 = Vector3f(A2.x, B2.y, B2.z);
+  if (intersectionBoxPoint(_box1, E2))
   {
     return true;
   }
 
-  const Vector3f& F = Vector3f(B.x, A.y, A.z);
-  if (intersectionBoxPoint(_box2, F))
+  const Vector3f& F1 = Vector3f(B1.x, A1.y, A1.z);
+  if (intersectionBoxPoint(_box2, F1))
+  {
+    return true;
+  }
+  const Vector3f& F2 = Vector3f(B2.x, A2.y, A2.z);
+  if (intersectionBoxPoint(_box1, F2))
   {
     return true;
   }
 
-  const Vector3f& G = Vector3f(B.x, A.y, B.z);
-  if (intersectionBoxPoint(_box2, G))
+  const Vector3f& G1 = Vector3f(B1.x, A1.y, B1.z);
+  if (intersectionBoxPoint(_box2, G1))
+  {
+    return true;
+  }
+  const Vector3f& G2 = Vector3f(B2.x, A2.y, B2.z);
+  if (intersectionBoxPoint(_box1, G2))
   {
     return true;
   }
 
-  const Vector3f& H = Vector3f(B.x, B.y, A.z);
-  if (intersectionBoxPoint(_box2, H))
+  const Vector3f& H1 = Vector3f(B1.x, B1.y, A1.z);
+  if (intersectionBoxPoint(_box2, H1))
+  {
+    return true;
+  }
+  const Vector3f& H2 = Vector3f(B2.x, B2.y, A2.z);
+  if (intersectionBoxPoint(_box1, H2))
   {
     return true;
   }
   
   return false;
 }
-bool PlatformMath::intersectionCapsulePoint(const Capsule& _capsule, const Vector3f& _point)
+bool
+PlatformMath::intersectionCapsulePoint(const Capsule& _capsule, 
+                                       const Vector3f& _point)
 {
   return false;
 }
-bool PlatformMath::intersectionCapsulePlane(const Capsule& _capsule, const Plane& _plane)
+bool
+PlatformMath::intersectionCapsulePlane(const Capsule& _capsule, 
+                                       const Plane& _plane)
 {
   return false;
 }
-bool PlatformMath::intersectionCapsuleSphere(const Capsule& _capsule, const Sphere& _sphere)
+bool
+PlatformMath::intersectionCapsuleSphere(const Capsule& _capsule, 
+                                        const Sphere& _sphere)
 {
   return false;
 }
-bool PlatformMath::intersectionCapsuleBox(const Capsule& _capsule, const BoxAAB& _box)
+bool
+PlatformMath::intersectionCapsuleBox(const Capsule& _capsule, 
+                                     const BoxAAB& _box)
 {
   return false;
 }
-bool PlatformMath::intersectionCapsuleCapsule(const Capsule& _capsule1, const Capsule& _capsule2)
+bool
+PlatformMath::intersectionCapsuleCapsule(const Capsule& _capsule1, 
+                                         const Capsule& _capsule2)
 {
   return false;
 }
-bool PlatformMath::intersectionRectanglePoint2D(const Rectangle& _rectangle, const Vector2f& _point2D)
+bool
+PlatformMath::intersectionRectanglePoint2D(const Rectangle& _rectangle, 
+                                           const Vector2f& _point2D)
 {
   Vector2f A = _rectangle.getA();
   Vector2f B = _rectangle.getB();
   return _point2D.x >= A.x && _point2D.x <= B.x
       && _point2D.y >= B.y && _point2D.y <= A.y;
 }
-bool PlatformMath::intersectionRectangleRectangle(const Rectangle& _rectangle1, const Rectangle& _rectangle2)
+bool 
+PlatformMath::intersectionRectangleRectangle(const Rectangle& _rectangle1,
+                                             const Rectangle& _rectangle2)
 {
-  Vector2f A = _rectangle1.getA();
-  Vector2f B = _rectangle1.getB();
+  const Vector2f& A1 = _rectangle1.getA();
+  if (intersectionRectanglePoint2D(_rectangle2, A1))
+  {
+    return true;
+  }
+  const Vector2f& A2 = _rectangle2.getA();
+  if (intersectionRectanglePoint2D(_rectangle1, A2))
+  {
+    return true;
+  }
+
+  const Vector2f& B1 = _rectangle1.getB();
+  if (intersectionRectanglePoint2D(_rectangle2, B1))
+  {
+    return true;
+  }
+  const Vector2f& B2 = _rectangle2.getB();
+  if (intersectionRectanglePoint2D(_rectangle1, B2))
+  {
+    return true;
+  }
+
+  const Vector2f& C1 = Vector2f(A1.x, B1.y);
+  if (intersectionRectanglePoint2D(_rectangle2, C1))
+  {
+    return true;
+  }
+  const Vector2f& C2 = Vector2f(A2.x, B2.y);
+  if (intersectionRectanglePoint2D(_rectangle1, C2))
+  {
+    return true;
+  }
+
+  const Vector2f& D1 = Vector2f(B1.x, A1.y);
+  if (intersectionRectanglePoint2D(_rectangle2, D1))
+  {
+    return true;
+  }
+  const Vector2f& D2 = Vector2f(B2.x, A2.y);
+  if (intersectionRectanglePoint2D(_rectangle1, D2))
+  {
+    return true;
+  }
+
   return false;
 }
 }
