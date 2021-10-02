@@ -81,6 +81,62 @@ Matrix4f
                   0.0f,    0.0f,    0.0f,    1.0f);
 }
 
+Matrix4f Matrix4f::viewMatrix(const Vector3f& eye, 
+                              const Vector3f& lookAt,
+                              const Vector3f& worldUp)
+{
+  Vector3f z = lookAt - eye;
+  z.normalize();
+
+  Vector3f x = worldUp.cross(z);
+  x.normalize();
+
+  Vector3f y = z.cross(x);
+
+  return Matrix4f(        x.x,         y.x,         z.x, 0,
+                          x.y,         y.y,         z.y, 0,
+                          x.z,         y.z,         z.z, 0,
+                  -x.dot(eye), -y.dot(eye), -z.dot(eye), 1 );
+}
+
+Matrix4f Matrix4f::orthograficMatrixMatrix(float ViewWidth,
+                                           float ViewHeight, 
+                                           float NearZ, 
+                                           float FarZ)
+{
+  float r = ViewWidth / 2;
+  float l = -ViewWidth / 2;
+  float t = ViewHeight / 2;
+  float b = -ViewHeight / 2;
+  float f = (FarZ - NearZ) / 2;
+  float n = -(FarZ - NearZ) / 2;
+
+  return Matrix4f(
+      2 / (r - l),            0,            0,  -((r + l) / (r - l)),
+                0,  2 / (t - b),            0,  -((t + b) / (t - b)),
+                0,            0,  2 / (f - n),  -((f + n) / (f - n)),
+                0,            0,            0,                     1
+  );
+}
+
+Matrix4f Matrix4f::perspectiveMatrix(float FovAngleY, 
+                                     float AspectRatio,
+                                     float NearZ, 
+                                     float FarZ)
+{
+  float fovCos = Math::cos(FovAngleY * .5f);
+  float fovSin = Math::sin(FovAngleY * .5f);
+  float height = fovCos / fovSin;
+  //float width = AspectRatio * height;
+
+  return Matrix4f(
+      height / AspectRatio, 0, 0, 0,
+      0, height, 0, 0,
+      0, 0, (FarZ / (FarZ - NearZ)), 1,
+      0, 0, -FarZ / (FarZ - NearZ) * NearZ, 0
+  );
+}
+
 
 
 Matrix4f::Matrix4f() 
@@ -314,6 +370,16 @@ Matrix4f::operator*(const Matrix4f& other) const
     + this->m_32 * other.m_22 + this->m_33 * other.m_32,
     this->m_30 * other.m_03 + this->m_31 * other.m_13 
     + this->m_32 * other.m_23 + this->m_33 * other.m_33 );
+}
+Vector4f
+Matrix4f::operator*(const Vector4f& v) const
+{
+  return Vector4f(
+    m_00 * v.x + m_01 * v.y + m_02 * v.z + m_03 * v.w,
+    m_10 * v.x + m_11 * v.y + m_12 * v.z + m_13 * v.w,
+    m_20 * v.x + m_21 * v.y + m_22 * v.z + m_23 * v.w,
+    m_30 * v.x + m_31 * v.y + m_32 * v.z + m_33 * v.w
+  );
 }
 Matrix4f
 Matrix4f::operator*(float k) const

@@ -17,17 +17,17 @@ class Vector4f;
 class Vector4i;
 class Vector4u;
 
-class Matrx2f;
-class Matrx2i;
-class Matrx2u;
+class Matrix2f;
+class Matrix2i;
+class Matrix2u;
 
-class Matrx3f;
-class Matrx3i;
-class Matrx3u;
+class Matrix3f;
+class Matrix3i;
+class Matrix3u;
 
-class Matrx4f;
-class Matrx4i;
-class Matrx4u;
+class Matrix4f;
+class Matrix4i;
+class Matrix4u;
 
 class Plane;
 class Sphere;

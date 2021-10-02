@@ -3,12 +3,20 @@
 #include <gtest/gtest.h>
 
 #include "eeMath.h"
+
 #include "eeVector2.h"
 #include "eeVector3.h"
 #include "eeVector4.h"
+
 #include "eeMatrix2.h"
 #include "eeMatrix3.h"
 #include "eeMatrix4.h"
+
+#include "eePlane.h"
+#include "eeSphere.h"
+#include "eeBox.h"
+#include "eeCapsule.h"
+#include "eeRectangle.h"
 	
 using eeEngineSDK::Math;
 using eeEngineSDK::int32;
@@ -37,6 +45,12 @@ using eeEngineSDK::Matrix3u;
 using eeEngineSDK::Matrix4f;
 using eeEngineSDK::Matrix4i;
 using eeEngineSDK::Matrix4u;
+
+using eeEngineSDK::Plane;
+using eeEngineSDK::Sphere;
+using eeEngineSDK::BoxAAB;
+using eeEngineSDK::Capsule;
+using eeEngineSDK::Rectangle;
 
 TEST(eeUtilities, Basic_Type_Sizes)
 {
@@ -1521,6 +1535,121 @@ TEST(eeUtilities, Matrix4)
                                 3u, 3u, 3u, 3u,
                                 3u, 3u, 3u, 3u,
                                 3u, 3u, 3u, 3u));
+}
+
+TEST(eeUtilities, Shapes)
+{
+  EXPECT_EQ(sizeof(Plane), 36);
+
+  Plane p(Vector3f(1.0f,1.0f,1.0f), Vector3f(2.0f,-3.0f,4.0f));
+
+  EXPECT_TRUE(p.getPoint() == Vector3f(1.0f, 1.0f, 1.0f));
+  EXPECT_TRUE(p.getNormal() == Vector3f(2.0f, -3.0f, 4.0f).getNormalize());
+
+  p.move(Vector3f(-1.0f, 2.0f, 1.0f));
+  EXPECT_TRUE(p.getPoint() == Vector3f(0.0f, 3.0f, 2.0f));
+  p.rotate(Vector3f(Math::kPI, 0.0f, 0.0f));
+  EXPECT_TRUE(p.getPoint() == Vector3f(0.0f, 3.0f, 2.0f));
+
+
+  p.setPoint(Vector3f(-1.0f, 2.0f, 1.0f));
+  EXPECT_TRUE(p.getPoint() == Vector3f(-1.0f, 2.0f, 1.0f));
+  p.setNormal(Vector3f(1.0f, 0.0f, 0.0f));
+  EXPECT_TRUE(p.getNormal() == Vector3f(1.0f, 0.0f, 0.0f).getNormalize());
+
+
+  EXPECT_EQ(sizeof(Sphere), 16);
+
+  Sphere s(Vector3f(2.0f, -1.0f, 3.0f), 5.0f);
+
+  EXPECT_TRUE(s.getCenter() == Vector3f(2.0f, -1.0f, 3.0f));
+  EXPECT_EQ(s.getRadious(), 5.0f);
+
+  s.move(Vector3f(1.0f, 1.0f, 1.0f));
+  EXPECT_TRUE(s.getCenter() == Vector3f(3.0f, 0.0f, 4.0f));
+
+  s.setCenter(Vector3f(2.0f, -4.0f, -2.0f));
+  EXPECT_TRUE(s.getCenter() == Vector3f(2.0f, -4.0f, -2.0f));
+  s.setRadious(3.0f);
+  EXPECT_EQ(s.getRadious(), 3.0f);
+
+  
+  EXPECT_EQ(sizeof(BoxAAB), 24);
+
+  BoxAAB b(Vector3f(2.0f, 2.0f, 2.0f), Vector3f(1.0f, 2.0f, 3.0f));
+
+  EXPECT_TRUE(b.getA() == Vector3f(2.0f, 2.0f, 2.0f));
+  EXPECT_TRUE(b.getB() == Vector3f(3.0f, 0.0f, -1.0f));
+  EXPECT_TRUE(b.getSize() == Vector3f(1.0f, 2.0f, 3.0f));
+
+  b.move(Vector3f(-1.0f, -2.0f, -3.0f));
+  EXPECT_TRUE(b.getA() == Vector3f(1.0f, 0.0f, -1.0f));
+  EXPECT_TRUE(b.getB() == Vector3f(2.0f, -2.0f, -4.0f));
+
+  b.setA(Vector3f(3.0f, 2.0f, 1.0f));
+  EXPECT_TRUE(b.getA() == Vector3f(3.0f, 2.0f, 1.0f));
+  EXPECT_TRUE(b.getB() == Vector3f(4.0f, 0.0f, -2.0f));
+
+  b.setSize(Vector3f(3.0f, 1.0f, 3.0f));
+  EXPECT_TRUE(b.getB() == Vector3f(6.0f, 1.0f, -2.0f));
+  EXPECT_TRUE(b.getSize() == Vector3f(3.0f, 1.0f, 3.0f));
+
+
+  EXPECT_EQ(sizeof(Capsule), 20);
+
+  Capsule c(Vector3f(2.0f, 1.0f, -3.0f), 2.0f, 1.0f);
+
+  EXPECT_TRUE(c.getCenter() == Vector3f(2.0f, 1.0f, -3.0f));
+  EXPECT_TRUE(c.getHeight() == 2.0f);
+  EXPECT_TRUE(c.getRadious() == 1.0f);
+
+  c.move(Vector3f(-3.0f, 2.0f, 1.0f));
+  EXPECT_TRUE(c.getCenter() == Vector3f(-1.0f, 3.0f, -2.0f));
+
+  c.setCenter(Vector3f(1.0f, 1.0f, -2.0f));
+  EXPECT_TRUE(c.getCenter() == Vector3f(1.0f, 1.0f, -2.0f));
+  c.setHeight(10.0f);
+  EXPECT_TRUE(c.getHeight() == 10.0f);
+  c.setRadious(2.0f);
+  EXPECT_TRUE(c.getRadious() == 2.0f);
+
+
+  EXPECT_EQ(sizeof(Rectangle), 16);
+
+  Rectangle r(Vector2f(2.0f,3.0f), Vector2f(3.0f, 4.0f));
+
+  EXPECT_TRUE(r.getA() == Vector2f(2.0f, 3.0f));
+  EXPECT_TRUE(r.getB() == Vector2f(5.0f, -1.0f));
+  EXPECT_TRUE(r.getSize() == Vector2f(3.0f, 4.0f));
+
+  r.move(Vector2f(1.0f, -2.0f));
+  EXPECT_TRUE(r.getA() == Vector2f(3.0f, 1.0f));
+  EXPECT_TRUE(r.getB() == Vector2f(6.0f, -3.0f));
+
+  r.setA(Vector2f(0.0f, -1.0f));
+  EXPECT_TRUE(r.getA() == Vector2f(0.0f, -1.0f));
+  EXPECT_TRUE(r.getB() == Vector2f(3.0f, -5.0f));
+
+  r.setSize(Vector2f(1.0f, 1.0f));
+  EXPECT_TRUE(r.getB() == Vector2f(1.0f, -2.0f));
+  EXPECT_TRUE(r.getSize() == Vector2f(1.0f, 1.0f));
+
+
+  EXPECT_TRUE(r.intersects(Vector2f(0.5f, -1.5f)));
+  EXPECT_TRUE(r.intersects(Rectangle(Vector2f(-1.0f, 0.0f), 
+                                     Vector2f(4.0f, 4.0f))));
+
+
+  EXPECT_TRUE(p.intersects(Vector3f(-1.0f, 2.0f, 0.0f)));
+  EXPECT_TRUE(s.intersects(Vector3f(2.0f, -3.0f, -1.0f)));
+  EXPECT_TRUE(s.intersects(p));
+  EXPECT_FALSE(b.intersects(Vector3f(2.0f, -3.0f, -1.0f)));
+  EXPECT_FALSE(b.intersects(p));
+  EXPECT_FALSE(b.intersects(s));
+  EXPECT_TRUE(c.intersects(Vector3f(2.0f, -3.0f, -1.0f)));
+  EXPECT_TRUE(c.intersects(p));
+  EXPECT_TRUE(c.intersects(s));
+  //EXPECT_TRUE(c.intersects(b));
 }
 
 int main(int argc, char** argv) {

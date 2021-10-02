@@ -25,11 +25,7 @@ class EE_UTILITY_EXPORT Vector3f
  public:
   /**
   * @brief
-  * Initializes the vector with a default value of 0.
-  *
-  * @description
-  * Initializes x and y with its default value of 0, because
-  * no value was given.
+  * The default constructor.
   */
   Vector3f();
   /**
@@ -37,13 +33,15 @@ class EE_UTILITY_EXPORT Vector3f
   * Initializes the vector with the values given.
   *
   * @description
-  * Initializes x and y with the values _x and _y
+  * Initializes x, y and z with the values _x, _y, _z
   * given.
   *
   * @param _x
   * The initial x for the vector.
   * @param _y
   * The initial y for the vector.
+  * @param _z
+  * The initial z for the vector.
   */
   Vector3f(float _x, float _y, float _z);
   /**
@@ -334,6 +332,19 @@ class EE_UTILITY_EXPORT Vector3f
   */
   Vector3f
   operator%(float other) const;
+
+  /**
+  * @brief
+  * The minus operator.
+  *
+  * @description
+  * Returns a vector in the oposite direction of the original.
+  *
+  * @return
+  * A vector in the oposite direction of the original.
+  */
+  Vector3f
+  operator-() const;
   
   /**
   * @brief
@@ -604,11 +615,7 @@ class EE_UTILITY_EXPORT Vector3i
  public:
   /**
   * @brief
-  * Initializes the vector with a default value of 0.
-  *
-  * @description
-  * Initializes x and y with its default value of 0, because
-  * no value was given.
+  * The default constructor.
   */
   Vector3i();
   /**
@@ -616,13 +623,15 @@ class EE_UTILITY_EXPORT Vector3i
   * Initializes the vector with the values given.
   *
   * @description
-  * Initializes x and y with the values _x and _y
+  * Initializes x, y and z with the values _x, _y, _z
   * given.
   *
   * @param _x
   * The initial x for the vector.
   * @param _y
   * The initial y for the vector.
+  * @param _z
+  * The initial z for the vector.
   */
   Vector3i(int32 _x, int32 _y, int32 _z);
   /**
@@ -854,6 +863,19 @@ class EE_UTILITY_EXPORT Vector3i
   */
   Vector3i
   operator%(int32 other) const;
+
+  /**
+  * @brief
+  * The minus operator.
+  *
+  * @description
+  * Returns a vector in the oposite direction of the original.
+  *
+  * @return
+  * A vector in the oposite direction of the original.
+  */
+  Vector3i
+  operator-() const;
 
   /**
   * @brief
@@ -1124,11 +1146,7 @@ class EE_UTILITY_EXPORT Vector3u
  public:
   /**
   * @brief
-  * Initializes the vector with a default value of 0.
-  *
-  * @description
-  * Initializes x and y with its default value of 0, because
-  * no value was given.
+  * The default constructor.
   */
   Vector3u();
   /**
@@ -1136,13 +1154,15 @@ class EE_UTILITY_EXPORT Vector3u
   * Initializes the vector with the values given.
   *
   * @description
-  * Initializes x and y with the values _x and _y
+  * Initializes x, y and z with the values _x, _y, _z
   * given.
   *
   * @param _x
   * The initial x for the vector.
   * @param _y
   * The initial y for the vector.
+  * @param _z
+  * The initial z for the vector.
   */
   Vector3u(uint32 _x, uint32 _y, uint32 _z);
   /**

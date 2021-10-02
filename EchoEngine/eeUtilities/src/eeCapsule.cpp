@@ -34,10 +34,10 @@ bool Capsule::intersects(const Sphere& sphere)
 {
   return Math::intersectionCapsuleSphere(*this, sphere);
 }
-bool Capsule::intersects(const BoxAAB& box)
-{
-  return Math::intersectionCapsuleBox(*this, box);
-}
+//bool Capsule::intersects(const BoxAAB& box)
+//{
+//  return Math::intersectionCapsuleBox(*this, box);
+//}
 bool Capsule::intersects(const Capsule& capsule)
 {
   return Math::intersectionCapsuleCapsule(*this, capsule);

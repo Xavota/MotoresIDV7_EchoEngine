@@ -1,6 +1,7 @@
 #include "eePlane.h"
 //#include "eeSphere.h"
 #include "eeMath.h"
+#include "eeMatrix4.h"
 
 namespace eeEngineSDK {
   const Plane Plane::XY = Plane(Vector3f(0.0f, 0.0f, 0.0f),
@@ -25,7 +26,7 @@ Plane::Plane(const Vector3f& pA, const Vector3f& pB, const Vector3f& pC)
   Vector3f AB = pB - pA;
   Vector3f AC = pC - pA;
 
-  m_normal = AB.cross(AC);
+  m_normal = AB.cross(AC).getNormalize();
 }
 Plane::~Plane()
 {
@@ -38,7 +39,9 @@ Plane::move(const Vector3f& movement)
 void
 Plane::rotate(const Vector3f& rotation)
 {
-  //TODO: Multiplications of Matrix*Vector
+  Vector4f rotated = Matrix4f::rotationMatrix(rotation) * 
+                     Vector4f(m_normal.x, m_normal.y, m_normal.z, 0.0f);
+  m_normal = Vector3f(rotated.x, rotated.y, rotated.z).getNormalize();
 }
 bool
 Plane::intersects(const Vector3f& point)

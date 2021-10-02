@@ -60,6 +60,9 @@
     <ClInclude Include="include\eeCapsule.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\eeQuaternion.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eePlatformMath.cpp">
@@ -99,6 +102,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\eeRectangle.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeQuaternion.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

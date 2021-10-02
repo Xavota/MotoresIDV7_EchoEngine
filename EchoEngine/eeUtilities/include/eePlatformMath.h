@@ -292,6 +292,24 @@ public:
   atan(const float& _radian);
   /**
   * @brief
+  * The arctangent2 function.
+  *
+  * @description
+  * Returns the arctangent operation for the values passed,
+  * using the signs of arguments to correctly determine quadrant.
+  *
+  * @param Y
+  * The vY component of the right triangle.
+  * @param X
+  * The vY component of the right triangle.
+  *
+  * @return
+  * The result of the arctangent2 function.
+  */
+  static FORCEINLINE float
+  atan2(const float& Y, const float& X);
+  /**
+  * @brief
   * The arctangent function, for degrees.
   *
   * @description
@@ -587,9 +605,124 @@ public:
 
   /****************************************************/
   /*
-   *    Intersections
+   *    Geometry
    */
    /****************************************************/
+
+  /**
+  * @brief
+  * Distance bewteen a pointe and a plane.
+  *
+  * @description
+  * Returns the shortest distance between a point and a plane.
+  *
+  * @param p
+  * The plane un the space.
+  * @param X
+  * The point to check distance.
+  *
+  * @return
+  * The shortest distance between a point and a plane.
+  */
+  static float
+  planeDistance(const Plane& p, const Vector3f& point);
+  /**
+  * @brief
+  * Check the position of the sphere with respect to the plane.
+  *
+  * @description
+  * Returns true if the sphere is on the oposite side of the normal
+  * of the plane and it's not toching it.
+  *
+  * @param s
+  * The sphere to check position.
+  * @param p
+  * The plane in the space.
+  *
+  * @return
+  * The shortest distance between a point and a plane.
+  */
+  static bool
+  sphereInsidePlane(const Sphere& s, const Plane& p);
+  /**
+  * @brief
+  * Intersection between a sphere and a plane.
+  *
+  * @description
+  * Returns true if the plane intersects the sphere.
+  *
+  * @param s
+  * The sphere to check.
+  * @param p
+  * The plane to check.
+  *
+  * @return
+  * True if the plane intersects the sphere.
+  */
+  static bool
+  sphereIntersectsPlane(const Sphere& s, const Plane& p);
+  /**
+  * @brief
+  * Check if the sphere is inside the box.
+  *
+  * @description
+  * Returns true if the sphere is inside the box with out touching
+  * its walls.
+  *
+  * @param s
+  * The sphere to check position.
+  * @param b
+  * The box in the space.
+  *
+  * @return
+  * True if the sphere is inside the box with out touching
+  * its walls.
+  */
+  static bool
+  sphereInsideBox(const Sphere& s, const BoxAAB& b);
+  /**
+  * @brief
+  * Intersection between a sphere and a plane.
+  *
+  * @description
+  * Returns true if the plane intersects the sphere, and returns
+  * the point and radious of the intersectiong circle between the
+  * sphere and the plane.
+  *
+  * @param s
+  * The sphere to check.
+  * @param p
+  * The plane to check.
+  * @param point
+  * The point on the center of the intersection.
+  * @param radious
+  * The radious of the circle of the intersection area.
+  *
+  * @return
+  * True if the plane intersects the sphere.
+  */
+  static bool
+  sphereIntersectsPlanePoint(const Sphere& s, 
+                             const Plane& p, 
+                             Vector3f* point, 
+                             float* radius);
+  /**
+  * @brief
+  * Intersection between a sphere and a box.
+  *
+  * @description
+  * Returns true if the sphere intersects the box, but it isn't inside.
+  *
+  * @param s
+  * The sphere to check.
+  * @param b
+  * The box to check.
+  *
+  * @return
+  * True if the sphere intersects the box, but it isn't inside.
+  */
+  static bool
+  sphereIntersectsBox(const Sphere& s, const BoxAAB& b);
 
   /**
   * @brief
@@ -810,8 +943,8 @@ public:
   * @return
   * True if the box intersects the capsule.
   */
-  static bool
-  intersectionCapsuleBox(const Capsule& _capsule, const BoxAAB& _box);
+  //static bool
+  //intersectionCapsuleBox(const Capsule& _capsule, const BoxAAB& _box);
   /**
   * @brief
   * Intersection between two capsules.
@@ -1007,6 +1140,11 @@ FORCEINLINE float
 PlatformMath::atan(const float& _radian)
 {
   return std::atanf(_radian);
+}
+FORCEINLINE float 
+PlatformMath::atan2(const float& Y, const float& X)
+{
+  return std::atan2f(Y, X);
 }
 FORCEINLINE float
 PlatformMath::atand(const float& _degree)

@@ -136,6 +136,10 @@ Vector3f::operator%(float other) const
     Math::fmod(this->y, other),
     Math::fmod(this->z, other));
 }
+Vector3f Vector3f::operator-() const
+{
+  return Vector3f(-x, -y, -z);
+}
 Vector3f&
 Vector3f::operator=(const Vector3f& other)
 {
@@ -318,6 +322,10 @@ Vector3i::operator%(int32 other) const
 {
   return Vector3i(this->x % other, this->y % other, this->z % other);
 }
+ Vector3i Vector3i::operator-() const
+ {
+   return Vector3i(-x, -y, -z);
+ }
  Vector3i&
 Vector3i::operator=(const Vector3i& other)
 {

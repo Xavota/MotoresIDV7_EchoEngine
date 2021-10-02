@@ -39,8 +39,8 @@ bool BoxAAB::intersects(const BoxAAB& box)
 {
   return Math::intersectionBoxBox(*this, box);
 }
-bool BoxAAB::intersects(const Capsule& capsule)
-{
-  return Math::intersectionCapsuleBox(capsule, *this);
-}
+//bool BoxAAB::intersects(const Capsule& capsule)
+//{
+//  return Math::intersectionCapsuleBox(capsule, *this);
+//}
 }

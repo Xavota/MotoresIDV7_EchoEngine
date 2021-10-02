@@ -20,7 +20,7 @@ namespace eeEngineSDK {
 * The simplest rectangle. Not oriented. Defined by a point and a size.
 * For 2 dimensional spaces, like viewports.
 */
-class Rectangle
+class EE_UTILITY_EXPORT Rectangle
 {
  public:
   /**
@@ -188,6 +188,39 @@ class Rectangle
   {
     return m_a + Vector2f(m_size.x, -m_size.y);
   }
+
+
+
+  /**
+  * @brief
+  * Checks intersection rectangle-point.
+  *
+  * @description
+  * Returns true if the point is in the rectangle.
+  *
+  * @param point
+  * The point to check if it's in the rectangle.
+  *
+  * @return
+  * Whether it's intersecting or not.
+  */
+  bool
+  intersects(const Vector2f& point) const;
+  /**
+  * @brief
+  * Checks intersection rectangle-rectangle.
+  *
+  * @description
+  * Returns true if the firts rectangle intersects the second.
+  *
+  * @param rectangle
+  * The second rectangle to check if it's touching the first.
+  *
+  * @return
+  * Whether it's intersecting or not.
+  */
+  bool
+  intersects(const Rectangle& rectangle) const;
 
 
 

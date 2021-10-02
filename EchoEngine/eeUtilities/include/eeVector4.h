@@ -26,11 +26,7 @@ class EE_UTILITY_EXPORT Vector4f
  public:
   /**
   * @brief
-  * Initializes the vector with a default value of 0.
-  *
-  * @description
-  * Initializes x and y with its default value of 0, because
-  * no value was given.
+  * Default constructor
   */
   Vector4f();
   /**
@@ -38,20 +34,25 @@ class EE_UTILITY_EXPORT Vector4f
   * Initializes the vector with the values given.
   *
   * @description
-  * Initializes x and y with the values _x and _y
+  * Initializes x, y, z and w with the values _x, _y, _z, _w
   * given.
   *
   * @param _x
   * The initial x for the vector.
   * @param _y
   * The initial y for the vector.
+  * @param _z
+  * The initial z for the vector.
+  * @param _w
+  * The initial w for the vector.
   */
   Vector4f(float _x, float _y, float _z, float _w);
   /**
   * @brief
   * Frees the memory allocated on the vector.
   *
-  * @description Releases and deletes all the possible memory
+  * @description 
+  * Releases and deletes all the possible memory
   * allocated in the vector.
   */
   ~Vector4f();
@@ -318,6 +319,19 @@ class EE_UTILITY_EXPORT Vector4f
   */
   Vector4f
   operator%(float other) const;
+
+  /**
+  * @brief
+  * The minus operator.
+  *
+  * @description
+  * Returns a vector in the oposite direction of the original.
+  *
+  * @return
+  * A vector in the oposite direction of the original.
+  */
+  Vector4f
+  operator-() const;
 
   /**
   * @brief
@@ -691,6 +705,10 @@ Vector4f::operator%(float other) const
                   Math::fmod(this->z, other),
                   Math::fmod(this->w, other));
 }
+inline Vector4f Vector4f::operator-() const
+{
+  return Vector4f(-x, -y, -z, -w);
+}
 FORCEINLINE Vector4f& 
 Vector4f::operator=(const Vector4f& other)
 {
@@ -785,11 +803,7 @@ class EE_UTILITY_EXPORT Vector4i
  public:
   /**
   * @brief
-  * Initializes the vector with a default value of 0.
-  *
-  * @description
-  * Initializes x and y with its default value of 0, because
-  * no value was given.
+  * The default constructor.
   */
   Vector4i();
   /**
@@ -797,13 +811,17 @@ class EE_UTILITY_EXPORT Vector4i
   * Initializes the vector with the values given.
   *
   * @description
-  * Initializes x and y with the values _x and _y
+  * Initializes x, y, z and w with the values _x, _y, _z, _w
   * given.
   *
   * @param _x
   * The initial x for the vector.
   * @param _y
   * The initial y for the vector.
+  * @param _z
+  * The initial z for the vector.
+  * @param _w
+  * The initial w for the vector.
   */
   Vector4i(int32 _x, int32 _y, int32 _z, int32 _w);
   /**
@@ -1019,6 +1037,19 @@ class EE_UTILITY_EXPORT Vector4i
   */
   Vector4i
   operator%(int32 other) const;
+
+  /**
+  * @brief
+  * The minus operator.
+  *
+  * @description
+  * Returns a vector in the oposite direction of the original.
+  *
+  * @return
+  * A vector in the oposite direction of the original.
+  */
+  Vector4i
+  operator-() const;
 
   /**
   * @brief
@@ -1371,6 +1402,10 @@ Vector4i::operator%(int32 other) const
   return Vector4i(this->x % other, this->y % other, 
                   this->z % other, this->w % other);
 }
+inline Vector4i Vector4i::operator-() const
+{
+  return Vector4i(-x, -y, -z, -w);
+}
 FORCEINLINE Vector4i& 
 Vector4i::operator=(const Vector4i& other)
 {
@@ -1463,11 +1498,7 @@ class EE_UTILITY_EXPORT Vector4u
  public:
   /**
   * @brief
-  * Initializes the vector with a default value of 0.
-  *
-  * @description
-  * Initializes x and y with its default value of 0, because
-  * no value was given.
+  * The default constructor.
   */
   Vector4u();
   /**
@@ -1475,13 +1506,17 @@ class EE_UTILITY_EXPORT Vector4u
   * Initializes the vector with the values given.
   *
   * @description
-  * Initializes x and y with the values _x and _y
+  * Initializes x, y, z and w with the values _x, _y, _z, _w
   * given.
   *
   * @param _x
   * The initial x for the vector.
   * @param _y
   * The initial y for the vector.
+  * @param _z
+  * The initial z for the vector.
+  * @param _w
+  * The initial w for the vector.
   */
   Vector4u(uint32 _x, uint32 _y, uint32 _z, uint32 _w);
   /**

@@ -26,11 +26,7 @@ class EE_UTILITY_EXPORT Vector2f
  public:
   /**
   * @brief
-  * Initializes the vector with a default value of 0.
-  *
-  * @description
-  * Initializes x and y with its default value of 0, because
-  * no value was given.
+  * The default constructor.
   */
   Vector2f();
   /**
@@ -319,6 +315,19 @@ class EE_UTILITY_EXPORT Vector2f
   */
   Vector2f
   operator%(float other) const;
+
+  /**
+  * @brief
+  * The minus operator.
+  *
+  * @description
+  * Returns a vector in the oposite direction of the original.
+  *
+  * @return
+  * A vector in the oposite direction of the original.
+  */
+  Vector2f
+  operator-() const;
 
   /**
   * @brief
@@ -666,6 +675,10 @@ Vector2f::operator%(float other) const
   return Vector2f(Math::fmod(this->x, other), 
 						Math::fmod(this->y, other));
 }
+inline Vector2f Vector2f::operator-() const
+{
+  return Vector2f(-x, -y);
+}
 FORCEINLINE Vector2f& 
 Vector2f::operator=(const Vector2f& other)
 {
@@ -756,11 +769,7 @@ class EE_UTILITY_EXPORT Vector2i
  public:
   /**
   * @brief
-  * Initializes the vector with a default value of 0.
-  *
-  * @description
-  * Initializes x and y with its default value of 0, because
-  * no value was given.
+  * The default constructor.
   */
   Vector2i();
   /**
@@ -991,6 +1000,19 @@ class EE_UTILITY_EXPORT Vector2i
   */
   Vector2i
   operator%(int32 other) const;
+
+  /**
+  * @brief
+  * The minus operator.
+  *
+  * @description
+  * Returns a vector in the oposite direction of the original.
+  *
+  * @return
+  * A vector in the oposite direction of the original.
+  */
+  Vector2i
+  operator-() const;
      
   /**
   * @brief
@@ -1315,6 +1337,10 @@ Vector2i::operator%(int32 other) const
 {
 	return Vector2i(this->x % other, this->y % other);
 }
+inline Vector2i Vector2i::operator-() const
+{
+  return Vector2i(-x, -y);
+}
 FORCEINLINE Vector2i& 
 Vector2i::operator=(const Vector2i& other)
 {
@@ -1402,14 +1428,10 @@ Vector2i::operator!=(const Vector2i& other) const
 class EE_UTILITY_EXPORT Vector2u
 {
  public:
-	/**
-	* @brief
-	* Initializes the vector with a default value of 0.
-	*
-	* @description
-	* Initializes x and y with its default value of 0, because
-	* no value was given.
-	*/
+  /**
+  * @brief
+  * The default constructor.
+  */
 	Vector2u();
 	/**
 	* @brief

@@ -24,7 +24,7 @@ namespace eeEngineSDK {
 * and the radious of the demispheres the is also the radious of 
 * the cylinder.
 */
-class Capsule
+class EE_UTILITY_EXPORT Capsule
 {
  public:
   /**
@@ -237,8 +237,8 @@ class Capsule
   * @return
   * Whether it's intersecting or not.
   */
-  bool
-  intersects(const BoxAAB& box);
+  //bool
+  //intersects(const BoxAAB& box);
   /**
   * @brief
   * Checks intersection capsule-capsule.

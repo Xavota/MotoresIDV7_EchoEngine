@@ -26,9 +26,6 @@ class EE_UTILITY_EXPORT Matrix2f
   /**
   * @brief
   * The default constructor.
-  *
-  * @description
-  * Initializes every value in 0.
   */
   Matrix2f();
   /**
@@ -371,9 +368,6 @@ class EE_UTILITY_EXPORT Matrix2i
   /**
   * @brief
   * The default constructor.
-  *
-  * @description
-  * Initializes every value in 0.
   */
   Matrix2i();
   /**
@@ -692,9 +686,6 @@ class EE_UTILITY_EXPORT Matrix2u
   /**
   * @brief
   * The default constructor.
-  *
-  * @description
-  * Initializes every value in 0.
   */
   Matrix2u();
   /**

@@ -176,6 +176,7 @@
     <ClInclude Include="include\eePlatformMath.h" />
     <ClInclude Include="include\eePlatformTypes.h" />
     <ClInclude Include="include\eePrerequisitesUtilities.h" />
+    <ClInclude Include="include\eeQuaternion.h" />
     <ClInclude Include="include\eeRectangle.h" />
     <ClInclude Include="include\eeSphere.h" />
     <ClInclude Include="include\eeSTDHeaders.h" />
@@ -192,6 +193,7 @@
     <ClCompile Include="src\eePlane.cpp" />
     <ClCompile Include="src\eePlatformMath.cpp" />
     <ClCompile Include="src\eePlatformMathIndependent.cpp" />
+    <ClCompile Include="src\eeQuaternion.cpp" />
     <ClCompile Include="src\eeRectangle.cpp" />
     <ClCompile Include="src\eeSphere.cpp" />
     <ClCompile Include="src\eeVector2.cpp" />

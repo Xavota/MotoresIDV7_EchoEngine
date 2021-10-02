@@ -26,9 +26,6 @@ public:
   /**
   * @brief
   * The default constructor.
-  *
-  * @description
-  * Initializes every value in 0.
   */
   Matrix3f();
   /**
@@ -510,9 +507,6 @@ public:
   /**
   * @brief
   * The default constructor.
-  *
-  * @description
-  * Initializes every value in 0.
   */
   Matrix3i();
   /**
@@ -870,9 +864,6 @@ public:
   /**
   * @brief
   * The default constructor.
-  *
-  * @description
-  * Initializes every value in 0.
   */
   Matrix3u();
   /**

@@ -27,9 +27,6 @@ public:
   /**
   * @brief
   * The default constructor.
-  *
-  * @description
-  * Initializes every value in 0.
   */
   Matrix4f();
   /**
@@ -279,6 +276,21 @@ public:
   operator*(const Matrix4f& other) const;
   /**
   * @brief
+  * The operator '*' with a vector4.
+  *
+  * @description
+  * Multiply the matrix times the vector, and returns a new vector.
+  *
+  * @param v
+  * The vector to multiply.
+  *
+  * @return
+  * The resultant vector of the multiplication.
+  */
+  Vector4f
+  operator*(const Vector4f& v) const;
+  /**
+  * @brief
   * The operator '*' with a number.
   *
   * @description
@@ -440,6 +452,21 @@ public:
   static Matrix4f
   scaleMatrix(const Vector3f& scale);
 
+  static Matrix4f
+  viewMatrix(const Vector3f& eye, 
+             const Vector3f& lookAt, 
+             const Vector3f& worldUp);
+  static Matrix4f
+  orthograficMatrixMatrix(float ViewWidth, 
+                          float ViewHeight, 
+                          float NearZ, 
+                          float FarZ);
+  static Matrix4f
+  perspectiveMatrix(float FovAngleY, 
+                    float AspectRatio, 
+                    float NearZ, 
+                    float FarZ);
+
 
 
   union
@@ -563,9 +590,6 @@ public:
   /**
   * @brief
   * The default constructor.
-  *
-  * @description
-  * Initializes every value in 0.
   */
   Matrix4i();
   /**
@@ -975,9 +999,6 @@ public:
   /**
   * @brief
   * The default constructor.
-  *
-  * @description
-  * Initializes every value in 0.
   */
   Matrix4u();
   /**

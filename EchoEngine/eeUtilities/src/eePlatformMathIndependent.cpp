@@ -21,6 +21,140 @@ const float PlatformMath::kBIG_FLOAT = 999999.0f;
 const int32 PlatformMath::kSMALL_INT = -2147483648;
 const int32 PlatformMath::kBIG_INT = 2147483647;
 
+
+
+float 
+PlatformMath::planeDistance(const Plane& p, const Vector3f& point)
+{
+  Vector3f d = point - p.getPoint();
+  return d.dot(p.getNormal());
+}
+bool 
+PlatformMath::sphereInsidePlane(const Sphere& s, const Plane& p) 
+{
+  return -planeDistance(p, s.getCenter()) > s.getRadious();
+}
+bool 
+PlatformMath::sphereIntersectsPlane(const Sphere& s, const Plane& p) 
+{
+  return abs(planeDistance(p, s.getCenter())) <= s.getRadious();
+}
+bool 
+PlatformMath::sphereInsideBox(const Sphere& s, const BoxAAB& b) 
+{
+  Plane front(b.getA(), Vector3f::FORWARD);
+  Plane back(b.getB(), -Vector3f::FORWARD);
+  Plane top(b.getA(), Vector3f::UP);
+  Plane bottom(b.getB(), -Vector3f::UP);
+  Plane left(b.getA(), -Vector3f::RIGHT);
+  Plane right(b.getB(), Vector3f::RIGHT);
+  if (!sphereInsidePlane(s, front)) { return false; }
+  if (!sphereInsidePlane(s, back)) { return false; }
+  if (!sphereInsidePlane(s, top)) { return false; }
+  if (!sphereInsidePlane(s, bottom)) { return false; }
+  if (!sphereInsidePlane(s, left)) { return false; }
+  if (!sphereInsidePlane(s, right)) { return false; }
+
+  return true;
+}
+bool 
+PlatformMath::sphereIntersectsPlanePoint(const Sphere& s, 
+                                         const Plane& p, 
+                                         Vector3f* point, 
+                                         float* radius) 
+{
+  float d = planeDistance(p, s.getCenter());
+  Vector3f proj = p.getNormal() * d;
+  *point = s.getCenter() - proj;
+  *radius = sqrt(max(s.getRadious() * s.getRadious() - d * d, 0));
+  return abs(d) <= s.getRadious();
+}
+bool 
+PlatformMath::sphereIntersectsBox(const Sphere& s, const BoxAAB& b) {
+
+  Plane front(b.getA(), Vector3f::FORWARD);
+  Plane back(b.getB(), -Vector3f::FORWARD);
+  Plane top(b.getA(), Vector3f::UP);
+  Plane bottom(b.getB(), -Vector3f::UP);
+  Plane left(b.getA(), -Vector3f::RIGHT);
+  Plane right(b.getB(), Vector3f::RIGHT);
+
+
+  Vector3f point;
+  float radius;
+
+  if (sphereIntersectsPlanePoint(s, top, &point, &radius)) {
+
+    if (planeDistance(left, point) <= radius &&
+        planeDistance(right, point) <= radius &&
+        planeDistance(front, point) <= radius &&
+        planeDistance(back, point) <= radius) {
+      return true;
+    }
+
+  }
+
+  if (sphereIntersectsPlanePoint(s, bottom, &point, &radius)) {
+
+    if (planeDistance(left, point) <= radius &&
+        planeDistance(right, point) <= radius &&
+        planeDistance(front, point) <= radius &&
+        planeDistance(back, point) <= radius) {
+      return true;
+    }
+
+  }
+
+  if (sphereIntersectsPlanePoint(s, left, &point, &radius)) {
+
+    if (planeDistance(top, point) <= radius &&
+        planeDistance(bottom, point) <= radius &&
+        planeDistance(front, point) <= radius &&
+        planeDistance(back, point) <= radius) {
+      return true;
+    }
+
+  }
+
+  if (sphereIntersectsPlanePoint(s, right, &point, &radius)) {
+
+    if (planeDistance(top, point) <= radius &&
+        planeDistance(bottom, point) <= radius &&
+        planeDistance(front, point) <= radius &&
+        planeDistance(back, point) <= radius) {
+      return true;
+    }
+
+  }
+
+  if (sphereIntersectsPlanePoint(s, front, &point, &radius)) {
+
+    if (planeDistance(top, point) <= radius &&
+        planeDistance(bottom, point) <= radius &&
+        planeDistance(left, point) <= radius &&
+        planeDistance(right, point) <= radius) {
+      return true;
+    }
+
+  }
+
+  if (sphereIntersectsPlanePoint(s, back, &point, &radius)) {
+
+    if (planeDistance(top, point) <= radius &&
+        planeDistance(bottom, point) <= radius &&
+        planeDistance(left, point) <= radius &&
+        planeDistance(right, point) <= radius) {
+      return true;
+    }
+
+  }
+
+  return false;
+
+}
+
+
+
 bool
 PlatformMath::intersectionPlanePoint(const Plane& _plane,
                                      const Vector3f& _point)
@@ -49,15 +183,7 @@ bool
 PlatformMath::intersectionSpherePlane(const Sphere& _sphere, 
                                       const Plane& _plane)
 {
-  const Vector3f P = _sphere.getCenter();
-  const Vector3f Q = _plane.getPoint();
-
-  const Vector3f n = _plane.getNormal();
-  const Vector3f v = P - Q;
-
-  const float distance = n.dot(v);
-
-  return abs(distance) <= _sphere.getRadious();
+  return sphereIntersectsPlane(_sphere, _plane);
 }
 bool
 PlatformMath::intersectionSphereSphere(const Sphere& _sphere1,
@@ -130,9 +256,7 @@ PlatformMath::intersectionBoxPlane(const BoxAAB& _box, const Plane& _plane)
 bool 
 PlatformMath::intersectionBoxSphere(const BoxAAB& _box, const Sphere& _sphere)
 {
-  //const Vector3f& A = _box.getA();
-  //Vector3f(max(B.x, min(A.x, _sphere.getCenter().x)));
-  return false;
+  return sphereInsideBox(_sphere, _box) || sphereIntersectsBox(_sphere, _box);
 }
 bool 
 PlatformMath::intersectionBoxBox(const BoxAAB& _box1, const BoxAAB& _box2)
@@ -231,31 +355,169 @@ bool
 PlatformMath::intersectionCapsulePoint(const Capsule& _capsule, 
                                        const Vector3f& _point)
 {
+  Vector3f center = _capsule.getCenter();
+  float r = _capsule.getRadious();
+
+  Vector3f cA = center + (Vector3f::UP * ((_capsule.getHeight() / 2) - r));
+
+  Sphere A(cA, r);
+  if (intersectionSpherePoint(A, _point))
+  {
+    return true;
+  }
+
+  Vector3f cB = center - (Vector3f::UP * ((_capsule.getHeight() / 2) - r));
+
+  Sphere B(cB, r);
+  if (intersectionSpherePoint(B, _point))
+  {
+    return true;
+  }
+
+  Vector3f d = _point - center;
+  float h = d.getMagnitud();
+  float a = d.dot(Vector3f::UP);
+  float distance = sqrt(h*h - a*a);
+
+  if (distance <= r && _point.y <= cA.y && _point.y >= cB.y)
+  {
+    return true;
+  }
+
   return false;
 }
 bool
 PlatformMath::intersectionCapsulePlane(const Capsule& _capsule, 
                                        const Plane& _plane)
 {
+  Vector3f center = _capsule.getCenter();
+  float r = _capsule.getRadious();
+
+  Vector3f cA = center + (Vector3f::UP * ((_capsule.getHeight() / 2) - r));
+
+  Sphere A(cA, r);
+  if (intersectionSpherePlane(A, _plane))
+  {
+    return true;
+  }
+
+  Vector3f cB = center - (Vector3f::UP * ((_capsule.getHeight() / 2) - r));
+
+  Sphere B(cB, r);
+  if (intersectionSpherePlane(B, _plane))
+  {
+    return true;
+  }
+
+  float d1 = planeDistance(_plane, cA);
+  float d2 = planeDistance(_plane, cB);
+
+  if (d1 * d2 < 0)
+  {
+    return true;
+  }
+
   return false;
 }
 bool
 PlatformMath::intersectionCapsuleSphere(const Capsule& _capsule, 
                                         const Sphere& _sphere)
 {
+  Vector3f center = _capsule.getCenter();
+  float r = _capsule.getRadious();
+
+  Vector3f cA = center + (Vector3f::UP * ((_capsule.getHeight() / 2) - r));
+
+  Sphere A(cA, r);
+  if (intersectionSphereSphere(A, _sphere))
+  {
+    return true;
+  }
+
+  Vector3f cB = center - (Vector3f::UP * ((_capsule.getHeight() / 2) - r));
+
+  Sphere B(cB, r);
+  if (intersectionSphereSphere(B, _sphere))
+  {
+    return true;
+  }
+
+  Vector3f sCenter = _sphere.getCenter();
+  
+  Vector3f d = _sphere.getCenter() - center;
+  float h = d.getMagnitud();
+  float a = d.dot(Vector3f::UP);
+  float distance = sqrt(h * h - a * a);
+
+  if (distance <= r + _sphere.getRadious() 
+   && sCenter.y <= cA.y 
+   && sCenter.y >= cB.y)
+  {
+    return true;
+  }
+
   return false;
 }
-bool
+/*bool
 PlatformMath::intersectionCapsuleBox(const Capsule& _capsule, 
                                      const BoxAAB& _box)
 {
   return false;
-}
+}*/
 bool
 PlatformMath::intersectionCapsuleCapsule(const Capsule& _capsule1, 
                                          const Capsule& _capsule2)
 {
+  Vector3f center1 = _capsule1.getCenter();
+  float r1 = _capsule1.getRadious();
+  float h1 = _capsule1.getHeight();
+
+  Vector3f center2 = _capsule2.getCenter();
+  float r2 = _capsule2.getRadious();
+  float h2 = _capsule2.getHeight();
+
+
+  Vector3f cA1 = center1 + (Vector3f::UP * ((h1 / 2) - r1));
+  Vector3f cA2 = center2 + (Vector3f::UP * ((h2 / 2) - r2));
+
+  Sphere A1(cA1, r1);
+  Sphere A2(cA2, r2);
+
+  Vector3f cB1 = center1 - (Vector3f::UP * ((h1 / 2) - r1));
+  Vector3f cB2 = center2 - (Vector3f::UP * ((h2 / 2) - r2));
+
+  Sphere B1(cB1, r1);
+  Sphere B2(cB2, r2);
+
+  if (intersectionSphereSphere(A1, B2))
+  {
+    return true;
+  }
+  if (intersectionSphereSphere(A2, B1))
+  {
+    return true;
+  }
+
+
+
+  Vector3f d = center2 - center1;
+  float h = d.getMagnitud();
+  float a = d.dot(Vector3f::UP);
+  float distance = sqrt(h * h - a * a);
+
+  if (distance <= r1 + r2 && cA2.y >= cB1.y && cB2.y <= cA1.y)
+  {
+    return true;
+  }
+
   return false;
+
+
+  return false;
+  // Posibles coliciones ya con inclinación
+  // https://wickedengine.net/2020/04/26/capsule-collision-detection/#:~:text=T
+  // he%20capsule%20collisions%20in%20action%20Capsules%20are%20often,well%20fo
+  // r%20other%20types%20of%20more%20rounded%20characters.
 }
 bool
 PlatformMath::intersectionRectanglePoint2D(const Rectangle& _rectangle, 

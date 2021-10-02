@@ -225,8 +225,8 @@ class EE_UTILITY_EXPORT BoxAAB
   * @return
   * Whether it's intersecting or not.
   */
-  bool
-  intersects(const Capsule& capsule);
+  //bool
+  //intersects(const Capsule& capsule);
 
 
   /**

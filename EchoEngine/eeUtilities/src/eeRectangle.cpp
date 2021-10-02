@@ -45,4 +45,12 @@ Rectangle::Rectangle(const float Ax,
 Rectangle::~Rectangle()
 {
 }
+bool Rectangle::intersects(const Vector2f& point) const
+{
+  return Math::intersectionRectanglePoint2D(*this, point);
+}
+bool Rectangle::intersects(const Rectangle& rectangle) const
+{
+  return Math::intersectionRectangleRectangle(*this, rectangle);
+}
 }
