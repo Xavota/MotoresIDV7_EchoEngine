@@ -20,7 +20,7 @@ namespace eeEngineSDK
   * Four dimensional quaternion made by floats.
   * It can be used for rotations in 3 dimensions.
   */
-class Quaternion
+class EE_UTILITY_EXPORT Quaternion
 {
  public:
   /**
