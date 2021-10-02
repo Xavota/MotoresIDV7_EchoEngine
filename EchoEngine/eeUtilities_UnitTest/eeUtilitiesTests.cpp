@@ -74,7 +74,7 @@ TEST(eeUtilities, Basic_Type_Sizes)
   EXPECT_EQ(sizeof(eeEngineSDK::unchar), 1);
 
   EXPECT_EQ(sizeof(eeEngineSDK::TYPE_OF_NULL), 4);
-  EXPECT_EQ(sizeof(eeEngineSDK::SIZE_T), 8);
+  //EXPECT_EQ(sizeof(eeEngineSDK::SIZE_T), 8); // Cambai segun la arquitectura
 }
 
 TEST(eeUtilities, Vector2)
