@@ -17,6 +17,8 @@
 #include "eeBox.h"
 #include "eeCapsule.h"
 #include "eeRectangle.h"
+
+#include "eeQuaternion.h"
 	
 using eeEngineSDK::Math;
 using eeEngineSDK::int32;
@@ -51,6 +53,8 @@ using eeEngineSDK::Sphere;
 using eeEngineSDK::BoxAAB;
 using eeEngineSDK::Capsule;
 using eeEngineSDK::Rectangle;
+
+using eeEngineSDK::Quaternion;
 
 TEST(eeUtilities, Basic_Type_Sizes)
 {
@@ -1641,15 +1645,34 @@ TEST(eeUtilities, Shapes)
 
 
   EXPECT_TRUE(p.intersects(Vector3f(-1.0f, 2.0f, 0.0f)));
+  EXPECT_TRUE(p.intersects(Plane(Vector3f(0.0f, 1.0f, 2.0f), 
+                                 Vector3f(1.0f, 2.0f, 3.0f))));
   EXPECT_TRUE(s.intersects(Vector3f(2.0f, -3.0f, -1.0f)));
   EXPECT_TRUE(s.intersects(p));
+  EXPECT_TRUE(s.intersects(Sphere(Vector3f(0.0f, -4.0f, 2.0f), 3.0f)));
   EXPECT_FALSE(b.intersects(Vector3f(2.0f, -3.0f, -1.0f)));
   EXPECT_FALSE(b.intersects(p));
   EXPECT_FALSE(b.intersects(s));
+  EXPECT_FALSE(b.intersects(BoxAAB(Vector3f(4.0f, 3.0f, 0.0f),
+                                   Vector3f(4.0f, 5.0f, 1.0f))));
   EXPECT_TRUE(c.intersects(Vector3f(2.0f, -3.0f, -1.0f)));
   EXPECT_TRUE(c.intersects(p));
   EXPECT_TRUE(c.intersects(s));
   //EXPECT_TRUE(c.intersects(b));
+  EXPECT_TRUE(c.intersects(Capsule(Vector3f(3.0f, 5.0f, -3.0f), 8.0f, 2.0f)));
+}
+
+TEST(eeUtilities, Quaternions)
+{
+  Quaternion q1(1.2f, 3.4f, 1.13f, -0.5f);
+
+  EXPECT_TRUE(q1.getConjugate() == Quaternion(1.2f, -3.4f, -1.13f, 0.5f));
+  q1.conjugate();
+  EXPECT_TRUE(q1 == Quaternion(1.2f, -3.4f, -1.13f, 0.5f));
+
+  Quaternion q2(Vector3f(2.0f, 1.0f, 3.0f));
+
+  EXPECT_TRUE(q2.getEuclidean() == Vector3f(2.0f, 1.0f, 3.0f));
 }
 
 int main(int argc, char** argv) {

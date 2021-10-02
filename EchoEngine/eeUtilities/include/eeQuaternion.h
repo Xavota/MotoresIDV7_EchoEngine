@@ -177,6 +177,23 @@ class Quaternion
   Quaternion&
   operator*(const Quaternion& other);
 
+  /**
+  * @brief
+  * Compares the two quaternions to see if they are equal.
+  *
+  * @description
+  * Check if every component of the quaternion are equal to their counterpart
+  * of the other vector.
+  *
+  * @param other
+  * The other quaternion to check.
+  *
+  * @return
+  * True if they are equal.
+  */
+  bool
+  operator==(const Quaternion& other) const;
+
 
   union
   {

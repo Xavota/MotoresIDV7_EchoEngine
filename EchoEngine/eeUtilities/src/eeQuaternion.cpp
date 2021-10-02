@@ -16,18 +16,7 @@ Quaternion::Quaternion(float _w, float _x, float _y, float _z) : w(_w),
 
 Quaternion::Quaternion(const Vector3f& euclidean)
 {
-  // Abbreviations for the various angular functions
-  float cy = Math::cos(euclidean.z * 0.5f);
-  float sy = Math::sin(euclidean.z * 0.5f);
-  float cp = Math::cos(euclidean.y * 0.5f);
-  float sp = Math::sin(euclidean.y * 0.5f);
-  float cr = Math::cos(euclidean.x * 0.5f);
-  float sr = Math::sin(euclidean.x * 0.5f);
-
-  w = cr * cp * cy + sr * sp * sy;
-  x = sr * cp * cy - cr * sp * sy;
-  y = cr * sp * cy + sr * cp * sy;
-  z = cr * cp * sy - sr * sp * cy;
+  setEuclidean(euclidean);
 }
 
 Quaternion::~Quaternion()
@@ -116,5 +105,12 @@ Quaternion::operator*(const Quaternion& other)
     this->w * other.z + this->x * other.y - this->y * other.x + this->z * other.w
   );
   return *this;
+}
+bool Quaternion::operator==(const Quaternion& other) const
+{
+  return (Math::abs(this->w - other.w) < Math::kFLOAT_EQUAL_SMALL_DIFFERENCE)
+      && (Math::abs(this->x - other.x) < Math::kFLOAT_EQUAL_SMALL_DIFFERENCE)
+      && (Math::abs(this->y - other.y) < Math::kFLOAT_EQUAL_SMALL_DIFFERENCE)
+      && (Math::abs(this->z - other.z) < Math::kFLOAT_EQUAL_SMALL_DIFFERENCE);
 }
 }
