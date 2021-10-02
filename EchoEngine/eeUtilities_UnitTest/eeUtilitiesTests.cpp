@@ -1,6 +1,9 @@
 #include "../eeUtilities/include/eePrerequisitesUtilities.h"
 
+#pragma warning(push)
+#pragma warning ( disable: 4389 )
 #include <gtest/gtest.h>
+#pragma warning(pop)
 
 #include "eeMath.h"
 
