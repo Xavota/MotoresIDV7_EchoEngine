@@ -1,4 +1,6 @@
 #include "eeMatrix2.h"
+#include "eeVector2.h"
+#include "eeMath.h"
 
 namespace eeEngineSDK {
 const Matrix2f Matrix2f::ZERO = Matrix2f(0.0f, 0.0f, 0.0f, 0.0f);
@@ -15,10 +17,6 @@ Matrix2f::Matrix2f(float src[4])
   std::copy(src, src + 4, m);
 }
 
-Matrix2f::Matrix2f(const Vector2f& r0, const Vector2f& r1) : m_r0(r0),
-                                                             m_r1(r1)
-{
-}
 
 Matrix2f::Matrix2f(float _00, float _01, float _10, float _11) : m_00(_00), 
                                                                  m_01(_01), 
@@ -164,11 +162,6 @@ Matrix2i::Matrix2i(int32 src[4])
   std::copy(src, src + 4, m);
 }
 
-Matrix2i::Matrix2i(const Vector2i& r0, const Vector2i& r1) : m_r0(r0),
-                                                             m_r1(r1)
-{
-}
-
 Matrix2i::Matrix2i(int32 _00, int32 _01, int32 _10, int32 _11) : m_00(_00),
                                                                  m_01(_01),
                                                                  m_10(_10),
@@ -295,11 +288,6 @@ Matrix2u::Matrix2u(uint32 src[4])
   //memcpy(m, src, sizeof(uint32) * 4);
   //Copy(m, m + 4, src);
   std::copy(src, src + 4, m);
-}
-
-Matrix2u::Matrix2u(const Vector2u& r0, const Vector2u& r1) : m_r0(r0),
-                                                             m_r1(r1)
-{
 }
 
 Matrix2u::Matrix2u(uint32 _00, uint32 _01, uint32 _10, uint32 _11) : m_00(_00),

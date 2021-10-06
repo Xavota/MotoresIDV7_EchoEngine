@@ -12,6 +12,8 @@
 
 #pragma once
 
+#define VECTOR3
+
 #include "eePrerequisitesUtilities.h"
 
 namespace eeEngineSDK {

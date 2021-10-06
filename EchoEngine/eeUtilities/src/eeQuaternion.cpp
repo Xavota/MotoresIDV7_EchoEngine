@@ -1,6 +1,7 @@
 #include "eeQuaternion.h"
 #include "eeVector3.h"
 #include "eeMatrix4.h"
+#include "eeMath.h"
 
 namespace eeEngineSDK{
 Quaternion::Quaternion()

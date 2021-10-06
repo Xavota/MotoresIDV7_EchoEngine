@@ -1,5 +1,8 @@
 #include "eeMatrix4.h"
 #include "eeMatrix3.h"
+#include "eeVector3.h"
+#include "eeVector4.h"
+#include "eeMath.h"
 
 namespace eeEngineSDK {
 const Matrix4f Matrix4f::ZERO = Matrix4f(0.0f, 0.0f, 0.0f, 0.0f,
@@ -147,11 +150,6 @@ Matrix4f::Matrix4f(float src[16])
   //memcpy(m, src, sizeof(float) * 16);
   //Copy(m, m + 16, src);
   std::copy(src, src + 16, m);
-}
-Matrix4f::Matrix4f(const Vector4f& r0, const Vector4f& r1, 
-                   const Vector4f& r2, const Vector4f& r3)
-                  : m_r0(r0), m_r1(r1), m_r2(r2), m_r3(r3)
-{
 }
 Matrix4f::Matrix4f(float _00, float _01, float _02, float _03,
                    float _10, float _11, float _12, float _13,
@@ -477,11 +475,6 @@ Matrix4i::Matrix4i(int32 src[16])
   //Copy(m, m + 16, src);
   std::copy(src, src + 16, m);
 }
-Matrix4i::Matrix4i(const Vector4i& r0, const Vector4i& r1,
-                   const Vector4i& r2, const Vector4i& r3)
-                  : m_r0(r0), m_r1(r1), m_r2(r2), m_r3(r3)
-{
-}
 Matrix4i::Matrix4i(int32 _00, int32 _01, int32 _02, int32 _03,
                    int32 _10, int32 _11, int32 _12, int32 _13,
                    int32 _20, int32 _21, int32 _22, int32 _23,
@@ -737,11 +730,6 @@ Matrix4u::Matrix4u(uint32 src[16])
   //memcpy(m, src, sizeof(uint32) * 16);
   //Copy(m, m + 16, src);
   std::copy(src, src + 16, m);
-}
-Matrix4u::Matrix4u(const Vector4u& r0, const Vector4u& r1,
-                   const Vector4u& r2, const Vector4u& r3)
-                  : m_r0(r0), m_r1(r1), m_r2(r2), m_r3(r3)
-{
 }
 Matrix4u::Matrix4u(uint32 _00, uint32 _01, uint32 _02, uint32 _03,
                    uint32 _10, uint32 _11, uint32 _12, uint32 _13,

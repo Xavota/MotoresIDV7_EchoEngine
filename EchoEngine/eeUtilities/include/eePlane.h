@@ -42,7 +42,7 @@ class EE_UTILITY_EXPORT Plane : public Vector3f
   * @param point
   * The place in 3D space where the plane it's gonna pass.
   * @param normal
-  * The normal vector to wich is gonna be facing.
+  * The normal vector to which is gonna be facing.
   */
   Plane(const Vector3f& point, const Vector3f& normal);
   /**
@@ -79,7 +79,7 @@ class EE_UTILITY_EXPORT Plane : public Vector3f
   * given space.
   *
   * @param movement
-  * The direction and magnitud of where it's gonna move.
+  * The direction and magnitude of where it's gonna move.
   */
   void
   move(const Vector3f& movement);
@@ -108,11 +108,8 @@ class EE_UTILITY_EXPORT Plane : public Vector3f
   * @return
   * The point that defines the plane.
   */
-  FORCEINLINE const Vector3f& 
-  getPoint() const 
-  {
-    return m_point;
-  }
+  const Vector3f& 
+  getPoint() const;
   /**
   * @brief
   * Setter of the point of the plane.
@@ -123,11 +120,8 @@ class EE_UTILITY_EXPORT Plane : public Vector3f
   * @param point
   * The new point for the plane.
   */
-  FORCEINLINE void 
-  setPoint(const Vector3f& point)
-  {
-    m_point = point;
-  }
+  void 
+  setPoint(const Vector3f& point);
   /**
   * @brief
   * Getter of the normal of the plane.
@@ -138,11 +132,8 @@ class EE_UTILITY_EXPORT Plane : public Vector3f
   * @return
   * The normal vector that defines the plane.
   */
-  FORCEINLINE const Vector3f& 
-  getNormal() const
-  {
-    return m_normal;
-  }
+  const Vector3f& 
+  getNormal() const;
   /**
   * @brief
   * Setter of the normal vector of the plane.
@@ -154,11 +145,8 @@ class EE_UTILITY_EXPORT Plane : public Vector3f
   * @param normal
   * The new normal vector for the plane.
   */
-  FORCEINLINE void 
-  setNormal(const Vector3f& normal)
-  {
-    m_normal = normal.getNormalize();
-  }
+  void 
+  setNormal(const Vector3f& normal);
 
 
   /**
@@ -260,11 +248,6 @@ class EE_UTILITY_EXPORT Plane : public Vector3f
    * @brief
    * A point that's on the plane, indicates where the plane is.
    */
-  Vector3f m_point;
-  /**
-  * @brief
-  * The normal vector to which is gonna be facing.
-  */
-  Vector3f m_normal;
+  float d;
 };
 }

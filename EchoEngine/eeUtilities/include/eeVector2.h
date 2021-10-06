@@ -12,6 +12,8 @@
 
 #pragma once
 
+#define VECTOR2
+
 #include "eePrerequisitesUtilities.h"
 #include "eeMath.h"
 

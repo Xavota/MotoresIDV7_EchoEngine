@@ -18,7 +18,7 @@ namespace eeEngineSDK {
 /**
 * @brief
 * The simplest rectangle. Not oriented. Defined by a point and a size.
-* For 2 dimensional spaces, like viewports.
+* For 2 dimensional spaces, like view ports.
 */
 class EE_UTILITY_EXPORT Rectangle
 {

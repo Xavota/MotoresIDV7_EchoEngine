@@ -12,8 +12,6 @@
 
 #pragma once
 #include "eePrerequisitesUtilities.h"
-#include "eeVector3.h"
-#include "eeVector4.h"
 
 namespace eeEngineSDK {
 /**
@@ -41,6 +39,7 @@ public:
   * The source from where the data is taken.
   */
   Matrix4f(float src[16]);
+#ifdef VECTOR4
   /**
   * @brief
   * Custom constructor.
@@ -60,6 +59,7 @@ public:
   */
   Matrix4f(const Vector4f& r0, const Vector4f& r1,
            const Vector4f& r2, const Vector4f& r3);
+#endif
   /**
   * @brief
   * Custom constructor.
@@ -538,6 +538,7 @@ public:
       */
       float m_33;
     };
+#ifdef VECTOR4
     struct
     {
       /*
@@ -553,10 +554,11 @@ public:
       */
       Vector4f m_r2;
       /*
-      * The fouth row.
+      * The fourth row.
       */
       Vector4f m_r3;
     };
+#endif
     /*
     * The entire matrix on an array.
     */
@@ -576,6 +578,14 @@ public:
   */
   static const Matrix4f IDENTITY;
 };
+
+#ifdef VECTOR4
+Matrix4f::Matrix4f(const Vector4f& r0, const Vector4f& r1,
+  const Vector4f& r2, const Vector4f& r3)
+  : m_r0(r0), m_r1(r1), m_r2(r2), m_r3(r3)
+{
+}
+#endif
 
 
 
@@ -604,6 +614,7 @@ public:
   * The source from where the data is taken.
   */
   Matrix4i(int32 src[16]);
+#ifdef VECTOR4
   /**
   * @brief
   * Custom constructor.
@@ -623,6 +634,7 @@ public:
   */
   Matrix4i(const Vector4i& r0, const Vector4i& r1,
            const Vector4i& r2, const Vector4i& r3);
+#endif
   /**
   * @brief
   * Custom constructor.
@@ -947,6 +959,7 @@ public:
       */
       int32 m_33;
     };
+#ifdef VECTOR4
     struct
     {
       /*
@@ -966,6 +979,7 @@ public:
       */
       Vector4i m_r3;
     };
+#endif
     /*
     * The entire matrix on an array.
     */
@@ -985,6 +999,14 @@ public:
   */
   static const Matrix4i IDENTITY;
 };
+
+#ifdef VECTOR4
+Matrix4i::Matrix4i(const Vector4i& r0, const Vector4i& r1,
+  const Vector4i& r2, const Vector4i& r3)
+  : m_r0(r0), m_r1(r1), m_r2(r2), m_r3(r3)
+{
+}
+#endif
 
 
 
@@ -1013,6 +1035,7 @@ public:
   * The source from where the data is taken.
   */
   Matrix4u(uint32 src[16]);
+#ifdef VECTOR4
   /**
   * @brief
   * Custom constructor.
@@ -1032,6 +1055,7 @@ public:
   */
   Matrix4u(const Vector4u& r0, const Vector4u& r1,
            const Vector4u& r2, const Vector4u& r3);
+#endif
   /**
   * @brief
   * Custom constructor.
@@ -1356,6 +1380,7 @@ public:
       */
       uint32 m_33;
     };
+#ifdef VECTOR4
     struct
     {
       /*
@@ -1375,6 +1400,7 @@ public:
       */
       Vector4u m_r3;
     };
+#endif
     /*
     * The entire matrix on an array.
     */
@@ -1394,4 +1420,12 @@ public:
   */
   static const Matrix4u IDENTITY;
 };
+
+#ifdef VECTOR4
+Matrix4u::Matrix4u(const Vector4u& r0, const Vector4u& r1,
+  const Vector4u& r2, const Vector4u& r3)
+  : m_r0(r0), m_r1(r1), m_r2(r2), m_r3(r3)
+{
+}
+#endif
 }
