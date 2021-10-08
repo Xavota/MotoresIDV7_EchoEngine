@@ -63,6 +63,24 @@ class EE_UTILITY_EXPORT Plane : public Vector3f
   Plane(const Vector3f& pA, const Vector3f& pB, const Vector3f& pC);
   /**
   * @brief
+  * Custom constructor.
+  *
+  * @description
+  * Initializes the plane given the 4 values on it's formula.
+  * ax+by+cz=d
+  *
+  * @param a
+  * The coefficient of the x in the formula.
+  * @param b
+  * The coefficient of the y in the formula.
+  * @param c
+  * The coefficient of the z in the formula.
+  * @param d
+  * The value on the other side of the equal sign.
+  */
+  Plane(const float a, const float b, const float c, const float d);
+  /**
+  * @brief
   * Destructor.
   *
   * @description

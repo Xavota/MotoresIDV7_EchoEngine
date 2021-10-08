@@ -13,7 +13,7 @@ namespace eeEngineSDK {
   const Plane Plane::YZ = Plane(Vector3f(0.0f, 0.0f, 0.0f),
                                 Vector3f(1.0f, 0.0f, 1.0f));
 
-Plane::Plane() : x(0.0f), y(0.0f), z(0.0f), d(0.0f)
+Plane::Plane()
 {}
 Plane::Plane(const Vector3f& point, const Vector3f& normal)
 {
@@ -37,6 +37,13 @@ Plane::Plane(const Vector3f& pA, const Vector3f& pB, const Vector3f& pC)
   z = norm.z;
 
   d = norm.dot(pA);
+}
+Plane::Plane(const float a, const float b, const float c, const float d)
+{
+  x = a;
+  y = b;
+  z = c;
+  this->d = d;
 }
 Plane::~Plane()
 {

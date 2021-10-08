@@ -18,6 +18,7 @@ namespace eeEngineSDK {
 * @brief
 * Matrix 4x4. Holds 4 rows and 4 columns of floats.
 * Has all the possible operations for matrices.
+* Row major
 */
 class EE_UTILITY_EXPORT Matrix4f
 {
@@ -593,6 +594,7 @@ Matrix4f::Matrix4f(const Vector4f& r0, const Vector4f& r1,
 * @brief
 * Matrix 4x4. Holds 4 rows and 4 columns of int32.
 * Has all the possible operations for matrices.
+* Row major
 */
 class EE_UTILITY_EXPORT Matrix4i
 {
@@ -1014,6 +1016,7 @@ Matrix4i::Matrix4i(const Vector4i& r0, const Vector4i& r1,
 * @brief
 * Matrix 4x4. Holds 4 rows and 4 columns of uint32.
 * Has all the possible operations for matrices.
+* Row major
 */
 class EE_UTILITY_EXPORT Matrix4u
 {

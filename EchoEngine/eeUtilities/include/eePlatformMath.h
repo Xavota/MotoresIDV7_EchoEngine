@@ -1053,6 +1053,11 @@ public:
   * The maximum integer of 32 bits possible.
   */
   static const int32 kBIG_INT;
+  /**
+  * @brief
+  * The maximum integer of 32 bits possible.
+  */
+  static const uint32 kBIG_UINT;
 };
 
 
