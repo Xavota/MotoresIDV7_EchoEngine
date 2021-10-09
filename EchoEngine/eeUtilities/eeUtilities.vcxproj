@@ -171,6 +171,7 @@
     <ClInclude Include="include\eeMatrix2.h" />
     <ClInclude Include="include\eeMatrix3.h" />
     <ClInclude Include="include\eeMatrix4.h" />
+    <ClInclude Include="include\eeModule.h" />
     <ClInclude Include="include\eePlane.h" />
     <ClInclude Include="include\eePlatformDefines.h" />
     <ClInclude Include="include\eePlatformMath.h" />

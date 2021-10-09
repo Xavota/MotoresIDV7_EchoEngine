@@ -63,6 +63,9 @@
     <ClInclude Include="include\eeQuaternion.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\eeModule.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eePlatformMath.cpp">

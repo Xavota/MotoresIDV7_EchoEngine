@@ -36,3 +36,25 @@
 # define EE_CORE_EXPORT __attribute__ ((visibility ("default")))
 # define EE_CORE_HIDDEN __attribute__ ((visibility ("hidden")))
 #endif
+
+
+
+
+
+namespace eeEngineSDK {
+class Buffer;
+
+struct SimpleVertex;
+struct ComplexVertex;
+struct SimpleAnimVertex;
+struct ComplexAnimVertex;
+
+class Mesh;
+class Model;
+class Texture;
+
+class PixelShader;
+class VertexShader;
+class InputLayout;
+class Window;
+}

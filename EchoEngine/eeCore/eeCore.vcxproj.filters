@@ -39,6 +39,7 @@
     <ClInclude Include="include\eeWindow.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\eeUtilities\include\eeGraficsApi.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeBuffer.cpp">
@@ -68,5 +69,6 @@
     <ClCompile Include="src\eeVertexShader.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\eeUtilities\src\eeGraficsApi.cpp" />
   </ItemGroup>
 </Project>

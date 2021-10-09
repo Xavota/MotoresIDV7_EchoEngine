@@ -13,7 +13,7 @@ class Texture
   loadFromFile() = 0;
 
   virtual bool
-  loadFromBuffer(void* buffer) = 0;
+  loadFromBuffer(SPtr<void> buffer) = 0;
 
 
 

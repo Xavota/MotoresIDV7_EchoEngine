@@ -169,6 +169,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\eeUtilities\src\eeGraficsApi.cpp" />
     <ClCompile Include="src\eeBuffer.cpp" />
     <ClCompile Include="src\eeInputLayout.cpp" />
     <ClCompile Include="src\eeMesh.cpp" />
@@ -180,6 +181,7 @@
     <ClCompile Include="src\eeWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\eeUtilities\include\eeGraficsApi.h" />
     <ClInclude Include="include\eeBuffer.h" />
     <ClInclude Include="include\eeInputLayout.h" />
     <ClInclude Include="include\eeMesh.h" />
