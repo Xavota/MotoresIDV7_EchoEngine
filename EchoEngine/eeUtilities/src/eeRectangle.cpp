@@ -1,4 +1,5 @@
 #include "eeRectangle.h"
+#include "eeMath.h"
 
 namespace eeEngineSDK {
 const Rectangle Rectangle::SIMPLEX(Vector2f(-1.0f, 1.0f), 

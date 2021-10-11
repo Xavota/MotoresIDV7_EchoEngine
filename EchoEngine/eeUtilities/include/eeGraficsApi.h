@@ -1,8 +1,22 @@
 #pragma once
-#include <eePrerequisitesUtilities.h>
+#include "eePrerequisitesCore.h"
+#include "eeModule.h"
 
 namespace eeEngineSDK {
-class GraficsApi
+class EE_CORE_EXPORT GraphicsApi : Module<GraphicsApi>
 {
+ public:
+  GraphicsApi();
+  virtual
+  ~GraphicsApi();
+
+  virtual bool
+  initializeScreen();
+
+  virtual void
+  drawObject();
+
+  virtual void
+  present();
 };
 }

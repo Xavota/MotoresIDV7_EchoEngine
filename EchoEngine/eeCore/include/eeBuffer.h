@@ -2,19 +2,22 @@
 #include "eePrerequisitesCore.h"
 
 namespace eeEngineSDK {
-class Buffer
+class EE_CORE_EXPORT Buffer
 {
  public:
   Buffer() = default;
-  Buffer(void* data) : m_data(data){};
   virtual
   ~Buffer() = default;
 
+  virtual void
+  InitData(uint32 dataSize, uint32 batchSize, Byte* data);
+
   virtual void 
-  Release() = 0;
+  Release(){};
 
  private:
-  SPtr<void> m_data;
+  Vector<Byte> m_data;
+  int32 m_batchSize;
 };
 }
   

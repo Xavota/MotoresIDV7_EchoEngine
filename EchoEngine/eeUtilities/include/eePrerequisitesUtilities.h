@@ -34,4 +34,6 @@ class Sphere;
 class BoxAAB;
 class Rectangle;
 class Capsule;
+
+class Quaternion;
 }

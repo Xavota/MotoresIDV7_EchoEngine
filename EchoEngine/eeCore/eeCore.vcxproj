@@ -170,28 +170,30 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\eeUtilities\src\eeGraficsApi.cpp" />
+    <ClCompile Include="eeResourceManager.cpp" />
     <ClCompile Include="src\eeBuffer.cpp" />
     <ClCompile Include="src\eeInputLayout.cpp" />
     <ClCompile Include="src\eeMesh.cpp" />
     <ClCompile Include="src\eeModel.cpp" />
+    <ClCompile Include="src\eeObject.cpp" />
     <ClCompile Include="src\eePixelShader.cpp" />
-    <ClCompile Include="src\eeVertex.cpp" />
     <ClCompile Include="src\eeTexture.cpp" />
     <ClCompile Include="src\eeVertexShader.cpp" />
-    <ClCompile Include="src\eeWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\eeUtilities\include\eeGraficsApi.h" />
+    <ClInclude Include="eeResourceManager.h" />
     <ClInclude Include="include\eeBuffer.h" />
+    <ClInclude Include="include\eeCoreConfiguration.h" />
     <ClInclude Include="include\eeInputLayout.h" />
     <ClInclude Include="include\eeMesh.h" />
     <ClInclude Include="include\eeModel.h" />
+    <ClInclude Include="include\eeObject.h" />
     <ClInclude Include="include\eePixelShader.h" />
     <ClInclude Include="include\eePrerequisitesCore.h" />
     <ClInclude Include="include\eeVertex.h" />
     <ClInclude Include="include\eeTexture.h" />
     <ClInclude Include="include\eeVertexShader.h" />
-    <ClInclude Include="include\eeWindow.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

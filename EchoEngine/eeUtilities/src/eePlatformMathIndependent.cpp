@@ -160,9 +160,8 @@ bool
 PlatformMath::intersectionPlanePoint(const Plane& _plane,
                                      const Vector3f& _point)
 {
-  float real = _plane.getNormal().dot(_plane.getPoint());
-  float dot = _plane.getNormal().dot(_point);
-  return abs(dot - real) < .001f;
+  float real = _point.x * _plane.x + _point.y * _plane.y + _point.z * _plane.z;
+  return abs(_plane.d - real) < kFLOAT_EQUAL_SMALL_DIFFERENCE;
 }
 bool 
 PlatformMath::intersectionPlanePlane(const Plane& _plane1, 

@@ -7,11 +7,11 @@
     <Filter Include="src">
       <UniqueIdentifier>{2fbad882-d942-4d2f-8bd6-a315644d8158}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Platform">
+      <UniqueIdentifier>{aacd84e0-924e-45da-a81f-0a2f4ce4a1d7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\eePrerequisitesCore.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\eeBuffer.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -36,10 +36,17 @@
     <ClInclude Include="include\eeVertexShader.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\eeWindow.h">
+    <ClInclude Include="..\eeUtilities\include\eeGraficsApi.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\eeUtilities\include\eeGraficsApi.h" />
+    <ClInclude Include="include\eeCoreConfiguration.h">
+      <Filter>include\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eePrerequisitesCore.h">
+      <Filter>include\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeObject.h" />
+    <ClInclude Include="eeResourceManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeBuffer.cpp">
@@ -51,9 +58,6 @@
     <ClCompile Include="src\eeModel.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\eeVertex.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\eeTexture.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -63,12 +67,13 @@
     <ClCompile Include="src\eePixelShader.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\eeWindow.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\eeVertexShader.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\eeUtilities\src\eeGraficsApi.cpp" />
+    <ClCompile Include="..\eeUtilities\src\eeGraficsApi.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeObject.cpp" />
+    <ClCompile Include="eeResourceManager.cpp" />
   </ItemGroup>
 </Project>

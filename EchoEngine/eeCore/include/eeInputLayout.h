@@ -2,7 +2,7 @@
 #include "eePrerequisitesCore.h"
 
 namespace eeEngineSDK {
-class InputLayout
+class EE_CORE_EXPORT InputLayout
 {
  public: 
   InputLayout() = default;

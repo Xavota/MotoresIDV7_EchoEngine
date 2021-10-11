@@ -2,16 +2,19 @@
 #include "eePrerequisitesCore.h"
 
 namespace eeEngineSDK {
-class VertexShader
+class EE_CORE_EXPORT VertexShader
 {
 public:
-  VertexShader();
+  VertexShader() = default;
   virtual
-  ~VertexShader();
+  ~VertexShader() = default;
 
   virtual bool
-  compileFromFile(const String& fileName) = 0;
+  compileFromFile(const String& fileName){};
   virtual bool
-  compileFromString(const String& shaderString) = 0;
+  compileFromString(const String& shaderString){};
+
+ private:
+  String m_shaderString;
 };
 }

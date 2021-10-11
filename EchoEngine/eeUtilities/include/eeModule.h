@@ -38,7 +38,7 @@ public:
    */
   static T&
   instance() {
-    if(!isStartedUp()) {
+    /*if (!isStartedUp()) {
       EE_EXCEPT(InternalErrorException,
                 "Trying to access a module but it hasn't been started.");
     }
@@ -46,7 +46,7 @@ public:
     if(isDestroyed()) {
       EE_EXCEPT(InternalErrorException,
                 "Trying to access a destroyed module.");
-    }
+    }*/
 
     return *_instance();
   }
@@ -57,7 +57,7 @@ public:
    */
   static T*
   instancePtr() {
-    if(!isStartedUp()) {
+    /*if (!isStartedUp()) {
       EE_EXCEPT(InternalErrorException,
                 "Trying to access a module but it hasn't been started.");
     }
@@ -65,7 +65,7 @@ public:
     if(isDestroyed()) {
       EE_EXCEPT(InternalErrorException,
                 "Trying to access a destroyed module.");
-    }
+    }*/
 
     return _instance();
   }
@@ -76,10 +76,10 @@ public:
   template<class... Args>
   static void
   startUp(Args&& ...args) {
-    if(isStartedUp()) {
+    /*if (isStartedUp()) {
       EE_EXCEPT(InternalErrorException,
                 "Trying to start an already started module.");
-    }
+    }*/
 
     _instance() = new T(std::forward<Args>(args)...);
     isStartedUp() = true;
@@ -97,9 +97,9 @@ public:
     static_assert(std::is_base_of<T, SubType>::value,
                   "Provided type isn't derived from type the Module is initialized with.");
 
-    if(isStartedUp()) {
+    /*if (isStartedUp()) {
       EE_EXCEPT(InternalErrorException, "Trying to start an already started module.");
-    }
+    }*/
 
     _instance() = new SubType(std::forward<Args>(args)...);
     isStartedUp() = true;
@@ -112,7 +112,7 @@ public:
    */
   static void
   shutDown() {
-    if(isDestroyed()) {
+    /*if (isDestroyed()) {
       EE_EXCEPT(InternalErrorException,
                 "Trying to shut down an already shut down module.");
     }
@@ -120,7 +120,7 @@ public:
     if(!isStartedUp()) {
       EE_EXCEPT(InternalErrorException,
                 "Trying to shut down a module which was never started.");
-    }
+    }*/
 
     static_cast<Module*>(_instance())->onShutDown();
 

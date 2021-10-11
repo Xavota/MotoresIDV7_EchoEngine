@@ -3,21 +3,20 @@
 #include "eeBuffer.h"
 
 namespace eeEngineSDK {
-class Texture
+class EE_CORE_EXPORT Texture
 {
  public:
   Texture() = default;
   virtual ~Texture() = default;
 
   virtual bool
-  loadFromFile() = 0;
+  loadFromFile(){};
 
   virtual bool
-  loadFromBuffer(SPtr<void> buffer) = 0;
+  loadFromBuffer(SPtr<void> buffer){};
 
 
 
  private:
-  Buffer* m_buffer;
 };
 }

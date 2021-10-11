@@ -126,7 +126,7 @@ class EE_UTILITY_EXPORT Plane : public Vector3f
   * @return
   * The point that defines the plane.
   */
-  const Vector3f& 
+  Vector3f
   getPoint() const;
   /**
   * @brief
@@ -150,7 +150,7 @@ class EE_UTILITY_EXPORT Plane : public Vector3f
   * @return
   * The normal vector that defines the plane.
   */
-  const Vector3f& 
+  Vector3f
   getNormal() const;
   /**
   * @brief
@@ -261,7 +261,7 @@ class EE_UTILITY_EXPORT Plane : public Vector3f
   */
   static const Plane YZ;
 
- private:
+ public:
    /**
    * @brief
    * A point that's on the plane, indicates where the plane is.

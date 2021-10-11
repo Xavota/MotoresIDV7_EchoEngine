@@ -1,8 +1,9 @@
 #pragma once
 #include "eePrerequisitesCore.h"
+#include "eeMesh.h"
 
 namespace eeEngineSDK {
-class Model
+class EE_CORE_EXPORT Model
 {
  public: 
   Model() = default;
@@ -10,9 +11,11 @@ class Model
   ~Model() = default;
 
   virtual bool
-  loadFromFile(const String& fileName) = 0;
+  loadFromFile(const String& fileName);
   virtual bool
-  loadFromMeshes(const Vector<Mesh>& meshes) = 0;
+  loadFromMeshes(const Vector<Mesh>& meshes);
+  virtual bool
+  loadFromMeshes(const Pair<Mesh, uint8>& meshes, Vector<Texture*> textures);
 
  private:
   Pair<Mesh, uint8> m_meshes;

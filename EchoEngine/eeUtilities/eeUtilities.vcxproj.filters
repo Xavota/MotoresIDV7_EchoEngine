@@ -7,26 +7,11 @@
     <Filter Include="src">
       <UniqueIdentifier>{58e190e3-06dc-4379-b177-138a0e8fd072}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Platform">
+      <UniqueIdentifier>{9b12fbd1-e84a-49ff-9ab6-d05122278d9d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\eeMath.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\eePlatformDefines.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\eePlatformMath.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\eePlatformTypes.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\eePrerequisitesUtilities.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\eeSTDHeaders.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\eeVector2.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -64,6 +49,24 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\eeModule.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eePlatformDefines.h">
+      <Filter>include\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eePlatformTypes.h">
+      <Filter>include\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eePrerequisitesUtilities.h">
+      <Filter>include\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeSTDHeaders.h">
+      <Filter>include\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeMath.h">
+      <Filter>include\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eePlatformMath.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

@@ -8,6 +8,7 @@
 #include <string>
 #include <memory>
 #include <cmath>
+#include <fstream>
 
 namespace eeEngineSDK
 {
@@ -27,7 +28,9 @@ using WString = std::wstring;
 template<typename T>
 using SPtr = std::shared_ptr<T>;
 
-
+using FStream = std::fstream;
+using IFStream = std::ifstream;
+using OFStream = std::ofstream;
 //using Cout = std::cout;
 //const std::ostream& Cout = std::cout;
 //const std::basic_ostream& Endl = std::endl;

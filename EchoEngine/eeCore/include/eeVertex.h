@@ -29,6 +29,16 @@ struct SimpleAnimVertex
   Vector4i boneIndices;
   Vector4f boneWeights;
 };
+template <int32 size>
+struct SimpleBigAnimVertex
+{
+  Vector3f position;
+  Vector2f uvCoord;
+  Vector3f normal;
+
+  int32 boneIndices[size];
+  float boneWeights[size];
+};
 struct ComplexAnimVertex
 {
   Vector3f position;
@@ -41,7 +51,7 @@ struct ComplexAnimVertex
   Vector4i boneIndices;
   Vector4f boneWeights;
 };
-template <int size>
+template <int32 size>
 struct ComplexBigAnimVertex
 {
   Vector3f position;

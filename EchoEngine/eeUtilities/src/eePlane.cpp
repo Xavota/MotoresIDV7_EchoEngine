@@ -13,8 +13,12 @@ namespace eeEngineSDK {
   const Plane Plane::YZ = Plane(Vector3f(0.0f, 0.0f, 0.0f),
                                 Vector3f(1.0f, 0.0f, 1.0f));
 
-Plane::Plane()
-{}
+Plane::Plane() : d(0.0f)
+{
+  x = 0.0f;
+  y = 0.0f;
+  z = 1.0f;
+}
 Plane::Plane(const Vector3f& point, const Vector3f& normal)
 {
   Vector3f norm = normal.getNormalize();
@@ -51,9 +55,7 @@ Plane::~Plane()
 void
 Plane::move(const Vector3f& movement)
 {
-  /*x += movement.x;
-  y += movement.y;
-  z += movement.z;*/
+  d += Vector3f(x,y,z).dot(movement);
 }
 void
 Plane::rotate(const Vector3f& rotation)
@@ -65,18 +67,28 @@ Plane::rotate(const Vector3f& rotation)
   y = rotated.y;
   z = rotated.z;
 }
-const Vector3f&
+Vector3f
 Plane::getPoint() const
 {
-  //return m_point;
-  return Vector3f();
+  if (z != 0.0f)
+  {
+    return Vector3f(0.0f, 0.0f, d/z);
+  }
+  else if (y != 0.0f)
+  {
+    return Vector3f(0.0f, d/y, 0.0f);
+  }
+  else
+  {
+    return Vector3f(d/x, 0.0f, 0.0f);
+  }
 }
 void
 Plane::setPoint(const Vector3f& point)
 {
-  //m_point = point;
+  d = Vector3f(x, y, z).dot(point);
 }
-const Vector3f&
+Vector3f
 Plane::getNormal() const
 {
   return Vector3f(x,y,z);
