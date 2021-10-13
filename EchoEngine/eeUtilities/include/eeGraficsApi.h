@@ -3,20 +3,29 @@
 #include "eeModule.h"
 
 namespace eeEngineSDK {
-class EE_CORE_EXPORT GraphicsApi : Module<GraphicsApi>
+class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
 {
  public:
-  GraphicsApi();
+  GraphicsApi() = default;
   virtual
-  ~GraphicsApi();
+  ~GraphicsApi() = default;
 
   virtual bool
-  initializeScreen();
+  initialize(){return true;}
+
+  virtual bool
+  appIsRunning(){return true;}
+
+  virtual bool
+  initializeScreen(){return true;}
 
   virtual void
-  drawObject();
+  processEvents(){}
 
   virtual void
-  present();
+  drawObject(){}
+
+  virtual void
+  present(){}
 };
 }

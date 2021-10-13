@@ -54,7 +54,9 @@
     <ClInclude Include="include\eeResourceManager.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\eeInput.h" />
+    <ClInclude Include="include\eeInput.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeBuffer.cpp">
@@ -90,6 +92,8 @@
     <ClCompile Include="src\eeResourceManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\eeInput.cpp" />
+    <ClCompile Include="src\eeInput.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -14,8 +14,11 @@ class DLLDynamics
   bool
   initialize(const String dllPath);
 
-  void*
-  getSymbol(const String symbolName);
+  foo
+  getFunction(const String functName);
+
+ private:
+  void* m_dllInstance;
 
 };
 }
