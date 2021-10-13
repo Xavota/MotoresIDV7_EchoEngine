@@ -45,8 +45,16 @@
     <ClInclude Include="include\eePrerequisitesCore.h">
       <Filter>include\Platform</Filter>
     </ClInclude>
-    <ClInclude Include="include\eeObject.h" />
-    <ClInclude Include="eeResourceManager.h" />
+    <ClInclude Include="include\eeObject.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BaseApp.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeResourceManager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeInput.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeBuffer.cpp">
@@ -73,7 +81,15 @@
     <ClCompile Include="..\eeUtilities\src\eeGraficsApi.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\eeObject.cpp" />
-    <ClCompile Include="eeResourceManager.cpp" />
+    <ClCompile Include="src\eeObject.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BaseApp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeResourceManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeInput.cpp" />
   </ItemGroup>
 </Project>

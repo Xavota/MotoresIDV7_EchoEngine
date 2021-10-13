@@ -10,6 +10,9 @@
     <Filter Include="include\Platform">
       <UniqueIdentifier>{9b12fbd1-e84a-49ff-9ab6-d05122278d9d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Platform">
+      <UniqueIdentifier>{30cdc0f8-8f93-4396-aa8b-99323ca4176a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\eeVector2.h">
@@ -69,6 +72,9 @@
     <ClInclude Include="include\eePlatformMath.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\eeDLLDynamics.h">
+      <Filter>include\Platform</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eePlatformMath.cpp">
@@ -112,6 +118,9 @@
     </ClCompile>
     <ClCompile Include="src\eeQuaternion.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeDLLDynamics.cpp">
+      <Filter>src\Platform</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

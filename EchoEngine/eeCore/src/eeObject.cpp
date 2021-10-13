@@ -1,32 +1,39 @@
 #include "eeObject.h"
 
-Vector3f eeEngineSDK::Object::getPosition()
+namespace eeEngineSDK {
+Vector3f 
+Object::getPosition()
 {
-    return Vector3f();
+  return m_position;
 }
-
-void eeEngineSDK::Object::setPosition(const Vector3f& pos)
+void 
+Object::setPosition(const Vector3f& pos)
 {
+  m_position = pos;
 }
-
-Quaternion eeEngineSDK::Object::getRotation()
+Quaternion 
+Object::getRotation()
 {
-    return Quaternion();
+  return m_rotation;
 }
-
-void eeEngineSDK::Object::setRotation(const Quaternion& rot)
+void 
+Object::setRotation(const Quaternion& rot)
 {
+  m_rotation = rot;
 }
-
-Vector3f eeEngineSDK::Object::getScale()
+Vector3f 
+Object::getScale()
 {
-    return Vector3f();
+  return m_scale;
 }
-
-void eeEngineSDK::Object::setScale(const Vector3f& scale)
+void 
+Object::setScale(const Vector3f& scale)
 {
+  m_scale = scale;
 }
-
-void eeEngineSDK::Object::setModel(SPtr<Model> model)
+void 
+Object::setModel(SPtr<Model>& model)
 {
+  m_model = model;
+}
 }

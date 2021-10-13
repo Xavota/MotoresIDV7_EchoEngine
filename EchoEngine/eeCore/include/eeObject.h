@@ -27,11 +27,11 @@ class EE_CORE_EXPORT Object
   setScale(const Vector3f& scale);
 
   void
-  setModel(SPtr<Model> model);
+  setModel(SPtr<Model>& model);
 
  private:
   Vector3f m_position;
-  Quaternion m_rotaion;
+  Quaternion m_rotation;
   Vector3f m_scale;
 
   SPtr<Model> m_model;
