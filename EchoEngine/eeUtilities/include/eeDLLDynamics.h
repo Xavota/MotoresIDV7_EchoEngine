@@ -1,11 +1,13 @@
 #pragma once
 #include "eePrerequisitesUtilities.h"
 
+//class HINSTANCE;
+
 namespace eeEngineSDK {
 
 using foo = const void* (*)();
 
-class DLLDynamics
+class EE_UTILITY_EXPORT DLLDynamics
 {
  public:
   DLLDynamics() = default;
@@ -19,6 +21,7 @@ class DLLDynamics
 
  private:
   void* m_dllInstance;
+  //class HINSTANCE* m_dllInstance;
 
 };
 }

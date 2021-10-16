@@ -10,9 +10,9 @@ public:
   ~VertexShader() = default;
 
   virtual bool
-  compileFromFile(const String& fileName){};
+  compileFromFile(const String& /*fileName*/){return true;}
   virtual bool
-  compileFromString(const String& shaderString){};
+  compileFromString(const String& /*shaderString*/){return true;}
 
  private:
   String m_shaderString;

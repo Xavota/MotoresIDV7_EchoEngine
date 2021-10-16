@@ -98,7 +98,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>EE_CORE_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)eeUtilities\include;$(SolutionDir)eeCore\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
@@ -117,7 +117,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>EE_CORE_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)eeUtilities\include;$(SolutionDir)eeCore\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
@@ -136,7 +136,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>EE_CORE_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)eeUtilities\include;$(SolutionDir)eeCore\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
@@ -155,7 +155,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>EE_CORE_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)eeUtilities\include;$(SolutionDir)eeCore\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>

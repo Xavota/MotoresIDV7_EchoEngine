@@ -24,4 +24,7 @@ String platformConfigPrefix = "";
 #ifdef DX11
 String graphicsApi = "DX11GraphicsApi";
 #endif
+
+String dynamicLibSufix = ".dll";
+String staticLibSufix = ".lib";
 }

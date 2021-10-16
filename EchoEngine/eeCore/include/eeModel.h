@@ -13,7 +13,7 @@ class EE_CORE_EXPORT Model
   virtual bool
   loadFromFile(const String& fileName);
   virtual bool
-  loadFromMeshes(const Vector<Mesh&>& meshes);
+  loadFromMeshes(Vector<Mesh> meshes);
   virtual bool
   loadFromMeshes(const Vector<Pair<Mesh&, uint8>>& meshes, 
                  Vector<Texture*>& textures);

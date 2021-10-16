@@ -21,8 +21,8 @@ template<typename T, typename U>
 using Map = std::map<T, U>;
 template<typename T, typename U>
 using Pair = std::pair<T, U>;
-template<typename T, typename U>
-using MakePair = std::make_pair<T, U>;
+//template<typename T, typename U>
+//using MakePair = make_pair<T, U>;
 
 using String = std::string;
 using WString = std::wstring;

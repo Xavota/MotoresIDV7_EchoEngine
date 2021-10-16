@@ -9,17 +9,18 @@ bool
 DLLDynamics::initialize(const String dllPath)
 {
 #if EE_PLATFORM == EE_PLATFORM_WIN32
-  HINSTANCE hGetProcIDDLL = LoadLibrary("x64/chDX11Graphicsd.dll");
+  m_dllInstance = reinterpret_cast<void*>(LoadLibrary(dllPath.c_str()));
 
-  if (!hGetProcIDDLL)
+  //if (!hGetProcIDDLL)
+  if (!*reinterpret_cast<HINSTANCE*>(m_dllInstance))
   {
     std::cout << "Could not load Dll" << std::endl;
     return false;
   }
 
-  m_dllInstance = reinterpret_cast<void*>(&hGetProcIDDLL);
+  //m_dllInstance = reinterpret_cast<void*>(&hGetProcIDDLL);
 #else
-  void* hGetProcIDDLL = dlopen("x64/chDX11Graphicsd.dll", RTLD_LAZY);
+  void* hGetProcIDDLL = dlopen(dllPath.c_str(), RTLD_LAZY);
   if (!hGetProcIDDLL)
   {
     std::cout << "Could not load Dll" << std::endl;
@@ -28,14 +29,20 @@ DLLDynamics::initialize(const String dllPath)
 
   m_dllInstance = hGetProcIDDLL;
 #endif
-  return false;
+  return true;
 }
 foo
 DLLDynamics::getFunction(const String functName)
 {
 #if EE_PLATFORM == EE_PLATFORM_WIN32
-  foo function = (foo)GetProcAddress(*reinterpret_cast<HINSTANCE*>(m_dllInstance), "initPlugin");
-  if (!function())
+  HMODULE* hGetProcIDDLL = reinterpret_cast<HMODULE*>(&m_dllInstance);
+  foo function = reinterpret_cast<foo>(GetProcAddress
+                                (
+                                  *hGetProcIDDLL,
+                                  functName.c_str()
+                                ));
+
+  if (!function)
   {
     std::cout << "Could not find function" << std::endl;
     return nullptr;

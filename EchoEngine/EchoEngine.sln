@@ -21,6 +21,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DX11GraphicsApi", "DX11Grap
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eeCore_Test", "eeCore_Test\eeCore_Test.vcxproj", "{8A42EB5E-B2EF-46C1-A7B4-A5166BA37036}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F7E825EA-18FC-43F9-931C-A5E1668CD452} = {F7E825EA-18FC-43F9-931C-A5E1668CD452}
+		{4656BAF2-E8EB-46A2-B234-157A9F5B4FBB} = {4656BAF2-E8EB-46A2-B234-157A9F5B4FBB}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

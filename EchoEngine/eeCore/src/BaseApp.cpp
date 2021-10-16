@@ -8,11 +8,9 @@ int32
 BaseApp::run()
 {
   DLLDynamics api;
-  api.initialize(platformTarget + 
-                 "/" + 
-                 graphicsApi + 
+  api.initialize(graphicsApi + 
                  platformConfigPrefix + 
-                 ".lib" /*This may need to be wraped for multiplatforming*/);
+                 dynamicLibSufix);
 
   auto apiInit = api.getFunction("initPlugin");
   if (apiInit)
@@ -27,9 +25,14 @@ BaseApp::run()
 
   return mainLoop();
 }
-int32 BaseApp::mainLoop()
+int32
+BaseApp::mainLoop()
 {
-  init();
+  if (!init())
+  {
+    destroy();
+    return 1;
+  }
 
   while (GraphicsApi::instance().appIsRunning())
   {
@@ -42,21 +45,31 @@ int32 BaseApp::mainLoop()
 
   return 0;
 }
-void BaseApp::init()
+bool
+BaseApp::init()
 {
-  GraphicsApi::instance().initialize();
-  GraphicsApi::instance().initializeScreen();
+  if (!GraphicsApi::instance().initialize())
+    return false;
+  if (!GraphicsApi::instance().initializeScreen())
+    return false;
+
+  return true;
 }
-void BaseApp::processEvents()
+void
+BaseApp::processEvents()
 {
 }
-void BaseApp::update(float deltaTime)
+void
+BaseApp::update(float deltaTime)
 {
 }
-void BaseApp::render()
+void
+BaseApp::render()
 {
 }
-void BaseApp::destroy()
+void
+BaseApp::destroy()
 {
+  GraphicsApi::shutDown();
 }
 }

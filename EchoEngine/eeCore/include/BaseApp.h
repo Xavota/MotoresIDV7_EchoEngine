@@ -15,7 +15,7 @@ class EE_CORE_EXPORT BaseApp : public Module<BaseApp>
   int32
   mainLoop();
 
-  void
+  bool
   init();
 
   void

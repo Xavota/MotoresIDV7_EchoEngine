@@ -17,7 +17,7 @@ class EE_CORE_EXPORT Buffer
 
  private:
   Vector<Byte> m_data;
-  int32 m_batchSize;
+  int32 m_batchSize = 0;
 };
 }
   

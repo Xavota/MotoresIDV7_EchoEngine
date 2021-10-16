@@ -10,5 +10,8 @@ int main()
   int32 r = BaseApp::instance().run();
   BaseApp::shutDown();
 
+  //int a;
+  //std::cin >> a;
+
   return r;
 }

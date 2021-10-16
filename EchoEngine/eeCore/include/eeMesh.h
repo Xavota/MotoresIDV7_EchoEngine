@@ -59,8 +59,8 @@ class EE_CORE_EXPORT Mesh
                 const int32 size);
 
  private:
-  Buffer* m_vertexData;
-  Buffer* m_indexData;
+  SPtr<Buffer> m_vertexData;
+  SPtr<Buffer> m_indexData;
 };
 template<int32 Size>
 FORCEINLINE bool 
