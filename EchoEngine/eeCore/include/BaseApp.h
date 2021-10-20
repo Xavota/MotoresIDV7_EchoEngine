@@ -7,27 +7,28 @@ class EE_CORE_EXPORT BaseApp : public Module<BaseApp>
 {
  public:
   BaseApp() = default;
+  virtual
   ~BaseApp() = default;
 
-  int32
+  virtual int32
   run();
 
-  int32
+  virtual int32
   mainLoop();
 
-  bool
+  virtual bool
   init();
 
-  void
+  virtual void
   processEvents();
 
-  void
+  virtual void
   update(float deltaTime);
 
-  void
+  virtual void
   render();
 
-  void
+  virtual void
   destroy();
 };
 }

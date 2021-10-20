@@ -1546,21 +1546,21 @@ TEST(eeUtilities, Matrix4)
 
 TEST(eeUtilities, Shapes)
 {
-  EXPECT_EQ(sizeof(Plane), 36);
+  EXPECT_EQ(sizeof(Plane), 16);
 
   Plane p(Vector3f(1.0f,1.0f,1.0f), Vector3f(2.0f,-3.0f,4.0f));
 
-  EXPECT_TRUE(p.getPoint() == Vector3f(1.0f, 1.0f, 1.0f));
+  EXPECT_TRUE(p.getPoint() == Vector3f(0.0f, 0.0f, 0.75f));
   EXPECT_TRUE(p.getNormal() == Vector3f(2.0f, -3.0f, 4.0f).getNormalize());
 
   p.move(Vector3f(-1.0f, 2.0f, 1.0f));
-  EXPECT_TRUE(p.getPoint() == Vector3f(0.0f, 3.0f, 2.0f));
+  EXPECT_TRUE(p.getPoint() == Vector3f(0.0f, 0.0f, -0.25f));
   p.rotate(Vector3f(Math::kPI, 0.0f, 0.0f));
-  EXPECT_TRUE(p.getPoint() == Vector3f(0.0f, 3.0f, 2.0f));
+  EXPECT_TRUE(p.getNormal() == Vector3f(0.37139067f, 0.55778611f, -0.74278128f));
 
 
   p.setPoint(Vector3f(-1.0f, 2.0f, 1.0f));
-  EXPECT_TRUE(p.getPoint() == Vector3f(-1.0f, 2.0f, 1.0f));
+  EXPECT_TRUE(p.getPoint() == Vector3f(0.0f, 0.0f, 0.0f));
   p.setNormal(Vector3f(1.0f, 0.0f, 0.0f));
   EXPECT_TRUE(p.getNormal() == Vector3f(1.0f, 0.0f, 0.0f).getNormalize());
 
@@ -1647,7 +1647,7 @@ TEST(eeUtilities, Shapes)
                                      Vector2f(4.0f, 4.0f))));
 
 
-  EXPECT_TRUE(p.intersects(Vector3f(-1.0f, 2.0f, 0.0f)));
+  EXPECT_TRUE(p.intersects(Vector3f(0.0f, 4.0f, 3.0f)));
   EXPECT_TRUE(p.intersects(Plane(Vector3f(0.0f, 1.0f, 2.0f), 
                                  Vector3f(1.0f, 2.0f, 3.0f))));
   EXPECT_TRUE(s.intersects(Vector3f(2.0f, -3.0f, -1.0f)));

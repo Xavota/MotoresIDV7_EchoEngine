@@ -12,114 +12,134 @@ class EE_CORE_EXPORT Mesh
   ~Mesh();
 
   bool
-  loadFromFile(String fileName);
+  loadFromArray(const Vector<SimplexVertex>& vertices,
+                const Vector<uint16>& indices);
   bool
-  loadFromArray(Vector<SimpleVertex>& vertices,
-                Vector<uint16>& indices);
+  loadFromArray(const Vector<SimpleVertex>& vertices,
+                const Vector<uint16>& indices);
   bool
-  loadFromArray(Vector<ComplexVertex>& vertices,
-                Vector<uint16>& indices);
+  loadFromArray(const Vector<ComplexVertex>& vertices,
+                const Vector<uint16>& indices);
   bool
-  loadFromArray(Vector<SimpleAnimVertex>& vertices,
-                Vector<uint16>& indices);
-  template<int32 Size = 4>
+  loadFromArray(const Vector<SimpleAnimVertex>& vertices,
+                const Vector<uint16>& indices);
+  template<uint32 Size = 4>
   FORCEINLINE bool
-  loadFromArray(Vector<SimpleBigAnimVertex<Size>>& vertices,
-                Vector<uint16>& indices,
-                const int32 size);
+  loadFromArray(const Vector<SimpleBigAnimVertex<Size>>& vertices,
+                const Vector<uint16>& indices);
   bool
-  loadFromArray(Vector<ComplexAnimVertex>& vertices,
-                Vector<uint16>& indices);
-  template<int32 Size = 4>
+  loadFromArray(const Vector<ComplexAnimVertex>& vertices,
+                const Vector<uint16>& indices);
+  template<uint32 Size = 4>
   FORCEINLINE bool
-  loadFromArray(Vector<ComplexBigAnimVertex<Size>>& vertices,
-                Vector<uint16>& indices,
-                const int32 size);
+  loadFromArray(const Vector<ComplexBigAnimVertex<Size>>& vertices,
+                const Vector<uint16>& indices);
   bool
-  loadFromArray(Vector<SimpleVertex>& vertices,
-                Vector<uint32>& indices);
+  loadFromArray(const Vector<SimplexVertex>& vertices,
+                const Vector<uint32>& indices);
   bool
-  loadFromArray(Vector<ComplexVertex>& vertices,
-                Vector<uint32>& indices);
+  loadFromArray(const Vector<SimpleVertex>& vertices,
+                const Vector<uint32>& indices);
   bool
-  loadFromArray(Vector<SimpleAnimVertex>& vertices,
-                Vector<uint32>& indices);
-  template<int32 Size = 4>
+  loadFromArray(const Vector<ComplexVertex>& vertices,
+                const Vector<uint32>& indices);
+  bool
+  loadFromArray(const Vector<SimpleAnimVertex>& vertices,
+                const Vector<uint32>& indices);
+  template<uint32 Size = 4>
   FORCEINLINE bool
-  loadFromArray(Vector<SimpleBigAnimVertex<Size>>& vertices,
-                Vector<uint32>& indices,
-                const int32 size);
+  loadFromArray(const Vector<SimpleBigAnimVertex<Size>>& vertices,
+                const Vector<uint32>& indices);
   bool
-  loadFromArray(Vector<ComplexAnimVertex>& vertices,
-                Vector<uint32>& indices);
-  template<int32 Size = 4>
+  loadFromArray(const Vector<ComplexAnimVertex>& vertices,
+                const Vector<uint32>& indices);
+  template<uint32 Size = 4>
   FORCEINLINE bool
-  loadFromArray(Vector<ComplexBigAnimVertex<Size>>& vertices,
-                Vector<uint32>& indices,
-                const int32 size);
+  loadFromArray(const Vector<ComplexBigAnimVertex<Size>>& vertices,
+                const Vector<uint32>& indices);
 
  private:
   SPtr<Buffer> m_vertexData;
   SPtr<Buffer> m_indexData;
 };
-template<int32 Size>
+template<uint32 Size>
 FORCEINLINE bool 
-Mesh::loadFromArray(Vector<SimpleBigAnimVertex<Size>>& vertices, 
-                    Vector<uint16>& indices, 
-                    const int32 size)
+Mesh::loadFromArray(const Vector<SimpleBigAnimVertex<Size>>& vertices, 
+                    const Vector<uint16>& indices)
 {
+  if (vertices.empty() || indices.empty())
+  {
+    std::cout << "Empty info loading mesh" << std::endl;
+    return false;
+  }
+
   m_vertexData->InitData(static_cast<uint32>(vertices.size()) * 
                          sizeof(SimpleBigAnimVertex<Size>),
                          sizeof(SimpleBigAnimVertex<Size>),
-                         reinterpret_cast<Byte*>(vertices.data()));
+                         reinterpret_cast<const Byte*>(vertices.data()));
   m_indexData->InitData(static_cast<uint32>(indices.size()) * sizeof(uint16),
                         sizeof(uint16),
-                        reinterpret_cast<Byte*>(indices.data()));
+                        reinterpret_cast<const Byte*>(indices.data()));
   return true;
 }
-template<int32 Size>
+template<uint32 Size>
 FORCEINLINE bool
-Mesh::loadFromArray(Vector<ComplexBigAnimVertex<Size>>& vertices,
-                    Vector<uint16>& indices,
-                    const int32 size)
+Mesh::loadFromArray(const Vector<ComplexBigAnimVertex<Size>>& vertices,
+                    const Vector<uint16>& indices)
 {
+  if (vertices.empty() || indices.empty())
+  {
+    std::cout << "Empty info loading mesh" << std::endl;
+    return false;
+  }
+
   m_vertexData->InitData(static_cast<uint32>(vertices.size()) * 
                          sizeof(ComplexBigAnimVertex<Size>),
                          sizeof(ComplexBigAnimVertex<Size>),
-                         reinterpret_cast<Byte*>(vertices.data()));
+                         reinterpret_cast<const Byte*>(vertices.data()));
   m_indexData->InitData(static_cast<uint32>(indices.size()) * sizeof(uint16),
                         sizeof(uint16),
-                        reinterpret_cast<Byte*>(indices.data()));
+                        reinterpret_cast<const Byte*>(indices.data()));
   return true;
 }
-template<int32 Size>
+template<uint32 Size>
 FORCEINLINE bool
-Mesh::loadFromArray(Vector<SimpleBigAnimVertex<Size>>& vertices,
-                    Vector<uint32>& indices,
-                    const int32 size)
+Mesh::loadFromArray(const Vector<SimpleBigAnimVertex<Size>>& vertices,
+                    const Vector<uint32>& indices)
 {
+  if (vertices.empty() || indices.empty())
+  {
+    std::cout << "Empty info loading mesh" << std::endl;
+    return false;
+  }
+
   m_vertexData->InitData(static_cast<uint32>(vertices.size()) * 
                          sizeof(SimpleBigAnimVertex<Size>),
                          sizeof(SimpleBigAnimVertex<Size>),
-                         reinterpret_cast<Byte*>(vertices.data()));
+                         reinterpret_cast<const Byte*>(vertices.data()));
   m_indexData->InitData(static_cast<uint32>(indices.size()) * sizeof(uint32),
                         sizeof(uint32),
-                        reinterpret_cast<Byte*>(indices.data()));
+                        reinterpret_cast<const Byte*>(indices.data()));
   return true;
 }
-template<int32 Size>
+template<uint32 Size>
 FORCEINLINE bool
-Mesh::loadFromArray(Vector<ComplexBigAnimVertex<Size>>& vertices,
-                    Vector<uint32>& indices,
-                    const int32 size)
+Mesh::loadFromArray(const Vector<ComplexBigAnimVertex<Size>>& vertices,
+                    const Vector<uint32>& indices)
 {
+  if (vertices.empty() || indices.empty())
+  {
+    std::cout << "Empty info loading mesh" << std::endl;
+    return false;
+  }
+
   m_vertexData->InitData(static_cast<uint32>(vertices.size()) * 
                          sizeof(ComplexBigAnimVertex<Size>),
                          sizeof(ComplexBigAnimVertex<Size>),
-                         reinterpret_cast<Byte*>(vertices.data()));
+                         reinterpret_cast<const Byte*>(vertices.data()));
   m_indexData->InitData(static_cast<uint32>(indices.size()) * sizeof(uint32),
                         sizeof(uint32),
-                        reinterpret_cast<Byte*>(indices.data()));
+                        reinterpret_cast<const Byte*>(indices.data()));
   return true;
 }
 }

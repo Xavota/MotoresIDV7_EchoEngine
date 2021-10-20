@@ -44,17 +44,25 @@
 namespace eeEngineSDK {
 class Buffer;
 
+struct SimplexVertex;
 struct SimpleVertex;
 struct ComplexVertex;
 struct SimpleAnimVertex;
 struct ComplexAnimVertex;
+template<uint32 size = 4>
+struct SimpleBigAnimVertex;
+template<uint32 size = 4>
+struct ComplexBigAnimVertex;
 
 class Mesh;
 class Model;
+class Object;
 class Texture;
 
 class PixelShader;
 class VertexShader;
 class InputLayout;
 class Window;
+
+class ResourceManager;
 }

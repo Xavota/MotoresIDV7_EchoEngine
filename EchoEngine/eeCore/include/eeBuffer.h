@@ -10,7 +10,7 @@ class EE_CORE_EXPORT Buffer
   ~Buffer() = default;
 
   virtual void
-  InitData(uint32 dataSize, uint32 batchSize, Byte* data);
+  InitData(uint32 dataSize, uint32 batchSize, const Byte* data);
 
   virtual void 
   Release(){};

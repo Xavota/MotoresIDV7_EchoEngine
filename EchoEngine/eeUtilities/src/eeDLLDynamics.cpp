@@ -11,8 +11,7 @@ DLLDynamics::initialize(const String dllPath)
 #if EE_PLATFORM == EE_PLATFORM_WIN32
   m_dllInstance = reinterpret_cast<void*>(LoadLibrary(dllPath.c_str()));
 
-  //if (!hGetProcIDDLL)
-  if (!*reinterpret_cast<HINSTANCE*>(m_dllInstance))
+  if (!m_dllInstance)
   {
     std::cout << "Could not load Dll" << std::endl;
     return false;
@@ -35,10 +34,10 @@ foo
 DLLDynamics::getFunction(const String functName)
 {
 #if EE_PLATFORM == EE_PLATFORM_WIN32
-  HMODULE* hGetProcIDDLL = reinterpret_cast<HMODULE*>(&m_dllInstance);
+  HMODULE hGetProcIDDLL = reinterpret_cast<HMODULE>(m_dllInstance);
   foo function = reinterpret_cast<foo>(GetProcAddress
                                 (
-                                  *hGetProcIDDLL,
+                                  hGetProcIDDLL,
                                   functName.c_str()
                                 ));
 

@@ -13,13 +13,13 @@ class EE_CORE_EXPORT Model
   virtual bool
   loadFromFile(const String& fileName);
   virtual bool
-  loadFromMeshes(Vector<Mesh> meshes);
+  loadFromMeshes(Vector<SPtr<Mesh>> meshes);
   virtual bool
-  loadFromMeshes(const Vector<Pair<Mesh&, uint8>>& meshes, 
-                 Vector<Texture*>& textures);
+  loadFromMeshes(const Vector<Pair<SPtr<Mesh>, uint8>>& meshes,
+                 const Vector<SPtr<Texture>>& textures);
 
  private:
-  Vector<Pair<Mesh&, uint8>> m_meshes;
-  Vector<Texture*> m_textures;
+  Vector<Pair<SPtr<Mesh>, uint8>> m_meshes;
+  Vector<SPtr<Texture>> m_textures;
 };
 }

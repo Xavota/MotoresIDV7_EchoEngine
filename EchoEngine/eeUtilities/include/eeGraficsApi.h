@@ -1,6 +1,7 @@
 #pragma once
 #include "eePrerequisitesCore.h"
 #include "eeModule.h"
+#include "eeTexture.h"
 
 namespace eeEngineSDK {
 class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
@@ -20,12 +21,28 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   initializeScreen(){return true;}
 
   virtual void
-  processEvents(){}
+  processEvents() {}
 
   virtual void
-  drawObject(){}
+  clearScreen(float r, float g, float b){};
+
+  virtual void
+  drawObject(SPtr<Object> /*obj*/) {}
 
   virtual void
   present(){}
+
+
+
+
+
+  ////////////////////////////////////////////////////
+  /*
+  *    Resources
+  */
+  ////////////////////////////////////////////////////
+
+  FORCEINLINE virtual SPtr<Texture>
+  getTexturePtr() {return std::make_shared<Texture>();}
 };
 }

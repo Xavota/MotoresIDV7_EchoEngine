@@ -1,7 +1,37 @@
 #include "eeObject.h"
 
 namespace eeEngineSDK {
-Vector3f 
+bool 
+Object::loadFromFile(const String& /*fileName*/)
+{
+  // Load from resource manager
+
+  /*if (!m_model->loadFromFile(fileName))
+  {
+    
+  }*/
+
+  return true;
+}
+bool 
+Object::loadFromModel(SPtr<Model> model,
+                      Vector3f pos,
+                      Quaternion rot,
+                      Vector3f scale)
+{
+  if (!model)
+  {
+    std::cout << "There is no model here..." << std::endl;
+    return false;
+  }
+
+  m_position = pos;
+  m_rotation = rot;
+  m_scale = scale;
+
+  return true;
+}
+Vector3f
 Object::getPosition()
 {
   return m_position;

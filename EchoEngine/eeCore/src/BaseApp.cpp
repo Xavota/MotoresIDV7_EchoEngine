@@ -2,6 +2,7 @@
 #include "eeCoreConfiguration.h"
 #include "eeDLLDynamics.h"
 #include "eeGraficsApi.h"
+#include "eeResourceManager.h"
 
 namespace eeEngineSDK {
 int32
@@ -48,10 +49,12 @@ BaseApp::mainLoop()
 bool
 BaseApp::init()
 {
-  if (!GraphicsApi::instance().initialize())
-    return false;
   if (!GraphicsApi::instance().initializeScreen())
     return false;
+  if (!GraphicsApi::instance().initialize())
+    return false;
+
+  ResourceManager::startUp();
 
   return true;
 }
@@ -60,7 +63,7 @@ BaseApp::processEvents()
 {
 }
 void
-BaseApp::update(float deltaTime)
+BaseApp::update(float /*deltaTime*/)
 {
 }
 void
@@ -71,5 +74,6 @@ void
 BaseApp::destroy()
 {
   GraphicsApi::shutDown();
+  ResourceManager::shutDown();
 }
 }

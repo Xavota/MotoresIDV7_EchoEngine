@@ -10,7 +10,7 @@ class EE_CORE_EXPORT Texture
   virtual ~Texture() = default;
 
   virtual bool
-  loadFromFile(){return true;};
+  loadFromFile(const String fileName) { return true; };
 
   virtual bool
   loadFromBuffer(SPtr<void> buffer){return true;};

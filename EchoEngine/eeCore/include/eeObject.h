@@ -11,6 +11,14 @@ class EE_CORE_EXPORT Object
   Object() = default;
   ~Object() = default;
 
+  bool
+  loadFromFile(const String& fileName);
+  bool
+  loadFromModel(SPtr<Model> model,
+                Vector3f pos,
+                Quaternion rot,
+                Vector3f scale);
+
   Vector3f
   getPosition();
   void

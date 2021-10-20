@@ -5,6 +5,10 @@
 #include "eeVector4.h"
 
 namespace eeEngineSDK {
+struct SimplexVertex
+{
+  Vector3f position;
+};
 struct SimpleVertex
 {
   Vector3f position;
@@ -29,7 +33,7 @@ struct SimpleAnimVertex
   Vector4i boneIndices;
   Vector4f boneWeights;
 };
-template <int32 size>
+template <uint32 size>
 struct SimpleBigAnimVertex
 {
   Vector3f position;
@@ -51,7 +55,7 @@ struct ComplexAnimVertex
   Vector4i boneIndices;
   Vector4f boneWeights;
 };
-template <int32 size>
+template <uint32 size>
 struct ComplexBigAnimVertex
 {
   Vector3f position;
