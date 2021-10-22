@@ -30,14 +30,4 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="..\bin\x64\TestVShader.hlsl">
-      <Filter>Resources</Filter>
-    </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\bin\x64\TestPShader.hlsl">
-      <Filter>Resources</Filter>
-    </None>
-  </ItemGroup>
 </Project>
