@@ -2,6 +2,8 @@
 #include "eeModel.h"
 #include "eeMesh.h"
 #include "eeTexture.h"
+#include "eeVertexShader.h"
+#include "eePixelShader.h"
 #include "eeGraficsApi.h"
 
 namespace eeEngineSDK
@@ -47,7 +49,7 @@ ResourceManager::loadModelFromFile(const String& fileName,
     return nullptr;
   }
 
-  SPtr<Model> model = std::make_shared<Model>();
+  SPtr<Model> model = GraphicsApi::instance().getModelPtr();
   if (!model->loadFromFile(fileName))
   {
     return nullptr;
@@ -72,7 +74,7 @@ ResourceManager::loadModelFromMeshesArray(const Vector<SPtr<Mesh>>& meshes,
     return nullptr;
   }
 
-  SPtr<Model> model = std::make_shared<Model>();
+  SPtr<Model> model = GraphicsApi::instance().getModelPtr();
   if (!model->loadFromMeshes(meshes))
   {
     return nullptr;
@@ -98,7 +100,7 @@ ResourceManager::loadModelFromMeshesArray(const Vector<Pair<SPtr<Mesh>, uint8>>&
     return nullptr;
   }
 
-  SPtr<Model> model = std::make_shared<Model>();
+  SPtr<Model> model = GraphicsApi::instance().getModelPtr();
   if (!model->loadFromMeshes(meshes, textures))
   {
     return nullptr;
@@ -120,7 +122,7 @@ ResourceManager::loadMeshFromVertexArray(const Vector<SimplexVertex>& vertices,
     return nullptr;
   }
 
-  SPtr<Mesh> mesh = std::make_shared<Mesh>();
+  SPtr<Mesh> mesh = GraphicsApi::instance().getMeshPtr();
   if (!mesh->loadFromArray(vertices, indices))
   {
     return nullptr;
@@ -140,7 +142,7 @@ ResourceManager::loadMeshFromVertexArray(const Vector<SimpleVertex>& vertices,
     return nullptr;
   }
 
-  SPtr<Mesh> mesh = std::make_shared<Mesh>();
+  SPtr<Mesh> mesh = GraphicsApi::instance().getMeshPtr();
   if (!mesh->loadFromArray(vertices, indices))
   {
     return nullptr;
@@ -160,7 +162,7 @@ ResourceManager::loadMeshFromVertexArray(const Vector<ComplexVertex>& vertices,
     return nullptr;
   }
 
-  SPtr<Mesh> mesh = std::make_shared<Mesh>();
+  SPtr<Mesh> mesh = GraphicsApi::instance().getMeshPtr();
   if (!mesh->loadFromArray(vertices, indices))
   {
     return nullptr;
@@ -180,7 +182,7 @@ ResourceManager::loadMeshFromVertexArray(const Vector<SimpleAnimVertex>& vertice
     return nullptr;
   }
 
-  SPtr<Mesh> mesh = std::make_shared<Mesh>();
+  SPtr<Mesh> mesh = GraphicsApi::instance().getMeshPtr();
   if (!mesh->loadFromArray(vertices, indices))
   {
     return nullptr;
@@ -200,7 +202,7 @@ ResourceManager::loadMeshFromVertexArray(const Vector<ComplexAnimVertex>& vertic
     return nullptr;
   }
 
-  SPtr<Mesh> mesh = std::make_shared<Mesh>();
+  SPtr<Mesh> mesh = GraphicsApi::instance().getMeshPtr();
   if (!mesh->loadFromArray(vertices, indices))
   {
     return nullptr;
@@ -220,7 +222,7 @@ ResourceManager::loadMeshFromVertexArray(const Vector<SimplexVertex>& vertices,
     return nullptr;
   }
 
-  SPtr<Mesh> mesh = std::make_shared<Mesh>();
+  SPtr<Mesh> mesh = GraphicsApi::instance().getMeshPtr();
   if (!mesh->loadFromArray(vertices, indices))
   {
     return nullptr;
@@ -240,7 +242,7 @@ ResourceManager::loadMeshFromVertexArray(const Vector<SimpleVertex>& vertices,
     return nullptr;
   }
 
-  SPtr<Mesh> mesh = std::make_shared<Mesh>();
+  SPtr<Mesh> mesh = GraphicsApi::instance().getMeshPtr();
   if (!mesh->loadFromArray(vertices, indices))
   {
     return nullptr;
@@ -260,7 +262,7 @@ ResourceManager::loadMeshFromVertexArray(const Vector<ComplexVertex>& vertices,
     return nullptr;
   }
 
-  SPtr<Mesh> mesh = std::make_shared<Mesh>();
+  SPtr<Mesh> mesh = GraphicsApi::instance().getMeshPtr();
   if (!mesh->loadFromArray(vertices, indices))
   {
     return nullptr;
@@ -280,7 +282,7 @@ ResourceManager::loadMeshFromVertexArray(const Vector<SimpleAnimVertex>& vertice
     return nullptr;
   }
 
-  SPtr<Mesh> mesh = std::make_shared<Mesh>();
+  SPtr<Mesh> mesh = GraphicsApi::instance().getMeshPtr();
   if (!mesh->loadFromArray(vertices, indices))
   {
     return nullptr;
@@ -292,7 +294,7 @@ ResourceManager::loadMeshFromVertexArray(const Vector<SimpleAnimVertex>& vertice
 SPtr<Mesh>
 ResourceManager::loadMeshFromVertexArray(const Vector<ComplexAnimVertex>& vertices,
                                          const Vector<uint32>& indices, 
-                                         const String resourceName)
+                                         const String& resourceName)
 {
   if (m_meshes.find(resourceName) != m_meshes.end())
   {
@@ -300,7 +302,7 @@ ResourceManager::loadMeshFromVertexArray(const Vector<ComplexAnimVertex>& vertic
     return nullptr;
   }
 
-  SPtr<Mesh> mesh = std::make_shared<Mesh>();
+  SPtr<Mesh> mesh = GraphicsApi::instance().getMeshPtr();
   if (!mesh->loadFromArray(vertices, indices))
   {
     return nullptr;
@@ -308,6 +310,86 @@ ResourceManager::loadMeshFromVertexArray(const Vector<ComplexAnimVertex>& vertic
 
   m_meshes.insert(make_pair(resourceName, mesh));
   return m_meshes[resourceName];
+}
+
+SPtr<VertexShader> 
+ResourceManager::loadVertexShaderFromFile(const String& fileName, 
+                                          const String& resourceName)
+{
+  if (m_vertexShaders.find(resourceName) != m_vertexShaders.end())
+  {
+    std::cout << "Resource already with this name" << std::endl;
+    return nullptr;
+  }
+
+  SPtr<VertexShader> shader = GraphicsApi::instance().getVertexShaderPtr();
+  if (!shader->compileFromFile(fileName))
+  {
+    return nullptr;
+  }
+
+  m_vertexShaders.insert(make_pair(resourceName, shader));
+  return m_vertexShaders[resourceName];
+}
+
+SPtr<VertexShader>
+ResourceManager::loadVertexShaderFromString(const String& shaderString,
+                                            const String& resourceName)
+{
+  if (m_vertexShaders.find(resourceName) != m_vertexShaders.end())
+  {
+    std::cout << "Resource already with this name" << std::endl;
+    return nullptr;
+  }
+
+  SPtr<VertexShader> shader = GraphicsApi::instance().getVertexShaderPtr();
+  if (!shader->compileFromString(shaderString))
+  {
+    return nullptr;
+  }
+
+  m_vertexShaders.insert(make_pair(resourceName, shader));
+  return m_vertexShaders[resourceName];
+}
+
+SPtr<PixelShader>
+ResourceManager::loadPixelShaderFromFile(const String& fileName,
+                                         const String& resourceName)
+{
+  if (m_pixelShaders.find(resourceName) != m_pixelShaders.end())
+  {
+    std::cout << "Resource already with this name" << std::endl;
+    return nullptr;
+  }
+
+  SPtr<PixelShader> shader = GraphicsApi::instance().getPixelShaderPtr();
+  if (!shader->compileFromFile(fileName))
+  {
+    return nullptr;
+  }
+
+  m_pixelShaders.insert(make_pair(resourceName, shader));
+  return m_pixelShaders[resourceName];
+}
+
+SPtr<PixelShader>
+ResourceManager::loadPixelShaderFromString(const String& shaderString,
+                                           const String& resourceName)
+{
+  if (m_pixelShaders.find(resourceName) != m_pixelShaders.end())
+  {
+    std::cout << "Resource already with this name" << std::endl;
+    return nullptr;
+  }
+
+  SPtr<PixelShader> shader = GraphicsApi::instance().getPixelShaderPtr();
+  if (!shader->compileFromString(shaderString))
+  {
+    return nullptr;
+  }
+
+  m_pixelShaders.insert(make_pair(resourceName, shader));
+  return m_pixelShaders[resourceName];
 }
 
 
@@ -332,6 +414,22 @@ SPtr<Mesh> ResourceManager::getResourceMesh(const String& resourceName)
   if (m_meshes.find(resourceName) != m_meshes.end())
   {
     return m_meshes[resourceName];
+  }
+  return nullptr;
+}
+SPtr<VertexShader> ResourceManager::getResourceVertexShader(const String& resourceName)
+{
+  if (m_vertexShaders.find(resourceName) != m_vertexShaders.end())
+  {
+    return m_vertexShaders[resourceName];
+  }
+  return nullptr;
+}
+SPtr<PixelShader> ResourceManager::getResourcePixelShader(const String& resourceName)
+{
+  if (m_pixelShaders.find(resourceName) != m_pixelShaders.end())
+  {
+    return m_pixelShaders[resourceName];
   }
   return nullptr;
 }

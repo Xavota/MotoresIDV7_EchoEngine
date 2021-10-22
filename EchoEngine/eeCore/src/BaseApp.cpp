@@ -49,12 +49,14 @@ BaseApp::mainLoop()
 bool
 BaseApp::init()
 {
+  ResourceManager::startUp();
+
+
   if (!GraphicsApi::instance().initializeScreen())
     return false;
   if (!GraphicsApi::instance().initialize())
     return false;
 
-  ResourceManager::startUp();
 
   return true;
 }

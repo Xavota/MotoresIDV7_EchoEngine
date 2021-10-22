@@ -16,12 +16,16 @@ Mesh::loadFromArray(const Vector<SimplexVertex>& vertices,
     return false;
   }
 
+  m_vertexData = std::make_shared<Buffer>();
+  m_indexData = std::make_shared<Buffer>();
   m_vertexData->InitData(static_cast<uint32>(vertices.size()) * sizeof(SimplexVertex),
                          sizeof(SimplexVertex), 
                          reinterpret_cast<const Byte*>(vertices.data()));
   m_indexData->InitData(static_cast<uint32>(indices.size()) * sizeof(uint16),
                         sizeof(uint16),
                         reinterpret_cast<const Byte*>(indices.data()));
+
+  constructBuffers();
 
   return true;
 }
@@ -35,12 +39,16 @@ Mesh::loadFromArray(const Vector<SimpleVertex>& vertices,
     return false;
   }
 
+  m_vertexData = std::make_shared<Buffer>();
+  m_indexData = std::make_shared<Buffer>();
   m_vertexData->InitData(static_cast<uint32>(vertices.size()) * sizeof(SimpleVertex),
                          sizeof(SimpleVertex), 
                          reinterpret_cast<const Byte*>(vertices.data()));
   m_indexData->InitData(static_cast<uint32>(indices.size()) * sizeof(uint16),
                         sizeof(uint16),
                         reinterpret_cast<const Byte*>(indices.data()));
+
+  constructBuffers();
 
   return true;
 }
@@ -54,12 +62,16 @@ Mesh::loadFromArray(const Vector<ComplexVertex>& vertices,
     return false;
   }
 
+  m_vertexData = std::make_shared<Buffer>();
+  m_indexData = std::make_shared<Buffer>();
   m_vertexData->InitData(static_cast<uint32>(vertices.size()) * sizeof(ComplexVertex),
                          sizeof(ComplexVertex),
                          reinterpret_cast<const Byte*>(vertices.data()));
   m_indexData->InitData(static_cast<uint32>(indices.size()) * sizeof(uint16),
                          sizeof(uint16),
                          reinterpret_cast<const Byte*>(indices.data()));
+
+  constructBuffers();
   return true;
 }
 bool
@@ -72,12 +84,16 @@ Mesh::loadFromArray(const Vector<SimpleAnimVertex>& vertices,
     return false;
   }
 
+  m_vertexData = std::make_shared<Buffer>();
+  m_indexData = std::make_shared<Buffer>();
   m_vertexData->InitData(static_cast<uint32>(vertices.size()) * sizeof(SimpleAnimVertex),
                          sizeof(SimpleAnimVertex),
                          reinterpret_cast<const Byte*>(vertices.data()));
   m_indexData->InitData(static_cast<uint32>(indices.size()) * sizeof(uint16),
                         sizeof(uint16),
                         reinterpret_cast<const Byte*>(indices.data()));
+
+  constructBuffers();
   return true;
 }
 bool
@@ -90,12 +106,16 @@ Mesh::loadFromArray(const Vector<ComplexAnimVertex>& vertices,
     return false;
   }
 
+  m_vertexData = std::make_shared<Buffer>();
+  m_indexData = std::make_shared<Buffer>();
   m_vertexData->InitData(static_cast<uint32>(vertices.size()) * sizeof(ComplexAnimVertex),
                          sizeof(ComplexAnimVertex),
                          reinterpret_cast<const Byte*>(vertices.data()));
   m_indexData->InitData(static_cast<uint32>(indices.size()) * sizeof(uint16),
                         sizeof(uint16),
                         reinterpret_cast<const Byte*>(indices.data()));
+
+  constructBuffers();
   return true;
 }
 bool
@@ -108,12 +128,16 @@ Mesh::loadFromArray(const Vector<SimplexVertex>& vertices,
     return false;
   }
 
+  m_vertexData = std::make_shared<Buffer>();
+  m_indexData = std::make_shared<Buffer>();
   m_vertexData->InitData(static_cast<uint32>(vertices.size()) * sizeof(SimplexVertex),
                          sizeof(SimplexVertex),
                          reinterpret_cast<const Byte*>(vertices.data()));
   m_indexData->InitData(static_cast<uint32>(indices.size()) * sizeof(uint32),
                         sizeof(uint32),
                         reinterpret_cast<const Byte*>(indices.data()));
+
+  constructBuffers();
 
   return true;
 }
@@ -127,12 +151,16 @@ Mesh::loadFromArray(const Vector<SimpleVertex>& vertices,
     return false;
   }
 
+  m_vertexData = std::make_shared<Buffer>();
+  m_indexData = std::make_shared<Buffer>();
   m_vertexData->InitData(static_cast<uint32>(vertices.size()) * sizeof(SimpleVertex),
                          sizeof(SimpleVertex),
                          reinterpret_cast<const Byte*>(vertices.data()));
   m_indexData->InitData(static_cast<uint32>(indices.size()) * sizeof(uint32),
                         sizeof(uint32),
                         reinterpret_cast<const Byte*>(indices.data()));
+
+  constructBuffers();
 
   return true;
 }
@@ -146,12 +174,16 @@ Mesh::loadFromArray(const Vector<ComplexVertex>& vertices,
     return false;
   }
 
+  m_vertexData = std::make_shared<Buffer>();
+  m_indexData = std::make_shared<Buffer>();
   m_vertexData->InitData(static_cast<uint32>(vertices.size()) * sizeof(ComplexVertex),
                          sizeof(ComplexVertex),
                          reinterpret_cast<const Byte*>(vertices.data()));
   m_indexData->InitData(static_cast<uint32>(indices.size()) * sizeof(uint32),
                         sizeof(uint32),
                         reinterpret_cast<const Byte*>(indices.data()));
+
+  constructBuffers();
   return true;
 }
 bool
@@ -164,12 +196,16 @@ Mesh::loadFromArray(const Vector<SimpleAnimVertex>& vertices,
     return false;
   }
 
+  m_vertexData = std::make_shared<Buffer>();
+  m_indexData = std::make_shared<Buffer>();
   m_vertexData->InitData(static_cast<uint32>(vertices.size()) * sizeof(SimpleAnimVertex),
                          sizeof(SimpleAnimVertex),
                          reinterpret_cast<const Byte*>(vertices.data()));
   m_indexData->InitData(static_cast<uint32>(indices.size()) * sizeof(uint32),
                         sizeof(uint32),
                         reinterpret_cast<const Byte*>(indices.data()));
+
+  constructBuffers();
   return true;
 }
 bool
@@ -182,12 +218,26 @@ Mesh::loadFromArray(const Vector<ComplexAnimVertex>& vertices,
     return false;
   }
 
+  m_vertexData = std::make_shared<Buffer>();
+  m_indexData = std::make_shared<Buffer>();
   m_vertexData->InitData(static_cast<uint32>(vertices.size()) * sizeof(ComplexAnimVertex),
                          sizeof(ComplexAnimVertex),
                          reinterpret_cast<const Byte*>(vertices.data()));
   m_indexData->InitData(static_cast<uint32>(indices.size()) * sizeof(uint32),
                         sizeof(uint32),
                         reinterpret_cast<const Byte*>(indices.data()));
+
+  constructBuffers();
   return true;
+}
+const SPtr<Buffer> 
+Mesh::getVertexData() const
+{
+  return m_vertexData;
+}
+const SPtr<Buffer> 
+Mesh::getIndexData() const
+{
+  return m_indexData;
 }
 }

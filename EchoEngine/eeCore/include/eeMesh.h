@@ -58,7 +58,15 @@ class EE_CORE_EXPORT Mesh
   loadFromArray(const Vector<ComplexBigAnimVertex<Size>>& vertices,
                 const Vector<uint32>& indices);
 
- private:
+  virtual bool
+  constructBuffers(){ return true; }
+
+  virtual const SPtr<Buffer>
+  getVertexData() const;
+  virtual const SPtr<Buffer>
+  getIndexData() const;
+
+ protected:
   SPtr<Buffer> m_vertexData;
   SPtr<Buffer> m_indexData;
 };
@@ -73,6 +81,8 @@ Mesh::loadFromArray(const Vector<SimpleBigAnimVertex<Size>>& vertices,
     return false;
   }
 
+  m_vertexData = std::make_shared<Buffer>();
+  m_indexData = std::make_shared<Buffer>();
   m_vertexData->InitData(static_cast<uint32>(vertices.size()) * 
                          sizeof(SimpleBigAnimVertex<Size>),
                          sizeof(SimpleBigAnimVertex<Size>),
@@ -80,6 +90,8 @@ Mesh::loadFromArray(const Vector<SimpleBigAnimVertex<Size>>& vertices,
   m_indexData->InitData(static_cast<uint32>(indices.size()) * sizeof(uint16),
                         sizeof(uint16),
                         reinterpret_cast<const Byte*>(indices.data()));
+
+  constructBuffers();
   return true;
 }
 template<uint32 Size>
@@ -93,6 +105,8 @@ Mesh::loadFromArray(const Vector<ComplexBigAnimVertex<Size>>& vertices,
     return false;
   }
 
+  m_vertexData = std::make_shared<Buffer>();
+  m_indexData = std::make_shared<Buffer>();
   m_vertexData->InitData(static_cast<uint32>(vertices.size()) * 
                          sizeof(ComplexBigAnimVertex<Size>),
                          sizeof(ComplexBigAnimVertex<Size>),
@@ -100,6 +114,8 @@ Mesh::loadFromArray(const Vector<ComplexBigAnimVertex<Size>>& vertices,
   m_indexData->InitData(static_cast<uint32>(indices.size()) * sizeof(uint16),
                         sizeof(uint16),
                         reinterpret_cast<const Byte*>(indices.data()));
+
+  constructBuffers();
   return true;
 }
 template<uint32 Size>
@@ -113,6 +129,8 @@ Mesh::loadFromArray(const Vector<SimpleBigAnimVertex<Size>>& vertices,
     return false;
   }
 
+  m_vertexData = std::make_shared<Buffer>();
+  m_indexData = std::make_shared<Buffer>();
   m_vertexData->InitData(static_cast<uint32>(vertices.size()) * 
                          sizeof(SimpleBigAnimVertex<Size>),
                          sizeof(SimpleBigAnimVertex<Size>),
@@ -120,6 +138,8 @@ Mesh::loadFromArray(const Vector<SimpleBigAnimVertex<Size>>& vertices,
   m_indexData->InitData(static_cast<uint32>(indices.size()) * sizeof(uint32),
                         sizeof(uint32),
                         reinterpret_cast<const Byte*>(indices.data()));
+
+  constructBuffers();
   return true;
 }
 template<uint32 Size>
@@ -133,6 +153,8 @@ Mesh::loadFromArray(const Vector<ComplexBigAnimVertex<Size>>& vertices,
     return false;
   }
 
+  m_vertexData = std::make_shared<Buffer>();
+  m_indexData = std::make_shared<Buffer>();
   m_vertexData->InitData(static_cast<uint32>(vertices.size()) * 
                          sizeof(ComplexBigAnimVertex<Size>),
                          sizeof(ComplexBigAnimVertex<Size>),
@@ -140,6 +162,8 @@ Mesh::loadFromArray(const Vector<ComplexBigAnimVertex<Size>>& vertices,
   m_indexData->InitData(static_cast<uint32>(indices.size()) * sizeof(uint32),
                         sizeof(uint32),
                         reinterpret_cast<const Byte*>(indices.data()));
+
+  constructBuffers();
   return true;
 }
 }

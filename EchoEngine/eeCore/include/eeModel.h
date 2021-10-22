@@ -18,6 +18,11 @@ class EE_CORE_EXPORT Model
   loadFromMeshes(const Vector<Pair<SPtr<Mesh>, uint8>>& meshes,
                  const Vector<SPtr<Texture>>& textures);
 
+  virtual Vector<Pair<SPtr<Mesh>, uint8>>
+  getMeshes();
+  virtual Vector<SPtr<Texture>>
+  getTextures();
+
  private:
   Vector<Pair<SPtr<Mesh>, uint8>> m_meshes;
   Vector<SPtr<Texture>> m_textures;

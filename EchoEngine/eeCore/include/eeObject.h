@@ -9,35 +9,38 @@ class EE_CORE_EXPORT Object
 {
  public:
   Object() = default;
+  virtual
   ~Object() = default;
 
-  bool
+  virtual bool
   loadFromFile(const String& fileName);
-  bool
+  virtual bool
   loadFromModel(SPtr<Model> model,
                 Vector3f pos,
                 Quaternion rot,
                 Vector3f scale);
 
-  Vector3f
+  virtual Vector3f
   getPosition();
-  void
+  virtual void
   setPosition(const Vector3f& pos);
 
-  Quaternion
+  virtual Quaternion
   getRotation();
-  void
+  virtual void
   setRotation(const Quaternion& rot);
 
-  Vector3f
+  virtual Vector3f
   getScale();
-  void
+  virtual void
   setScale(const Vector3f& scale);
 
-  void
-  setModel(SPtr<Model>& model);
+  virtual void
+  setModel(const SPtr<Model>& model);
+  virtual SPtr<Model>
+  getModel();
 
- private:
+ protected:
   Vector3f m_position;
   Quaternion m_rotation;
   Vector3f m_scale;

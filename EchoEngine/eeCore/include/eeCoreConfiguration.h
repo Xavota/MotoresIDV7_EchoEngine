@@ -4,8 +4,8 @@
 #include "eePrerequisitesUtilities.h"
 
 namespace eeEngineSDK {
-int32 screenWidth;
-int32 screenHeight;
+int32 screenWidth = 1280;
+int32 screenHeight = 720;
 
 #ifdef _M_IX86
 String platformTarget = "x86";

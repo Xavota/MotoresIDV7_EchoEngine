@@ -25,6 +25,8 @@ Object::loadFromModel(SPtr<Model> model,
     return false;
   }
 
+  m_model = model;
+
   m_position = pos;
   m_rotation = rot;
   m_scale = scale;
@@ -62,8 +64,12 @@ Object::setScale(const Vector3f& scale)
   m_scale = scale;
 }
 void 
-Object::setModel(SPtr<Model>& model)
+Object::setModel(const SPtr<Model>& model)
 {
   m_model = model;
+}
+SPtr<Model> Object::getModel()
+{
+  return m_model;
 }
 }

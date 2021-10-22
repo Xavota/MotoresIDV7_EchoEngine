@@ -14,6 +14,9 @@ public:
   virtual bool
   compileFromString(const String& /*shaderString*/){return true;}
 
+  virtual void
+  use() {}
+
  private:
   String m_shaderString;
 };

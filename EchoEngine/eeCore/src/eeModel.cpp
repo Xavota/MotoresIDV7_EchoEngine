@@ -4,7 +4,7 @@ namespace eeEngineSDK {
 bool
 Model::loadFromFile(const String& /*fileName*/)
 {
-  return false;
+  return true;
 }
 bool
 Model::loadFromMeshes(Vector<SPtr<Mesh>> meshes)
@@ -20,7 +20,7 @@ Model::loadFromMeshes(Vector<SPtr<Mesh>> meshes)
     //m_meshes.push_back(MakePair<Mesh&, uint8>(m, 0u));
     m_meshes.push_back(Pair<SPtr<Mesh>, uint8>(m, static_cast<uint8>(0u)));
   }
-  return false;
+  return true;
 }
 bool
 Model::loadFromMeshes(const Vector<Pair<SPtr<Mesh>, uint8>>& meshes,
@@ -34,6 +34,14 @@ Model::loadFromMeshes(const Vector<Pair<SPtr<Mesh>, uint8>>& meshes,
 
   m_meshes = meshes;
   m_textures = textures;
-  return false;
+  return true;
+}
+Vector<Pair<SPtr<Mesh>, uint8>> Model::getMeshes()
+{
+  return m_meshes;
+}
+Vector<SPtr<Texture>> Model::getTextures()
+{
+  return m_textures;
 }
 }

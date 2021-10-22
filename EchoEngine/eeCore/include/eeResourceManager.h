@@ -3,6 +3,8 @@
 #include "eeTexture.h"
 #include "eeModel.h"
 #include "eeMesh.h"
+#include "eeVertexShader.h"
+#include "eePixelShader.h"
 #include <eeModule.h>
 
 namespace eeEngineSDK {
@@ -79,12 +81,26 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
   SPtr<Mesh>
   loadMeshFromVertexArray(const Vector<ComplexAnimVertex>& vertices,
                           const Vector<uint32>& indices, 
-                          const String resourceName);
+                          const String& resourceName);
   template<uint32 Size = 4>
   FORCEINLINE SPtr<Mesh>
   loadMeshFromVertexArray(const Vector<ComplexBigAnimVertex<Size>>& vertices,
                           const Vector<uint32>& indices, 
                           const String resourceName);
+
+  SPtr<VertexShader>
+  loadVertexShaderFromFile(const String& fileName,
+                           const String& resourceName);
+  SPtr<VertexShader>
+  loadVertexShaderFromString(const String& shaderString,
+                             const String& resourceName);
+
+  SPtr<PixelShader>
+  loadPixelShaderFromFile(const String& fileName,
+                            const String& resourceName);
+  SPtr<PixelShader>
+  loadPixelShaderFromString(const String& shaderString,
+                             const String& resourceName);
 
   SPtr<Texture>
   getResourceTexture(const String& resourceName);
@@ -92,12 +108,19 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
   getResourceModel(const String& resourceName);
   SPtr<Mesh>
   getResourceMesh(const String& resourceName);
+  SPtr<VertexShader>
+  getResourceVertexShader(const String& resourceName);
+  SPtr<PixelShader>
+  getResourcePixelShader(const String& resourceName);
+
 
 
  private:
   Map<String, SPtr<Texture>> m_textures;
   Map<String, SPtr<Model>> m_models;
   Map<String, SPtr<Mesh>> m_meshes;
+  Map<String, SPtr<VertexShader>> m_vertexShaders;
+  Map<String, SPtr<PixelShader>> m_pixelShaders;
 };
 template<uint32 Size>
 FORCEINLINE SPtr<Mesh>

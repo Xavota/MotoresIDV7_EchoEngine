@@ -22,6 +22,11 @@
     <ClInclude Include="include\eePrerequisitesDX11.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\eeDX11Object.h" />
+    <ClInclude Include="include\eeDX11Mesh.h" />
+    <ClInclude Include="include\eeDX11Model.h" />
+    <ClInclude Include="include\eeDX11VertexShader.h" />
+    <ClInclude Include="include\eeDX11PixelShader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeDX11Texture.cpp">
@@ -30,5 +35,10 @@
     <ClCompile Include="src\eeDX11GraphicsApi.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\eeDX11Object.cpp" />
+    <ClCompile Include="src\eeDX11Mesh.cpp" />
+    <ClCompile Include="src\eeDX11Model.cpp" />
+    <ClCompile Include="src\eeDX11VertexShader.cpp" />
+    <ClCompile Include="src\eeDX11PixelShader.cpp" />
   </ItemGroup>
 </Project>

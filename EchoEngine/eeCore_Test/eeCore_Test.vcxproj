@@ -177,6 +177,12 @@
   <ItemGroup>
     <ClInclude Include="include\BaseAppTest1.h" />
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\bin\x64\TestVShader.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\bin\x64\TestPShader.hlsl" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

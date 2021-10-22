@@ -1,5 +1,8 @@
 #include "eeDX11GraphicsApi.h"
+#include "eeDX11Object.h"
+#include "eeResourceManager.h"
 #include <windows.h>
+#include <eeCoreConfiguration.h>
 
 namespace eeEngineSDK {
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -27,17 +30,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 DX11GraphicsApi::~DX11GraphicsApi()
 {
-  if (m_device)
+  if (m_basics.m_device)
   {
-    m_device->Release();
+    m_basics.m_device->Release();
   }
-  if (m_deviceContext)
+  if (m_basics.m_deviceContext)
   {
-    m_deviceContext->Release();
+    m_basics.m_deviceContext->Release();
   }
-  if (m_swapChain)
+  if (m_basics.m_swapChain)
   {
-    m_swapChain->Release();
+    m_basics.m_swapChain->Release();
   }
   if (m_rtv)
   {
@@ -78,10 +81,10 @@ DX11GraphicsApi::initialize()
     0,
     D3D11_SDK_VERSION,
     &sd,
-    &m_swapChain,
-    &m_device,
+    &m_basics.m_swapChain,
+    &m_basics.m_device,
     nullptr,
-    &m_deviceContext
+    &m_basics.m_deviceContext
   );
 
   if (FAILED(hr))
@@ -91,13 +94,19 @@ DX11GraphicsApi::initialize()
 
 
   ID3D11Resource* pBackBuffer = nullptr;
-  m_swapChain->GetBuffer(0, __uuidof(ID3D11Resource), 
+  m_basics.m_swapChain->GetBuffer(0, __uuidof(ID3D11Resource),
                          reinterpret_cast<void**>(&pBackBuffer));
 
-  m_device->CreateRenderTargetView(pBackBuffer,
+  m_basics.m_device->CreateRenderTargetView(pBackBuffer,
                                    nullptr,
                                    &m_rtv);
   pBackBuffer->Release();
+
+
+  ResourceManager::instance().loadVertexShaderFromFile("C:/Users/oscar/Documents/GitHub/MotoresIDV7_EchoEngine/EchoEngine/bin/x64/TestVShader.hlsl",
+                                                       "TestVS");
+  ResourceManager::instance().loadPixelShaderFromFile("C:/Users/oscar/Documents/GitHub/MotoresIDV7_EchoEngine/EchoEngine/bin/x64/TestPShader.hlsl",
+                                                      "TestPS");
 
   return true;
 }
@@ -135,7 +144,7 @@ DX11GraphicsApi::initializeScreen()
   }
 
   // Create window
-  RECT rc = { 0, 0, 1280, 720 };
+  RECT rc = { 0, 0, screenWidth, screenHeight };
   AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
   m_win = reinterpret_cast<void*>(CreateWindow("TutorialWindowClass", 
                                                "EchoEngine", 
@@ -163,17 +172,57 @@ DX11GraphicsApi::processEvents()
 void DX11GraphicsApi::clearScreen(float r, float g, float b)
 {
   const float clearColor[] = {r,g,b};
-  m_deviceContext->ClearRenderTargetView(m_rtv, clearColor);
-  m_deviceContext->OMSetRenderTargets(1, &m_rtv, nullptr);
+  m_basics.m_deviceContext->ClearRenderTargetView(m_rtv, clearColor);
+  m_basics.m_deviceContext->OMSetRenderTargets(1, &m_rtv, nullptr);
+}
+void DX11GraphicsApi::setViewport(float width, float height)
+{
+  D3D11_VIEWPORT vp = {};
+  vp.Width = width;
+  vp.Height = height;
+  vp.MinDepth = 0;
+  vp.MaxDepth = 0;
+  vp.TopLeftX = 0;
+  vp.TopLeftY = 0;
+
+  m_basics.m_deviceContext->RSSetViewports(1u, &vp);
 }
 void
 DX11GraphicsApi::drawObject(SPtr<Object> obj)
 {
+  setViewport(screenWidth, screenHeight);
+
+  SPtr<VertexShader> vs =
+  ResourceManager::instance().getResourceVertexShader("TestVS");
+
+  vs->use();
+
+  SPtr<PixelShader> ps =
+  ResourceManager::instance().getResourcePixelShader("TestPS");
+
+  ps->use();
+
+
+  m_basics.m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+
+  SPtr<DX11Object> drawOb = std::reinterpret_pointer_cast<DX11Object>(obj);
+  const Vector<Pair<SPtr<Mesh>, uint8>>& m_meshes = drawOb->getModel()->getMeshes();
+  for (const Pair<SPtr<Mesh>, uint8>& m : m_meshes)
+  {
+    SPtr<DX11Mesh> drawMesh = std::reinterpret_pointer_cast<DX11Mesh>(m.first);
+    const uint32 stride = drawMesh->getVertexData()->getBatchSize();
+    const uint32 offset = 0u;
+    ID3D11Buffer* vertexBuff = drawMesh->getVertexBuffer();
+    m_basics.m_deviceContext->IASetVertexBuffers(0u, 1u, &vertexBuff, &stride, &offset);
+
+    m_basics.m_deviceContext->Draw(drawMesh->getVertexData()->getDataSize() / drawMesh->getVertexData()->getBatchSize(), 0u);
+  }
 }
 void
 DX11GraphicsApi::present()
 {
-  m_swapChain->Present(1u, 0u);
+  m_basics.m_swapChain->Present(1u, 0u);
 }
 
 EE_EXTERN EE_PLUGIN_EXPORT void

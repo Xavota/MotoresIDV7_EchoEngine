@@ -60,7 +60,7 @@ bool BaseAppTest1::init()
     Vector3f(1.0f, 1.0f, 1.0f)
   );
 
-  return false;
+  return true;
 }
 
 void BaseAppTest1::update(float deltaTime)
@@ -69,7 +69,7 @@ void BaseAppTest1::update(float deltaTime)
 
 void BaseAppTest1::render()
 {
-  GraphicsApi::instance().clearScreen(0.0f, 0.0f, 0.0f);
+  GraphicsApi::instance().clearScreen(1.0f, 0.0f, 0.0f);
 
   GraphicsApi::instance().drawObject(m_triangle);
 
