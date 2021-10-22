@@ -103,9 +103,13 @@ DX11GraphicsApi::initialize()
   pBackBuffer->Release();
 
 
-  ResourceManager::instance().loadVertexShaderFromFile("C:/Users/oscar/Documents/GitHub/MotoresIDV7_EchoEngine/EchoEngine/bin/x64/TestVShader.hlsl",
+  /*ResourceManager::instance().loadVertexShaderFromFile("C:/Users/oscar/Documents/GitHub/MotoresIDV7_EchoEngine/EchoEngine/bin/x64/TestVShader.hlsl",
                                                        "TestVS");
   ResourceManager::instance().loadPixelShaderFromFile("C:/Users/oscar/Documents/GitHub/MotoresIDV7_EchoEngine/EchoEngine/bin/x64/TestPShader.hlsl",
+                                                      "TestPS");*/
+  ResourceManager::instance().loadVertexShaderFromFile("C:/Users/Alumno/Documents/GitHub/MotoresIDV7_EchoEngine/EchoEngine/bin/x64/TestVShader.hlsl",
+                                                       "TestVS");
+  ResourceManager::instance().loadPixelShaderFromFile("C:/Users/Alumno/Documents/GitHub/MotoresIDV7_EchoEngine/EchoEngine/bin/x64/TestPShader.hlsl",
                                                       "TestPS");
 
   return true;
