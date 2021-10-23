@@ -94,6 +94,8 @@ DX11VertexShader::compileFromFile(const String& fileName)
   bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
   bd.CPUAccessFlags = 0;
   basics->m_device->CreateBuffer(&bd, NULL, &m_matrixBuffer);
+  basics->m_device->CreateBuffer(&bd, NULL, &m_viewBuffer);
+  basics->m_device->CreateBuffer(&bd, NULL, &m_projBuffer);
 
   return true;
 }
@@ -202,6 +204,7 @@ DX11VertexShader::createInputLayout(ID3DBlob* pShaderBlob)
   pVertexShaderReflection->Release();
   return hr;
 }
+
 void DX11VertexShader::setModelMatrix(const Matrix4f& model)
 {
   DX11Basics* basics =
@@ -215,15 +218,15 @@ void DX11VertexShader::setViewMatrix(const Matrix4f& view)
   DX11Basics* basics =
   reinterpret_cast<DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
-  basics->m_deviceContext->UpdateSubresource(m_matrixBuffer, 0u, NULL, &view, 0u, 0u);
-  basics->m_deviceContext->VSSetConstantBuffers(1u, 1u, &m_matrixBuffer);  
+  basics->m_deviceContext->UpdateSubresource(m_viewBuffer, 0u, NULL, &view, 0u, 0u);
+  basics->m_deviceContext->VSSetConstantBuffers(1u, 1u, &m_viewBuffer);
 }
 void DX11VertexShader::setProjectionMatrix(const Matrix4f& proj)
 {
   DX11Basics* basics =
   reinterpret_cast<DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
-  basics->m_deviceContext->UpdateSubresource(m_matrixBuffer, 0u, NULL, &proj, 0u, 0u);
-  basics->m_deviceContext->VSSetConstantBuffers(2u, 1u, &m_matrixBuffer);
+  basics->m_deviceContext->UpdateSubresource(m_projBuffer, 0u, NULL, &proj, 0u, 0u);
+  basics->m_deviceContext->VSSetConstantBuffers(2u, 1u, &m_projBuffer);
 }
 }
