@@ -59,7 +59,9 @@ public:
   * The fourth row of the matrix.
   */
   Matrix4f(const Vector4f& r0, const Vector4f& r1,
-           const Vector4f& r2, const Vector4f& r3);
+    const Vector4f& r2, const Vector4f& r3)
+    : m_r0(r0), m_r1(r1), m_r2(r2), m_r3(r3)
+  {}
 #endif
   /**
   * @brief
@@ -580,13 +582,6 @@ public:
   static const Matrix4f IDENTITY;
 };
 
-#ifdef VECTOR4
-Matrix4f::Matrix4f(const Vector4f& r0, const Vector4f& r1,
-  const Vector4f& r2, const Vector4f& r3)
-  : m_r0(r0), m_r1(r1), m_r2(r2), m_r3(r3)
-{
-}
-#endif
 
 
 
@@ -635,7 +630,10 @@ public:
   * The fourth row of the matrix.
   */
   Matrix4i(const Vector4i& r0, const Vector4i& r1,
-           const Vector4i& r2, const Vector4i& r3);
+    const Vector4i& r2, const Vector4i& r3)
+    : m_r0(r0), m_r1(r1), m_r2(r2), m_r3(r3)
+  {
+  }
 #endif
   /**
   * @brief
@@ -1002,14 +1000,6 @@ public:
   static const Matrix4i IDENTITY;
 };
 
-#ifdef VECTOR4
-Matrix4i::Matrix4i(const Vector4i& r0, const Vector4i& r1,
-  const Vector4i& r2, const Vector4i& r3)
-  : m_r0(r0), m_r1(r1), m_r2(r2), m_r3(r3)
-{
-}
-#endif
-
 
 
 /**
@@ -1057,7 +1047,10 @@ public:
   * The fourth row of the matrix.
   */
   Matrix4u(const Vector4u& r0, const Vector4u& r1,
-           const Vector4u& r2, const Vector4u& r3);
+    const Vector4u& r2, const Vector4u& r3)
+    : m_r0(r0), m_r1(r1), m_r2(r2), m_r3(r3)
+  {
+  }
 #endif
   /**
   * @brief
@@ -1423,12 +1416,4 @@ public:
   */
   static const Matrix4u IDENTITY;
 };
-
-#ifdef VECTOR4
-Matrix4u::Matrix4u(const Vector4u& r0, const Vector4u& r1,
-  const Vector4u& r2, const Vector4u& r3)
-  : m_r0(r0), m_r1(r1), m_r2(r2), m_r3(r3)
-{
-}
-#endif
 }

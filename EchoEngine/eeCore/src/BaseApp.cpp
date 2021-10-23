@@ -38,7 +38,7 @@ BaseApp::mainLoop()
   while (GraphicsApi::instance().appIsRunning())
   {
     processEvents();
-    update(0.0f);
+    update(0.016f);
     render();
   }
 

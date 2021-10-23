@@ -25,6 +25,8 @@ Mesh::loadFromArray(const Vector<SimplexVertex>& vertices,
                         sizeof(uint16),
                         reinterpret_cast<const Byte*>(indices.data()));
 
+  m_indexCount = indices.size();
+
   constructBuffers();
 
   return true;
@@ -47,6 +49,8 @@ Mesh::loadFromArray(const Vector<SimpleVertex>& vertices,
   m_indexData->InitData(static_cast<uint32>(indices.size()) * sizeof(uint16),
                         sizeof(uint16),
                         reinterpret_cast<const Byte*>(indices.data()));
+
+  m_indexCount = indices.size();
 
   constructBuffers();
 
@@ -71,6 +75,8 @@ Mesh::loadFromArray(const Vector<ComplexVertex>& vertices,
                          sizeof(uint16),
                          reinterpret_cast<const Byte*>(indices.data()));
 
+  m_indexCount = indices.size();
+
   constructBuffers();
   return true;
 }
@@ -92,6 +98,8 @@ Mesh::loadFromArray(const Vector<SimpleAnimVertex>& vertices,
   m_indexData->InitData(static_cast<uint32>(indices.size()) * sizeof(uint16),
                         sizeof(uint16),
                         reinterpret_cast<const Byte*>(indices.data()));
+
+  m_indexCount = indices.size();
 
   constructBuffers();
   return true;
@@ -115,6 +123,8 @@ Mesh::loadFromArray(const Vector<ComplexAnimVertex>& vertices,
                         sizeof(uint16),
                         reinterpret_cast<const Byte*>(indices.data()));
 
+  m_indexCount = indices.size();
+
   constructBuffers();
   return true;
 }
@@ -136,6 +146,8 @@ Mesh::loadFromArray(const Vector<SimplexVertex>& vertices,
   m_indexData->InitData(static_cast<uint32>(indices.size()) * sizeof(uint32),
                         sizeof(uint32),
                         reinterpret_cast<const Byte*>(indices.data()));
+
+  m_indexCount = indices.size();
 
   constructBuffers();
 
@@ -160,6 +172,8 @@ Mesh::loadFromArray(const Vector<SimpleVertex>& vertices,
                         sizeof(uint32),
                         reinterpret_cast<const Byte*>(indices.data()));
 
+  m_indexCount = indices.size();
+
   constructBuffers();
 
   return true;
@@ -183,6 +197,8 @@ Mesh::loadFromArray(const Vector<ComplexVertex>& vertices,
                         sizeof(uint32),
                         reinterpret_cast<const Byte*>(indices.data()));
 
+  m_indexCount = indices.size();
+
   constructBuffers();
   return true;
 }
@@ -205,6 +221,8 @@ Mesh::loadFromArray(const Vector<SimpleAnimVertex>& vertices,
                         sizeof(uint32),
                         reinterpret_cast<const Byte*>(indices.data()));
 
+  m_indexCount = indices.size();
+
   constructBuffers();
   return true;
 }
@@ -226,6 +244,8 @@ Mesh::loadFromArray(const Vector<ComplexAnimVertex>& vertices,
   m_indexData->InitData(static_cast<uint32>(indices.size()) * sizeof(uint32),
                         sizeof(uint32),
                         reinterpret_cast<const Byte*>(indices.data()));
+
+  m_indexCount = indices.size();
 
   constructBuffers();
   return true;

@@ -22,6 +22,21 @@ DX11Mesh::constructBuffers()
   {
     return false;
   }
+
+  ZeroMemory(&bd, sizeof(bd));
+  bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+  bd.Usage = D3D11_USAGE_DEFAULT;
+  bd.CPUAccessFlags = 0;
+  bd.MiscFlags = 0u;
+  bd.ByteWidth = m_indexData->getDataSize();
+  bd.StructureByteStride = m_indexData->getBatchSize();
+  ZeroMemory(&sd, sizeof(sd));
+  sd.pSysMem = m_indexData->getData().data();
+  hr = basics->m_device->CreateBuffer(&bd, &sd, &m_indexBuffer);
+  if (FAILED(hr))
+  {
+    return false;
+  }
 }
 ID3D11Buffer* 
 DX11Mesh::getVertexBuffer()

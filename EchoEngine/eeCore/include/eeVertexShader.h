@@ -17,6 +17,14 @@ public:
   virtual void
   use() {}
 
+  virtual void
+  setModelMatrix(const Matrix4f& /*model*/) {}
+  virtual void
+  setViewMatrix(const Matrix4f& /*view*/) {}
+  virtual void
+  setProjectionMatrix(const Matrix4f& /*proj*/) {}
+
+
  private:
   String m_shaderString;
 };

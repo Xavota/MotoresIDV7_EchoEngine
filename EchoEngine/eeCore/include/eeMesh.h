@@ -66,9 +66,17 @@ class EE_CORE_EXPORT Mesh
   virtual const SPtr<Buffer>
   getIndexData() const;
 
+  FORCEINLINE uint32
+  getIndexCount() const
+  {
+    return m_indexCount;
+  }
+
  protected:
   SPtr<Buffer> m_vertexData;
   SPtr<Buffer> m_indexData;
+
+  uint32 m_indexCount = 0u;
 };
 template<uint32 Size>
 FORCEINLINE bool 
@@ -90,6 +98,8 @@ Mesh::loadFromArray(const Vector<SimpleBigAnimVertex<Size>>& vertices,
   m_indexData->InitData(static_cast<uint32>(indices.size()) * sizeof(uint16),
                         sizeof(uint16),
                         reinterpret_cast<const Byte*>(indices.data()));
+
+  m_indexCount = indices.size();
 
   constructBuffers();
   return true;
@@ -114,6 +124,8 @@ Mesh::loadFromArray(const Vector<ComplexBigAnimVertex<Size>>& vertices,
   m_indexData->InitData(static_cast<uint32>(indices.size()) * sizeof(uint16),
                         sizeof(uint16),
                         reinterpret_cast<const Byte*>(indices.data()));
+
+  m_indexCount = indices.size();
 
   constructBuffers();
   return true;
@@ -139,6 +151,8 @@ Mesh::loadFromArray(const Vector<SimpleBigAnimVertex<Size>>& vertices,
                         sizeof(uint32),
                         reinterpret_cast<const Byte*>(indices.data()));
 
+  m_indexCount = indices.size();
+
   constructBuffers();
   return true;
 }
@@ -162,6 +176,8 @@ Mesh::loadFromArray(const Vector<ComplexBigAnimVertex<Size>>& vertices,
   m_indexData->InitData(static_cast<uint32>(indices.size()) * sizeof(uint32),
                         sizeof(uint32),
                         reinterpret_cast<const Byte*>(indices.data()));
+
+  m_indexCount = indices.size();
 
   constructBuffers();
   return true;

@@ -36,5 +36,6 @@ class BaseAppTest1 : public BaseApp
 
  private:
   SPtr<Object> m_triangle;
+  SPtr<Object> m_cube;
 };
 

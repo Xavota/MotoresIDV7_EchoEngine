@@ -3,6 +3,8 @@
 #include <d3dcompiler.h>
 #include <D3DX11async.h>
 
+#include <eeMatrix4.h>
+
 namespace eeEngineSDK {
 DX11VertexShader::~DX11VertexShader()
 {
@@ -76,13 +78,22 @@ DX11VertexShader::compileFromFile(const String& fileName)
   }
 
 
-  hr = CreateInputLayout(pVSBlob);
+  hr = createInputLayout(pVSBlob);
   if (pVSBlob)
     pVSBlob->Release();
   if (FAILED(hr))
   {
     return false;
   }
+
+
+  D3D11_BUFFER_DESC bd;
+  ZeroMemory(&bd, sizeof(bd));
+  bd.Usage = D3D11_USAGE_DEFAULT;
+  bd.ByteWidth = sizeof(Matrix4f);
+  bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+  bd.CPUAccessFlags = 0;
+  basics->m_device->CreateBuffer(&bd, NULL, &m_matrixBuffer);
 
   return true;
 }
@@ -103,7 +114,7 @@ void DX11VertexShader::use()
 }
 
 HRESULT 
-DX11VertexShader::CreateInputLayout(ID3DBlob* pShaderBlob)
+DX11VertexShader::createInputLayout(ID3DBlob* pShaderBlob)
 {
   DX11Basics* basics =
   reinterpret_cast<DX11Basics*>(DX11GraphicsApi::instance().getBasics());
@@ -190,5 +201,29 @@ DX11VertexShader::CreateInputLayout(ID3DBlob* pShaderBlob)
   //Free allocation shader reflection memory
   pVertexShaderReflection->Release();
   return hr;
+}
+void DX11VertexShader::setModelMatrix(const Matrix4f& model)
+{
+  DX11Basics* basics =
+  reinterpret_cast<DX11Basics*>(DX11GraphicsApi::instance().getBasics());
+  
+  basics->m_deviceContext->UpdateSubresource(m_matrixBuffer, 0u, NULL, &model, 0u, 0u);
+  basics->m_deviceContext->VSSetConstantBuffers(0u, 1u, &m_matrixBuffer);
+}
+void DX11VertexShader::setViewMatrix(const Matrix4f& view)
+{
+  DX11Basics* basics =
+  reinterpret_cast<DX11Basics*>(DX11GraphicsApi::instance().getBasics());
+
+  basics->m_deviceContext->UpdateSubresource(m_matrixBuffer, 0u, NULL, &view, 0u, 0u);
+  basics->m_deviceContext->VSSetConstantBuffers(1u, 1u, &m_matrixBuffer);  
+}
+void DX11VertexShader::setProjectionMatrix(const Matrix4f& proj)
+{
+  DX11Basics* basics =
+  reinterpret_cast<DX11Basics*>(DX11GraphicsApi::instance().getBasics());
+
+  basics->m_deviceContext->UpdateSubresource(m_matrixBuffer, 0u, NULL, &proj, 0u, 0u);
+  basics->m_deviceContext->VSSetConstantBuffers(2u, 1u, &m_matrixBuffer);
 }
 }

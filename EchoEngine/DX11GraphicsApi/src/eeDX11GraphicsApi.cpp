@@ -4,6 +4,8 @@
 #include <windows.h>
 #include <eeCoreConfiguration.h>
 
+//#include <eeMath.h>
+
 namespace eeEngineSDK {
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -103,14 +105,20 @@ DX11GraphicsApi::initialize()
   pBackBuffer->Release();
 
 
-  /*ResourceManager::instance().loadVertexShaderFromFile("C:/Users/oscar/Documents/GitHub/MotoresIDV7_EchoEngine/EchoEngine/bin/x64/TestVShader.hlsl",
+  /*ResourceManager::instance().loadVertexShaderFromFile("C:/Users/oscar/Documents/GitHub/MotoresIDV7_EchoEngine/EchoEngine/TestVShader.hlsl",
                                                        "TestVS");
-  ResourceManager::instance().loadPixelShaderFromFile("C:/Users/oscar/Documents/GitHub/MotoresIDV7_EchoEngine/EchoEngine/bin/x64/TestPShader.hlsl",
+  ResourceManager::instance().loadPixelShaderFromFile("C:/Users/oscar/Documents/GitHub/MotoresIDV7_EchoEngine/EchoEngine/TestPShader.hlsl",
                                                       "TestPS");*/
-  ResourceManager::instance().loadVertexShaderFromFile("C:/Users/Alumno/Documents/GitHub/MotoresIDV7_EchoEngine/EchoEngine/bin/x64/TestVShader.hlsl",
-                                                       "TestVS");
-  ResourceManager::instance().loadPixelShaderFromFile("C:/Users/Alumno/Documents/GitHub/MotoresIDV7_EchoEngine/EchoEngine/bin/x64/TestPShader.hlsl",
-                                                      "TestPS");
+  if (!ResourceManager::instance().loadVertexShaderFromFile("C:/Users/Alumno/Documents/GitHub/MotoresIDV7_EchoEngine/EchoEngine/TestVShader.hlsl",
+    "TestVS"))
+  {
+    return false;
+  }
+  if (!ResourceManager::instance().loadPixelShaderFromFile("C:/Users/Alumno/Documents/GitHub/MotoresIDV7_EchoEngine/EchoEngine/TestPShader.hlsl",
+    "TestPS"))
+  {
+  return false;
+  }
 
   return true;
 }
@@ -219,8 +227,23 @@ DX11GraphicsApi::drawObject(SPtr<Object> obj)
     const uint32 offset = 0u;
     ID3D11Buffer* vertexBuff = drawMesh->getVertexBuffer();
     m_basics.m_deviceContext->IASetVertexBuffers(0u, 1u, &vertexBuff, &stride, &offset);
+    ID3D11Buffer* indexBuff = drawMesh->getIndexBuffer();
+    m_basics.m_deviceContext->IASetIndexBuffer(indexBuff, DXGI_FORMAT_R16_UINT, offset);
 
-    m_basics.m_deviceContext->Draw(drawMesh->getVertexData()->getDataSize() / drawMesh->getVertexData()->getBatchSize(), 0u);
+    vs->setModelMatrix(drawOb->getModelMatrix());
+
+    /*Matrix4f view = Matrix4f::viewMatrix(Vector3f(0.0f, 3.0f, -6.0f),
+                                         Vector3f(0.0f, 1.0f, 0.0f),
+                                         Vector3f(0.0f, 1.0f, 0.0f));
+    vs->setViewMatrix(view);*/
+
+    /*Matrix4f proj = Matrix4f::perspectiveMatrix(0.785398163f,
+                                                1.7777778f,
+                                                0.01f,
+                                                100.0f);
+    vs->setProjectionMatrix(proj);*/
+
+    m_basics.m_deviceContext->DrawIndexed(drawMesh->getIndexCount(), 0u, 0u);
   }
 }
 void

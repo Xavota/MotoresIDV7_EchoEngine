@@ -72,4 +72,10 @@ SPtr<Model> Object::getModel()
 {
   return m_model;
 }
+Matrix4f Object::getModelMatrix()
+{
+  return Matrix4f::translationMatrix(m_position) *
+         Matrix4f::rotationMatrix(m_rotation.getEuclidean()) *
+         Matrix4f::scaleMatrix(m_scale);
+}
 }

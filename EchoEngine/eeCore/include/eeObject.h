@@ -4,6 +4,8 @@
 #include "eeQuaternion.h"
 #include "eeModel.h"
 
+#include <eeMatrix4.h>
+
 namespace eeEngineSDK {
 class EE_CORE_EXPORT Object
 {
@@ -39,6 +41,9 @@ class EE_CORE_EXPORT Object
   setModel(const SPtr<Model>& model);
   virtual SPtr<Model>
   getModel();
+
+  virtual Matrix4f
+  getModelMatrix();
 
  protected:
   Vector3f m_position;
