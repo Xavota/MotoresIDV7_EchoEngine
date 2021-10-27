@@ -7,7 +7,7 @@
 namespace eeEngineSDK {
 struct SimplexVertex
 {
-  Vector3f position;
+  Vector4f position;
 };
 struct SimpleVertex
 {

@@ -105,7 +105,7 @@ DX11GraphicsApi::initialize()
   pBackBuffer->Release();
 
 
-  if (!ResourceManager::instance().loadVertexShaderFromFile("C:/Users/oscar/Documents/GitHub/MotoresIDV7_EchoEngine/EchoEngine/TestVShader.hlsl",
+  /*if (!ResourceManager::instance().loadVertexShaderFromFile("C:/Users/oscar/Documents/GitHub/MotoresIDV7_EchoEngine/EchoEngine/TestVShader.hlsl",
     "TestVS"))
   {
     return false;
@@ -114,8 +114,8 @@ DX11GraphicsApi::initialize()
     "TestPS"))
   {
     return false;
-  }
-  /*if (!ResourceManager::instance().loadVertexShaderFromFile("C:/Users/Alumno/Documents/GitHub/MotoresIDV7_EchoEngine/EchoEngine/TestVShader.hlsl",
+  }/**/
+  if (!ResourceManager::instance().loadVertexShaderFromFile("C:/Users/Alumno/Documents/GitHub/MotoresIDV7_EchoEngine/EchoEngine/TestVShader.hlsl",
     "TestVS"))
   {
     return false;
@@ -124,7 +124,7 @@ DX11GraphicsApi::initialize()
     "TestPS"))
   {
   return false;
-  }*/
+  }/**/
 
   return true;
 }
@@ -239,17 +239,17 @@ DX11GraphicsApi::drawObject(SPtr<Object> obj)
     vs->setModelMatrix(drawOb->getModelMatrix());
 
     Matrix4f view = Matrix4f::IDENTITY;
-    view = Matrix4f::viewMatrix(Vector3f(0.0f, 0.0f, -12.0f),
-                                Vector3f(0.0f, -1.0f, 0.0f),
+    view = Matrix4f::viewMatrix(Vector3f(0.0f, 3.0f, -6.0f),
+                                Vector3f(0.0f, 1.0f, 0.0f),
                                 Vector3f(0.0f, 1.0f, 0.0f));
-    vs->setViewMatrix(view);
+    vs->setViewMatrix(view.getTranspose());
 
     Matrix4f proj = Matrix4f::IDENTITY;
     proj = Matrix4f::perspectiveMatrix(0.785398163f,
                                        1.7777778f,
                                        0.01f,
                                        100.0f);
-    vs->setProjectionMatrix(proj);
+    vs->setProjectionMatrix(proj.getTranspose());
 
     m_basics.m_deviceContext->DrawIndexed(drawMesh->getIndexCount(), 0u, 0u);
   }

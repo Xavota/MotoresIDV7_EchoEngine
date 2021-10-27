@@ -7,6 +7,7 @@
 
 using eeEngineSDK::GraphicsApi;
 using eeEngineSDK::ResourceManager;
+using eeEngineSDK::Vector4f;
 using eeEngineSDK::Vector3f;
 using eeEngineSDK::Vector2f;
 using eeEngineSDK::Quaternion;
@@ -43,9 +44,9 @@ bool BaseAppTest1::init()
         (
           Vector<SimplexVertex>
           {
-            SimplexVertex{Vector3f(-1.0f,  0.5f,  0.0f)},
-            SimplexVertex{Vector3f(-0.01f,  0.5f,  0.0f)},
-            SimplexVertex{Vector3f(-0.01f, -0.5f,  0.0f)}
+            SimplexVertex{Vector4f(-1.0f ,  0.5f,  0.0f, 0.0f)},
+            SimplexVertex{Vector4f(-0.01f,  0.5f,  0.0f, 0.0f)},
+            SimplexVertex{Vector4f(-0.01f, -0.5f,  0.0f, 0.0f)}
           },
           Vector<uint16>
           {
@@ -71,43 +72,64 @@ bool BaseAppTest1::init()
         (
           Vector<SimplexVertex>
           {
-            SimplexVertex{Vector3f(-0.5f,  0.5f,  0.5f)},
-            SimplexVertex{Vector3f( 0.5f,  0.5f,  0.5f)},
-            SimplexVertex{Vector3f( 0.5f, -0.5f,  0.5f)},
-            SimplexVertex{Vector3f(-0.5f, -0.5f,  0.5f)},
-            SimplexVertex{Vector3f(-0.5f,  0.5f, -0.5f)},
-            SimplexVertex{Vector3f( 0.5f,  0.5f, -0.5f)},
-            SimplexVertex{Vector3f( 0.5f, -0.5f, -0.5f)},
-            SimplexVertex{Vector3f(-0.5f, -0.5f, -0.5f)}
+            SimplexVertex{Vector4f(-1.0f,  1.0f, -1.0f, 1.0f)},
+            SimplexVertex{Vector4f( 1.0f,  1.0f, -1.0f, 1.0f)},
+            SimplexVertex{Vector4f( 1.0f,  1.0f,  1.0f, 1.0f)},
+            SimplexVertex{Vector4f(-1.0f,  1.0f,  1.0f, 1.0f)},
+
+            SimplexVertex{Vector4f(-1.0f, -1.0f, -1.0f, 1.0f)},
+            SimplexVertex{Vector4f( 1.0f, -1.0f, -1.0f, 1.0f)},
+            SimplexVertex{Vector4f( 1.0f, -1.0f,  1.0f, 1.0f)},
+            SimplexVertex{Vector4f(-1.0f, -1.0f,  1.0f, 1.0f)},
+
+            SimplexVertex{Vector4f(-1.0f, -1.0f,  1.0f, 1.0f)},
+            SimplexVertex{Vector4f(-1.0f, -1.0f, -1.0f, 1.0f)},
+            SimplexVertex{Vector4f(-1.0f,  1.0f, -1.0f, 1.0f)},
+            SimplexVertex{Vector4f(-1.0f,  1.0f,  1.0f, 1.0f)},
+
+            SimplexVertex{Vector4f( 1.0f, -1.0f,  1.0f, 1.0f)},
+            SimplexVertex{Vector4f( 1.0f, -1.0f, -1.0f, 1.0f)},
+            SimplexVertex{Vector4f( 1.0f,  1.0f, -1.0f, 1.0f)},
+            SimplexVertex{Vector4f( 1.0f,  1.0f,  1.0f, 1.0f)},
+
+            SimplexVertex{Vector4f(-1.0f, -1.0f, -1.0f, 1.0f)},
+            SimplexVertex{Vector4f( 1.0f, -1.0f, -1.0f, 1.0f)},
+            SimplexVertex{Vector4f( 1.0f,  1.0f, -1.0f, 1.0f)},
+            SimplexVertex{Vector4f(-1.0f,  1.0f, -1.0f, 1.0f)},
+
+            SimplexVertex{Vector4f(-1.0f, -1.0f,  1.0f, 1.0f)},
+            SimplexVertex{Vector4f( 1.0f, -1.0f,  1.0f, 1.0f)},
+            SimplexVertex{Vector4f( 1.0f,  1.0f,  1.0f, 1.0f)},
+            SimplexVertex{Vector4f(-1.0f,  1.0f,  1.0f, 1.0f)}
           },
           Vector<uint16>
           {
-            0u, 1u, 2u, 
-            0u, 2u, 3u,
-            
-            1u, 5u, 6u,
-            1u, 6u, 2u,
+            3, 1, 0,
+            2, 1, 3,
 
-            5u, 4u, 7u,
-            5u, 7u, 6u,
+            6, 4, 5,
+            7, 4, 6,
 
-            4u, 0u, 3u,
-            4u, 3u, 7u,
+            11, 9, 8,
+            10, 9, 11,
 
-            4u, 5u, 1u,
-            4u, 1u, 0u,
+            14, 12, 13,
+            15, 12, 14,
 
-            3u, 2u, 6u,
-            3u, 6u, 7u
+            19, 17, 16,
+            18, 17, 19,
+
+            22, 20, 21,
+            23, 20, 22
           },
           "TestCubeMesh1"
         )
       },
       "TestCube"
     ),
-    Vector3f(0.5f, 0.0f, 0.0f),
+    Vector3f(0.0f, 0.0f, 0.0f),
     Quaternion(Vector3f(0.0f, 0.0f, 0.0f)),
-    Vector3f(0.5f, 0.5f, 0.5f)
+    Vector3f(1.0f, 1.0f, 1.0f)
   );
 
   return true;
@@ -116,7 +138,7 @@ bool BaseAppTest1::init()
 void BaseAppTest1::update(float deltaTime)
 {
   static Quaternion rot(Vector3f(0.0f, 0.0f, 0.0f));
-  rot = Quaternion((rot.getEuclidean() + Vector3f(deltaTime, 0.0f, deltaTime)));
+  rot = Quaternion((rot.getEuclidean() + Vector3f(deltaTime, 0.0f, 0.0f)));
   m_cube->setRotation(rot);
 }
 
@@ -124,7 +146,7 @@ void BaseAppTest1::render()
 {
   GraphicsApi::instance().clearScreen(1.0f, 0.0f, 1.0f);
 
-  GraphicsApi::instance().drawObject(m_triangle);
+  //GraphicsApi::instance().drawObject(m_triangle);
   GraphicsApi::instance().drawObject(m_cube);
 
   GraphicsApi::instance().present();

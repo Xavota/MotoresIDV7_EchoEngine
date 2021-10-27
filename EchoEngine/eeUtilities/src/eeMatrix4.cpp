@@ -133,7 +133,7 @@ Matrix4f Matrix4f::perspectiveMatrix(float FovAngleY,
   //float width = AspectRatio * height;
 
   return Matrix4f(
-      height / AspectRatio, 0, 0, 0,
+      1.81066/*height / AspectRatio */ , 0, 0, 0,
       0, height, 0, 0,
       0, 0, (FarZ / (FarZ - NearZ)), 1,
       0, 0, -FarZ / (FarZ - NearZ) * NearZ, 0
