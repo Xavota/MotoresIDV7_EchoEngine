@@ -1,4 +1,4 @@
-#include "BaseApp.h"
+#include "eeBaseApp.h"
 #include "eeCoreConfiguration.h"
 #include "eeDLLDynamics.h"
 #include "eeGraficsApi.h"
@@ -11,7 +11,7 @@ BaseApp::run()
   DLLDynamics api;
   api.initialize(graphicsApi + 
                  platformConfigPrefix + 
-                 dynamicLibSufix);
+                 dynamicLibSuffix);
 
   auto apiInit = api.getFunction("initPlugin");
   if (apiInit)
@@ -34,6 +34,16 @@ BaseApp::mainLoop()
     destroy();
     return 1;
   }
+  if (!initSystems())
+  {
+    destroy();
+    return 1;
+  }
+  if (!initResources())
+  {
+    destroy();
+    return 1;
+  }
 
   while (GraphicsApi::instance().appIsRunning())
   {
@@ -49,14 +59,18 @@ BaseApp::mainLoop()
 bool
 BaseApp::init()
 {
-  ResourceManager::startUp();
-
 
   if (!GraphicsApi::instance().initializeScreen())
     return false;
   if (!GraphicsApi::instance().initialize())
     return false;
 
+
+  return true;
+}
+bool BaseApp::initSystems()
+{
+  ResourceManager::startUp();
 
   return true;
 }

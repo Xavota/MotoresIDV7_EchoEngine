@@ -3,9 +3,9 @@
  * @file eeCapsule.h
  * @author Diego Castellanos
  * @date 28/09/21
- * @brief The capsule, a cylinder with two demispheres on it's ends.
+ * @brief The capsule, a cylinder with two semi spheres on it's ends.
  *        Defined by a center, the distance between the top and bottom
- *        and the radious of the demispheres the is also the radious of
+ *        and the radious of the semi spheres the is also the radious of
  *        the cylinder.
  *
  * @bug Not bug Known.
@@ -19,9 +19,9 @@
 namespace eeEngineSDK {
 /**
 * @brief
-* The capsule, a cylinder with two demispheres on it's ends.
+* The capsule, a cylinder with two semi spheres on it's ends.
 * Defined by a center, the distance between the top and bottom
-* and the radious of the demispheres the is also the radious of 
+* and the radious of the semi spheres the is also the radious of 
 * the cylinder.
 */
 class EE_UTILITY_EXPORT Capsule

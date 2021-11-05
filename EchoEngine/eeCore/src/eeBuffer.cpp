@@ -1,15 +1,27 @@
 #include "eeBuffer.h"
 
 namespace eeEngineSDK {
-void Buffer::InitData(uint32 dataSize, uint32 batchSize, const Byte* data)
+bool Buffer::initData(uint32 dataSize, uint32 batchSize, const Byte* data)
 {
-  if (!data)
-  {
-    return;
-  }
   m_data.resize(dataSize);
-  //m_data.insert(m_data.begin(), data, data + dataSize - 1);
-  memcpy(m_data.data(), data, dataSize);
   m_batchSize = batchSize;
+  if (data)
+  {
+    memcpy(m_data.data(), data, dataSize);
+    return true;
+  }
+
+  return true;
+}
+void Buffer::updateData(const Byte* data)
+{
+  if (data)
+  {
+    memcpy(m_data.data(), data, m_data.size());
+  }
+  else
+  {
+    memset(m_data.data(), 0, m_data.size());
+  }
 }
 }

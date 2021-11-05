@@ -1,7 +1,9 @@
 #include "eeDX11PixelShader.h"
 #include "eeDX11GraphicsApi.h"
+#pragma warning(push, 0)   
 #include <d3dcompiler.h>
 #include <D3DX11async.h>
+#pragma warning(pop)   
 
 eeEngineSDK::DX11PixelShader::~DX11PixelShader()
 {
@@ -13,8 +15,8 @@ eeEngineSDK::DX11PixelShader::~DX11PixelShader()
 
 bool eeEngineSDK::DX11PixelShader::compileFromFile(const String& fileName)
 {
-  DX11Basics* basics =
-  reinterpret_cast<DX11Basics*>(DX11GraphicsApi::instance().getBasics());
+  const DX11Basics* basics =
+  reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   HRESULT hr = S_OK;
 
@@ -57,14 +59,15 @@ bool eeEngineSDK::DX11PixelShader::compileFromFile(const String& fileName)
   return true;
 }
 
-bool eeEngineSDK::DX11PixelShader::compileFromString(const String& shaderString)
+bool eeEngineSDK::DX11PixelShader::compileFromString(const String& /*shaderString*/)
 {
   return false;
 }
 
 void eeEngineSDK::DX11PixelShader::use()
 {
-  DX11Basics* basics =
-  reinterpret_cast<DX11Basics*>(DX11GraphicsApi::instance().getBasics());
+  const DX11Basics* basics =
+  reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
+
   basics->m_deviceContext->PSSetShader(m_shader, NULL, 0);
 }

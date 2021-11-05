@@ -1,10 +1,11 @@
 /************************************************************************/
 /**
- * @file eeInput.h
+ * @file eeRenderTarget.h
  * @author Diego Castellanos
- * @date 25/10/21
+ * @date 23/10/21
  * @brief
- * The input manager for the api.
+ * The Render target for the graphic memory to paint on.
+ * It can be used as an input texture to.
  *
  * @bug Not bug Known.
  */
@@ -16,9 +17,10 @@
 namespace eeEngineSDK {
 /**
  * @brief
- * The input manager for the api.
+ * The Render target for the graphic memory to paint on.
+ * It can be used as an input texture to.
  */
-class EE_CORE_EXPORT Input
+class EE_CORE_EXPORT RenderTarget
 {
 };
 }

@@ -40,29 +40,29 @@ public:
   * The source from where the data is taken.
   */
   Matrix4f(float src[16]);
-#ifdef VECTOR4
-  /**
-  * @brief
-  * Custom constructor.
-  *
-  * @description
-  * Initializes the matrix with vectors,
-  * one for each row.
-  *
-  * @param r0
-  * The first row of the matrix.
-  * @param r1
-  * The second row of the matrix.
-  * @param r2
-  * The third row of the matrix.
-  * @param r3
-  * The fourth row of the matrix.
-  */
-  Matrix4f(const Vector4f& r0, const Vector4f& r1,
-    const Vector4f& r2, const Vector4f& r3)
-    : m_r0(r0), m_r1(r1), m_r2(r2), m_r3(r3)
-  {}
-#endif
+//#ifdef VECTOR4
+//  /**
+//  * @brief
+//  * Custom constructor.
+//  *
+//  * @description
+//  * Initializes the matrix with vectors,
+//  * one for each row.
+//  *
+//  * @param r0
+//  * The first row of the matrix.
+//  * @param r1
+//  * The second row of the matrix.
+//  * @param r2
+//  * The third row of the matrix.
+//  * @param r3
+//  * The fourth row of the matrix.
+//  */
+//  Matrix4f(const Vector4f& r0, const Vector4f& r1,
+//    const Vector4f& r2, const Vector4f& r3)
+//    : m_r0(r0), m_r1(r1), m_r2(r2), m_r3(r3)
+//  {}
+//#endif
   /**
   * @brief
   * Custom constructor.
@@ -611,30 +611,30 @@ public:
   * The source from where the data is taken.
   */
   Matrix4i(int32 src[16]);
-#ifdef VECTOR4
-  /**
-  * @brief
-  * Custom constructor.
-  *
-  * @description
-  * Initializes the matrix with vectors,
-  * one for each row.
-  *
-  * @param r0
-  * The first row of the matrix.
-  * @param r1
-  * The second row of the matrix.
-  * @param r2
-  * The third row of the matrix.
-  * @param r3
-  * The fourth row of the matrix.
-  */
-  Matrix4i(const Vector4i& r0, const Vector4i& r1,
-    const Vector4i& r2, const Vector4i& r3)
-    : m_r0(r0), m_r1(r1), m_r2(r2), m_r3(r3)
-  {
-  }
-#endif
+//#ifdef VECTOR4
+//  /**
+//  * @brief
+//  * Custom constructor.
+//  *
+//  * @description
+//  * Initializes the matrix with vectors,
+//  * one for each row.
+//  *
+//  * @param r0
+//  * The first row of the matrix.
+//  * @param r1
+//  * The second row of the matrix.
+//  * @param r2
+//  * The third row of the matrix.
+//  * @param r3
+//  * The fourth row of the matrix.
+//  */
+//  Matrix4i(const Vector4i& r0, const Vector4i& r1,
+//    const Vector4i& r2, const Vector4i& r3)
+//    : m_r0(r0), m_r1(r1), m_r2(r2), m_r3(r3)
+//  {
+//  }
+//#endif
   /**
   * @brief
   * Custom constructor.
@@ -1028,30 +1028,30 @@ public:
   * The source from where the data is taken.
   */
   Matrix4u(uint32 src[16]);
-#ifdef VECTOR4
-  /**
-  * @brief
-  * Custom constructor.
-  *
-  * @description
-  * Initializes the matrix with vectors,
-  * one for each row.
-  *
-  * @param r0
-  * The first row of the matrix.
-  * @param r1
-  * The second row of the matrix.
-  * @param r2
-  * The third row of the matrix.
-  * @param r3
-  * The fourth row of the matrix.
-  */
-  Matrix4u(const Vector4u& r0, const Vector4u& r1,
-    const Vector4u& r2, const Vector4u& r3)
-    : m_r0(r0), m_r1(r1), m_r2(r2), m_r3(r3)
-  {
-  }
-#endif
+//#ifdef VECTOR4
+//  /**
+//  * @brief
+//  * Custom constructor.
+//  *
+//  * @description
+//  * Initializes the matrix with vectors,
+//  * one for each row.
+//  *
+//  * @param r0
+//  * The first row of the matrix.
+//  * @param r1
+//  * The second row of the matrix.
+//  * @param r2
+//  * The third row of the matrix.
+//  * @param r3
+//  * The fourth row of the matrix.
+//  */
+//  Matrix4u(const Vector4u& r0, const Vector4u& r1,
+//    const Vector4u& r2, const Vector4u& r3)
+//    : m_r0(r0), m_r1(r1), m_r2(r2), m_r3(r3)
+//  {
+//  }
+//#endif
   /**
   * @brief
   * Custom constructor.

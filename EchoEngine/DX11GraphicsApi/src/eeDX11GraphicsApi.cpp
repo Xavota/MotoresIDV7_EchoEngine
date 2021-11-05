@@ -1,7 +1,8 @@
 #include "eeDX11GraphicsApi.h"
-#include "eeDX11Object.h"
 #include "eeResourceManager.h"
+#pragma warning(push, 0)   
 #include <windows.h>
+#pragma warning(pop)   
 #include <eeCoreConfiguration.h>
 
 //#include <eeMath.h>
@@ -30,6 +31,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
   return 0;
 }
 
+
 DX11GraphicsApi::~DX11GraphicsApi()
 {
   if (m_basics.m_device)
@@ -55,8 +57,21 @@ DX11GraphicsApi::initialize()
 {
   std::cout << "Initialized form DX11" << std::endl;
 
-  DXGI_SWAP_CHAIN_DESC sd = {};
+  if (!GraphicsApi::initialize())
+  {
+    return false;
+  }
 
+
+
+  RECT rc = {};
+  GetClientRect(reinterpret_cast<HWND>(m_win), &rc);
+  int32 width = rc.right - rc.left;
+  int32 height = rc.bottom - rc.top;
+
+
+
+  DXGI_SWAP_CHAIN_DESC sd = {};
   sd.BufferDesc.Width = 0;
   sd.BufferDesc.Height = 0;
   sd.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
@@ -95,6 +110,11 @@ DX11GraphicsApi::initialize()
   }
 
 
+
+  setViewport(static_cast<float>(width), static_cast<float>(height));
+
+
+
   ID3D11Resource* pBackBuffer = nullptr;
   m_basics.m_swapChain->GetBuffer(0, __uuidof(ID3D11Resource),
                          reinterpret_cast<void**>(&pBackBuffer));
@@ -105,26 +125,42 @@ DX11GraphicsApi::initialize()
   pBackBuffer->Release();
 
 
-  /*if (!ResourceManager::instance().loadVertexShaderFromFile("C:/Users/oscar/Documents/GitHub/MotoresIDV7_EchoEngine/EchoEngine/TestVShader.hlsl",
-    "TestVS"))
-  {
+
+  ID3D11Texture2D* depthStencil = nullptr;
+  D3D11_TEXTURE2D_DESC descDepth;
+  ZeroMemory(&descDepth, sizeof(descDepth));
+  descDepth.Width = width;
+  descDepth.Height = height;
+  descDepth.MipLevels = 1;
+  descDepth.ArraySize = 1;
+  descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+  descDepth.SampleDesc.Count = 1;
+  descDepth.SampleDesc.Quality = 0;
+  descDepth.Usage = D3D11_USAGE_DEFAULT;
+  descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+  descDepth.CPUAccessFlags = 0;
+  descDepth.MiscFlags = 0;
+  hr = m_basics.m_device->CreateTexture2D(&descDepth, NULL, &depthStencil);
+  if (FAILED(hr))
     return false;
-  }
-  if (!ResourceManager::instance().loadPixelShaderFromFile("C:/Users/oscar/Documents/GitHub/MotoresIDV7_EchoEngine/EchoEngine/TestPShader.hlsl",
-    "TestPS"))
-  {
+
+  // Create the depth stencil view
+  D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
+  ZeroMemory(&descDSV, sizeof(descDSV));
+  descDSV.Format = descDepth.Format;
+  descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+  descDSV.Texture2D.MipSlice = 0;
+  hr = m_basics.m_device->CreateDepthStencilView(depthStencil,
+                                                 &descDSV,
+                                                 &m_pDepthStencilView);
+  if (FAILED(hr))
     return false;
-  }/**/
-  if (!ResourceManager::instance().loadVertexShaderFromFile("C:/Users/Alumno/Documents/GitHub/MotoresIDV7_EchoEngine/EchoEngine/TestVShader.hlsl",
-    "TestVS"))
-  {
-    return false;
-  }
-  if (!ResourceManager::instance().loadPixelShaderFromFile("C:/Users/Alumno/Documents/GitHub/MotoresIDV7_EchoEngine/EchoEngine/TestPShader.hlsl",
-    "TestPS"))
-  {
-  return false;
-  }/**/
+
+  depthStencil->Release();
+
+
+  m_basics.m_deviceContext->IASetPrimitiveTopology(
+                                        D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
   return true;
 }
@@ -184,16 +220,15 @@ DX11GraphicsApi::initializeScreen()
   return true;
 }
 void
-DX11GraphicsApi::processEvents()
+DX11GraphicsApi::clearScreen(float r, float g, float b)
 {
-}
-void DX11GraphicsApi::clearScreen(float r, float g, float b)
-{
-  const float clearColor[] = {r,g,b};
+  float clearColor[4] = {r,g,b,1.0f};
   m_basics.m_deviceContext->ClearRenderTargetView(m_rtv, clearColor);
-  m_basics.m_deviceContext->OMSetRenderTargets(1, &m_rtv, nullptr);
+  m_basics.m_deviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+  m_basics.m_deviceContext->OMSetRenderTargets(1, &m_rtv, m_pDepthStencilView);
 }
-void DX11GraphicsApi::setViewport(float width, float height)
+void
+DX11GraphicsApi::setViewport(float width, float height)
 {
   D3D11_VIEWPORT vp = {};
   vp.Width = width;
@@ -206,59 +241,16 @@ void DX11GraphicsApi::setViewport(float width, float height)
   m_basics.m_deviceContext->RSSetViewports(1u, &vp);
 }
 void
-DX11GraphicsApi::drawObject(SPtr<Object> obj)
+DX11GraphicsApi::drawIndexed(int32 indicesCount) const
 {
-  setViewport(screenWidth, screenHeight);
-
-  SPtr<VertexShader> vs =
-  ResourceManager::instance().getResourceVertexShader("TestVS");
-
-  vs->use();
-
-  SPtr<PixelShader> ps =
-  ResourceManager::instance().getResourcePixelShader("TestPS");
-
-  ps->use();
-
-
-  m_basics.m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-
-  SPtr<DX11Object> drawOb = std::reinterpret_pointer_cast<DX11Object>(obj);
-  const Vector<Pair<SPtr<Mesh>, uint8>>& m_meshes = drawOb->getModel()->getMeshes();
-  for (const Pair<SPtr<Mesh>, uint8>& m : m_meshes)
-  {
-    SPtr<DX11Mesh> drawMesh = std::reinterpret_pointer_cast<DX11Mesh>(m.first);
-    const uint32 stride = drawMesh->getVertexData()->getBatchSize();
-    const uint32 offset = 0u;
-    ID3D11Buffer* vertexBuff = drawMesh->getVertexBuffer();
-    m_basics.m_deviceContext->IASetVertexBuffers(0u, 1u, &vertexBuff, &stride, &offset);
-    ID3D11Buffer* indexBuff = drawMesh->getIndexBuffer();
-    m_basics.m_deviceContext->IASetIndexBuffer(indexBuff, DXGI_FORMAT_R16_UINT, offset);
-
-    vs->setModelMatrix(drawOb->getModelMatrix());
-
-    Matrix4f view = Matrix4f::IDENTITY;
-    view = Matrix4f::viewMatrix(Vector3f(0.0f, 3.0f, -6.0f),
-                                Vector3f(0.0f, 1.0f, 0.0f),
-                                Vector3f(0.0f, 1.0f, 0.0f));
-    vs->setViewMatrix(view.getTranspose());
-
-    Matrix4f proj = Matrix4f::IDENTITY;
-    proj = Matrix4f::perspectiveMatrix(0.785398163f,
-                                       1.7777778f,
-                                       0.01f,
-                                       100.0f);
-    vs->setProjectionMatrix(proj.getTranspose());
-
-    m_basics.m_deviceContext->DrawIndexed(drawMesh->getIndexCount(), 0u, 0u);
-  }
+  m_basics.m_deviceContext->DrawIndexed(indicesCount, 0u, 0u);
 }
 void
 DX11GraphicsApi::present()
 {
   m_basics.m_swapChain->Present(1u, 0u);
 }
+
 
 EE_EXTERN EE_PLUGIN_EXPORT void
 initPlugin()

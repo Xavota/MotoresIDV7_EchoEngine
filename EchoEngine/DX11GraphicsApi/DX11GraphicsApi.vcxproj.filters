@@ -22,11 +22,21 @@
     <ClInclude Include="include\eePrerequisitesDX11.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\eeDX11Object.h" />
-    <ClInclude Include="include\eeDX11Mesh.h" />
-    <ClInclude Include="include\eeDX11Model.h" />
-    <ClInclude Include="include\eeDX11VertexShader.h" />
-    <ClInclude Include="include\eeDX11PixelShader.h" />
+    <ClInclude Include="include\eeDX11ConstantBuffer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeDX11IndexBuffer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeDX11PixelShader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeDX11VertexBuffer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeDX11VertexShader.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeDX11Texture.cpp">
@@ -35,10 +45,20 @@
     <ClCompile Include="src\eeDX11GraphicsApi.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\eeDX11Object.cpp" />
-    <ClCompile Include="src\eeDX11Mesh.cpp" />
-    <ClCompile Include="src\eeDX11Model.cpp" />
-    <ClCompile Include="src\eeDX11VertexShader.cpp" />
-    <ClCompile Include="src\eeDX11PixelShader.cpp" />
+    <ClCompile Include="src\eeDX11ConstantBuffer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeDX11IndexBuffer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeDX11PixelShader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeDX11VertexBuffer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeDX11VertexShader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -18,7 +18,7 @@ ResourceManager::loadTextureFromFile(const String& fileName,
     return nullptr;
   }
 
-  if (fileName != "")
+  if (fileName == "")
   {
     std::cout << "Empty info loading model" << std::endl;
     return nullptr;
@@ -49,7 +49,7 @@ ResourceManager::loadModelFromFile(const String& fileName,
     return nullptr;
   }
 
-  SPtr<Model> model = GraphicsApi::instance().getModelPtr();
+  SPtr<Model> model = std::make_shared<Model>();
   if (!model->loadFromFile(fileName))
   {
     return nullptr;
@@ -74,7 +74,7 @@ ResourceManager::loadModelFromMeshesArray(const Vector<SPtr<Mesh>>& meshes,
     return nullptr;
   }
 
-  SPtr<Model> model = GraphicsApi::instance().getModelPtr();
+  SPtr<Model> model = std::make_shared<Model>();
   if (!model->loadFromMeshes(meshes))
   {
     return nullptr;
@@ -100,7 +100,7 @@ ResourceManager::loadModelFromMeshesArray(const Vector<Pair<SPtr<Mesh>, uint8>>&
     return nullptr;
   }
 
-  SPtr<Model> model = GraphicsApi::instance().getModelPtr();
+  SPtr<Model> model = std::make_shared<Model>();
   if (!model->loadFromMeshes(meshes, textures))
   {
     return nullptr;
@@ -111,206 +111,6 @@ ResourceManager::loadModelFromMeshesArray(const Vector<Pair<SPtr<Mesh>, uint8>>&
 }
 
 
-SPtr<Mesh> 
-ResourceManager::loadMeshFromVertexArray(const Vector<SimplexVertex>& vertices,
-                                         const Vector<uint16>& indices,
-                                         const String resourceName)
-{
-  if (m_meshes.find(resourceName) != m_meshes.end())
-  {
-    std::cout << "Resource already with this name" << std::endl;
-    return nullptr;
-  }
-
-  SPtr<Mesh> mesh = GraphicsApi::instance().getMeshPtr();
-  if (!mesh->loadFromArray(vertices, indices))
-  {
-    return nullptr;
-  }
-
-  m_meshes.insert(make_pair(resourceName, mesh));
-  return m_meshes[resourceName];
-}
-SPtr<Mesh> 
-ResourceManager::loadMeshFromVertexArray(const Vector<SimpleVertex>& vertices, 
-                                         const Vector<uint16>& indices, 
-                                         const String resourceName)
-{
-  if (m_meshes.find(resourceName) != m_meshes.end())
-  {
-    std::cout << "Resource already with this name" << std::endl;
-    return nullptr;
-  }
-
-  SPtr<Mesh> mesh = GraphicsApi::instance().getMeshPtr();
-  if (!mesh->loadFromArray(vertices, indices))
-  {
-    return nullptr;
-  }
-
-  m_meshes.insert(make_pair(resourceName, mesh));
-  return m_meshes[resourceName];
-}
-SPtr<Mesh>
-ResourceManager::loadMeshFromVertexArray(const Vector<ComplexVertex>& vertices,
-                                         const Vector<uint16>& indices, 
-                                         const String resourceName)
-{
-  if (m_meshes.find(resourceName) != m_meshes.end())
-  {
-    std::cout << "Resource already with this name" << std::endl;
-    return nullptr;
-  }
-
-  SPtr<Mesh> mesh = GraphicsApi::instance().getMeshPtr();
-  if (!mesh->loadFromArray(vertices, indices))
-  {
-    return nullptr;
-  }
-
-  m_meshes.insert(make_pair(resourceName, mesh));
-  return m_meshes[resourceName];
-}
-SPtr<Mesh>
-ResourceManager::loadMeshFromVertexArray(const Vector<SimpleAnimVertex>& vertices,
-                                         const Vector<uint16>& indices, 
-                                         const String resourceName)
-{
-  if (m_meshes.find(resourceName) != m_meshes.end())
-  {
-    std::cout << "Resource already with this name" << std::endl;
-    return nullptr;
-  }
-
-  SPtr<Mesh> mesh = GraphicsApi::instance().getMeshPtr();
-  if (!mesh->loadFromArray(vertices, indices))
-  {
-    return nullptr;
-  }
-
-  m_meshes.insert(make_pair(resourceName, mesh));
-  return m_meshes[resourceName];
-}
-SPtr<Mesh>
-ResourceManager::loadMeshFromVertexArray(const Vector<ComplexAnimVertex>& vertices,
-                                         const Vector<uint16>& indices, 
-                                         const String resourceName)
-{
-  if (m_meshes.find(resourceName) != m_meshes.end())
-  {
-    std::cout << "Resource already with this name" << std::endl;
-    return nullptr;
-  }
-
-  SPtr<Mesh> mesh = GraphicsApi::instance().getMeshPtr();
-  if (!mesh->loadFromArray(vertices, indices))
-  {
-    return nullptr;
-  }
-
-  m_meshes.insert(make_pair(resourceName, mesh));
-  return m_meshes[resourceName];
-}
-SPtr<Mesh>
-ResourceManager::loadMeshFromVertexArray(const Vector<SimplexVertex>& vertices,
-                                         const Vector<uint32>& indices, 
-                                         const String resourceName)
-{
-  if (m_meshes.find(resourceName) != m_meshes.end())
-  {
-    std::cout << "Resource already with this name" << std::endl;
-    return nullptr;
-  }
-
-  SPtr<Mesh> mesh = GraphicsApi::instance().getMeshPtr();
-  if (!mesh->loadFromArray(vertices, indices))
-  {
-    return nullptr;
-  }
-
-  m_meshes.insert(make_pair(resourceName, mesh));
-  return m_meshes[resourceName];
-}
-SPtr<Mesh>
-ResourceManager::loadMeshFromVertexArray(const Vector<SimpleVertex>& vertices,
-                                         const Vector<uint32>& indices, 
-                                         const String resourceName)
-{
-  if (m_meshes.find(resourceName) != m_meshes.end())
-  {
-    std::cout << "Resource already with this name" << std::endl;
-    return nullptr;
-  }
-
-  SPtr<Mesh> mesh = GraphicsApi::instance().getMeshPtr();
-  if (!mesh->loadFromArray(vertices, indices))
-  {
-    return nullptr;
-  }
-
-  m_meshes.insert(make_pair(resourceName, mesh));
-  return m_meshes[resourceName];
-}
-SPtr<Mesh>
-ResourceManager::loadMeshFromVertexArray(const Vector<ComplexVertex>& vertices,
-                                         const Vector<uint32>& indices, 
-                                         const String resourceName)
-{
-  if (m_meshes.find(resourceName) != m_meshes.end())
-  {
-    std::cout << "Resource already with this name" << std::endl;
-    return nullptr;
-  }
-
-  SPtr<Mesh> mesh = GraphicsApi::instance().getMeshPtr();
-  if (!mesh->loadFromArray(vertices, indices))
-  {
-    return nullptr;
-  }
-
-  m_meshes.insert(make_pair(resourceName, mesh));
-  return m_meshes[resourceName];
-}
-SPtr<Mesh>
-ResourceManager::loadMeshFromVertexArray(const Vector<SimpleAnimVertex>& vertices,
-                                         const Vector<uint32>& indices, 
-                                         const String resourceName)
-{
-  if (m_meshes.find(resourceName) != m_meshes.end())
-  {
-    std::cout << "Resource already with this name" << std::endl;
-    return nullptr;
-  }
-
-  SPtr<Mesh> mesh = GraphicsApi::instance().getMeshPtr();
-  if (!mesh->loadFromArray(vertices, indices))
-  {
-    return nullptr;
-  }
-
-  m_meshes.insert(make_pair(resourceName, mesh));
-  return m_meshes[resourceName];
-}
-SPtr<Mesh>
-ResourceManager::loadMeshFromVertexArray(const Vector<ComplexAnimVertex>& vertices,
-                                         const Vector<uint32>& indices, 
-                                         const String& resourceName)
-{
-  if (m_meshes.find(resourceName) != m_meshes.end())
-  {
-    std::cout << "Resource already with this name" << std::endl;
-    return nullptr;
-  }
-
-  SPtr<Mesh> mesh = GraphicsApi::instance().getMeshPtr();
-  if (!mesh->loadFromArray(vertices, indices))
-  {
-    return nullptr;
-  }
-
-  m_meshes.insert(make_pair(resourceName, mesh));
-  return m_meshes[resourceName];
-}
 
 SPtr<VertexShader> 
 ResourceManager::loadVertexShaderFromFile(const String& fileName, 

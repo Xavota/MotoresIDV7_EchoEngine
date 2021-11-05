@@ -18,15 +18,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\eCoreTests.cpp">
+    <ClCompile Include="src\eeCoreTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\BaseAppTest1.cpp">
+    <ClCompile Include="src\eeBaseAppTest1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\BaseAppTest1.h">
+    <ClInclude Include="include\eeBaseAppTest1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

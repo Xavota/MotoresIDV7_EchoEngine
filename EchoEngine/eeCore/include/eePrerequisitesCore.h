@@ -43,6 +43,9 @@
 
 namespace eeEngineSDK {
 class Buffer;
+class VertexBuffer;
+class IndexBuffer;
+class ConstantBuffer;
 
 struct SimplexVertex;
 struct SimpleVertex;

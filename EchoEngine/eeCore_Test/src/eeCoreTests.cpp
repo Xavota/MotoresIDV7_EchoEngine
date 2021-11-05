@@ -1,6 +1,5 @@
 #include "eePrerequisitesCore.h"
-#include "BaseApp.h"
-#include "BaseAppTest1.h"
+#include "eeBaseAppTest1.h"
 
 using eeEngineSDK::BaseApp;
 using eeEngineSDK::int32;

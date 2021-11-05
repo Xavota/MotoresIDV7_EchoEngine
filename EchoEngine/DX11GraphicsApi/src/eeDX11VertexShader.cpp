@@ -1,7 +1,9 @@
 #include "eeDX11VertexShader.h"
 #include "eeDX11GraphicsApi.h"
+#pragma warning(push, 0)   
 #include <d3dcompiler.h>
 #include <D3DX11async.h>
+#pragma warning(pop)   
 
 #include <eeMatrix4.h>
 
@@ -17,8 +19,8 @@ DX11VertexShader::~DX11VertexShader()
 bool 
 DX11VertexShader::compileFromFile(const String& fileName)
 {
-  DX11Basics* basics =
-  reinterpret_cast<DX11Basics*>(DX11GraphicsApi::instance().getBasics());
+  const DX11Basics* basics =
+  reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   HRESULT hr = S_OK;
 
@@ -86,30 +88,19 @@ DX11VertexShader::compileFromFile(const String& fileName)
     return false;
   }
 
-
-  D3D11_BUFFER_DESC bd;
-  ZeroMemory(&bd, sizeof(bd));
-  bd.Usage = D3D11_USAGE_DEFAULT;
-  bd.ByteWidth = sizeof(Matrix4f);
-  bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-  bd.CPUAccessFlags = 0;
-  basics->m_device->CreateBuffer(&bd, NULL, &m_matrixBuffer);
-  basics->m_device->CreateBuffer(&bd, NULL, &m_viewBuffer);
-  basics->m_device->CreateBuffer(&bd, NULL, &m_projBuffer);
-
   return true;
 }
 
 bool 
-DX11VertexShader::compileFromString(const String& shaderString)
+DX11VertexShader::compileFromString(const String& /*shaderString*/)
 {
   return false;
 }
 
 void DX11VertexShader::use()
 {
-  DX11Basics* basics =
-  reinterpret_cast<DX11Basics*>(DX11GraphicsApi::instance().getBasics());
+  const DX11Basics* basics =
+  reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   basics->m_deviceContext->IASetInputLayout(m_inputLayout);
   basics->m_deviceContext->VSSetShader(m_shader, NULL, 0);
@@ -118,8 +109,8 @@ void DX11VertexShader::use()
 HRESULT 
 DX11VertexShader::createInputLayout(ID3DBlob* pShaderBlob)
 {
-  DX11Basics* basics =
-  reinterpret_cast<DX11Basics*>(DX11GraphicsApi::instance().getBasics());
+  const DX11Basics* basics =
+  reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   // Reflect shader info
   ID3D11ShaderReflection* pVertexShaderReflection = NULL;
@@ -195,7 +186,7 @@ DX11VertexShader::createInputLayout(ID3DBlob* pShaderBlob)
 
   // Try to create Input Layout
   HRESULT hr = basics->m_device->CreateInputLayout(&inputLayoutDesc[0],
-                                                   inputLayoutDesc.size(),
+                                                   static_cast<uint32>(inputLayoutDesc.size()),
                                                    pShaderBlob->GetBufferPointer(),
                                                    pShaderBlob->GetBufferSize(),
                                                    &m_inputLayout);
@@ -203,30 +194,5 @@ DX11VertexShader::createInputLayout(ID3DBlob* pShaderBlob)
   //Free allocation shader reflection memory
   pVertexShaderReflection->Release();
   return hr;
-}
-
-void DX11VertexShader::setModelMatrix(const Matrix4f& model)
-{
-  DX11Basics* basics =
-  reinterpret_cast<DX11Basics*>(DX11GraphicsApi::instance().getBasics());
-  
-  basics->m_deviceContext->UpdateSubresource(m_matrixBuffer, 0u, NULL, &model, 0u, 0u);
-  basics->m_deviceContext->VSSetConstantBuffers(0u, 1u, &m_matrixBuffer);
-}
-void DX11VertexShader::setViewMatrix(const Matrix4f& view)
-{
-  DX11Basics* basics =
-  reinterpret_cast<DX11Basics*>(DX11GraphicsApi::instance().getBasics());
-
-  basics->m_deviceContext->UpdateSubresource(m_viewBuffer, 0u, NULL, &view, 0u, 0u);
-  basics->m_deviceContext->VSSetConstantBuffers(1u, 1u, &m_viewBuffer);
-}
-void DX11VertexShader::setProjectionMatrix(const Matrix4f& proj)
-{
-  DX11Basics* basics =
-  reinterpret_cast<DX11Basics*>(DX11GraphicsApi::instance().getBasics());
-
-  basics->m_deviceContext->UpdateSubresource(m_projBuffer, 0u, NULL, &proj, 0u, 0u);
-  basics->m_deviceContext->VSSetConstantBuffers(2u, 1u, &m_projBuffer);
 }
 }

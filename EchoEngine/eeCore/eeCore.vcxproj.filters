@@ -48,13 +48,25 @@
     <ClInclude Include="include\eeObject.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\BaseApp.h">
+    <ClInclude Include="include\eeBaseApp.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\eeResourceManager.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\eeInput.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeConstantBuffer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeIndexBuffer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeRenderTarget.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeVertexBuffer.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
@@ -86,13 +98,25 @@
     <ClCompile Include="src\eeObject.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\BaseApp.cpp">
+    <ClCompile Include="src\eeBaseApp.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\eeResourceManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\eeInput.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeConstantBuffer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeIndexBuffer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeRenderTarget.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeVertexBuffer.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
