@@ -865,12 +865,12 @@ public:
   static const Matrix3i IDENTITY;
 };
 
-#ifdef VECTOR3
-Matrix3i::Matrix3i(const Vector3i& r0, const Vector3i& r1, const Vector3i& r2)
-  : m_r0(r0), m_r1(r1), m_r2(r2)
-{
-}
-#endif
+//#ifdef VECTOR3
+//Matrix3i::Matrix3i(const Vector3i& r0, const Vector3i& r1, const Vector3i& r2)
+//  : m_r0(r0), m_r1(r1), m_r2(r2)
+//{
+//}
+//#endif
 
 /**
 * @brief

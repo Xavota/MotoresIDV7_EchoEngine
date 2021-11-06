@@ -23,6 +23,7 @@ using eeEngineSDK::Vector;
 using eeEngineSDK::Pair;
 using eeEngineSDK::uint8;
 using eeEngineSDK::uint16;
+using eeEngineSDK::uint32;
 using eeEngineSDK::SPtr;
 using eeEngineSDK::Math;
 using eeEngineSDK::VertexShader;
@@ -53,7 +54,7 @@ bool BaseAppTest1::initResources()
         make_pair
         (
           ResourceManager::instance().loadMeshFromVertexArray
-          <SimpleVertex, uint16>
+          <SimpleVertex, uint32>
           (
             Vector<SimpleVertex>
             {
@@ -207,7 +208,7 @@ bool BaseAppTest1::initResources()
                 Vector4f(0.0f,  0.0f, -1.0f, 0.0f)
               }
             },
-            Vector<uint16>
+            Vector<uint32>
             {
               3, 1, 0,
               2, 1, 3,

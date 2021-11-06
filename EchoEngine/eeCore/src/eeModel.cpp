@@ -370,6 +370,7 @@ Model::loadFromFile(const String& fileName)
       make_pair
       (
         ResourceManager::instance().loadMeshFromVertexArray
+        <SimpleVertex, uint32>
         (
           vertices,
           indices,
