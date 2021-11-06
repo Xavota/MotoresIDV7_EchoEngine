@@ -249,7 +249,7 @@ bool BaseAppTest1::initResources()
   m_model = std::make_shared<Object>();
   m_model->loadFromFile
   (
-    "Models/Rammer 225 (Large).obj.obj",
+    "Models/plant.obj",
     Vector3f(0.0f, 0.0f, 0.0f),
     Quaternion(Vector3f(0.0f, 0.0f, 0.0f)),
     Vector3f(0.1f, 0.10f, 0.10f)
@@ -280,7 +280,7 @@ bool BaseAppTest1::initResources()
 void BaseAppTest1::update(float deltaTime)
 {
   static Quaternion rot(Vector3f(0.0f, 0.0f, 0.0f));
-  rot = Quaternion((rot.getEuclidean() + Vector3f(deltaTime, 0.0f, 0.0f)));
+  rot = Quaternion((rot.getEuclidean() + Vector3f(deltaTime * .005f, 0.0f, 0.0f)));
   m_model->setRotation(rot);
 }
 

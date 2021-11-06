@@ -284,6 +284,7 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
   * The dapth stencil for the back buffer **TODO: HARCODED**
   */
   ID3D11DepthStencilView* m_pDepthStencilView = nullptr;
+  ID3D11Texture2D* depthStencil = nullptr;
 };
 }
 

@@ -50,6 +50,10 @@ DX11GraphicsApi::~DX11GraphicsApi()
   {
     m_rtv->Release();
   }
+  if (depthStencil)
+  {
+    depthStencil->Release();
+  }
 }
 
 bool
@@ -117,16 +121,15 @@ DX11GraphicsApi::initialize()
 
   ID3D11Resource* pBackBuffer = nullptr;
   m_basics.m_swapChain->GetBuffer(0, __uuidof(ID3D11Resource),
-                         reinterpret_cast<void**>(&pBackBuffer));
+                                  reinterpret_cast<void**>(&pBackBuffer));
 
   m_basics.m_device->CreateRenderTargetView(pBackBuffer,
-                                   nullptr,
-                                   &m_rtv);
+                                            nullptr,
+                                            &m_rtv);
   pBackBuffer->Release();
 
 
 
-  ID3D11Texture2D* depthStencil = nullptr;
   D3D11_TEXTURE2D_DESC descDepth;
   ZeroMemory(&descDepth, sizeof(descDepth));
   descDepth.Width = width;
@@ -140,7 +143,7 @@ DX11GraphicsApi::initialize()
   descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
   descDepth.CPUAccessFlags = 0;
   descDepth.MiscFlags = 0;
-  hr = m_basics.m_device->CreateTexture2D(&descDepth, NULL, &depthStencil);
+  hr = m_basics.m_device->CreateTexture2D(&descDepth, nullptr, &depthStencil);
   if (FAILED(hr))
     return false;
 
@@ -151,12 +154,11 @@ DX11GraphicsApi::initialize()
   descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
   descDSV.Texture2D.MipSlice = 0;
   hr = m_basics.m_device->CreateDepthStencilView(depthStencil,
-                                                 &descDSV,
+                                                 nullptr,
                                                  &m_pDepthStencilView);
   if (FAILED(hr))
     return false;
 
-  depthStencil->Release();
 
 
   m_basics.m_deviceContext->IASetPrimitiveTopology(
@@ -248,7 +250,7 @@ DX11GraphicsApi::drawIndexed(int32 indicesCount) const
 void
 DX11GraphicsApi::present()
 {
-  m_basics.m_swapChain->Present(1u, 0u);
+  m_basics.m_swapChain->Present(0u, 0u);
 }
 
 

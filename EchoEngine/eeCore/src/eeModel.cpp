@@ -17,13 +17,7 @@ Model::loadFromFile(const String& fileName)
   scene = importer->ReadFile
   (
     fileName,
-    aiProcess_Triangulate
-    | aiProcess_GenSmoothNormals
-    | aiProcess_OptimizeMeshes
-    | aiProcess_OptimizeGraph
-    | aiProcess_JoinIdenticalVertices
-    | aiProcess_CalcTangentSpace
-    | aiProcessPreset_TargetRealtime_MaxQuality
+    aiProcessPreset_TargetRealtime_MaxQuality
     | aiProcess_ConvertToLeftHanded
   );
   if (!scene)
