@@ -39,24 +39,24 @@ public:
   * The source from where the data is taken.
   */
   Matrix3f(float src[9]);
-#ifdef VECTOR3
-  /**
-  * @brief
-  * Custom constructor.
-  *
-  * @description
-  * Initializes the matrix with vectors,
-  * one for each row.
-  *
-  * @param r0
-  * The first row of the matrix.
-  * @param r1
-  * The second row of the matrix.
-  * @param r2
-  * The third row of the matrix.
-  */
-  Matrix3f(const Vector3f& r0, const Vector3f& r1, const Vector3f& r2);
-#endif
+//#ifdef VECTOR3
+//  /**
+//  * @brief
+//  * Custom constructor.
+//  *
+//  * @description
+//  * Initializes the matrix with vectors,
+//  * one for each row.
+//  *
+//  * @param r0
+//  * The first row of the matrix.
+//  * @param r1
+//  * The second row of the matrix.
+//  * @param r2
+//  * The third row of the matrix.
+//  */
+//  Matrix3f(const Vector3f& r0, const Vector3f& r1, const Vector3f& r2);
+//#endif
   /**
   * @brief
   * Custom constructor.
@@ -461,23 +461,23 @@ public:
       */
       float m_22;
     };
-#ifdef VECTOR3
-    struct
-    {
-      /*
-      * The first row.
-      */
-      Vector3f m_r0;
-      /*
-      * The second row.
-      */
-      Vector3f m_r1;
-      /*
-      * The third row.
-      */
-      Vector3f m_r2;
-    };
-#endif
+//#ifdef VECTOR3
+//    struct
+//    {
+//      /*
+//      * The first row.
+//      */
+//      Vector3f m_r0;
+//      /*
+//      * The second row.
+//      */
+//      Vector3f m_r1;
+//      /*
+//      * The third row.
+//      */
+//      Vector3f m_r2;
+//    };
+//#endif
     /*
     * The entire matrix on an array.
     */
@@ -498,12 +498,12 @@ public:
   static const Matrix3f IDENTITY;
 };
 
-#ifdef VECTOR3
-Matrix3f::Matrix3f(const Vector3f& r0, const Vector3f& r1, const Vector3f& r2)
-  : m_r0(r0), m_r1(r1), m_r2(r2)
-{
-}
-#endif
+//#ifdef VECTOR3
+//Matrix3f::Matrix3f(const Vector3f& r0, const Vector3f& r1, const Vector3f& r2)
+//  : m_r0(r0), m_r1(r1), m_r2(r2)
+//{
+//}
+//#endif
 
 /**
 * @brief
@@ -530,23 +530,24 @@ public:
   * The source from where the data is taken.
   */
   Matrix3i(int32 src[9]);
-  /**
-  * @brief
-  * Custom constructor.
-  *
-  * @description
-  * Initializes the matrix with vectors,
-  * one for each row.
-  *
-  * @param r0
-  * The first row of the matrix.
-  * @param r1
-  * The second row of the matrix.
-  * @param r2
-  * The third row of the matrix.
-  */
-#ifdef VECTOR3
-  Matrix3i(const Vector3i& r0, const Vector3i& r1, const Vector3i& r2);
+//#ifdef VECTOR3
+//  /**
+//  * @brief
+//  * Custom constructor.
+//  *
+//  * @description
+//  * Initializes the matrix with vectors,
+//  * one for each row.
+//  *
+//  * @param r0
+//  * The first row of the matrix.
+//  * @param r1
+//  * The second row of the matrix.
+//  * @param r2
+//  * The third row of the matrix.
+//  */
+//  Matrix3i(const Vector3i& r0, const Vector3i& r1, const Vector3i& r2);
+//#endif
   /**
   * @brief
   * Custom constructor.
@@ -576,7 +577,6 @@ public:
   * @param _22
   * Third row, third column.
   */
-#endif
   Matrix3i(int32 _00, int32 _01, int32 _02,
            int32 _10, int32 _11, int32 _12,
            int32 _20, int32 _21, int32 _22);
@@ -828,23 +828,23 @@ public:
       */
       int32 m_22;
     };
-#ifdef VECTOR3
-    struct
-    {
-      /*
-      * The first row.
-      */
-      Vector3i m_r0;
-      /*
-      * The second row.
-      */
-      Vector3i m_r1;
-      /*
-      * The third row.
-      */
-      Vector3i m_r2;
-    };
-#endif
+//#ifdef VECTOR3
+//    struct
+//    {
+//      /*
+//      * The first row.
+//      */
+//      Vector3i m_r0;
+//      /*
+//      * The second row.
+//      */
+//      Vector3i m_r1;
+//      /*
+//      * The third row.
+//      */
+//      Vector3i m_r2;
+//    };
+//#endif
     /*
     * The entire matrix on an array.
     */
@@ -897,24 +897,24 @@ public:
   * The source from where the data is taken.
   */
   Matrix3u(uint32 src[9]);
-#ifdef VECTOR3
-  /**
-  * @brief
-  * Custom constructor.
-  *
-  * @description
-  * Initializes the matrix with vectors,
-  * one for each row.
-  *
-  * @param r0
-  * The first row of the matrix.
-  * @param r1
-  * The second row of the matrix.
-  * @param r2
-  * The third row of the matrix.
-  */
-  Matrix3u(const Vector3u& r0, const Vector3u& r1, const Vector3u& r2);
-#endif
+//#ifdef VECTOR3
+//  /**
+//  * @brief
+//  * Custom constructor.
+//  *
+//  * @description
+//  * Initializes the matrix with vectors,
+//  * one for each row.
+//  *
+//  * @param r0
+//  * The first row of the matrix.
+//  * @param r1
+//  * The second row of the matrix.
+//  * @param r2
+//  * The third row of the matrix.
+//  */
+//  Matrix3u(const Vector3u& r0, const Vector3u& r1, const Vector3u& r2);
+//#endif
   /**
   * @brief
   * Custom constructor.
@@ -1195,23 +1195,23 @@ public:
       */
       uint32 m_22;
     };
-#ifdef VECTOR3
-    struct
-    {
-      /*
-      * The first row.
-      */
-      Vector3u m_r0;
-      /*
-      * The second row.
-      */
-      Vector3u m_r1;
-      /*
-      * The third row.
-      */
-      Vector3u m_r2;
-    };
-#endif
+//#ifdef VECTOR3
+//    struct
+//    {
+//      /*
+//      * The first row.
+//      */
+//      Vector3u m_r0;
+//      /*
+//      * The second row.
+//      */
+//      Vector3u m_r1;
+//      /*
+//      * The third row.
+//      */
+//      Vector3u m_r2;
+//    };
+//#endif
     /*
     * The entire matrix on an array.
     */
@@ -1232,10 +1232,10 @@ public:
   static const Matrix3u IDENTITY;
 };
 
-#ifdef VECTOR3
-Matrix3u::Matrix3u(const Vector3u& r0, const Vector3u& r1, const Vector3u& r2)
-  : m_r0(r0), m_r1(r1), m_r2(r2)
-{
-}
-#endif
+//#ifdef VECTOR3
+//Matrix3u::Matrix3u(const Vector3u& r0, const Vector3u& r1, const Vector3u& r2)
+//  : m_r0(r0), m_r1(r1), m_r2(r2)
+//{
+//}
+//#endif
 }

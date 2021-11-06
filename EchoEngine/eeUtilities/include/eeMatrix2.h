@@ -39,22 +39,22 @@ class EE_UTILITY_EXPORT Matrix2f
   * The source from where the data is taken.
   */
   Matrix2f(float src[4]);
-#ifdef VECTOR2
-  /**
-  * @brief
-  * Custom constructor.
-  *
-  * @description
-  * Initializes the matrix with vectors,
-  * one for each row.
-  *
-  * @param r0
-  * The first row of the matrix.
-  * @param r1
-  * The second row of the matrix.
-  */
-  Matrix2f(const Vector2f& r0, const Vector2f& r1);
-#endif
+//#ifdef VECTOR2
+//  /**
+//  * @brief
+//  * Custom constructor.
+//  *
+//  * @description
+//  * Initializes the matrix with vectors,
+//  * one for each row.
+//  *
+//  * @param r0
+//  * The first row of the matrix.
+//  * @param r1
+//  * The second row of the matrix.
+//  */
+//  Matrix2f(const Vector2f& r0, const Vector2f& r1);
+//#endif
   /**
   * @brief
   * Custom constructor.
@@ -326,19 +326,19 @@ class EE_UTILITY_EXPORT Matrix2f
       */
       float m_11;
     };
-#ifdef VECTOR2
-    struct
-    {
-      /*
-      * The first row.
-      */
-      Vector2f m_r0;
-      /*
-      * The second row.
-      */
-      Vector2f m_r1;
-    };
-#endif
+//#ifdef VECTOR2
+//    struct
+//    {
+//      /*
+//      * The first row.
+//      */
+//      Vector2f m_r0;
+//      /*
+//      * The second row.
+//      */
+//      Vector2f m_r1;
+//    };
+//#endif
     /*
     * The entire matrix on an array.
     */
@@ -359,12 +359,12 @@ class EE_UTILITY_EXPORT Matrix2f
   static const Matrix2f IDENTITY;
 };
 
-#ifdef VECTOR2
-Matrix2f::Matrix2f(const Vector2f& r0, const Vector2f& r1) : m_r0(r0),
-m_r1(r1)
-{
-}
-#endif
+//#ifdef VECTOR2
+//Matrix2f::Matrix2f(const Vector2f& r0, const Vector2f& r1) : m_r0(r0),
+//m_r1(r1)
+//{
+//}
+//#endif
 
 
 /**
@@ -392,22 +392,22 @@ class EE_UTILITY_EXPORT Matrix2i
   * The source from where the data is taken.
   */
   Matrix2i(int32 src[4]);
-#ifdef VECTOR2
-  /**
-  * @brief
-  * Custom constructor.
-  *
-  * @description
-  * Initializes the matrix with vectors,
-  * one for each row.
-  *
-  * @param r0
-  * The first row of the matrix.
-  * @param r1
-  * The second row of the matrix.
-  */
-  Matrix2i(const Vector2i& r0, const Vector2i& r1);
-#endif
+//#ifdef VECTOR2
+//  /**
+//  * @brief
+//  * Custom constructor.
+//  *
+//  * @description
+//  * Initializes the matrix with vectors,
+//  * one for each row.
+//  *
+//  * @param r0
+//  * The first row of the matrix.
+//  * @param r1
+//  * The second row of the matrix.
+//  */
+//  Matrix2i(const Vector2i& r0, const Vector2i& r1);
+//#endif
   /**
   * @brief
   * Custom constructor.
@@ -655,19 +655,19 @@ class EE_UTILITY_EXPORT Matrix2i
       */
       int32 m_11;
     };
-#ifdef VECTOR2
-    struct
-    {
-      /*
-      * The first row.
-      */
-      Vector2i m_r0;
-      /*
-      * The second row.
-      */
-      Vector2i m_r1;
-    };
-#endif
+//#ifdef VECTOR2
+//    struct
+//    {
+//      /*
+//      * The first row.
+//      */
+//      Vector2i m_r0;
+//      /*
+//      * The second row.
+//      */
+//      Vector2i m_r1;
+//    };
+//#endif
     /*
     * The entire matrix on an array.
     */
@@ -688,12 +688,12 @@ class EE_UTILITY_EXPORT Matrix2i
   static const Matrix2i IDENTITY;
 };
 
-#ifdef VECTOR2
-Matrix2i::Matrix2i(const Vector2i& r0, const Vector2i& r1) : m_r0(r0),
-m_r1(r1)
-{
-}
-#endif
+//#ifdef VECTOR2
+//Matrix2i::Matrix2i(const Vector2i& r0, const Vector2i& r1) : m_r0(r0),
+//m_r1(r1)
+//{
+//}
+//#endif
 
 
 /**
@@ -721,22 +721,22 @@ class EE_UTILITY_EXPORT Matrix2u
   * The source from where the data is taken.
   */
   Matrix2u(uint32 src[4]);
-#ifdef VECTOR2
-  /**
-  * @brief
-  * Custom constructor.
-  *
-  * @description
-  * Initializes the matrix with vectors,
-  * one for each row.
-  *
-  * @param r0
-  * The first row of the matrix.
-  * @param r1
-  * The second row of the matrix.
-  */
-  Matrix2u(const Vector2u& r0, const Vector2u& r1);
-#endif
+//#ifdef VECTOR2
+//  /**
+//  * @brief
+//  * Custom constructor.
+//  *
+//  * @description
+//  * Initializes the matrix with vectors,
+//  * one for each row.
+//  *
+//  * @param r0
+//  * The first row of the matrix.
+//  * @param r1
+//  * The second row of the matrix.
+//  */
+//  Matrix2u(const Vector2u& r0, const Vector2u& r1);
+//#endif
   /**
   * @brief
   * Custom constructor.
@@ -984,19 +984,19 @@ class EE_UTILITY_EXPORT Matrix2u
       */
       uint32 m_11;
     };
-#ifdef VECTOR2
-    struct
-    {
-      /*
-      * The first row.
-      */
-      Vector2u m_r0;
-      /*
-      * The second row.
-      */
-      Vector2u m_r1;
-    };
-#endif
+//#ifdef VECTOR2
+//    struct
+//    {
+//      /*
+//      * The first row.
+//      */
+//      Vector2u m_r0;
+//      /*
+//      * The second row.
+//      */
+//      Vector2u m_r1;
+//    };
+//#endif
     /*
     * The entire matrix on an array.
     */
@@ -1017,10 +1017,10 @@ class EE_UTILITY_EXPORT Matrix2u
   static const Matrix2u IDENTITY;
 };
 
-#ifdef VECTOR2
-Matrix2u::Matrix2u(const Vector2u& r0, const Vector2u& r1) : m_r0(r0),
-m_r1(r1)
-{
-}
-#endif
+//#ifdef VECTOR2
+//Matrix2u::Matrix2u(const Vector2u& r0, const Vector2u& r1) : m_r0(r0),
+//m_r1(r1)
+//{
+//}
+//#endif
 }

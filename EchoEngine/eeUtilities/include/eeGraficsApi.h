@@ -112,7 +112,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   * The height of the viewport.
   */
   virtual void
-  setViewport(float width, float height) {}
+  setViewport(float /*width*/, float /*height*/) {}
 
   /**
   * @brief

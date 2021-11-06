@@ -422,7 +422,8 @@ Model::loadFromMeshes(const Vector<Pair<SPtr<Mesh>, uint8>>& meshes,
   }
 
   m_meshes = meshes;
-  for (int32 i = 0; i < textures.size(); ++i)
+  uint32 texturesCount = static_cast<uint32>(textures.size());
+  for (uint32 i = 0; i < texturesCount; ++i)
   {
     m_textures.push_back(textures[i]);
   }
