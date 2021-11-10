@@ -46,6 +46,8 @@ class Buffer;
 class VertexBuffer;
 class IndexBuffer;
 class ConstantBuffer;
+class RenderTarget;
+class DepthStencil;
 
 struct SimplexVertex;
 struct SimpleVertex;

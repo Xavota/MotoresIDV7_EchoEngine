@@ -276,15 +276,9 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
   * The basics for DX11
   */
   DX11Basics m_basics;
-  /**
-  * The back buffer **TODO: HARCODED**
-  */
-  ID3D11RenderTargetView* m_rtv = nullptr;
-  /**
-  * The dapth stencil for the back buffer **TODO: HARCODED**
-  */
-  ID3D11DepthStencilView* m_pDepthStencilView = nullptr;
-  ID3D11Texture2D* depthStencil = nullptr;
+
+  SPtr<RenderTarget> m_rtv;
+  SPtr<DepthStencil> m_dsv;
 };
 }
 

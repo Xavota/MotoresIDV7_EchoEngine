@@ -173,6 +173,7 @@
     <ClCompile Include="src\eeBaseApp.cpp" />
     <ClCompile Include="src\eeBuffer.cpp" />
     <ClCompile Include="src\eeConstantBuffer.cpp" />
+    <ClCompile Include="src\eeDepthStencil.cpp" />
     <ClCompile Include="src\eeIndexBuffer.cpp" />
     <ClCompile Include="src\eeInput.cpp" />
     <ClCompile Include="src\eeInputLayout.cpp" />
@@ -192,6 +193,7 @@
     <ClInclude Include="include\eeBuffer.h" />
     <ClInclude Include="include\eeConstantBuffer.h" />
     <ClInclude Include="include\eeCoreConfiguration.h" />
+    <ClInclude Include="include\eeDepthStencil.h" />
     <ClInclude Include="include\eeIndexBuffer.h" />
     <ClInclude Include="include\eeInput.h" />
     <ClInclude Include="include\eeInputLayout.h" />

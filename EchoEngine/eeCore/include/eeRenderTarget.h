@@ -22,5 +22,36 @@ namespace eeEngineSDK {
  */
 class EE_CORE_EXPORT RenderTarget
 {
+ public:
+  RenderTarget() = default;
+  virtual
+  ~RenderTarget() = default;
+
+  virtual bool
+  createAsBackBuffer() { return true; }
+  virtual bool
+  createAsIOTexture() { return true; }
+
+  virtual const SPtr<const Texture>
+  getAsTexture() const { return m_inTexture; }
+
+
+  virtual void
+  set(SPtr<DepthStencil> /*stencil*/) {}
+  virtual void
+  clean(float r, float g, float b, float a) {}
+
+  /**
+  * @brief
+  * Releases the data.
+  *
+  * @description
+  * Deletes the memory of all data allocated.
+  */
+  virtual void
+  release() {};
+
+ protected:
+  SPtr<Texture> m_inTexture = nullptr;
 };
 }

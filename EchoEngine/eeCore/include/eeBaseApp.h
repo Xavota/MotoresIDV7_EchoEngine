@@ -46,50 +46,10 @@ class EE_CORE_EXPORT BaseApp : public Module<BaseApp>
   * @return
   * The finish code, tells if there was any error.
   */
-  virtual int32
+  int32
   run();
 
  protected:
-  /**
-  * @brief
-  * Where the application stays till the end.
-  *
-  * @description
-  * Keeps the application running, make the input/update/render loop.
-  *
-  * @return
-  * The finish code, tells if there was any error.
-  */
-  virtual int32
-  mainLoop();
-
-  /**
-  * @brief
-  * Initializes everything.
-  *
-  * @description
-  * Initializes everything that will be needed for the application to run.
-  *
-  * @return
-  * Weather it succeed or failed to initialize.
-  */
-  virtual bool
-  init();
-
-  /**
-  * @brief
-  * Initializes the systems needed.
-  *
-  * @description
-  * Initializes the systems that the app needs, like the graphics, mesh loading,
-  * inputs, etc.
-  *
-  * @return
-  * Weather it succeed or failed to initialize.
-  */
-  bool
-  initSystems();
-
   /**
   * @brief
   * Initializes the resources needed.
@@ -103,17 +63,6 @@ class EE_CORE_EXPORT BaseApp : public Module<BaseApp>
   */
   virtual bool
   initResources(){return true;}
-
-  /**
-  * @brief
-  * Processes the events given by the system.
-  *
-  * @description
-  * Gets all the events given by the systems and interprets them to something
-  * useful.
-  */
-  virtual void
-  processEvents();
 
   /**
   * @brief
@@ -147,5 +96,57 @@ class EE_CORE_EXPORT BaseApp : public Module<BaseApp>
   */
   virtual void
   destroy();
+
+ private:
+  /**
+  * @brief
+  * Where the application stays till the end.
+  *
+  * @description
+  * Keeps the application running, make the input/update/render loop.
+  *
+  * @return
+  * The finish code, tells if there was any error.
+  */
+  int32
+  mainLoop();
+
+  /**
+  * @brief
+  * Initializes everything.
+  *
+  * @description
+  * Initializes everything that will be needed for the application to run.
+  *
+  * @return
+  * Weather it succeed or failed to initialize.
+  */
+  bool
+  init();
+
+  /**
+  * @brief
+  * Initializes the systems needed.
+  *
+  * @description
+  * Initializes the systems that the app needs, like the graphics, mesh loading,
+  * inputs, etc.
+  *
+  * @return
+  * Weather it succeed or failed to initialize.
+  */
+  bool
+  initSystems();
+
+  /**
+  * @brief
+  * Processes the events given by the system.
+  *
+  * @description
+  * Gets all the events given by the systems and interprets them to something
+  * useful.
+  */
+  void
+  processEvents();
 };
 }

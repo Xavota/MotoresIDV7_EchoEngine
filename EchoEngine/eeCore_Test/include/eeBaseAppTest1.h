@@ -25,7 +25,7 @@ class BaseAppTest1 : public BaseApp
   * Weather it succeed or failed to initialize.
   */
   virtual bool
-  initResources();
+  initResources() override;
 
   /**
   * @brief
@@ -75,7 +75,13 @@ class BaseAppTest1 : public BaseApp
   */
   SPtr<Object> m_model;
 
+  /*
+  * The buffer for the view matrix
+  */
   SPtr<ConstantBuffer> m_viewMatrixBuffer;
+  /*
+  * The buffer for the projection matrix
+  */
   SPtr<ConstantBuffer> m_projectionMatrixBuffer;
 };
 

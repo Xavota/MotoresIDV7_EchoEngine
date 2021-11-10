@@ -4,7 +4,13 @@
 #include <d3dx11.h>
 #pragma warning(pop)   
 
-bool eeEngineSDK::DX11Texture::loadFromFile(const String fileName)
+namespace eeEngineSDK {
+DX11Texture::~DX11Texture()
+{
+  release();
+}
+
+bool DX11Texture::loadFromFile(const String fileName)
 {
   const DX11Basics* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
@@ -35,16 +41,29 @@ bool eeEngineSDK::DX11Texture::loadFromFile(const String fileName)
   return true;
 }
 
-bool eeEngineSDK::DX11Texture::loadFromBuffer(SPtr<void> /*buffer*/)
+bool DX11Texture::loadFromBuffer(SPtr<void> /*buffer*/)
 {
   return false;
 }
 
-void eeEngineSDK::DX11Texture::use()
+void DX11Texture::use()
 {
   const DX11Basics* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   basics->m_deviceContext->PSSetShaderResources(0, 1, &m_tex);
   basics->m_deviceContext->PSSetSamplers(0, 1, &m_sampler);
+}
+
+void DX11Texture::release()
+{
+  if (m_tex)
+  {
+    m_tex->Release();
+  }
+  if (m_sampler)
+  {
+    m_sampler->Release();
+  }
+}
 }

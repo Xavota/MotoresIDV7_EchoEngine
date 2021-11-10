@@ -36,7 +36,7 @@ public:
   * @brief
   * Default destructor
   */
-  ~DX11Texture() = default;
+  ~DX11Texture();
 
   /**
   * @brief
@@ -80,6 +80,16 @@ public:
   */
   void
   use() override;
+
+  /**
+  * @brief
+  * Releases the data.
+  *
+  * @description
+  * Deletes the memory of all data allocated.
+  */
+  void
+  release() override;
 
 private:
   /**

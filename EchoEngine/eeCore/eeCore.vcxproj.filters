@@ -69,6 +69,7 @@
     <ClInclude Include="include\eeVertexBuffer.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\eeDepthStencil.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeBuffer.cpp">
@@ -119,5 +120,6 @@
     <ClCompile Include="src\eeVertexBuffer.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\eeDepthStencil.cpp" />
   </ItemGroup>
 </Project>

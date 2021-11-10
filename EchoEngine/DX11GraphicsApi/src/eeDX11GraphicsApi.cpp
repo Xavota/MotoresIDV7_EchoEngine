@@ -5,6 +5,9 @@
 #pragma warning(pop)   
 #include <eeCoreConfiguration.h>
 
+#include "eeDX11RenderTarget.h"
+#include "DX11DepthStencil.h"
+
 //#include <eeMath.h>
 
 namespace eeEngineSDK {
@@ -48,11 +51,7 @@ DX11GraphicsApi::~DX11GraphicsApi()
   }
   if (m_rtv)
   {
-    m_rtv->Release();
-  }
-  if (depthStencil)
-  {
-    depthStencil->Release();
+    m_rtv->release();
   }
 }
 
@@ -119,45 +118,11 @@ DX11GraphicsApi::initialize()
 
 
 
-  ID3D11Resource* pBackBuffer = nullptr;
-  m_basics.m_swapChain->GetBuffer(0, __uuidof(ID3D11Resource),
-                                  reinterpret_cast<void**>(&pBackBuffer));
+  m_rtv = std::make_shared<DX11RenderTarget>();
+  m_rtv->createAsBackBuffer();
 
-  m_basics.m_device->CreateRenderTargetView(pBackBuffer,
-                                            nullptr,
-                                            &m_rtv);
-  pBackBuffer->Release();
-
-
-
-  D3D11_TEXTURE2D_DESC descDepth;
-  ZeroMemory(&descDepth, sizeof(descDepth));
-  descDepth.Width = width;
-  descDepth.Height = height;
-  descDepth.MipLevels = 1;
-  descDepth.ArraySize = 1;
-  descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-  descDepth.SampleDesc.Count = 1;
-  descDepth.SampleDesc.Quality = 0;
-  descDepth.Usage = D3D11_USAGE_DEFAULT;
-  descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-  descDepth.CPUAccessFlags = 0;
-  descDepth.MiscFlags = 0;
-  hr = m_basics.m_device->CreateTexture2D(&descDepth, nullptr, &depthStencil);
-  if (FAILED(hr))
-    return false;
-
-  // Create the depth stencil view
-  D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
-  ZeroMemory(&descDSV, sizeof(descDSV));
-  descDSV.Format = descDepth.Format;
-  descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-  descDSV.Texture2D.MipSlice = 0;
-  hr = m_basics.m_device->CreateDepthStencilView(depthStencil,
-                                                 nullptr,
-                                                 &m_pDepthStencilView);
-  if (FAILED(hr))
-    return false;
+  m_dsv = std::make_shared<DX11DepthStencil>();
+  m_dsv->create(width, height);
 
 
 
@@ -224,10 +189,9 @@ DX11GraphicsApi::initializeScreen()
 void
 DX11GraphicsApi::clearScreen(float r, float g, float b)
 {
-  float clearColor[4] = {r,g,b,1.0f};
-  m_basics.m_deviceContext->ClearRenderTargetView(m_rtv, clearColor);
-  m_basics.m_deviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-  m_basics.m_deviceContext->OMSetRenderTargets(1, &m_rtv, m_pDepthStencilView);
+  m_rtv->clean(r,g,b,1.0f);
+  m_dsv->clean();
+  m_rtv->set(m_dsv);
 }
 void
 DX11GraphicsApi::setViewport(float width, float height)

@@ -251,6 +251,7 @@ bool BaseAppTest1::initResources()
   m_model->loadFromFile
   (
     "Models/plant.obj",
+
     Vector3f(0.0f, 0.0f, 0.0f),
     Quaternion(Vector3f(0.0f, 0.0f, 0.0f)),
     Vector3f(0.1f, 0.10f, 0.10f)

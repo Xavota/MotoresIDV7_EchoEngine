@@ -19,20 +19,24 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\DX11DepthStencil.h" />
     <ClInclude Include="include\eeDX11ConstantBuffer.h" />
     <ClInclude Include="include\eeDX11GraphicsApi.h" />
     <ClInclude Include="include\eeDX11IndexBuffer.h" />
     <ClInclude Include="include\eeDX11PixelShader.h" />
+    <ClInclude Include="include\eeDX11RenderTarget.h" />
     <ClInclude Include="include\eeDX11Texture.h" />
     <ClInclude Include="include\eeDX11VertexBuffer.h" />
     <ClInclude Include="include\eeDX11VertexShader.h" />
     <ClInclude Include="include\eePrerequisitesDX11.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\DX11DepthStencil.cpp" />
     <ClCompile Include="src\eeDX11ConstantBuffer.cpp" />
     <ClCompile Include="src\eeDX11GraphicsApi.cpp" />
     <ClCompile Include="src\eeDX11IndexBuffer.cpp" />
     <ClCompile Include="src\eeDX11PixelShader.cpp" />
+    <ClCompile Include="src\eeDX11RenderTarget.cpp" />
     <ClCompile Include="src\eeDX11Texture.cpp" />
     <ClCompile Include="src\eeDX11VertexBuffer.cpp" />
     <ClCompile Include="src\eeDX11VertexShader.cpp" />
