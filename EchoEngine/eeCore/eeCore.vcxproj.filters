@@ -70,6 +70,10 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\eeDepthStencil.h" />
+    <ClInclude Include="include\eeSamplerState.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeCoreDefines.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeBuffer.cpp">
@@ -121,5 +125,8 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\eeDepthStencil.cpp" />
+    <ClCompile Include="src\eeSamplerState.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

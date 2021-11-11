@@ -29,8 +29,8 @@ namespace eeEngineSDK {
     void
     release() override;
 
-    void*
-    getResource() override;
+    ID3D11DepthStencilView*
+    getResource();
 
   private:
     /**

@@ -137,9 +137,9 @@ Mesh::loadFromArray(const Vector<V>& vertices,
   }
 
   if (!m_vertexData)
-    m_vertexData = GraphicsApi::instance().getVertexBufferPtr();
+    m_vertexData = GraphicsApi::instance().createVertexBufferPtr();
   if (!m_indexData)
-    m_indexData = GraphicsApi::instance().getIndexBufferPtr();
+    m_indexData = GraphicsApi::instance().createIndexBufferPtr();
   m_vertexData->initData(static_cast<uint32>(vertices.size()) * sizeof(V),
     sizeof(V),
     reinterpret_cast<const Byte*>(vertices.data()));

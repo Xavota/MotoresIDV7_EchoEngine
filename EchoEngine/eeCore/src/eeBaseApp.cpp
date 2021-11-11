@@ -9,9 +9,9 @@ int32
 BaseApp::run()
 {
   DLLDynamics api;
-  api.initialize(graphicsApi + 
-                 platformConfigPrefix + 
-                 dynamicLibSuffix);
+  api.initialize(eeConfigurations::graphicsApi +
+                 eeConfigurations::platformConfigPrefix +
+                 eeConfigurations::dynamicLibSuffix);
 
   auto apiInit = api.getFunction("initPlugin");
   if (apiInit)
@@ -45,10 +45,14 @@ BaseApp::mainLoop()
     return 1;
   }
 
+  auto start = std::chrono::high_resolution_clock::now();
   while (GraphicsApi::instance().appIsRunning())
   {
     processEvents();
-    update(0.016f);
+    auto end = std::chrono::high_resolution_clock::now();
+    float dt = std::chrono::duration<float>(end - start).count();
+    start = std::chrono::high_resolution_clock::now();
+    update(dt);
     render();
   }
 
@@ -89,6 +93,7 @@ BaseApp::render()
 void
 BaseApp::destroy()
 {
+  GraphicsApi::instance().release();
   GraphicsApi::shutDown();
   ResourceManager::shutDown();
 }

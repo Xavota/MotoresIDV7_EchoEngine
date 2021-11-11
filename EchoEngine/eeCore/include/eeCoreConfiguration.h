@@ -16,6 +16,7 @@
 #include "eePrerequisitesUtilities.h"
 
 namespace eeEngineSDK {
+namespace eeConfigurations {
 /**
 * The width of the screen.
 */
@@ -60,4 +61,5 @@ String dynamicLibSuffix = ".dll";
 * The suffix for static libraries.
 */
 String staticLibSuffix = ".lib";
+}
 }

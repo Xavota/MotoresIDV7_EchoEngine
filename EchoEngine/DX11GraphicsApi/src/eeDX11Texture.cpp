@@ -1,5 +1,7 @@
 #include "eeDX11Texture.h"
 #include "eeDX11GraphicsApi.h"
+#include "eeDX11SamplerState.h"
+//#include <eeMath.h>
 #pragma warning(push, 0)   
 #include <d3dx11.h>
 #pragma warning(pop)   
@@ -25,18 +27,17 @@ bool DX11Texture::loadFromFile(const String fileName)
     return false;
 
 
-  D3D11_SAMPLER_DESC sampDesc;
-  ZeroMemory(&sampDesc, sizeof(sampDesc));
-  sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-  sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-  sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-  sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-  sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-  sampDesc.MinLOD = 0;
-  sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
-  hr = basics->m_device->CreateSamplerState(&sampDesc, &m_sampler);
-  if (FAILED(hr))
-    return false;
+  SamplerStateDesc desc;
+  memset(&desc, 0, sizeof(desc));
+  desc.filter = FILTER::MIN_MAG_MIP_LINEAR;
+  desc.addressU = TEXTURE_ADDRESS_MODE::WRAP;
+  desc.addressV = TEXTURE_ADDRESS_MODE::WRAP;
+  desc.addressW = TEXTURE_ADDRESS_MODE::WRAP;
+  desc.comparisonFunc = COMPARISON_FUNC::NEVER;
+  desc.minLOD = 0;
+  desc.maxLOD = D3D11_FLOAT32_MAX;
+  m_sampler = std::make_shared<DX11SamplerState>();
+  m_sampler->create(desc);
 
   return true;
 }
@@ -52,18 +53,13 @@ void DX11Texture::use()
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   basics->m_deviceContext->PSSetShaderResources(0, 1, &m_tex);
-  basics->m_deviceContext->PSSetSamplers(0, 1, &m_sampler);
+
+  m_sampler->use();
 }
 
 void DX11Texture::release()
 {
-  if (m_tex)
-  {
-    m_tex->Release();
-  }
-  if (m_sampler)
-  {
-    m_sampler->Release();
-  }
+  DX11SAFE_RELEASE(m_tex);
+  m_sampler->release();
 }
 }

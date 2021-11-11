@@ -27,9 +27,12 @@ void GraphicsApi::drawObject(SPtr<Object> obj)
   {
     m.first->set();
 
-    textures[m.second]->use();
+    GraphicsApi::instance().setTextures({textures[m.second]}, 0u);
 
     drawIndexed(m.first->getIndexCount());
   }  
+}
+void GraphicsApi::release()
+{
 }
 }

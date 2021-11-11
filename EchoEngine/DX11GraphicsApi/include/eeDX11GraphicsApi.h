@@ -20,6 +20,8 @@
 #include "eeDX11VertexBuffer.h"
 #include "eeDX11IndexBuffer.h"
 #include "eeDX11ConstantBuffer.h"
+#include "eeDX11RenderTarget.h"
+#include "DX11DepthStencil.h"
 
 #pragma warning(push, 0)   
 #include <d3d11.h>
@@ -107,36 +109,90 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
 
   /**
   * @brief
-  * Clears the active screen.
+  * Cleans the render targets given.
   *
   * @description
-  * Clears the active render target with the given color.
-  * **TODO: NEEDS TO BE REFACTORED TO USE THE RENDER TARGETS AND DEPTH STENCILS**
+  * Cleans the render targets with the given color.
   *
-  * @param r
-  * Red part of the color. From 0 to 1 inclusive.
-  * @param g
-  * Green part of the color. From 0 to 1 inclusive.
-  * @param b
-  * Blue part of the color. From 0 to 1 inclusive.
+  * @param rtvs
+  * The render targets to clean.
+  * @param rgba
+  * The color to clean with in RGBA. From 0 to 1 inclusive.
   */
   void
-  clearScreen(float r, float g, float b) override;
+  clearRenderTargets(Vector<SPtr<RenderTarget>> rtvs, float rgba[4]) override;
 
   /**
   * @brief
-  * Set the viewport's size.
+  * Clean the depth stencil.
   *
   * @description
-  * Sets the dimensions of the viewport on the screen
+  * Remove all the last data from the depth stencil.
   *
-  * @param width
-  * The width of the viewport.
-  * @param height
-  * The height of the viewport.
+  * @param dsvs
+  * The depth stencils to clean.
   */
   void
-  setViewport(float width, float height) override;
+  cleanDepthStencils(Vector<SPtr<DepthStencil>> dsvs) override;
+
+  /**
+  * @brief
+  * Sets the render targets given.
+  *
+  * @description
+  * Sets the render targets with the depth stencil.
+  *
+  * @param rtvs
+  * The render targets to set.
+  * @param dsv
+  * The depth stencil for the render targets.
+  */
+  void
+  setRenderTargets(Vector<SPtr<RenderTarget>> rtvs,
+                   SPtr<DepthStencil> dsv) override;
+
+  /**
+  * @brief
+  * Sets the textures given.
+  *
+  * @description
+  * Sets several textures for the graphics memory.
+  *
+  * @param textures
+  * The vector of textures to set.
+  * @param startSlot
+  * The first index for the texture indices.
+  */
+  void
+  setTextures(Vector<SPtr<Texture>> textures,
+              uint32 startSlot) override;
+
+  /**
+  * @brief
+  * Set viewports.
+  *
+  * @description
+  * Sets the viewports for the screen.
+  *
+  * @param descs
+  * The description for the different viewports. Also determines how many
+  * viewports to set.
+  */
+  void
+  setViewports(Vector<ViewportDesc> descs) override;
+
+  /**
+  * @brief
+  * Set the topology.
+  *
+  * @description
+  * Sets the topology for the render.
+  *
+  * @param topology
+  * The topology to set.
+  */
+  void
+  setPrimitiveTopology(PRIMITIVE_TOPOLOGY topology) override;
 
   /**
   * @brief
@@ -148,6 +204,15 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
   void
   present() override;
 
+  /**
+  * @brief
+  * Releases the data.
+  *
+  * @description
+  * Deletes the memory of all data allocated.
+  */
+  void
+  release() override;
 
 
 
@@ -169,7 +234,7 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
   * The pointer to a texture depending on the api.
   */
   FORCEINLINE SPtr<Texture>
-  getTexturePtr() const override { return std::make_shared<DX11Texture>(); }
+  createTexturePtr() const override { return std::make_shared<DX11Texture>(); }
 
   /**
   * @brief
@@ -182,7 +247,7 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
   * The pointer to a vertex shader depending on the api.
   */
   FORCEINLINE virtual SPtr<VertexShader>
-  getVertexShaderPtr() const override { return std::make_shared<DX11VertexShader>(); }
+  createVertexShaderPtr() const override { return std::make_shared<DX11VertexShader>(); }
 
   /**
   * @brief
@@ -195,7 +260,7 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
   * The pointer to a pixel shader depending on the api.
   */
   FORCEINLINE virtual SPtr<PixelShader>
-  getPixelShaderPtr() const override { return std::make_shared<DX11PixelShader>(); }
+  createPixelShaderPtr() const override { return std::make_shared<DX11PixelShader>(); }
 
   /**
   * @brief
@@ -208,7 +273,7 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
   * The pointer to a vertex buffer depending on the api.
   */
   FORCEINLINE virtual SPtr<VertexBuffer>
-  getVertexBufferPtr() const override { return std::make_shared<DX11VertexBuffer>(); }
+  createVertexBufferPtr() const override { return std::make_shared<DX11VertexBuffer>(); }
 
   /**
   * @brief
@@ -221,7 +286,7 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
   * The pointer to a index buffer depending on the api.
   */
   FORCEINLINE virtual SPtr<IndexBuffer>
-  getIndexBufferPtr() const override { return std::make_shared<DX11IndexBuffer>(); }
+  createIndexBufferPtr() const override { return std::make_shared<DX11IndexBuffer>(); }
 
   /**
   * @brief
@@ -234,7 +299,33 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
   * The pointer to a vertex constant depending on the api.
   */
   FORCEINLINE virtual SPtr<ConstantBuffer>
-  getConstantBufferPtr() const override { return std::make_shared<DX11ConstantBuffer>(); }
+  createConstantBufferPtr() const override { return std::make_shared<DX11ConstantBuffer>(); }
+
+  /**
+  * @brief
+  * Gets the specific render target pointer.
+  *
+  * @description
+  * Returns a pointer to a render target depending on the api.
+  *
+  * @return
+  * The pointer to a render target depending on the api.
+  */
+  FORCEINLINE virtual SPtr<RenderTarget>
+  createRenderTragetPtr() const { return std::make_shared<DX11RenderTarget>(); }
+
+  /**
+  * @brief
+  * Gets the specific depth stencil pointer.
+  *
+  * @description
+  * Returns a pointer to a depth stencil depending on the api.
+  *
+  * @return
+  * The pointer to a depth stencil depending on the api.
+  */
+  FORCEINLINE virtual SPtr<DepthStencil>
+  createDepthStencilPtr() const { return std::make_shared<DX11DepthStencil>(); }
 
 
 
@@ -276,9 +367,6 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
   * The basics for DX11
   */
   DX11Basics m_basics;
-
-  SPtr<RenderTarget> m_rtv;
-  SPtr<DepthStencil> m_dsv;
 };
 }
 

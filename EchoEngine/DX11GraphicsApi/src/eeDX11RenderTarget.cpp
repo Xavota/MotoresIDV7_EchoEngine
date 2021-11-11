@@ -47,11 +47,11 @@ DX11RenderTarget::set(SPtr<DepthStencil> stencil)
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   ID3D11DepthStencilView* depthStencilView = nullptr;
-
   if (stencil)
   {
-    depthStencilView =
-    reinterpret_cast<ID3D11DepthStencilView*>(stencil->getResource());
+    SPtr<DX11DepthStencil> ds =
+    std::reinterpret_pointer_cast<DX11DepthStencil>(stencil);
+    depthStencilView = ds->getResource();
   }
 
   if (depthStencilView)

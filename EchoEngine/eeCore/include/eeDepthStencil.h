@@ -27,9 +27,6 @@ class DepthStencil
   virtual void
   release() {}
 
-  virtual void*
-  getResource() { return nullptr; }
-
  protected:
 };
 }

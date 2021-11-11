@@ -25,6 +25,7 @@
     <ClInclude Include="include\eeDX11IndexBuffer.h" />
     <ClInclude Include="include\eeDX11PixelShader.h" />
     <ClInclude Include="include\eeDX11RenderTarget.h" />
+    <ClInclude Include="include\eeDX11SamplerState.h" />
     <ClInclude Include="include\eeDX11Texture.h" />
     <ClInclude Include="include\eeDX11VertexBuffer.h" />
     <ClInclude Include="include\eeDX11VertexShader.h" />
@@ -37,6 +38,7 @@
     <ClCompile Include="src\eeDX11IndexBuffer.cpp" />
     <ClCompile Include="src\eeDX11PixelShader.cpp" />
     <ClCompile Include="src\eeDX11RenderTarget.cpp" />
+    <ClCompile Include="src\eeDX11SamplerState.cpp" />
     <ClCompile Include="src\eeDX11Texture.cpp" />
     <ClCompile Include="src\eeDX11VertexBuffer.cpp" />
     <ClCompile Include="src\eeDX11VertexShader.cpp" />

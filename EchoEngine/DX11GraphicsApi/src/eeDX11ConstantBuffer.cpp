@@ -47,10 +47,7 @@ void DX11ConstantBuffer::updateData(const Byte* data)
 }
 void DX11ConstantBuffer::release()
 {
-  if (m_buffer)
-  {
-    m_buffer->Release();
-  }
+  DX11SAFE_RELEASE(m_buffer);
 }
 void DX11ConstantBuffer::setInVertex(uint32 index)
 {

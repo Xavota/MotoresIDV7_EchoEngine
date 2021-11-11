@@ -5,8 +5,14 @@
 #include <eeResourceManager.h>
 #include <eeObject.h>
 #include <eeCoreConfiguration.h>
+#include <eeRenderTarget.h>
+#include <eeDepthStencil.h>
 
 #include <eeMath.h>
+
+using eeEngineSDK::eeConfigurations::screenWidth;
+using eeEngineSDK::eeConfigurations::screenHeight;
+
 
 using eeEngineSDK::GraphicsApi;
 using eeEngineSDK::ResourceManager;
@@ -42,6 +48,25 @@ bool BaseAppTest1::initResources()
 {
 
   ResourceManager::instance().loadTextureFromFile("Textures/Default.png", "Default");
+
+
+  m_rtv = GraphicsApi::instance().createRenderTragetPtr();
+  m_rtv->createAsBackBuffer();
+
+  m_dsv = GraphicsApi::instance().createDepthStencilPtr();
+  m_dsv->create(screenWidth, screenHeight);
+
+  ViewportDesc desc;
+  desc.width = screenWidth;
+  desc.height = screenHeight;
+  desc.maxDepth = 0;
+  desc.minDepth = 0;
+  desc.topLeftX = 0;
+  desc.topLeftY = 0;
+  GraphicsApi::instance().setViewports({ desc });
+
+
+  GraphicsApi::instance().setPrimitiveTopology(PRIMITIVE_TOPOLOGY::TRIANGLELIST);
 
 
   m_cube = std::make_shared<Object>();
@@ -270,8 +295,8 @@ bool BaseAppTest1::initResources()
     return false;
   }
 
-  m_viewMatrixBuffer = GraphicsApi::instance().getConstantBufferPtr();
-  m_projectionMatrixBuffer = GraphicsApi::instance().getConstantBufferPtr();
+  m_viewMatrixBuffer = GraphicsApi::instance().createConstantBufferPtr();
+  m_projectionMatrixBuffer = GraphicsApi::instance().createConstantBufferPtr();
   m_viewMatrixBuffer->initData(sizeof(Matrix4f), sizeof(Matrix4f), nullptr);
   m_projectionMatrixBuffer->initData(sizeof(Matrix4f), sizeof(Matrix4f), nullptr);
 
@@ -282,13 +307,16 @@ bool BaseAppTest1::initResources()
 void BaseAppTest1::update(float deltaTime)
 {
   static Quaternion rot(Vector3f(0.0f, 0.0f, 0.0f));
-  rot = Quaternion((rot.getEuclidean() + Vector3f(deltaTime * .005f, 0.0f, 0.0f)));
+  rot = Quaternion((rot.getEuclidean() + Vector3f(deltaTime * .5f, 0.0f, 0.0f)));
   m_model->setRotation(rot);
 }
 
 void BaseAppTest1::render()
 {
-  GraphicsApi::instance().clearScreen(0.3f, 0.5f, 0.8f);
+  float color[4] = {0.3f, 0.5f, 0.8f, 1.0f};
+  GraphicsApi::instance().clearRenderTargets({m_rtv}, color);
+  GraphicsApi::instance().cleanDepthStencils({m_dsv});
+  GraphicsApi::instance().setRenderTargets({m_rtv}, m_dsv);
 
   SPtr<VertexShader> vs =
   ResourceManager::instance().getResourceVertexShader("TestVS");
@@ -308,8 +336,8 @@ void BaseAppTest1::render()
 
   Matrix4f proj = Matrix4f::IDENTITY;
   proj = Matrix4f::perspectiveMatrix(0.785398163f,
-                                     static_cast<float>(eeEngineSDK::screenWidth) /
-                                     static_cast<float>(720),
+                                     static_cast<float>(screenWidth) /
+                                     static_cast<float>(screenHeight),
                                      0.01f,
                                      100.0f).getTranspose();
   m_projectionMatrixBuffer->updateData(reinterpret_cast<Byte*>(&proj));
@@ -325,4 +353,5 @@ void BaseAppTest1::render()
 
 void BaseAppTest1::destroy()
 {
+  eeEngineSDK::BaseApp::destroy();
 }

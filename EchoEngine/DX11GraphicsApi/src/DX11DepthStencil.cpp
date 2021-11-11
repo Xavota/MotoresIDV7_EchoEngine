@@ -47,7 +47,8 @@ DX11DepthStencil::create(int32 width, int32 height)
   return true;
 }
 
-void DX11DepthStencil::clean()
+void
+DX11DepthStencil::clean()
 {
   const DX11Basics* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
@@ -61,17 +62,12 @@ void DX11DepthStencil::clean()
 void
 DX11DepthStencil::release()
 {
-  if (m_depthStencilView)
-  {
-    m_depthStencilView->Release();
-  }
-  if (m_depthStencilResource)
-  {
-    m_depthStencilResource->Release();
-  }
+  DX11SAFE_RELEASE(m_depthStencilView);
+  DX11SAFE_RELEASE(m_depthStencilResource);
 }
-void* DX11DepthStencil::getResource()
+ID3D11DepthStencilView* 
+DX11DepthStencil::getResource()
 {
-  return reinterpret_cast<void*>(m_depthStencilView);
+  return m_depthStencilView;
 }
 }

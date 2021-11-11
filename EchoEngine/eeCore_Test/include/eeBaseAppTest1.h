@@ -6,6 +6,8 @@ using eeEngineSDK::int32;
 using eeEngineSDK::SPtr;
 using eeEngineSDK::Object;
 using eeEngineSDK::ConstantBuffer;
+using eeEngineSDK::RenderTarget;
+using eeEngineSDK::DepthStencil;
 
 class BaseAppTest1 : public BaseApp
 {
@@ -83,5 +85,8 @@ class BaseAppTest1 : public BaseApp
   * The buffer for the projection matrix
   */
   SPtr<ConstantBuffer> m_projectionMatrixBuffer;
+
+  SPtr<RenderTarget> m_rtv;
+  SPtr<DepthStencil> m_dsv;
 };
 

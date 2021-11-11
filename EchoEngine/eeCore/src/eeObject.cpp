@@ -22,7 +22,7 @@ Object::loadFromFile(const String& fileName,
   m_rotation = rot;
   m_scale = scale;
 
-  m_modelMatrixBuff = GraphicsApi::instance().getConstantBufferPtr();
+  m_modelMatrixBuff = GraphicsApi::instance().createConstantBufferPtr();
   Matrix4f modelMat = getModelMatrix();
   m_modelMatrixBuff->initData(sizeof(Matrix4f), 
                               sizeof(Matrix4f),
@@ -48,7 +48,7 @@ Object::loadFromModel(SPtr<Model> model,
   m_rotation = rot;
   m_scale = scale;
 
-  m_modelMatrixBuff = GraphicsApi::instance().getConstantBufferPtr();
+  m_modelMatrixBuff = GraphicsApi::instance().createConstantBufferPtr();
   Matrix4f modelMat = getModelMatrix();
   m_modelMatrixBuff->initData(sizeof(Matrix4f),
     sizeof(Matrix4f),

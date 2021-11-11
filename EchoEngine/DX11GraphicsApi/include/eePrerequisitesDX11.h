@@ -1,6 +1,7 @@
 #pragma once
 #include <eePrerequisitesCore.h>
 
+#define DX11SAFE_RELEASE(x) if (x) { x->Release(); x = nullptr; }
 
 
 

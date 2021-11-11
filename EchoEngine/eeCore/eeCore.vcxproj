@@ -183,6 +183,7 @@
     <ClCompile Include="src\eePixelShader.cpp" />
     <ClCompile Include="src\eeRenderTarget.cpp" />
     <ClCompile Include="src\eeResourceManager.cpp" />
+    <ClCompile Include="src\eeSamplerState.cpp" />
     <ClCompile Include="src\eeTexture.cpp" />
     <ClCompile Include="src\eeVertexBuffer.cpp" />
     <ClCompile Include="src\eeVertexShader.cpp" />
@@ -193,6 +194,7 @@
     <ClInclude Include="include\eeBuffer.h" />
     <ClInclude Include="include\eeConstantBuffer.h" />
     <ClInclude Include="include\eeCoreConfiguration.h" />
+    <ClInclude Include="include\eeCoreDefines.h" />
     <ClInclude Include="include\eeDepthStencil.h" />
     <ClInclude Include="include\eeIndexBuffer.h" />
     <ClInclude Include="include\eeInput.h" />
@@ -204,6 +206,7 @@
     <ClInclude Include="include\eePrerequisitesCore.h" />
     <ClInclude Include="include\eeRenderTarget.h" />
     <ClInclude Include="include\eeResourceManager.h" />
+    <ClInclude Include="include\eeSamplerState.h" />
     <ClInclude Include="include\eeVertex.h" />
     <ClInclude Include="include\eeTexture.h" />
     <ClInclude Include="include\eeVertexBuffer.h" />

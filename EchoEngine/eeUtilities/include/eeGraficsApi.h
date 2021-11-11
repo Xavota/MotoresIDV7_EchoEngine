@@ -20,6 +20,8 @@
 #include "eeVertexBuffer.h"
 #include "eeIndexBuffer.h"
 #include "eeConstantBuffer.h"
+#include "eeRenderTarget.h"
+#include "eeDepthStencil.h"
 
 namespace eeEngineSDK {
 /**
@@ -97,22 +99,79 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   * Blue part of the color. From 0 to 1 inclusive.
   */
   virtual void
-  clearScreen(float /*r*/, float /*g*/, float /*b*/){};
+  clearRenderTargets(Vector<SPtr<RenderTarget>> /*rtvs*/, float /*rgba*/[4]){};
 
   /**
   * @brief
-  * Set the viewport's size.
+  * Clean the depth stencil.
   *
   * @description
-  * Sets the dimensions of the viewport on the screen
+  * Remove all the last data from the depth stencil.
   *
-  * @param width
-  * The width of the viewport.
-  * @param height
-  * The height of the viewport.
+  * @param dsvs
+  * The depth stencils to clean.
   */
   virtual void
-  setViewport(float /*width*/, float /*height*/) {}
+  cleanDepthStencils(Vector<SPtr<DepthStencil>> /*dsvs*/) {};
+
+  /**
+  * @brief
+  * Sets the render targets given.
+  *
+  * @description
+  * Sets the render targets with the depth stencil.
+  *
+  * @param rtvs
+  * The render targets to set.
+  * @param dsv
+  * The depth stencil for the render targets.
+  */
+  virtual void
+  setRenderTargets(Vector<SPtr<RenderTarget>> /*rtvs*/,
+                   SPtr<DepthStencil> /*dsv*/) {}
+
+  /**
+  * @brief
+  * Sets the textures given.
+  *
+  * @description
+  * Sets several textures for the graphics memory.
+  *
+  * @param textures
+  * The vector of textures to set.
+  * @param startSlot
+  * The first index for the texture indices.
+  */
+  virtual void
+  setTextures(Vector<SPtr<Texture>> textures,
+              uint32 startSlot) {}
+
+  /**
+  * @brief
+  * Set viewports.
+  *
+  * @description
+  * Sets the viewports for the screen.
+  *
+  * @param descs
+  * The description for the different viewports. Also determines how many
+  * viewports to set.
+  */
+  virtual void
+  setViewports(Vector<ViewportDesc> descs) {}
+
+  /**
+  * @brief
+  * Set the topology.
+  *
+  * @description
+  * Sets the topology for the render.
+  *
+  * @param topology
+  * The topology to set.
+  */
+  virtual void
+  setPrimitiveTopology(PRIMITIVE_TOPOLOGY topology) {}
 
   /**
   * @brief
@@ -137,6 +196,16 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   virtual void
   present(){}
 
+  /**
+  * @brief
+  * Releases the data.
+  *
+  * @description
+  * Deletes the memory of all data allocated.
+  */
+  virtual void
+  release();
+
 
 
 
@@ -158,7 +227,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   * The pointer to a texture depending on the api.
   */
   FORCEINLINE virtual SPtr<Texture>
-  getTexturePtr() const { return std::make_shared<Texture>(); }
+  createTexturePtr() const { return std::make_shared<Texture>(); }
 
   /**
   * @brief
@@ -171,7 +240,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   * The pointer to a vertex shader depending on the api.
   */
   FORCEINLINE virtual SPtr<VertexShader>
-  getVertexShaderPtr() const { return std::make_shared<VertexShader>(); }
+  createVertexShaderPtr() const { return std::make_shared<VertexShader>(); }
 
   /**
   * @brief
@@ -184,7 +253,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   * The pointer to a pixel shader depending on the api.
   */
   FORCEINLINE virtual SPtr<PixelShader>
-  getPixelShaderPtr() const { return std::make_shared<PixelShader>(); }
+  createPixelShaderPtr() const { return std::make_shared<PixelShader>(); }
 
   /**
   * @brief
@@ -197,7 +266,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   * The pointer to a vertex buffer depending on the api.
   */
   FORCEINLINE virtual SPtr<VertexBuffer>
-  getVertexBufferPtr() const { return std::make_shared<VertexBuffer>(); }
+  createVertexBufferPtr() const { return std::make_shared<VertexBuffer>(); }
 
   /**
   * @brief
@@ -210,7 +279,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   * The pointer to a index buffer depending on the api.
   */
   FORCEINLINE virtual SPtr<IndexBuffer>
-  getIndexBufferPtr() const { return std::make_shared<IndexBuffer>(); }
+  createIndexBufferPtr() const { return std::make_shared<IndexBuffer>(); }
 
   /**
   * @brief
@@ -223,7 +292,33 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   * The pointer to a vertex constant depending on the api.
   */
   FORCEINLINE virtual SPtr<ConstantBuffer>
-  getConstantBufferPtr() const { return std::make_shared<ConstantBuffer>(); }
+  createConstantBufferPtr() const { return std::make_shared<ConstantBuffer>(); }
+
+  /**
+  * @brief
+  * Gets the specific render target pointer.
+  *
+  * @description
+  * Returns a pointer to a render target depending on the api.
+  *
+  * @return
+  * The pointer to a render target depending on the api.
+  */
+  FORCEINLINE virtual SPtr<RenderTarget>
+  createRenderTragetPtr() const { return std::make_shared<RenderTarget>(); }
+
+  /**
+  * @brief
+  * Gets the specific depth stencil pointer.
+  *
+  * @description
+  * Returns a pointer to a depth stencil depending on the api.
+  *
+  * @return
+  * The pointer to a depth stencil depending on the api.
+  */
+  FORCEINLINE virtual SPtr<DepthStencil>
+  createDepthStencilPtr() const { return std::make_shared<DepthStencil>(); }
 
 
 

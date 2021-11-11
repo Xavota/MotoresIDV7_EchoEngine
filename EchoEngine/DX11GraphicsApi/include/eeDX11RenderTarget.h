@@ -27,6 +27,8 @@ class DX11RenderTarget : public RenderTarget
   void
   clean(float r, float g, float b, float a) override;
 
+  ID3D11RenderTargetView*
+  getResource() { return m_renderTarget; }
 
   /**
   * @brief

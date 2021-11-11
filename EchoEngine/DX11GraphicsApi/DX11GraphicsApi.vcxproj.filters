@@ -39,6 +39,7 @@
     </ClInclude>
     <ClInclude Include="include\eeDX11RenderTarget.h" />
     <ClInclude Include="include\DX11DepthStencil.h" />
+    <ClInclude Include="include\eeDX11SamplerState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeDX11Texture.cpp">
@@ -64,5 +65,6 @@
     </ClCompile>
     <ClCompile Include="src\eeDX11RenderTarget.cpp" />
     <ClCompile Include="src\DX11DepthStencil.cpp" />
+    <ClCompile Include="src\eeDX11SamplerState.cpp" />
   </ItemGroup>
 </Project>

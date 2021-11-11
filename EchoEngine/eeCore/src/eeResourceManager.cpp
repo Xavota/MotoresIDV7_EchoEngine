@@ -24,7 +24,7 @@ ResourceManager::loadTextureFromFile(const String& fileName,
     return nullptr;
   }
 
-  SPtr<Texture> tex = GraphicsApi::instance().getTexturePtr();
+  SPtr<Texture> tex = GraphicsApi::instance().createTexturePtr();
   if (!tex->loadFromFile(fileName))
   {
     return nullptr;
@@ -122,7 +122,7 @@ ResourceManager::loadVertexShaderFromFile(const String& fileName,
     return nullptr;
   }
 
-  SPtr<VertexShader> shader = GraphicsApi::instance().getVertexShaderPtr();
+  SPtr<VertexShader> shader = GraphicsApi::instance().createVertexShaderPtr();
   if (!shader->compileFromFile(fileName))
   {
     return nullptr;
@@ -142,7 +142,7 @@ ResourceManager::loadVertexShaderFromString(const String& shaderString,
     return nullptr;
   }
 
-  SPtr<VertexShader> shader = GraphicsApi::instance().getVertexShaderPtr();
+  SPtr<VertexShader> shader = GraphicsApi::instance().createVertexShaderPtr();
   if (!shader->compileFromString(shaderString))
   {
     return nullptr;
@@ -162,7 +162,7 @@ ResourceManager::loadPixelShaderFromFile(const String& fileName,
     return nullptr;
   }
 
-  SPtr<PixelShader> shader = GraphicsApi::instance().getPixelShaderPtr();
+  SPtr<PixelShader> shader = GraphicsApi::instance().createPixelShaderPtr();
   if (!shader->compileFromFile(fileName))
   {
     return nullptr;
@@ -182,7 +182,7 @@ ResourceManager::loadPixelShaderFromString(const String& shaderString,
     return nullptr;
   }
 
-  SPtr<PixelShader> shader = GraphicsApi::instance().getPixelShaderPtr();
+  SPtr<PixelShader> shader = GraphicsApi::instance().createPixelShaderPtr();
   if (!shader->compileFromString(shaderString))
   {
     return nullptr;

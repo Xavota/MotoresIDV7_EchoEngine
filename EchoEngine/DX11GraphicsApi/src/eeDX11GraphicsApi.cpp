@@ -5,9 +5,6 @@
 #pragma warning(pop)   
 #include <eeCoreConfiguration.h>
 
-#include "eeDX11RenderTarget.h"
-#include "DX11DepthStencil.h"
-
 //#include <eeMath.h>
 
 namespace eeEngineSDK {
@@ -37,22 +34,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 DX11GraphicsApi::~DX11GraphicsApi()
 {
-  if (m_basics.m_device)
-  {
-    m_basics.m_device->Release();
-  }
-  if (m_basics.m_deviceContext)
-  {
-    m_basics.m_deviceContext->Release();
-  }
-  if (m_basics.m_swapChain)
-  {
-    m_basics.m_swapChain->Release();
-  }
-  if (m_rtv)
-  {
-    m_rtv->release();
-  }
+  release();
 }
 
 bool
@@ -113,22 +95,6 @@ DX11GraphicsApi::initialize()
   }
 
 
-
-  setViewport(static_cast<float>(width), static_cast<float>(height));
-
-
-
-  m_rtv = std::make_shared<DX11RenderTarget>();
-  m_rtv->createAsBackBuffer();
-
-  m_dsv = std::make_shared<DX11DepthStencil>();
-  m_dsv->create(width, height);
-
-
-
-  m_basics.m_deviceContext->IASetPrimitiveTopology(
-                                        D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
   return true;
 }
 bool
@@ -165,7 +131,10 @@ DX11GraphicsApi::initializeScreen()
   }
 
   // Create window
-  RECT rc = { 0, 0, screenWidth, screenHeight };
+  RECT rc = { 0,
+              0,
+              eeConfigurations::screenWidth,
+              eeConfigurations::screenHeight };
   AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
   m_win = reinterpret_cast<void*>(CreateWindow("TutorialWindowClass", 
                                                "EchoEngine", 
@@ -187,34 +156,121 @@ DX11GraphicsApi::initializeScreen()
   return true;
 }
 void
-DX11GraphicsApi::clearScreen(float r, float g, float b)
+DX11GraphicsApi::clearRenderTargets(Vector<SPtr<RenderTarget>> rtvs,
+                                    float rgba[4])
 {
-  m_rtv->clean(r,g,b,1.0f);
-  m_dsv->clean();
-  m_rtv->set(m_dsv);
+  for (SPtr<RenderTarget> r : rtvs)
+  {
+    r->clean(rgba[0],rgba[1],rgba[2],rgba[3]);
+  }
 }
 void
-DX11GraphicsApi::setViewport(float width, float height)
+DX11GraphicsApi::cleanDepthStencils(Vector<SPtr<DepthStencil>> dsvs)
 {
-  D3D11_VIEWPORT vp = {};
-  vp.Width = width;
-  vp.Height = height;
-  vp.MinDepth = 0;
-  vp.MaxDepth = 0;
-  vp.TopLeftX = 0;
-  vp.TopLeftY = 0;
+  for (SPtr<DepthStencil> d : dsvs)
+  {
+    d->clean();
+  }
+}
+void
+DX11GraphicsApi::setRenderTargets(Vector<SPtr<RenderTarget>> rtvs,
+                                  SPtr<DepthStencil> dsv)
+{
+  Vector<ID3D11RenderTargetView*> dx11rts;
 
-  m_basics.m_deviceContext->RSSetViewports(1u, &vp);
+  SPtr<DX11DepthStencil> ds = nullptr;
+  if (dsv)
+  {
+    ds = std::reinterpret_pointer_cast<DX11DepthStencil>(dsv);
+  }
+
+  for (SPtr<RenderTarget> r : rtvs)
+  {
+    SPtr<DX11RenderTarget> rt = 
+    std::reinterpret_pointer_cast<DX11RenderTarget>(r);
+
+    if (rt)
+    {
+      dx11rts.push_back(rt->getResource());
+    }
+  }
+
+  if (!dx11rts.empty())
+  {
+    m_basics.m_deviceContext->OMSetRenderTargets(static_cast<UINT>(dx11rts.size()),
+                                                 dx11rts.data(),
+                                                 ds ? ds->getResource() : nullptr);
+  }
+}
+void DX11GraphicsApi::setTextures(Vector<SPtr<Texture>> textures,
+                                  uint32 startSlot)
+{
+
+  Vector<ID3D11ShaderResourceView*> dx11texs;
+
+  for (SPtr<Texture> tex : textures)
+  {
+    SPtr<DX11Texture> t = std::reinterpret_pointer_cast<DX11Texture>(tex);
+
+    if (t)
+    {
+      dx11texs.push_back(t->getResource());
+    }
+  }
+
+  if (!dx11texs.empty())
+  {
+    m_basics.m_deviceContext->PSSetShaderResources
+    (
+      startSlot,
+      static_cast<UINT>(dx11texs.size()),
+      dx11texs.data()
+    );
+  }
+}
+void
+DX11GraphicsApi::setViewports(Vector<ViewportDesc> descs)
+{
+  Vector<D3D11_VIEWPORT> vps;
+
+  for (ViewportDesc& d : descs)
+  {
+    int32 vSize = static_cast<int32>(vps.size());
+    vps.push_back(D3D11_VIEWPORT());
+
+    vps[vSize].Width = d.width;
+    vps[vSize].Height = d.height;
+    vps[vSize].MinDepth = d.minDepth;
+    vps[vSize].MaxDepth = d.maxDepth;
+    vps[vSize].TopLeftX = d.topLeftX;
+    vps[vSize].TopLeftY = d.topLeftY;
+
+  }
+
+  m_basics.m_deviceContext->RSSetViewports(static_cast<UINT>(vps.size()),
+                                           vps.data());
 }
 void
 DX11GraphicsApi::drawIndexed(int32 indicesCount) const
 {
   m_basics.m_deviceContext->DrawIndexed(indicesCount, 0u, 0u);
 }
+void DX11GraphicsApi::setPrimitiveTopology(PRIMITIVE_TOPOLOGY topology)
+{
+  m_basics.m_deviceContext->IASetPrimitiveTopology(
+  static_cast<D3D11_PRIMITIVE_TOPOLOGY>(topology));
+}
 void
 DX11GraphicsApi::present()
 {
   m_basics.m_swapChain->Present(0u, 0u);
+}
+
+void DX11GraphicsApi::release()
+{
+  DX11SAFE_RELEASE(m_basics.m_device);
+  DX11SAFE_RELEASE(m_basics.m_deviceContext);
+  DX11SAFE_RELEASE(m_basics.m_swapChain);
 }
 
 

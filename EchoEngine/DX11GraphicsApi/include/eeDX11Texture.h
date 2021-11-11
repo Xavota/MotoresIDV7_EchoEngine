@@ -70,6 +70,9 @@ public:
   bool
   loadFromBuffer(SPtr<void> buffer) override;
 
+  ID3D11ShaderResourceView*
+  getResource() { return m_tex; }
+
   /**
   * @brief
   * Set to graphics api.
@@ -97,8 +100,8 @@ private:
   */
   ID3D11ShaderResourceView* m_tex = nullptr;
   /**
-  * DX11 sampler state. The sampler of the texture.
+  * sampler state. The sampler of the texture.
   */
-  ID3D11SamplerState* m_sampler = nullptr;
+  SPtr<SamplerState> m_sampler = nullptr;
 };
 }

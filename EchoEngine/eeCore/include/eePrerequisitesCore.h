@@ -1,7 +1,8 @@
 #pragma once
 
 #include <eePrerequisitesUtilities.h>
-
+#include "eeCoreDefines.h"
+#include <chrono>
 
 
 /************************************************************************/
@@ -48,6 +49,7 @@ class IndexBuffer;
 class ConstantBuffer;
 class RenderTarget;
 class DepthStencil;
+class SamplerState;
 
 struct SimplexVertex;
 struct SimpleVertex;
