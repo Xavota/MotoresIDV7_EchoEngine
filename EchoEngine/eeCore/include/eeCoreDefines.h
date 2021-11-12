@@ -3,7 +3,8 @@
 
 
 namespace eeEngineSDK {
-enum class FILTER {
+enum class FILTER
+{
   MIN_MAG_MIP_POINT,
   MIN_MAG_POINT_MIP_LINEAR,
   MIN_POINT_MAG_LINEAR_MIP_POINT,
@@ -42,7 +43,8 @@ enum class FILTER {
   MAXIMUM_ANISOTROPIC
 };
 
-enum class TEXTURE_ADDRESS_MODE {
+enum class TEXTURE_ADDRESS_MODE
+{
   WRAP,
   MIRROR,
   CLAMP,
@@ -50,7 +52,8 @@ enum class TEXTURE_ADDRESS_MODE {
   MIRROR_ONCE
 };
 
-enum class COMPARISON_FUNC {
+enum class COMPARISON_FUNC
+{
   NEVER,
   LESS,
   EQUAL,
@@ -204,6 +207,19 @@ enum class SRV_DIMENSION
   BUFFEREX = 11
 };
 
+enum class FILL_MODE
+{
+  WIREFRAME = 2,
+  SOLID = 3
+};
+
+enum class CULL_MODE
+{
+  NONE = 1,
+  FRONT = 2,
+  BACK = 3
+};
+
 ////////////////////////////////////////////////////////////////////////////////
 /*                                                                            */
 /*                                 structures                                 */
@@ -354,5 +370,19 @@ struct ShaderResourceViewDesc
     TexcubeArraySRV textureCubeArray;
     BufferExSRV     bufferEx;
   };
+};
+
+struct RasteraizerDesc
+{
+  FILL_MODE fillMode;
+  CULL_MODE cullMode;
+  bool      frontCounterClockwise;
+  int32     depthBias;
+  float     depthBiasClamp;
+  float     slopeScaledDepthBias;
+  bool      depthClipEnable;
+  bool      scissorEnable;
+  bool      multisampleEnable;
+  bool      antialiasedLineEnable;
 };
 }

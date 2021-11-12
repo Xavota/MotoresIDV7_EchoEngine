@@ -22,6 +22,7 @@
 #include "eeDX11ConstantBuffer.h"
 #include "eeDX11RenderTarget.h"
 #include "DX11DepthStencil.h"
+#include "eeDX11RasterizerState.h"
 
 #pragma warning(push, 0)   
 #include <d3d11.h>
@@ -287,9 +288,14 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
   *
   * @description
   * Changes the back buffer to the front buffer to show it in the screen.
+  *
+  * @param syncInterval
+  * How often the screen will sync.
+  * @param flags
+  * Extra info flags.
   */
   void
-  present() override;
+  present(uint32 syncInterval, uint32 flags) override;
 
   /**
   * @brief
@@ -413,6 +419,19 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
   */
   FORCEINLINE virtual SPtr<DepthStencil>
   createDepthStencilPtr() const { return std::make_shared<DX11DepthStencil>(); }
+
+  /**
+  * @brief
+  * Gets the specific rasterizer state pointer.
+  *
+  * @description
+  * Returns a pointer to a rasterizer state depending on the api.
+  *
+  * @return
+  * The pointer to a rasterizer state depending on the api.
+  */
+  FORCEINLINE virtual SPtr<RasterizerState>
+  createRasterizerStatePtr() const { return std::make_shared<DX11RasterizerState>(); }
 
 
 

@@ -22,6 +22,7 @@
 #include "eeConstantBuffer.h"
 #include "eeRenderTarget.h"
 #include "eeDepthStencil.h"
+#include "eeRasterizerState.h"
 
 namespace eeEngineSDK {
 /**
@@ -279,9 +280,14 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   *
   * @description
   * Changes the back buffer to the front buffer to show it in the screen.
+  * 
+  * @param syncInterval
+  * How often the screen will sync.
+  * @param flags
+  * Extra info flags.
   */
   virtual void
-  present(){}
+  present(uint32 /*syncInterval*/, uint32 /*flags*/){}
 
   /**
   * @brief
@@ -406,6 +412,19 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   */
   FORCEINLINE virtual SPtr<DepthStencil>
   createDepthStencilPtr() const { return std::make_shared<DepthStencil>(); }
+
+  /**
+  * @brief
+  * Gets the specific rasterizer state pointer.
+  *
+  * @description
+  * Returns a pointer to a rasterizer state depending on the api.
+  *
+  * @return
+  * The pointer to a rasterizer state depending on the api.
+  */
+  FORCEINLINE virtual SPtr<RasterizerState>
+  createRasterizerStatePtr() const { return std::make_shared<RasterizerState>(); }
 
 
 

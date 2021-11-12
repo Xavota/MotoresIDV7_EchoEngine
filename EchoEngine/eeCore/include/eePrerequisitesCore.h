@@ -50,6 +50,7 @@ class ConstantBuffer;
 class RenderTarget;
 class DepthStencil;
 class SamplerState;
+class RasterizerState;
 
 struct SimplexVertex;
 struct SimpleVertex;

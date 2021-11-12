@@ -40,6 +40,7 @@
     <ClInclude Include="include\eeDX11RenderTarget.h" />
     <ClInclude Include="include\DX11DepthStencil.h" />
     <ClInclude Include="include\eeDX11SamplerState.h" />
+    <ClInclude Include="include\eeDX11RasterizerState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeDX11Texture.cpp">
@@ -66,5 +67,6 @@
     <ClCompile Include="src\eeDX11RenderTarget.cpp" />
     <ClCompile Include="src\DX11DepthStencil.cpp" />
     <ClCompile Include="src\eeDX11SamplerState.cpp" />
+    <ClCompile Include="src\eeDX11RasterizerState.cpp" />
   </ItemGroup>
 </Project>

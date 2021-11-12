@@ -7,6 +7,7 @@
 #include <eeCoreConfiguration.h>
 #include <eeRenderTarget.h>
 #include <eeDepthStencil.h>
+#include <eeRasterizerState.h>
 
 #include <eeMath.h>
 
@@ -35,6 +36,7 @@ using eeEngineSDK::Math;
 using eeEngineSDK::VertexShader;
 using eeEngineSDK::PixelShader;
 using eeEngineSDK::Byte;
+using eeEngineSDK::Texture;
 
 
 using eeEngineSDK::FILTER;
@@ -44,6 +46,7 @@ using eeEngineSDK::PRIMITIVE_TOPOLOGY;
 
 using eeEngineSDK::SamplerStateDesc;
 using eeEngineSDK::ViewportDesc;
+using eeEngineSDK::RasteraizerDesc;
 
 BaseAppTest1::BaseAppTest1()
 {
@@ -73,6 +76,12 @@ bool BaseAppTest1::initResources()
 
   m_dsv = GraphicsApi::instance().createDepthStencilPtr();
   m_dsv->create(screenWidth, screenHeight);
+
+  m_rtv2 = GraphicsApi::instance().createRenderTragetPtr();
+  m_rtv2->createAsIOTexture();
+
+  m_dsv2 = GraphicsApi::instance().createDepthStencilPtr();
+  m_dsv2->create(screenWidth, screenHeight);
 
   ViewportDesc desc;
   memset(&desc, 0, sizeof(desc));
@@ -302,15 +311,87 @@ bool BaseAppTest1::initResources()
     Vector3f(0.1f, 0.10f, 0.10f)
   );
 
+  m_SAQ = std::make_shared<Object>();
+  m_SAQ->loadFromModel
+  (
+    ResourceManager::instance().loadModelFromMeshesArray
+    (
+      Vector<Pair<SPtr<Mesh>, uint8>>
+      {
+        make_pair
+        (
+          ResourceManager::instance().loadMeshFromVertexArray
+          <SimpleVertex, uint32>
+          (
+            Vector<SimpleVertex>
+            {
+              SimpleVertex
+              {
+                Vector4f(-1.0f,  1.0f, 0.0f, 1.0f),
+                Vector4f( 0.0f,  0.0f, 0.0f, 0.0f),
+                Vector4f( 0.0f,  0.0f, 0.0f, 0.0f)
+              },
+              SimpleVertex
+              {
+                Vector4f( 1.0f,  1.0f, 0.0f, 1.0f),
+                Vector4f( 1.0f,  0.0f, 0.0f, 0.0f),
+                Vector4f( 0.0f,  0.0f, 0.0f, 0.0f)
+              },
+              SimpleVertex
+              {
+                Vector4f( 1.0f, -1.0f,  0.0f, 1.0f),
+                Vector4f( 1.0f,  1.0f,  0.0f, 0.0f),
+                Vector4f( 0.0f,  0.0f,  0.0f, 0.0f)
+              },
+              SimpleVertex
+              {
+                Vector4f(-1.0f, -1.0f,  0.0f, 1.0f),
+                Vector4f( 0.0f,  1.0f,  0.0f, 0.0f),
+                Vector4f( 0.0f,  0.0f,  0.0f, 0.0f)
+              }
+            },
+            Vector<uint32>
+            {
+              0, 1, 2, 
+              0, 2, 3
+            },
+            "MeshSAQ1"
+          ),
+          1u
+        )
+      },
+      Vector<SPtr<Texture>>
+      {
+        m_rtv2->getAsTexture()
+      },
+      "SAQ"
+    ),
+    Vector3f(0.0f, 0.0f, 0.0f),
+    Quaternion(Vector3f(0.0f, 0.0f, 0.0f)),
+    Vector3f(1.0f, 1.0f, 1.0f)
+  );
 
 
-  if (!ResourceManager::instance().loadVertexShaderFromFile("TestVShader.hlsl",
+
+  if (!ResourceManager::instance().loadVertexShaderFromFile("Shaders/TestVShader.hlsl",
                                                             "TestVS"))
   {
     return false;
   }
-  if (!ResourceManager::instance().loadPixelShaderFromFile("TestPShader.hlsl",
+  if (!ResourceManager::instance().loadPixelShaderFromFile("Shaders/TestPShader.hlsl",
                                                            "TestPS"))
+  {
+    return false;
+  }
+
+
+  if (!ResourceManager::instance().loadVertexShaderFromFile("Shaders/TestVSSAQ.hlsl",
+    "TestSAQVS"))
+  {
+    return false;
+  }
+  if (!ResourceManager::instance().loadPixelShaderFromFile("Shaders/TestPSSAQ.hlsl",
+    "TestSAQPS"))
   {
     return false;
   }
@@ -320,6 +401,30 @@ bool BaseAppTest1::initResources()
   m_viewMatrixBuffer->initData(sizeof(Matrix4f), sizeof(Matrix4f), nullptr);
   m_projectionMatrixBuffer->initData(sizeof(Matrix4f), sizeof(Matrix4f), nullptr);
 
+
+  RasteraizerDesc rasDesc;
+  memset(&rasDesc, 0, sizeof(rasDesc));
+  rasDesc.cullMode = eeEngineSDK::CULL_MODE::NONE;
+  rasDesc.fillMode = eeEngineSDK::FILL_MODE::SOLID;
+  rasDesc.frontCounterClockwise = true;
+
+  m_rasterizer = GraphicsApi::instance().createRasterizerStatePtr();
+  if (!m_rasterizer->create(rasDesc))
+  {
+    return false;
+  }
+
+
+  memset(&rasDesc, 0, sizeof(rasDesc));
+  rasDesc.cullMode = eeEngineSDK::CULL_MODE::FRONT;
+  rasDesc.fillMode = eeEngineSDK::FILL_MODE::SOLID;
+  rasDesc.frontCounterClockwise = true;
+
+  m_rasterizer2 = GraphicsApi::instance().createRasterizerStatePtr();
+  if (!m_rasterizer2->create(rasDesc))
+  {
+    return false;
+  }
 
   return true;
 }
@@ -335,9 +440,9 @@ void BaseAppTest1::render()
 {
   // Clean and set back buffer and depth stencil
   float color[4] = {0.3f, 0.5f, 0.8f, 1.0f};
-  GraphicsApi::instance().clearRenderTargets({m_rtv}, color);
-  GraphicsApi::instance().cleanDepthStencils({m_dsv});
-  GraphicsApi::instance().setRenderTargets({m_rtv}, m_dsv);
+  GraphicsApi::instance().clearRenderTargets({m_rtv2}, color);
+  GraphicsApi::instance().cleanDepthStencils({m_dsv2});
+  GraphicsApi::instance().setRenderTargets({m_rtv2}, m_dsv2);
 
 
 
@@ -377,16 +482,40 @@ void BaseAppTest1::render()
   );
 
 
+  m_rasterizer->use();
   // Draws the object
   //GraphicsApi::instance().drawObject(m_triangle);
   //GraphicsApi::instance().drawObject(m_cube);
   GraphicsApi::instance().drawObject(m_model);
 
-  GraphicsApi::instance().present();
 
   GraphicsApi::instance().unsetRenderTargets();
   GraphicsApi::instance().unsetTextures(1u, 0u);
   GraphicsApi::instance().unsetVSConstantBuffers(3u, 0u);
+
+
+
+  GraphicsApi::instance().clearRenderTargets({ m_rtv }, color);
+  GraphicsApi::instance().cleanDepthStencils({ m_dsv });
+  GraphicsApi::instance().setRenderTargets({ m_rtv }, m_dsv);
+
+
+
+  // Load shaders
+  vs = ResourceManager::instance().getResourceVertexShader("TestSAQVS");
+  vs->use();
+
+  ps = ResourceManager::instance().getResourcePixelShader("TestSAQPS");
+  ps->use();
+
+
+
+  m_rasterizer2->use();
+  GraphicsApi::instance().drawObject(m_SAQ);
+
+
+
+  GraphicsApi::instance().present(0u, 0u);
 }
 
 void BaseAppTest1::destroy()

@@ -53,7 +53,11 @@ bool DX11Texture::loadFromBuffer(void* buffer, SamplerStateDesc desc)
   HRESULT hr = basics->m_device->CreateShaderResourceView(texBuff, &srvDesc, &m_tex);
   if (FAILED(hr))
     return false;
-  return false;
+
+  m_sampler = std::make_shared<DX11SamplerState>();
+  m_sampler->create(desc);
+
+  return true;
 }
 
 void DX11Texture::use()

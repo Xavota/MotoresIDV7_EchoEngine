@@ -352,9 +352,9 @@ void DX11GraphicsApi::setPrimitiveTopology(PRIMITIVE_TOPOLOGY topology)
   static_cast<D3D11_PRIMITIVE_TOPOLOGY>(topology));
 }
 void
-DX11GraphicsApi::present()
+DX11GraphicsApi::present(uint32 syncInterval, uint32 flags)
 {
-  m_basics.m_swapChain->Present(0u, 0u);
+  m_basics.m_swapChain->Present(syncInterval, flags);
 }
 
 void DX11GraphicsApi::release()

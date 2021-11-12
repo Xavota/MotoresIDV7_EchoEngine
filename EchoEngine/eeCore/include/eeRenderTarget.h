@@ -32,7 +32,7 @@ class EE_CORE_EXPORT RenderTarget
   virtual bool
   createAsIOTexture() { return true; }
 
-  virtual const SPtr<const Texture>
+  virtual const SPtr<Texture>
   getAsTexture() const { return m_inTexture; }
 
 

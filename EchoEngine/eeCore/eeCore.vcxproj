@@ -181,6 +181,7 @@
     <ClCompile Include="src\eeModel.cpp" />
     <ClCompile Include="src\eeObject.cpp" />
     <ClCompile Include="src\eePixelShader.cpp" />
+    <ClCompile Include="src\eeRasterizerState.cpp" />
     <ClCompile Include="src\eeRenderTarget.cpp" />
     <ClCompile Include="src\eeResourceManager.cpp" />
     <ClCompile Include="src\eeSamplerState.cpp" />
@@ -204,6 +205,7 @@
     <ClInclude Include="include\eeObject.h" />
     <ClInclude Include="include\eePixelShader.h" />
     <ClInclude Include="include\eePrerequisitesCore.h" />
+    <ClInclude Include="include\eeRasterizerState.h" />
     <ClInclude Include="include\eeRenderTarget.h" />
     <ClInclude Include="include\eeResourceManager.h" />
     <ClInclude Include="include\eeSamplerState.h" />

@@ -8,6 +8,7 @@ using eeEngineSDK::Object;
 using eeEngineSDK::ConstantBuffer;
 using eeEngineSDK::RenderTarget;
 using eeEngineSDK::DepthStencil;
+using eeEngineSDK::RasterizerState;
 
 class BaseAppTest1 : public BaseApp
 {
@@ -76,6 +77,7 @@ class BaseAppTest1 : public BaseApp
   * An object loaded from a file.
   */
   SPtr<Object> m_model;
+  SPtr<Object> m_SAQ;
 
   /*
   * The buffer for the view matrix
@@ -88,5 +90,11 @@ class BaseAppTest1 : public BaseApp
 
   SPtr<RenderTarget> m_rtv;
   SPtr<DepthStencil> m_dsv;
+
+  SPtr<RenderTarget> m_rtv2;
+  SPtr<DepthStencil> m_dsv2;
+
+  SPtr<RasterizerState> m_rasterizer;
+  SPtr<RasterizerState> m_rasterizer2;
 };
 

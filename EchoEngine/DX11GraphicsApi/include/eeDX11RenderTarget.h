@@ -18,7 +18,7 @@ class DX11RenderTarget : public RenderTarget
   bool
   createAsIOTexture() override;
 
-  const SPtr<const Texture>
+  const SPtr<Texture>
   getAsTexture() const override;
 
 
