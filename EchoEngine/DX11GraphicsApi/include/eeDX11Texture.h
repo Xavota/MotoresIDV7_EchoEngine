@@ -72,7 +72,7 @@ public:
   * Weather it succeed or failed to initialize.
   */
   bool
-  loadFromBuffer(SPtr<void> buffer, SamplerStateDesc desc) override;
+  loadFromBuffer(void* buffer, SamplerStateDesc desc) override;
 
   ID3D11ShaderResourceView*
   getResource() { return m_tex; }

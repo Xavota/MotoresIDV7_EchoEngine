@@ -71,7 +71,7 @@ class EE_CORE_EXPORT Texture
   * Weather it succeed or failed to initialize.
   */
   virtual bool
-  loadFromBuffer(SPtr<void> /*buffer*/, SamplerStateDesc /*desc*/){return true;}
+  loadFromBuffer(void* /*buffer*/, SamplerStateDesc /*desc*/){return true;}
 
   /**
   * @brief

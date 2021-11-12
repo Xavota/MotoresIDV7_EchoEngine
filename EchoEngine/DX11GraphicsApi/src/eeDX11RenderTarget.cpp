@@ -31,6 +31,40 @@ DX11RenderTarget::createAsBackBuffer()
 bool
 DX11RenderTarget::createAsIOTexture()
 {
+  //TODO: Areglar
+  Texture2D Tex;
+  TEXTURE2D_DESC descTextRT;
+  ZeroMemory(&descTextRT, sizeof(descTextRT));
+  descTextRT.Width = 1264;
+  descTextRT.Height = 681;
+  descTextRT.MipLevels = 1;
+  descTextRT.ArraySize = 1;
+  descTextRT.Format = FORMAT_R8G8B8A8_UNORM;
+  descTextRT.SampleDesc.Count = 1;
+  descTextRT.SampleDesc.Quality = 0;
+  descTextRT.Usage = USAGE_DEFAULT;
+  descTextRT.BindFlags = BIND_SHADER_RESOURCE | BIND_RENDER_TARGET;
+  descTextRT.CPUAccessFlags = 0;
+  descTextRT.MiscFlags = 0;
+  if (FAILED(GetManager()->CreateTexture2D(&descTextRT, NULL, Tex)))
+  {
+    Tex.Release();
+    return;
+  }
+
+  if (FAILED(GetManager()->CreateRenderTargetView(Tex, NULL, m_rtv)))
+  {
+    Tex.Release();
+    return;
+  }
+
+  if (m_tex.CreateTextureFromBuffer(Tex))
+  {
+    Tex.Release();
+    return;
+  }
+
+  Tex.Release();
   return false;
 }
 

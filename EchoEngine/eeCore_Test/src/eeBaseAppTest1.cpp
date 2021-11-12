@@ -35,7 +35,15 @@ using eeEngineSDK::Math;
 using eeEngineSDK::VertexShader;
 using eeEngineSDK::PixelShader;
 using eeEngineSDK::Byte;
+
+
+using eeEngineSDK::FILTER;
+using eeEngineSDK::TEXTURE_ADDRESS_MODE;
+using eeEngineSDK::COMPARISON_FUNC;
+using eeEngineSDK::PRIMITIVE_TOPOLOGY;
+
 using eeEngineSDK::SamplerStateDesc;
+using eeEngineSDK::ViewportDesc;
 
 BaseAppTest1::BaseAppTest1()
 {

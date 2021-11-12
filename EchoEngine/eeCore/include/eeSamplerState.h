@@ -2,19 +2,6 @@
 #include "eePrerequisitesCore.h"
 
 namespace eeEngineSDK {
-struct SamplerStateDesc
-{
-  FILTER               filter;
-  TEXTURE_ADDRESS_MODE addressU;
-  TEXTURE_ADDRESS_MODE addressV;
-  TEXTURE_ADDRESS_MODE addressW;
-  float                mipLODBias;
-  uint32               maxAnisotropy;
-  COMPARISON_FUNC      comparisonFunc;
-  float                borderColor[4];
-  float                minLOD;
-  float                maxLOD;
-};
 
 class SamplerState
 {
