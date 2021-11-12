@@ -18,6 +18,7 @@ const float PlatformMath::kEuler = 2.71828183f;
 const float PlatformMath::kFLOAT_EQUAL_SMALL_DIFFERENCE = 0.001f;
 const float PlatformMath::kSMALL_FLOAT = -999999.0f;
 const float PlatformMath::kBIG_FLOAT = 999999.0f;
+const float PlatformMath::kMAX_FLOAT = 3.402823466e+38f;
 const int32 PlatformMath::kSMALL_INT = -2147483648;
 const int32 PlatformMath::kBIG_INT = 2147483647;
 const uint32 PlatformMath::kBIG_UINT = 4294967295u;

@@ -14,6 +14,7 @@
 #pragma once
 #include "eePrerequisitesCore.h"
 #include "eeBuffer.h"
+#include "eeSamplerState.h"
 
 namespace eeEngineSDK {
 /**
@@ -45,12 +46,14 @@ class EE_CORE_EXPORT Texture
   *
   * @param fileName
   * The name of the file containing the texture.
+  * @param desc
+  * The descriptor for the sampler of the texture.
   *
   * @return
   * Weather it succeed or failed to initialize.
   */
   virtual bool
-  loadFromFile(const String fileName) { return true; }
+  loadFromFile(const String /*fileName*/, SamplerStateDesc /*desc*/) { return true; }
 
   /**
   * @brief
@@ -61,12 +64,14 @@ class EE_CORE_EXPORT Texture
   *
   * @param buffer
   * The buffer containing the information about the texture.
+  * @param desc
+  * The descriptor for the sampler of the texture.
   *
   * @return
   * Weather it succeed or failed to initialize.
   */
   virtual bool
-  loadFromBuffer(SPtr<void> buffer){return true;}
+  loadFromBuffer(SPtr<void> /*buffer*/, SamplerStateDesc /*desc*/){return true;}
 
   /**
   * @brief

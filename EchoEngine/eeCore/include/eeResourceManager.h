@@ -48,7 +48,9 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
   * Weather it succeed or failed to initialize.
   */
   SPtr<Texture>
-  loadTextureFromFile(const String& fileName, const String resourceName);
+  loadTextureFromFile(const String& fileName,
+                      const String resourceName,
+                      SamplerStateDesc desc);
 
   /**
   * @brief

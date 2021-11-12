@@ -153,6 +153,16 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
 
   /**
   * @brief
+  * Unset the render targets and depth stencil.
+  *
+  * @description
+  * Sets a nullptr render target and depth stencil.
+  */
+  void
+  unsetRenderTargets() override;
+
+  /**
+  * @brief
   * Sets the textures given.
   *
   * @description
@@ -166,6 +176,83 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
   void
   setTextures(Vector<SPtr<Texture>> textures,
               uint32 startSlot) override;
+
+  /**
+  * @brief
+  * Unset the textures.
+  *
+  * @description
+  * Sets nullptr textures.
+  *
+  * @param textureCount
+  * The number of textures to unset
+  * @param startSlot
+  * The first index for the texture indices.
+  */
+  void
+  unsetTextures(uint32 textureCount, uint32 startSlot) override;
+
+  /**
+  * @brief
+  * Sets the buffers given.
+  *
+  * @description
+  * Sets several buffers for the vertex shader.
+  *
+  * @param buffers
+  * The vector of buffers to set.
+  * @param startSlot
+  * The first index for the buffers indices.
+  */
+  void
+  setVSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
+                       uint32 startSlot) override;
+
+  /**
+  * @brief
+  * Unset the buffers on the vertex buffer.
+  *
+  * @description
+  * Sets nullptr buffers on the vertex buffer.
+  *
+  * @param buffersCount
+  * The number of buffers to unset
+  * @param startSlot
+  * The first index for the buffers indices.
+  */
+  void
+  unsetVSConstantBuffers(uint32 buffersCount, uint32 startSlot) override;
+
+  /**
+  * @brief
+  * Sets the buffers given.
+  *
+  * @description
+  * Sets several buffers for the pixel shader.
+  *
+  * @param buffers
+  * The vector of buffers to set.
+  * @param startSlot
+  * The first index for the buffers indices.
+  */
+  void
+  setPSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
+                       uint32 startSlot) override;
+
+  /**
+  * @brief
+  * Unset the buffers on the pixel buffer.
+  *
+  * @description
+  * Sets nullptr buffers on the pixel buffer.
+  *
+  * @param buffersCount
+  * The number of buffers to unset.
+  * @param startSlot
+  * The first index for the buffers indices.
+  */
+  void
+  unsetPSConstantBuffers(uint32 buffersCount, uint32 startSlot) override;
 
   /**
   * @brief

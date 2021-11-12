@@ -202,10 +202,13 @@ DX11GraphicsApi::setRenderTargets(Vector<SPtr<RenderTarget>> rtvs,
                                                  ds ? ds->getResource() : nullptr);
   }
 }
+void DX11GraphicsApi::unsetRenderTargets()
+{
+  m_basics.m_deviceContext->OMSetRenderTargets(0u, nullptr, nullptr);
+}
 void DX11GraphicsApi::setTextures(Vector<SPtr<Texture>> textures,
                                   uint32 startSlot)
 {
-
   Vector<ID3D11ShaderResourceView*> dx11texs;
 
   for (SPtr<Texture> tex : textures)
@@ -227,6 +230,94 @@ void DX11GraphicsApi::setTextures(Vector<SPtr<Texture>> textures,
       dx11texs.data()
     );
   }
+}
+void DX11GraphicsApi::unsetTextures(uint32 textureCount, uint32 startSlot)
+{
+  Vector<ID3D11ShaderResourceView*> dx11texs;
+  dx11texs.resize(textureCount, nullptr);
+
+  m_basics.m_deviceContext->PSSetShaderResources
+  (
+    startSlot,
+    textureCount,
+    dx11texs.data()
+  );
+}
+void DX11GraphicsApi::setVSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
+                                           uint32 startSlot)
+{
+  Vector<ID3D11Buffer*> dx11buffers;
+
+  for (SPtr<ConstantBuffer> buff : buffers)
+  {
+    SPtr<DX11ConstantBuffer> b =
+    std::reinterpret_pointer_cast<DX11ConstantBuffer>(buff);
+
+    if (b)
+    {
+      dx11buffers.push_back(b->getResource());
+    }
+  }
+
+  if (!dx11buffers.empty())
+  {
+    m_basics.m_deviceContext->VSSetConstantBuffers
+    (
+      startSlot,
+      static_cast<UINT>(dx11buffers.size()),
+      dx11buffers.data()
+    );
+  }
+}
+void DX11GraphicsApi::unsetVSConstantBuffers(uint32 buffersCount, uint32 startSlot)
+{
+  Vector<ID3D11Buffer*> dx11buffers;
+  dx11buffers.resize(buffersCount, nullptr);
+
+  m_basics.m_deviceContext->VSSetConstantBuffers
+  (
+    startSlot,
+    buffersCount,
+    dx11buffers.data()
+  );
+}
+void DX11GraphicsApi::setPSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
+                                           uint32 startSlot)
+{
+  Vector<ID3D11Buffer*> dx11buffers;
+
+  for (SPtr<ConstantBuffer> buff : buffers)
+  {
+    SPtr<DX11ConstantBuffer> b =
+    std::reinterpret_pointer_cast<DX11ConstantBuffer>(buff);
+
+    if (b)
+    {
+      dx11buffers.push_back(b->getResource());
+    }
+  }
+
+  if (!dx11buffers.empty())
+  {
+    m_basics.m_deviceContext->PSSetConstantBuffers
+    (
+      startSlot,
+      static_cast<UINT>(dx11buffers.size()),
+      dx11buffers.data()
+    );
+  }
+}
+void DX11GraphicsApi::unsetPSConstantBuffers(uint32 buffersCount, uint32 startSlot)
+{
+  Vector<ID3D11Buffer*> dx11buffers;
+  dx11buffers.resize(buffersCount, nullptr);
+
+  m_basics.m_deviceContext->PSSetConstantBuffers
+  (
+    startSlot,
+    buffersCount,
+    dx11buffers.data()
+  );
 }
 void
 DX11GraphicsApi::setViewports(Vector<ViewportDesc> descs)

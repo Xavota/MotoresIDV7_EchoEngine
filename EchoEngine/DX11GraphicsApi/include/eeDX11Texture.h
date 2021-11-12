@@ -47,12 +47,14 @@ public:
   *
   * @param fileName
   * The name of the file containing the texture.
+  * @param desc
+  * The descriptor for the sampler of the texture.
   *
   * @return
   * Weather it succeed or failed to initialize.
   */
   bool
-  loadFromFile(const String fileName) override;
+  loadFromFile(const String fileName, SamplerStateDesc desc) override;
 
   /**
   * @brief
@@ -63,12 +65,14 @@ public:
   *
   * @param buffer
   * The buffer containing the information about the texture.
+  * @param desc
+  * The descriptor for the sampler of the texture.
   *
   * @return
   * Weather it succeed or failed to initialize.
   */
   bool
-  loadFromBuffer(SPtr<void> buffer) override;
+  loadFromBuffer(SPtr<void> buffer, SamplerStateDesc desc) override;
 
   ID3D11ShaderResourceView*
   getResource() { return m_tex; }

@@ -1045,6 +1045,11 @@ public:
   static const float kBIG_FLOAT;
   /**
   * @brief
+  * The maximum float possible.
+  */
+  static const float kMAX_FLOAT;
+  /**
+  * @brief
   * The minimum integer of 32 bits possible.
   */
   static const int32 kSMALL_INT;

@@ -22,6 +22,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eeCore_Test", "eeCore_Test\
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eeCore", "eeCore\eeCore.vcxproj", "{4656BAF2-E8EB-46A2-B234-157A9F5B4FBB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3D0C2046-53A4-46DA-AE64-3B8AB0A0E2AD} = {3D0C2046-53A4-46DA-AE64-3B8AB0A0E2AD}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

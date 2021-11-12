@@ -10,7 +10,8 @@ namespace eeEngineSDK
 {
 SPtr<Texture> 
 ResourceManager::loadTextureFromFile(const String& fileName,
-                                     const String resourceName)
+                                     const String resourceName,
+                                     SamplerStateDesc desc)
 {
   if (m_meshes.find(resourceName) != m_meshes.end())
   {
@@ -25,7 +26,7 @@ ResourceManager::loadTextureFromFile(const String& fileName,
   }
 
   SPtr<Texture> tex = GraphicsApi::instance().createTexturePtr();
-  if (!tex->loadFromFile(fileName))
+  if (!tex->loadFromFile(fileName, desc))
   {
     return nullptr;
   }

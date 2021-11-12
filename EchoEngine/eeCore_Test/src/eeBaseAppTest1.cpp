@@ -35,6 +35,7 @@ using eeEngineSDK::Math;
 using eeEngineSDK::VertexShader;
 using eeEngineSDK::PixelShader;
 using eeEngineSDK::Byte;
+using eeEngineSDK::SamplerStateDesc;
 
 BaseAppTest1::BaseAppTest1()
 {
@@ -46,8 +47,17 @@ BaseAppTest1::~BaseAppTest1()
 
 bool BaseAppTest1::initResources()
 {
+  SamplerStateDesc samDesc;
+  memset(&samDesc, 0, sizeof(samDesc));
+  samDesc.filter = FILTER::MIN_MAG_MIP_LINEAR;
+  samDesc.addressU = TEXTURE_ADDRESS_MODE::WRAP;
+  samDesc.addressV = TEXTURE_ADDRESS_MODE::WRAP;
+  samDesc.addressW = TEXTURE_ADDRESS_MODE::WRAP;
+  samDesc.comparisonFunc = COMPARISON_FUNC::NEVER;
+  samDesc.minLOD = 0;
+  samDesc.maxLOD = Math::kMAX_FLOAT;
 
-  ResourceManager::instance().loadTextureFromFile("Textures/Default.png", "Default");
+  ResourceManager::instance().loadTextureFromFile("Textures/Default.png", "Default", samDesc);
 
 
   m_rtv = GraphicsApi::instance().createRenderTragetPtr();
@@ -57,6 +67,7 @@ bool BaseAppTest1::initResources()
   m_dsv->create(screenWidth, screenHeight);
 
   ViewportDesc desc;
+  memset(&desc, 0, sizeof(desc));
   desc.width = screenWidth;
   desc.height = screenHeight;
   desc.maxDepth = 0;
@@ -262,7 +273,8 @@ bool BaseAppTest1::initResources()
         ResourceManager::instance().loadTextureFromFile
         (
           "pepe.png",
-          "TestTexture"
+          "TestTexture",
+          samDesc
         )
       },
       "TestCube"
@@ -313,11 +325,15 @@ void BaseAppTest1::update(float deltaTime)
 
 void BaseAppTest1::render()
 {
+  // Clean and set back buffer and depth stencil
   float color[4] = {0.3f, 0.5f, 0.8f, 1.0f};
   GraphicsApi::instance().clearRenderTargets({m_rtv}, color);
   GraphicsApi::instance().cleanDepthStencils({m_dsv});
   GraphicsApi::instance().setRenderTargets({m_rtv}, m_dsv);
 
+
+
+  // Load shaders
   SPtr<VertexShader> vs =
   ResourceManager::instance().getResourceVertexShader("TestVS");
   vs->use();
@@ -326,13 +342,14 @@ void BaseAppTest1::render()
   ResourceManager::instance().getResourcePixelShader("TestPS");
   ps->use();
 
+
+
+  // Create view/proj matrices
   Matrix4f view = Matrix4f::IDENTITY;
   view = Matrix4f::viewMatrix(Vector3f(0.0f, 3.0f, -6.0f),
                               Vector3f(0.0f, 1.0f, 0.0f),
                               Vector3f(0.0f, 1.0f, 0.0f)).getTranspose();
   m_viewMatrixBuffer->updateData(reinterpret_cast<Byte*>(&view));
-  m_viewMatrixBuffer->setInVertex(1u);
-  //vs->setViewMatrix(view.getTranspose());
 
   Matrix4f proj = Matrix4f::IDENTITY;
   proj = Matrix4f::perspectiveMatrix(0.785398163f,
@@ -341,14 +358,27 @@ void BaseAppTest1::render()
                                      0.01f,
                                      100.0f).getTranspose();
   m_projectionMatrixBuffer->updateData(reinterpret_cast<Byte*>(&proj));
-  m_projectionMatrixBuffer->setInVertex(2u);
-  //vs->setProjectionMatrix(proj.getTranspose());
 
+
+
+  // Set buffers
+  GraphicsApi::instance().setVSConstantBuffers
+  (
+    { m_viewMatrixBuffer, m_projectionMatrixBuffer },
+    1u
+  );
+
+
+  // Draws the object
   //GraphicsApi::instance().drawObject(m_triangle);
   //GraphicsApi::instance().drawObject(m_cube);
   GraphicsApi::instance().drawObject(m_model);
 
   GraphicsApi::instance().present();
+
+  GraphicsApi::instance().unsetRenderTargets();
+  GraphicsApi::instance().unsetTextures(1u, 0u);
+  GraphicsApi::instance().unsetVSConstantBuffers(3u, 0u);
 }
 
 void BaseAppTest1::destroy()

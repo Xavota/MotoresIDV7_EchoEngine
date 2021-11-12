@@ -70,6 +70,9 @@ class DX11ConstantBuffer : public ConstantBuffer
   */
   virtual void
   updateData(const Byte* data);
+
+  ID3D11Buffer*
+  getResource() { return m_buffer; }
   
   /**
   * @brief
