@@ -1,4 +1,4 @@
-#include "DX11DepthStencil.h"
+#include "eeDX11DepthStencil.h"
 #include "eeDX11GraphicsApi.h"
 
 namespace eeEngineSDK {

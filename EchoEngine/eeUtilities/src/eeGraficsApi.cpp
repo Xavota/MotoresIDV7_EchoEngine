@@ -30,6 +30,9 @@ void GraphicsApi::drawObject(SPtr<Object> obj)
     GraphicsApi::instance().setTextures({textures[m.second]}, 0u);
 
     drawIndexed(m.first->getIndexCount());
+
+
+    GraphicsApi::instance().unsetVertexBuffers(1u, 0u);
   }  
 }
 void GraphicsApi::release()

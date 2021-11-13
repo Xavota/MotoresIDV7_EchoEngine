@@ -92,6 +92,9 @@ public:
   virtual void
   set() override;
 
+  ID3D11Buffer*
+  getResource() { return m_buffer; }
+
 private:
   /**
   * The DX11 buffer.

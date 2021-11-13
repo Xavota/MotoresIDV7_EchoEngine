@@ -21,7 +21,7 @@
 #include "eeDX11IndexBuffer.h"
 #include "eeDX11ConstantBuffer.h"
 #include "eeDX11RenderTarget.h"
-#include "DX11DepthStencil.h"
+#include "eeDX11DepthStencil.h"
 #include "eeDX11RasterizerState.h"
 
 #pragma warning(push, 0)   
@@ -254,6 +254,66 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
   */
   void
   unsetPSConstantBuffers(uint32 buffersCount, uint32 startSlot) override;
+
+  /**
+  * @brief
+  * Sets the vertex buffers given.
+  *
+  * @description
+  * Sets several vertex buffers for the shaders.
+  *
+  * @param buffers
+  * The vector of vertex buffers to set.
+  * @param offsets
+  * The vector of offsets for the buffers.
+  * @param startSlot
+  * The first index for the buffers indices.
+  */
+  void
+  setVertexBuffers(Vector<SPtr<VertexBuffer>> buffers,
+                   Vector<uint32> offsets,
+                   uint32 startSlot) override;
+
+  /**
+  * @brief
+  * Unset the vertex buffers on the shaders.
+  *
+  * @description
+  * Sets nullptr vertex buffers on the shaders.
+  *
+  * @param buffersCount
+  * The number of vertex buffers to unset.
+  * @param startSlot
+  * The first index for the vertex buffers indices.
+  */
+  void
+  unsetVertexBuffers(uint32 buffersCount, uint32 startSlot) override;
+
+  /**
+  * @brief
+  * Sets the index buffers given.
+  *
+  * @description
+  * Sets several index buffers for the shaders.
+  *
+  * @param buffer
+  * The index buffers to set.
+  * @param offset
+  * The offset for the starting point on the buffer.
+  */
+  void
+  setIndexBuffer(SPtr<IndexBuffer> buffers,
+                 uint32 offsets) override;
+
+  /**
+  * @brief
+  * Unset the vertex buffers on the shaders.
+  *
+  * @description
+  * Sets nullptr vertex buffers on the shaders.
+  */
+  void
+  unsetIndexBuffer() override;
 
   /**
   * @brief

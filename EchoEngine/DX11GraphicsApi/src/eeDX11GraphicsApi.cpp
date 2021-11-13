@@ -319,6 +319,82 @@ void DX11GraphicsApi::unsetPSConstantBuffers(uint32 buffersCount, uint32 startSl
     dx11buffers.data()
   );
 }
+void DX11GraphicsApi::setVertexBuffers(Vector<SPtr<VertexBuffer>> buffers,
+                                       Vector<uint32> offsets,
+                                       uint32 startSlot)
+{
+  Vector<ID3D11Buffer*> dx11Vbuffers;
+  Vector<uint32> strides;
+
+  for (SPtr<VertexBuffer> buff : buffers)
+  {
+    SPtr<DX11VertexBuffer> b =
+      std::reinterpret_pointer_cast<DX11VertexBuffer>(buff);
+
+    if (b)
+    {
+      dx11Vbuffers.push_back(b->getResource());
+      strides.push_back(b->getBatchSize());
+    }
+  }
+
+  if (!dx11Vbuffers.empty())
+  {
+    m_basics.m_deviceContext->IASetVertexBuffers
+    (
+      startSlot,
+      static_cast<UINT>(dx11Vbuffers.size()),
+      dx11Vbuffers.data(),
+      strides.data(),
+      offsets.data()
+    );
+  }
+}
+void DX11GraphicsApi::unsetVertexBuffers(uint32 buffersCount, uint32 startSlot)
+{
+  Vector<ID3D11Buffer*> dx11Vbuffers;
+  dx11Vbuffers.resize(buffersCount, nullptr);
+  Vector<uint32> strides;
+  strides.resize(buffersCount, 0u);
+  Vector<uint32> offsets;
+  offsets.resize(buffersCount, 0u);
+
+  if (!dx11Vbuffers.empty())
+  {
+    m_basics.m_deviceContext->IASetVertexBuffers
+    (
+      startSlot,
+      static_cast<UINT>(dx11Vbuffers.size()),
+      dx11Vbuffers.data(),
+      strides.data(),
+      offsets.data()
+    );
+  }
+}
+void DX11GraphicsApi::setIndexBuffer(SPtr<IndexBuffer> buffer, uint32 offset)
+{
+  const DX11Basics* basics =
+  reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
+
+  SPtr<DX11IndexBuffer> buf =
+  std::reinterpret_pointer_cast<DX11IndexBuffer>(buffer);
+
+  if (buffer->getBatchSize() == 2)
+  {
+    basics->m_deviceContext->IASetIndexBuffer(buf->getResource(), DXGI_FORMAT_R16_UINT, offset);
+  }
+  else if (buffer->getBatchSize() == 4)
+  {
+    basics->m_deviceContext->IASetIndexBuffer(buf->getResource(), DXGI_FORMAT_R32_UINT, offset);
+  }
+}
+void DX11GraphicsApi::unsetIndexBuffer()
+{
+  const DX11Basics* basics =
+  reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
+
+  basics->m_deviceContext->IASetIndexBuffer(nullptr, DXGI_FORMAT_R16_UINT, 0);
+}
 void
 DX11GraphicsApi::setViewports(Vector<ViewportDesc> descs)
 {

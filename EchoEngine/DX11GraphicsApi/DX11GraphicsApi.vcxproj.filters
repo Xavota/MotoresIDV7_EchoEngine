@@ -37,10 +37,18 @@
     <ClInclude Include="include\eeDX11VertexShader.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\eeDX11RenderTarget.h" />
-    <ClInclude Include="include\DX11DepthStencil.h" />
-    <ClInclude Include="include\eeDX11SamplerState.h" />
-    <ClInclude Include="include\eeDX11RasterizerState.h" />
+    <ClInclude Include="include\eeDX11DepthStencil.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeDX11RasterizerState.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeDX11RenderTarget.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeDX11SamplerState.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeDX11Texture.cpp">
@@ -64,9 +72,17 @@
     <ClCompile Include="src\eeDX11VertexShader.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\eeDX11RenderTarget.cpp" />
-    <ClCompile Include="src\DX11DepthStencil.cpp" />
-    <ClCompile Include="src\eeDX11SamplerState.cpp" />
-    <ClCompile Include="src\eeDX11RasterizerState.cpp" />
+    <ClCompile Include="src\eeDX11DepthStencil.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeDX11RasterizerState.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeDX11RenderTarget.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeDX11SamplerState.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

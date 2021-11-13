@@ -35,32 +35,32 @@ DX11VertexShader::compileFromFile(const String& fileName)
 #endif
 
   // Compile the vertex shader
-  ID3DBlob* pVSBlob = NULL;
-  ID3DBlob* pErrorBlob = NULL;
+  ID3DBlob* pVSBlob = nullptr;
+  ID3DBlob* pErrorBlob = nullptr;
 
   hr = D3DX11CompileFromFileA(fileName.c_str(),
-                              NULL,
-                              NULL,
+                              nullptr,
+                              nullptr,
                               "main",
                               "vs_4_0",
                               dwShaderFlags,
                               0,
-                              NULL,
+                              nullptr,
                               &pVSBlob,
                               &pErrorBlob,
-                              NULL);
+                              nullptr);
   if (FAILED(hr))
   {
     if (pVSBlob)
       pVSBlob->Release();
-    if (pErrorBlob != NULL)
+    if (pErrorBlob != nullptr)
       OutputDebugStringA((char*)pErrorBlob->GetBufferPointer());
     if (pErrorBlob) pErrorBlob->Release();
 
     String msg = "The FX file cannot be compiled. Please run this ";
     msg.append("executable from the directory that contains the FX file.");
 
-    MessageBox(NULL, msg.c_str(), "Error", MB_OK);
+    MessageBox(nullptr, msg.c_str(), "Error", MB_OK);
 
     return false;
   }
@@ -70,7 +70,7 @@ DX11VertexShader::compileFromFile(const String& fileName)
   // Create the vertex shader
   hr = basics->m_device->CreateVertexShader(pVSBlob->GetBufferPointer(),
                                             pVSBlob->GetBufferSize(),
-                                            NULL,
+                                            nullptr,
                                             &m_shader);
   if (FAILED(hr))
   {
@@ -103,7 +103,7 @@ void DX11VertexShader::use()
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   basics->m_deviceContext->IASetInputLayout(m_inputLayout);
-  basics->m_deviceContext->VSSetShader(m_shader, NULL, 0);
+  basics->m_deviceContext->VSSetShader(m_shader, nullptr, 0);
 }
 
 HRESULT 
@@ -113,7 +113,7 @@ DX11VertexShader::createInputLayout(ID3DBlob* pShaderBlob)
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   // Reflect shader info
-  ID3D11ShaderReflection* pVertexShaderReflection = NULL;
+  ID3D11ShaderReflection* pVertexShaderReflection = nullptr;
   if (FAILED(D3DReflect(pShaderBlob->GetBufferPointer(), 
                         pShaderBlob->GetBufferSize(), 
                         IID_ID3D11ShaderReflection, 

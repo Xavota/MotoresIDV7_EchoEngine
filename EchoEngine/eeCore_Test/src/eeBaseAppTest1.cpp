@@ -404,7 +404,7 @@ bool BaseAppTest1::initResources()
 
   RasteraizerDesc rasDesc;
   memset(&rasDesc, 0, sizeof(rasDesc));
-  rasDesc.cullMode = eeEngineSDK::CULL_MODE::NONE;
+  rasDesc.cullMode = eeEngineSDK::CULL_MODE::FRONT;
   rasDesc.fillMode = eeEngineSDK::FILL_MODE::SOLID;
   rasDesc.frontCounterClockwise = true;
 
@@ -433,7 +433,7 @@ void BaseAppTest1::update(float deltaTime)
 {
   static Quaternion rot(Vector3f(0.0f, 0.0f, 0.0f));
   rot = Quaternion((rot.getEuclidean() + Vector3f(deltaTime * .5f, 0.0f, 0.0f)));
-  m_model->setRotation(rot);
+  m_cube->setRotation(rot);
 }
 
 void BaseAppTest1::render()
@@ -485,8 +485,8 @@ void BaseAppTest1::render()
   m_rasterizer->use();
   // Draws the object
   //GraphicsApi::instance().drawObject(m_triangle);
-  //GraphicsApi::instance().drawObject(m_cube);
-  GraphicsApi::instance().drawObject(m_model);
+  GraphicsApi::instance().drawObject(m_cube);
+  //GraphicsApi::instance().drawObject(m_model);
 
 
   GraphicsApi::instance().unsetRenderTargets();
@@ -509,10 +509,8 @@ void BaseAppTest1::render()
   ps->use();
 
 
-
   m_rasterizer2->use();
   GraphicsApi::instance().drawObject(m_SAQ);
-
 
 
   GraphicsApi::instance().present(0u, 0u);

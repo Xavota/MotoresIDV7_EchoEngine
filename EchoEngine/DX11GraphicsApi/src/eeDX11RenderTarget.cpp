@@ -1,7 +1,7 @@
 #include "eeDX11RenderTarget.h"
 #include "eeDX11GraphicsApi.h"
 #include "eeDX11Texture.h"
-#include "DX11DepthStencil.h"
+#include "eeDX11DepthStencil.h"
 
 namespace eeEngineSDK {
 DX11RenderTarget::~DX11RenderTarget()
@@ -49,13 +49,13 @@ DX11RenderTarget::createAsIOTexture()
   descTextRT.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
   descTextRT.CPUAccessFlags = 0;
   descTextRT.MiscFlags = 0;
-  if (FAILED(basics->m_device->CreateTexture2D(&descTextRT, NULL, &Tex)))
+  if (FAILED(basics->m_device->CreateTexture2D(&descTextRT, nullptr, &Tex)))
   {
     DX11SAFE_RELEASE(Tex);
     return false;
   }
 
-  if (FAILED(basics->m_device->CreateRenderTargetView(Tex, NULL, &m_renderTarget)))
+  if (FAILED(basics->m_device->CreateRenderTargetView(Tex, nullptr, &m_renderTarget)))
   {
     DX11SAFE_RELEASE(Tex);
     return false;

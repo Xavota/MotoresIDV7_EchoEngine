@@ -221,10 +221,10 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
 
   /**
   * @brief
-  * Unset the buffers on the pixel buffer.
+  * Unset the buffers on the pixel shader.
   *
   * @description
-  * Sets nullptr buffers on the pixel buffer.
+  * Sets nullptr buffers on the pixel shader.
   *
   * @param buffersCount
   * The number of buffers to unset.
@@ -233,6 +233,66 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   */
   virtual void
   unsetPSConstantBuffers(uint32 buffersCount, uint32 startSlot) {}
+
+  /**
+  * @brief
+  * Sets the vertex buffers given.
+  *
+  * @description
+  * Sets several vertex buffers for the shaders.
+  *
+  * @param buffers
+  * The vector of vertex buffers to set.
+  * @param offsets
+  * The vector of off buffers to set.
+  * @param startSlot
+  * The first index for the buffers indices.
+  */
+  virtual void
+  setVertexBuffers(Vector<SPtr<VertexBuffer>> buffers,
+                   Vector<uint32> offsets,
+                   uint32 startSlot) {}
+
+  /**
+  * @brief
+  * Unset the vertex buffers on the shaders.
+  *
+  * @description
+  * Sets nullptr vertex buffers on the shaders.
+  *
+  * @param buffersCount
+  * The number of vertex buffers to unset.
+  * @param startSlot
+  * The first index for the vertex buffers indices.
+  */
+  virtual void
+  unsetVertexBuffers(uint32 buffersCount, uint32 startSlot) {}
+
+  /**
+  * @brief
+  * Sets the index buffers given.
+  *
+  * @description
+  * Sets several index buffers for the shaders.
+  *
+  * @param buffer
+  * The index buffers to set.
+  * @param offset
+  * The offset for the starting point on the buffer.
+  */
+  virtual void
+  setIndexBuffer(SPtr<IndexBuffer> buffers,
+                 uint32 offsets) {}
+
+  /**
+  * @brief
+  * Unset the vertex buffers on the shaders.
+  *
+  * @description
+  * Sets nullptr vertex buffers on the shaders.
+  */
+  virtual void
+  unsetIndexBuffer() {}
 
   /**
   * @brief
