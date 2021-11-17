@@ -171,9 +171,11 @@
   <ItemGroup>
     <ClCompile Include="..\eeUtilities\src\eeGraficsApi.cpp" />
     <ClCompile Include="src\eeBaseApp.cpp" />
+    <ClCompile Include="src\eeBlendState.cpp" />
     <ClCompile Include="src\eeBuffer.cpp" />
     <ClCompile Include="src\eeConstantBuffer.cpp" />
     <ClCompile Include="src\eeDepthStencil.cpp" />
+    <ClCompile Include="src\eeDepthStencilState.cpp" />
     <ClCompile Include="src\eeIndexBuffer.cpp" />
     <ClCompile Include="src\eeInput.cpp" />
     <ClCompile Include="src\eeInputLayout.cpp" />
@@ -192,11 +194,13 @@
   <ItemGroup>
     <ClInclude Include="..\eeUtilities\include\eeGraficsApi.h" />
     <ClInclude Include="include\eeBaseApp.h" />
+    <ClInclude Include="include\eeBlendState.h" />
     <ClInclude Include="include\eeBuffer.h" />
     <ClInclude Include="include\eeConstantBuffer.h" />
     <ClInclude Include="include\eeCoreConfiguration.h" />
     <ClInclude Include="include\eeCoreDefines.h" />
     <ClInclude Include="include\eeDepthStencil.h" />
+    <ClInclude Include="include\eeDepthStencilState.h" />
     <ClInclude Include="include\eeIndexBuffer.h" />
     <ClInclude Include="include\eeInput.h" />
     <ClInclude Include="include\eeInputLayout.h" />

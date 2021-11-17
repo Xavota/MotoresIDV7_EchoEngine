@@ -64,11 +64,11 @@ DX11RenderTarget::createAsIOTexture()
 
   SamplerStateDesc samDesc;
   memset(&samDesc, 0, sizeof(samDesc));
-  samDesc.filter = FILTER::MIN_MAG_MIP_LINEAR;
-  samDesc.addressU = TEXTURE_ADDRESS_MODE::WRAP;
-  samDesc.addressV = TEXTURE_ADDRESS_MODE::WRAP;
-  samDesc.addressW = TEXTURE_ADDRESS_MODE::WRAP;
-  samDesc.comparisonFunc = COMPARISON_FUNC::NEVER;
+  samDesc.filter = eFILTER::MIN_MAG_MIP_LINEAR;
+  samDesc.addressU = eTEXTURE_ADDRESS_MODE::WRAP;
+  samDesc.addressV = eTEXTURE_ADDRESS_MODE::WRAP;
+  samDesc.addressW = eTEXTURE_ADDRESS_MODE::WRAP;
+  samDesc.comparisonFunc = eCOMPARISON_FUNC::NEVER;
   samDesc.minLOD = 0;
   samDesc.maxLOD = D3D11_FLOAT32_MAX;
 

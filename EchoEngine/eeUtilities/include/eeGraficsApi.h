@@ -319,7 +319,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   * The topology to set.
   */
   virtual void
-  setPrimitiveTopology(PRIMITIVE_TOPOLOGY topology) {}
+  setPrimitiveTopology(ePRIMITIVE_TOPOLOGY topology) {}
 
   /**
   * @brief

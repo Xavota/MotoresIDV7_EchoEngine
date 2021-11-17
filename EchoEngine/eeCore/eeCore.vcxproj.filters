@@ -75,6 +75,8 @@
     </ClInclude>
     <ClInclude Include="include\eeCoreDefines.h" />
     <ClInclude Include="include\eeRasterizerState.h" />
+    <ClInclude Include="include\eeDepthStencilState.h" />
+    <ClInclude Include="include\eeBlendState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeBuffer.cpp">
@@ -130,5 +132,7 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\eeRasterizerState.cpp" />
+    <ClCompile Include="src\eeDepthStencilState.cpp" />
+    <ClCompile Include="src\eeBlendState.cpp" />
   </ItemGroup>
 </Project>

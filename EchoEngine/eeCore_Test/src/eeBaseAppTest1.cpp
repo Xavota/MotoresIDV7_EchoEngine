@@ -39,10 +39,10 @@ using eeEngineSDK::Byte;
 using eeEngineSDK::Texture;
 
 
-using eeEngineSDK::FILTER;
-using eeEngineSDK::TEXTURE_ADDRESS_MODE;
-using eeEngineSDK::COMPARISON_FUNC;
-using eeEngineSDK::PRIMITIVE_TOPOLOGY;
+using eeEngineSDK::eFILTER;
+using eeEngineSDK::eTEXTURE_ADDRESS_MODE;
+using eeEngineSDK::eCOMPARISON_FUNC;
+using eeEngineSDK::ePRIMITIVE_TOPOLOGY;
 
 using eeEngineSDK::SamplerStateDesc;
 using eeEngineSDK::ViewportDesc;
@@ -60,11 +60,11 @@ bool BaseAppTest1::initResources()
 {
   SamplerStateDesc samDesc;
   memset(&samDesc, 0, sizeof(samDesc));
-  samDesc.filter = FILTER::MIN_MAG_MIP_LINEAR;
-  samDesc.addressU = TEXTURE_ADDRESS_MODE::WRAP;
-  samDesc.addressV = TEXTURE_ADDRESS_MODE::WRAP;
-  samDesc.addressW = TEXTURE_ADDRESS_MODE::WRAP;
-  samDesc.comparisonFunc = COMPARISON_FUNC::NEVER;
+  samDesc.filter = eFILTER::MIN_MAG_MIP_LINEAR;
+  samDesc.addressU = eTEXTURE_ADDRESS_MODE::WRAP;
+  samDesc.addressV = eTEXTURE_ADDRESS_MODE::WRAP;
+  samDesc.addressW = eTEXTURE_ADDRESS_MODE::WRAP;
+  samDesc.comparisonFunc = eCOMPARISON_FUNC::NEVER;
   samDesc.minLOD = 0;
   samDesc.maxLOD = Math::kMAX_FLOAT;
 
@@ -94,7 +94,7 @@ bool BaseAppTest1::initResources()
   GraphicsApi::instance().setViewports({ desc });
 
 
-  GraphicsApi::instance().setPrimitiveTopology(PRIMITIVE_TOPOLOGY::TRIANGLELIST);
+  GraphicsApi::instance().setPrimitiveTopology(ePRIMITIVE_TOPOLOGY::TRIANGLELIST);
 
 
   m_cube = std::make_shared<Object>();
@@ -404,8 +404,8 @@ bool BaseAppTest1::initResources()
 
   RasteraizerDesc rasDesc;
   memset(&rasDesc, 0, sizeof(rasDesc));
-  rasDesc.cullMode = eeEngineSDK::CULL_MODE::FRONT;
-  rasDesc.fillMode = eeEngineSDK::FILL_MODE::SOLID;
+  rasDesc.cullMode = eeEngineSDK::eCULL_MODE::FRONT;
+  rasDesc.fillMode = eeEngineSDK::eFILL_MODE::SOLID;
   rasDesc.frontCounterClockwise = true;
 
   m_rasterizer = GraphicsApi::instance().createRasterizerStatePtr();
@@ -416,8 +416,8 @@ bool BaseAppTest1::initResources()
 
 
   memset(&rasDesc, 0, sizeof(rasDesc));
-  rasDesc.cullMode = eeEngineSDK::CULL_MODE::FRONT;
-  rasDesc.fillMode = eeEngineSDK::FILL_MODE::SOLID;
+  rasDesc.cullMode = eeEngineSDK::eCULL_MODE::FRONT;
+  rasDesc.fillMode = eeEngineSDK::eFILL_MODE::SOLID;
   rasDesc.frontCounterClockwise = true;
 
   m_rasterizer2 = GraphicsApi::instance().createRasterizerStatePtr();

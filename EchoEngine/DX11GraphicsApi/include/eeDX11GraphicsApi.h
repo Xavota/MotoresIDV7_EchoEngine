@@ -340,7 +340,7 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
   * The topology to set.
   */
   void
-  setPrimitiveTopology(PRIMITIVE_TOPOLOGY topology) override;
+  setPrimitiveTopology(ePRIMITIVE_TOPOLOGY topology) override;
 
   /**
   * @brief

@@ -3,7 +3,7 @@
 
 
 namespace eeEngineSDK {
-enum class FILTER
+enum class eFILTER
 {
   MIN_MAG_MIP_POINT,
   MIN_MAG_POINT_MIP_LINEAR,
@@ -43,7 +43,7 @@ enum class FILTER
   MAXIMUM_ANISOTROPIC
 };
 
-enum class TEXTURE_ADDRESS_MODE
+enum class eTEXTURE_ADDRESS_MODE
 {
   WRAP,
   MIRROR,
@@ -52,7 +52,7 @@ enum class TEXTURE_ADDRESS_MODE
   MIRROR_ONCE
 };
 
-enum class COMPARISON_FUNC
+enum class eCOMPARISON_FUNC
 {
   NEVER,
   LESS,
@@ -64,7 +64,7 @@ enum class COMPARISON_FUNC
   ALWAYS
 };
 
-enum class PRIMITIVE_TOPOLOGY
+enum class ePRIMITIVE_TOPOLOGY
 {
   UNDEFINED = 0,
   POINTLIST = 1,
@@ -78,7 +78,7 @@ enum class PRIMITIVE_TOPOLOGY
   TRIANGLESTRIP_ADJ = 13
 }; 
 
-enum class FORMAT
+enum class eFORMAT
 {
   UNKNOWN = 0,
   R32G32B32A32_TYPELESS = 1,
@@ -183,7 +183,7 @@ enum class FORMAT
   FORCE_UINT = 0xffffffff
 };
 
-enum class USAGE
+enum class eUSAGE
 {
   DEFAULT = 0,
   IMMUTABLE = 1,
@@ -191,7 +191,7 @@ enum class USAGE
   STAGING = 3
 };
 
-enum class SRV_DIMENSION
+enum class eSRV_DIMENSION
 {
   UNKNOWN = 0,
   BUFFER = 1,
@@ -207,17 +207,65 @@ enum class SRV_DIMENSION
   BUFFEREX = 11
 };
 
-enum class FILL_MODE
+enum class eFILL_MODE
 {
   WIREFRAME = 2,
   SOLID = 3
 };
 
-enum class CULL_MODE
+enum class eCULL_MODE
 {
   NONE = 1,
   FRONT = 2,
   BACK = 3
+};
+
+enum class eDEPTH_WRITE_MASK
+{
+  ZERO,
+  ALL
+};
+
+enum eSTENCIL_OP
+{
+  KEEP,
+  ZERO,
+  REPLACE,
+  INCR_SAT,
+  DECR_SAT,
+  INVERT,
+  INCR,
+  DECR
+};
+
+enum class eBLEND
+{
+  ZERO,
+  ONE,
+  SRC_COLOR,
+  INV_SRC_COLOR,
+  SRC_ALPHA,
+  INV_SRC_ALPHA,
+  DEST_ALPHA,
+  INV_DEST_ALPHA,
+  DEST_COLOR,
+  INV_DEST_COLOR,
+  SRC_ALPHA_SAT,
+  BLEND_FACTOR,
+  INV_BLEND_FACTOR,
+  SRC1_COLOR,
+  INV_SRC1_COLOR,
+  SRC1_ALPHA,
+  INV_SRC1_ALPHA
+};
+
+enum class eBLEND_OP
+{
+ ADD,
+ SUBTRACT,
+ REV_SUBTRACT,
+ MIN,
+ MAX
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -240,16 +288,16 @@ struct ViewportDesc
 
 struct SamplerStateDesc
 {
-  FILTER               filter;
-  TEXTURE_ADDRESS_MODE addressU;
-  TEXTURE_ADDRESS_MODE addressV;
-  TEXTURE_ADDRESS_MODE addressW;
-  float                mipLODBias;
-  uint32               maxAnisotropy;
-  COMPARISON_FUNC      comparisonFunc;
-  float                borderColor[4];
-  float                minLOD;
-  float                maxLOD;
+  eFILTER               filter;
+  eTEXTURE_ADDRESS_MODE addressU;
+  eTEXTURE_ADDRESS_MODE addressV;
+  eTEXTURE_ADDRESS_MODE addressW;
+  float                 mipLODBias;
+  uint32                maxAnisotropy;
+  eCOMPARISON_FUNC      comparisonFunc;
+  float                 borderColor[4];
+  float                 minLOD;
+  float                 maxLOD;
 };
 
 struct SampleDesc
@@ -260,16 +308,16 @@ struct SampleDesc
 
 struct Texture2DDesc
 {
-  uint32 width;
-  uint32 height;
-  uint32 mipLevels;
-  uint32 arraySize;
-  FORMAT format;
+  uint32     width;
+  uint32     height;
+  uint32     mipLevels;
+  uint32     arraySize;
+  eFORMAT    format;
   SampleDesc sampleDesc;
-  USAGE usage;
-  uint32 bindFlags;
-  uint32 CPUAccessFlags;
-  uint32 miscFlags;
+  eUSAGE     usage;
+  uint32     bindFlags;
+  uint32     CPUAccessFlags;
+  uint32     miscFlags;
 };
 
 struct BufferSRV
@@ -354,8 +402,8 @@ struct BufferExSRV
 
 struct ShaderResourceViewDesc
 {
-  FORMAT format;
-  SRV_DIMENSION viewDimension;
+  eFORMAT        format;
+  eSRV_DIMENSION viewDimension;
   union
   {
     BufferSRV       buffer;
@@ -374,15 +422,54 @@ struct ShaderResourceViewDesc
 
 struct RasteraizerDesc
 {
-  FILL_MODE fillMode;
-  CULL_MODE cullMode;
-  bool      frontCounterClockwise;
-  int32     depthBias;
-  float     depthBiasClamp;
-  float     slopeScaledDepthBias;
-  bool      depthClipEnable;
-  bool      scissorEnable;
-  bool      multisampleEnable;
-  bool      antialiasedLineEnable;
+  eFILL_MODE fillMode;
+  eCULL_MODE cullMode;
+  bool       frontCounterClockwise;
+  int32      depthBias;
+  float      depthBiasClamp;
+  float      slopeScaledDepthBias;
+  bool       depthClipEnable;
+  bool       scissorEnable;
+  bool       multisampleEnable;
+  bool       antialiasedLineEnable;
+};
+
+struct DepthStencilOPDesc
+{
+  eSTENCIL_OP      stencilFailOp;
+  eSTENCIL_OP      stencilDepthFailOp;
+  eSTENCIL_OP      stencilPassOp;
+  eCOMPARISON_FUNC stencilFunc;
+};
+
+struct DepthStencilDesc
+{
+  bool               depthEnable;
+  eDEPTH_WRITE_MASK  depthWriteMask;
+  eCOMPARISON_FUNC   depthFunc;
+  bool               stencilEnable;
+  uint8              stencilReadMask;
+  uint8              stencilWriteMask;
+  DepthStencilOPDesc frontFace;
+  DepthStencilOPDesc backFace;
+};
+
+struct RenderTargetBlendDesc
+{
+  bool      blendEnable;
+  eBLEND    srcBlend;
+  eBLEND    destBlend;
+  eBLEND_OP blendOp;
+  eBLEND    srcBlendAlpha;
+  eBLEND    destBlendAlpha;
+  eBLEND_OP blendOpAlpha;
+  uint8     renderTargetWriteMask;
+};
+
+struct BlendDesc
+{
+  bool                  alphaToCoverageEnable;
+  bool                  independentBlendEnable;
+  RenderTargetBlendDesc renderTarget[8];
 };
 }
