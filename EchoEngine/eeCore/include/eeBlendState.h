@@ -1,11 +1,8 @@
 #pragma once
-class BlendState
-{
-};
 #include "eePrerequisitesCore.h"
 
 namespace eeEngineSDK {
-class BlendState
+class EE_CORE_EXPORT BlendState
 {
 public:
   BlendState() = default;

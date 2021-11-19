@@ -8,6 +8,8 @@
 #include <eeRenderTarget.h>
 #include <eeDepthStencil.h>
 #include <eeRasterizerState.h>
+#include <eeActor.h>
+#include <eeCTransform.h>
 
 #include <eeMath.h>
 
@@ -25,6 +27,7 @@ using eeEngineSDK::Quaternion;
 using eeEngineSDK::SimplexVertex;
 using eeEngineSDK::SimpleVertex;
 using eeEngineSDK::Object;
+using eeEngineSDK::Model;
 using eeEngineSDK::Mesh;
 using eeEngineSDK::Vector;
 using eeEngineSDK::Pair;
@@ -37,6 +40,8 @@ using eeEngineSDK::VertexShader;
 using eeEngineSDK::PixelShader;
 using eeEngineSDK::Byte;
 using eeEngineSDK::Texture;
+using eeEngineSDK::Component;
+using eeEngineSDK::CTransform;
 
 
 using eeEngineSDK::eFILTER;
@@ -70,6 +75,11 @@ bool BaseAppTest1::initResources()
 
   ResourceManager::instance().loadTextureFromFile("Textures/Default.png", "Default", samDesc);
 
+  Model::initPrimitives();
+
+
+
+
 
   m_rtv = GraphicsApi::instance().createRenderTragetPtr();
   m_rtv->createAsBackBuffer();
@@ -99,6 +109,13 @@ bool BaseAppTest1::initResources()
 
   m_cube = std::make_shared<Object>();
   m_cube->loadFromModel
+  (
+    Model::cube,
+    Vector3f(0.0f, 0.0f, 0.0f),
+    Quaternion(Vector3f(0.0f, 0.0f, 0.0f)),
+    Vector3f(1.0f, 1.0f, 1.0f)
+  );
+  /*m_cube->loadFromModel
   (
     ResourceManager::instance().loadModelFromMeshesArray
     (
@@ -299,7 +316,7 @@ bool BaseAppTest1::initResources()
     Vector3f(0.0f, 0.0f, 0.0f),
     Quaternion(Vector3f(0.0f, 0.0f, 0.0f)),
     Vector3f(1.0f, 1.0f, 1.0f)
-  );
+  );/**/
 
   m_model = std::make_shared<Object>();
   m_model->loadFromFile
@@ -426,14 +443,21 @@ bool BaseAppTest1::initResources()
     return false;
   }
 
+
+  m_actorTest = std::make_shared<Actor>();
+  m_actorTest->addComponent<CTransform>();
+  SPtr<CTransform> transform = m_actorTest->getComponent<CTransform>();
+
   return true;
 }
 
 void BaseAppTest1::update(float deltaTime)
 {
+  BaseApp::update(deltaTime);
+
   static Quaternion rot(Vector3f(0.0f, 0.0f, 0.0f));
   rot = Quaternion((rot.getEuclidean() + Vector3f(deltaTime * .5f, 0.0f, 0.0f)));
-  m_cube->setRotation(rot);
+  m_model->setRotation(rot);
 }
 
 void BaseAppTest1::render()
@@ -485,8 +509,8 @@ void BaseAppTest1::render()
   m_rasterizer->use();
   // Draws the object
   //GraphicsApi::instance().drawObject(m_triangle);
-  GraphicsApi::instance().drawObject(m_cube);
-  //GraphicsApi::instance().drawObject(m_model);
+  //GraphicsApi::instance().drawObject(m_cube);
+  GraphicsApi::instance().drawObject(m_model);
 
 
   GraphicsApi::instance().unsetRenderTargets();

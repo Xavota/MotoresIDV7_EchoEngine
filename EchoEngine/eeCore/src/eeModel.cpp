@@ -1,5 +1,6 @@
 #include "eeModel.h"
 #include "eeResourceManager.h"
+#include <eeQuaternion.h>
 #pragma warning(push, 0)   
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -455,5 +456,214 @@ void Model::setMeshes(Vector<Pair<SPtr<Mesh>, uint8>> meshes)
 Vector<SPtr<Texture>> Model::getTextures()
 {
   return m_textures;
+}
+
+SPtr<Model> Model::cube = nullptr;
+SPtr<Model> Model::tetrahedron = nullptr;
+SPtr<Model> Model::cone = nullptr;
+SPtr<Model> Model::cylinder = nullptr;
+SPtr<Model> Model::sphere = nullptr;
+SPtr<Model> Model::capsule = nullptr;
+void Model::initPrimitives()
+{
+  Vector<SimpleVertex> vertices;
+  Vector<uint16> indices;
+
+  vertices = 
+  {
+    // Front
+    SimpleVertex
+    {
+      Vector4f(-0.5f,  0.5f,  0.5f, 1.0f),
+      Vector4f( 0.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f( 0.0f,  0.0f,  1.0f, 0.0f)
+    },
+    SimpleVertex
+    {
+      Vector4f( 0.5f,  0.5f,  0.5f, 1.0f),
+      Vector4f( 1.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f( 0.0f,  0.0f,  1.0f, 0.0f)
+    },
+    SimpleVertex
+    {
+      Vector4f( 0.5f, -0.5f,  0.5f, 1.0f),
+      Vector4f( 1.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f( 0.0f,  0.0f,  1.0f, 0.0f)
+    },
+    SimpleVertex
+    {
+      Vector4f(-0.5f, -0.5f,  0.5f, 1.0f),
+      Vector4f( 0.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f( 0.0f,  0.0f,  1.0f, 0.0f)
+    },
+
+    // Back
+    SimpleVertex
+    {
+      Vector4f( 0.5f,  0.5f, -0.5f, 1.0f),
+      Vector4f( 0.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f( 0.0f,  0.0f, -1.0f, 0.0f)
+    },
+    SimpleVertex
+    {
+      Vector4f(-0.5f,  0.5f, -0.5f, 1.0f),
+      Vector4f( 1.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f( 0.0f,  0.0f, -1.0f, 0.0f)
+    },
+    SimpleVertex
+    {
+      Vector4f(-0.5f, -0.5f, -0.5f, 1.0f),
+      Vector4f( 1.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f( 0.0f,  0.0f, -1.0f, 0.0f)
+    },
+    SimpleVertex
+    {
+      Vector4f( 0.5f, -0.5f, -0.5f, 1.0f),
+      Vector4f( 0.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f( 0.0f,  0.0f, -1.0f, 0.0f)
+    },
+
+    // Left
+    SimpleVertex
+    {
+      Vector4f(-0.5f,  0.5f, -0.5f, 1.0f),
+      Vector4f( 0.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f(-1.0f,  0.0f,  0.0f, 0.0f)
+    },
+    SimpleVertex
+    {
+      Vector4f(-0.5f,  0.5f,  0.5f, 1.0f),
+      Vector4f( 1.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f(-1.0f,  0.0f,  0.0f, 0.0f)
+    },
+    SimpleVertex
+    {
+      Vector4f(-0.5f, -0.5f,  0.5f, 1.0f),
+      Vector4f( 1.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f(-1.0f,  0.0f,  0.0f, 0.0f)
+    },
+    SimpleVertex
+    {
+      Vector4f(-0.5f, -0.5f, -0.5f, 1.0f),
+      Vector4f( 0.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f(-1.0f,  0.0f,  0.0f, 0.0f)
+    },
+
+    // Right
+    SimpleVertex
+    {
+      Vector4f( 0.5f,  0.5f,  0.5f, 1.0f),
+      Vector4f( 0.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f( 1.0f,  0.0f,  0.0f, 0.0f)
+    },
+    SimpleVertex
+    {
+      Vector4f( 0.5f,  0.5f, -0.5f, 1.0f),
+      Vector4f( 1.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f( 1.0f,  0.0f,  0.0f, 0.0f)
+    },
+    SimpleVertex
+    {
+      Vector4f( 0.5f, -0.5f, -0.5f, 1.0f),
+      Vector4f( 1.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f( 1.0f,  0.0f,  0.0f, 0.0f)
+    },
+    SimpleVertex
+    {
+      Vector4f( 0.5f, -0.5f,  0.5f, 1.0f),
+      Vector4f( 0.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f( 1.0f,  0.0f,  0.0f, 0.0f)
+    },
+
+    // Up
+    SimpleVertex
+    {
+      Vector4f(-0.5f,  0.5f, -0.5f, 1.0f),
+      Vector4f( 0.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f( 0.0f,  1.0f,  0.0f, 0.0f)
+    },
+    SimpleVertex
+    {
+      Vector4f( 0.5f,  0.5f, -0.5f, 1.0f),
+      Vector4f( 1.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f( 0.0f,  1.0f,  0.0f, 0.0f)
+    },
+    SimpleVertex
+    {
+      Vector4f( 0.5f,  0.5f,  0.5f, 1.0f),
+      Vector4f( 1.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f( 0.0f,  1.0f,  0.0f, 0.0f)
+    },
+    SimpleVertex
+    {
+      Vector4f(-0.5f,  0.5f,  0.5f, 1.0f),
+      Vector4f( 0.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f( 0.0f,  1.0f,  0.0f, 0.0f)
+    },
+
+    // Down
+    SimpleVertex
+    {
+      Vector4f(-0.5f, -0.5f,  0.5f, 1.0f),
+      Vector4f( 0.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f( 0.0f, -1.0f,  0.0f, 0.0f)
+    },
+    SimpleVertex
+    {
+      Vector4f( 0.5f, -0.5f,  0.5f, 1.0f),
+      Vector4f( 1.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f( 0.0f, -1.0f,  0.0f, 0.0f)
+    },
+    SimpleVertex
+    {
+      Vector4f( 0.5f, -0.5f, -0.5f, 1.0f),
+      Vector4f( 1.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f( 0.0f, -1.0f,  0.0f, 0.0f)
+    },
+    SimpleVertex
+    {
+      Vector4f(-0.5f, -0.5f, -0.5f, 1.0f),
+      Vector4f( 0.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f( 0.0f, -1.0f,  0.0f, 0.0f)
+    }
+  };
+
+  indices =
+  {
+    0u, 2u, 1u,
+    0u, 3u, 2u,
+
+    4u, 6u, 5u,
+    4u, 7u, 6u,
+
+    8u, 10u, 9u,
+    8u, 11u, 10u,
+
+    12u, 14u, 13u,
+    12u, 15u, 14u,
+
+    16u, 18u, 17u,
+    16u, 19u, 18u,
+
+    20u, 22u, 21u,
+    20u, 23u, 22u
+  };
+
+
+  SPtr<Mesh> cubeMesh = std::make_shared<Mesh>();
+  cubeMesh->loadFromArray
+  (
+    vertices,
+    indices
+  );
+
+  cube = std::make_shared<Model>();
+  cube->loadFromMeshes
+  (
+    Vector<SPtr<Mesh>>
+    {
+      cubeMesh
+    }
+  );
 }
 }

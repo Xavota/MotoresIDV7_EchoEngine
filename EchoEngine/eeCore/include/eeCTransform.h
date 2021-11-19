@@ -1,0 +1,107 @@
+#pragma once
+#include "eePrerequisitesCore.h"
+#include "eeComponent.h"
+#include "eeVector3.h"
+#include "eeMatrix4.h"
+#include "eeQuaternion.h"
+
+namespace eeEngineSDK {
+class EE_CORE_EXPORT CTransform : public Component
+{
+ public:
+  CTransform();
+  ~CTransform() = default;
+
+  virtual Matrix4f
+  getModelMatrix();
+
+  /**
+  * @brief
+  * Getter for the position.
+  *
+  * @description
+  * Returns the position of the object.
+  *
+  * @return
+  * The position of the object.
+  */
+  virtual Vector3f
+  getPosition();
+  /**
+  * @brief
+  * Setter for the position.
+  *
+  * @description
+  * Sets a new position for the object
+  *
+  * @param
+  * The new position for the object.
+  */
+  virtual void
+  setPosition(const Vector3f& pos);
+
+  /**
+  * @brief
+  * Getter for the rotation.
+  *
+  * @description
+  * Returns the rotation of the object.
+  *
+  * @return
+  * The rotation of the object.
+  */
+  virtual Quaternion
+  getRotation();
+  /**
+  * @brief
+  * Setter for the rotation.
+  *
+  * @description
+  * Sets a new rotation for the object
+  *
+  * @param
+  * The new rotation for the object.
+  */
+  virtual void
+  setRotation(const Quaternion& rot);
+
+  /**
+  * @brief
+  * Getter for the scale.
+  *
+  * @description
+  * Returns the scale of the object.
+  *
+  * @return
+  * The scale of the object.
+  */
+  virtual Vector3f
+  getScale();
+  /**
+  * @brief
+  * Setter for the scale.
+  *
+  * @description
+  * Sets a new scale for the object
+  *
+  * @param
+  * The new scale for the object.
+  */
+  virtual void
+  setScale(const Vector3f& scale);
+
+ private:
+  /**
+  * The position of the actor.
+  */
+  Vector3f m_position;
+  /**
+  * The rotation of the actor.
+  */
+  Quaternion m_rotation;
+  /**
+  * The scale of the actor.
+  */
+  Vector3f m_scale;
+};
+}

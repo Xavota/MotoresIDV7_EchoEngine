@@ -134,6 +134,18 @@ class EE_CORE_EXPORT Model
   virtual Vector<SPtr<Texture>>
   getTextures();
 
+
+
+
+  static void initPrimitives();
+
+  static SPtr<Model> cube;
+  static SPtr<Model> tetrahedron;
+  static SPtr<Model> cone;
+  static SPtr<Model> cylinder;
+  static SPtr<Model> sphere;
+  static SPtr<Model> capsule;
+
  private:
   /**
   * The vector of pairs of meshes and texture indices.

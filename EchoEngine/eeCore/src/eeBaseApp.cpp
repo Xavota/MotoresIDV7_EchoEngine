@@ -76,6 +76,13 @@ bool BaseApp::initSystems()
 {
   ResourceManager::startUp();
 
+  m_mouseID = m_inManager.CreateDevice<gainput::InputDeviceMouse>();
+
+  m_inManager.SetDisplaySize(1280, 720);
+
+  m_inMap = std::make_shared<gainput::InputMap>(m_inManager);
+  m_inMap->MapBool(0, m_mouseID, gainput::MouseButtonLeft);
+
   return true;
 }
 void
@@ -85,6 +92,12 @@ BaseApp::processEvents()
 void
 BaseApp::update(float /*deltaTime*/)
 {
+  m_inManager.Update();
+
+  if (m_inMap->GetBoolWasDown(0))
+  {
+    std::cout << "Funciona!" << std::endl;
+  }
 }
 void
 BaseApp::render()

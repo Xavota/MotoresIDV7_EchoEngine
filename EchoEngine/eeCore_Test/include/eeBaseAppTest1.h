@@ -9,6 +9,7 @@ using eeEngineSDK::ConstantBuffer;
 using eeEngineSDK::RenderTarget;
 using eeEngineSDK::DepthStencil;
 using eeEngineSDK::RasterizerState;
+using eeEngineSDK::Actor;
 
 class BaseAppTest1 : public BaseApp
 {
@@ -96,5 +97,8 @@ class BaseAppTest1 : public BaseApp
 
   SPtr<RasterizerState> m_rasterizer;
   SPtr<RasterizerState> m_rasterizer2;
+
+
+  SPtr<Actor> m_actorTest;
 };
 

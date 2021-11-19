@@ -52,6 +52,12 @@ class DepthStencil;
 class SamplerState;
 class RasterizerState;
 
+class PixelShader;
+class VertexShader;
+class InputLayout;
+class Window;
+
+
 struct SimplexVertex;
 struct SimpleVertex;
 struct ComplexVertex;
@@ -66,11 +72,9 @@ class Mesh;
 class Model;
 class Object;
 class Texture;
-
-class PixelShader;
-class VertexShader;
-class InputLayout;
-class Window;
+class Actor;
+class Component;
+class CTransform;
 
 class ResourceManager;
 }

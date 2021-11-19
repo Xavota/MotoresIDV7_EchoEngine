@@ -10,6 +10,12 @@
     <Filter Include="include\Platform">
       <UniqueIdentifier>{aacd84e0-924e-45da-a81f-0a2f4ce4a1d7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Components">
+      <UniqueIdentifier>{e2444e55-f22a-45bc-b606-41b26a46319e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Components">
+      <UniqueIdentifier>{0bbef58c-4df7-4dec-b875-207c6f4b55b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\eeBuffer.h">
@@ -69,14 +75,36 @@
     <ClInclude Include="include\eeVertexBuffer.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\eeDepthStencil.h" />
     <ClInclude Include="include\eeSamplerState.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\eeCoreDefines.h" />
-    <ClInclude Include="include\eeRasterizerState.h" />
-    <ClInclude Include="include\eeDepthStencilState.h" />
-    <ClInclude Include="include\eeBlendState.h" />
+    <ClInclude Include="include\eeActor.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeBlendState.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeDepthStencil.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeDepthStencilState.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeRasterizerState.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeSceneGraph.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeCoreDefines.h">
+      <Filter>include\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeComponent.h">
+      <Filter>include\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeCTransform.h">
+      <Filter>include\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeBuffer.cpp">
@@ -127,12 +155,32 @@
     <ClCompile Include="src\eeVertexBuffer.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\eeDepthStencil.cpp" />
     <ClCompile Include="src\eeSamplerState.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\eeRasterizerState.cpp" />
-    <ClCompile Include="src\eeDepthStencilState.cpp" />
-    <ClCompile Include="src\eeBlendState.cpp" />
+    <ClCompile Include="src\eeActor.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeBlendState.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeDepthStencil.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeDepthStencilState.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeRasterizerState.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeSceneGraph.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeComponent.cpp">
+      <Filter>src\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeCTransform.cpp">
+      <Filter>src\Components</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

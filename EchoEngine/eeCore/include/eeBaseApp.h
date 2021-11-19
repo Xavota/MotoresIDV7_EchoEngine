@@ -15,6 +15,8 @@
 #include "eePrerequisitesCore.h"
 #include <eeModule.h>
 
+#include <gainput/gainput.h>
+
 namespace eeEngineSDK {
 /**
  * @brief
@@ -148,5 +150,11 @@ class EE_CORE_EXPORT BaseApp : public Module<BaseApp>
   */
   void
   processEvents();
+
+
+ private:
+  gainput::InputManager m_inManager;
+  gainput::DeviceId m_mouseID;
+  SPtr<gainput::InputMap> m_inMap;
 };
 }

@@ -2,7 +2,7 @@
 #include "eePrerequisitesCore.h"
 
 namespace eeEngineSDK{
-class RasterizerState
+class EE_CORE_EXPORT RasterizerState
 {
  public:
   RasterizerState() = default;

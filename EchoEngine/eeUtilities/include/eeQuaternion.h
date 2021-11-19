@@ -57,6 +57,7 @@ class EE_UTILITY_EXPORT Quaternion
   * @param euclidean
   * The vector with the 3 angles (roll, pitch, yaw);
   */
+  explicit
   Quaternion(const Vector3f& euclidean);
   /**
   * @brief

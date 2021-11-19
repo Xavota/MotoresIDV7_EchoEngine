@@ -3,7 +3,7 @@
 
 namespace eeEngineSDK {
 
-class SamplerState
+class EE_CORE_EXPORT SamplerState
 {
  public:
   SamplerState() = default;

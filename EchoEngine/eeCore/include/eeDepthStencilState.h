@@ -2,7 +2,7 @@
 #include "eePrerequisitesCore.h"
 
 namespace eeEngineSDK{
-class DepthStencilState
+class EE_CORE_EXPORT DepthStencilState
 {
  public:
   DepthStencilState() = default;
