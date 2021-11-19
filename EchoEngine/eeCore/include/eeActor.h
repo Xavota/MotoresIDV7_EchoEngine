@@ -13,6 +13,9 @@ class EE_CORE_EXPORT Actor
   void
   init();
 
+  virtual void
+  update();
+
   template <class T>
   FORCEINLINE void
   addComponent();

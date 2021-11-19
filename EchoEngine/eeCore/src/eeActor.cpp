@@ -1,11 +1,22 @@
 #include "eeActor.h"
+#include "eeCTransform.h"
 
 namespace eeEngineSDK {
-void Actor::init()
+void
+Actor::init()
 {
+  addComponent<CTransform>();
 }
-
-void Actor::destroy()
+void
+Actor::update()
+{
+  for (SPtr<Component> cmp : m_components)
+  {
+    cmp->update(this);
+  }
+}
+void
+Actor::destroy()
 {
 }
 }

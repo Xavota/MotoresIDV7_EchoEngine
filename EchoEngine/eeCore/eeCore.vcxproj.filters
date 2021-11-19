@@ -105,6 +105,8 @@
     <ClInclude Include="include\eeCTransform.h">
       <Filter>include\Components</Filter>
     </ClInclude>
+    <ClInclude Include="include\eeCModel.h" />
+    <ClInclude Include="include\eeCRender.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeBuffer.cpp">
@@ -182,5 +184,7 @@
     <ClCompile Include="src\eeCTransform.cpp">
       <Filter>src\Components</Filter>
     </ClCompile>
+    <ClCompile Include="src\eeCModel.cpp" />
+    <ClCompile Include="src\eeCRender.cpp" />
   </ItemGroup>
 </Project>

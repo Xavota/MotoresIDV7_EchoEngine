@@ -174,8 +174,10 @@
     <ClCompile Include="src\eeBaseApp.cpp" />
     <ClCompile Include="src\eeBlendState.cpp" />
     <ClCompile Include="src\eeBuffer.cpp" />
+    <ClCompile Include="src\eeCModel.cpp" />
     <ClCompile Include="src\eeComponent.cpp" />
     <ClCompile Include="src\eeConstantBuffer.cpp" />
+    <ClCompile Include="src\eeCRender.cpp" />
     <ClCompile Include="src\eeCTransform.cpp" />
     <ClCompile Include="src\eeDepthStencil.cpp" />
     <ClCompile Include="src\eeDepthStencilState.cpp" />
@@ -201,10 +203,12 @@
     <ClInclude Include="include\eeBaseApp.h" />
     <ClInclude Include="include\eeBlendState.h" />
     <ClInclude Include="include\eeBuffer.h" />
+    <ClInclude Include="include\eeCModel.h" />
     <ClInclude Include="include\eeComponent.h" />
     <ClInclude Include="include\eeConstantBuffer.h" />
     <ClInclude Include="include\eeCoreConfiguration.h" />
     <ClInclude Include="include\eeCoreDefines.h" />
+    <ClInclude Include="include\eeCRender.h" />
     <ClInclude Include="include\eeCTransform.h" />
     <ClInclude Include="include\eeDepthStencil.h" />
     <ClInclude Include="include\eeDepthStencilState.h" />

@@ -8,11 +8,13 @@
 #include "eeMesh.h"
 
 namespace eeEngineSDK {
-bool GraphicsApi::initialize()
+bool
+GraphicsApi::initialize()
 {
   return true;
 }
-void GraphicsApi::drawObject(SPtr<Object> obj)
+void
+GraphicsApi::drawObject(SPtr<Object> obj)
 {
   //m_basics.m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -35,7 +37,23 @@ void GraphicsApi::drawObject(SPtr<Object> obj)
     GraphicsApi::instance().unsetVertexBuffers(1u, 0u);
   }  
 }
-void GraphicsApi::release()
+void
+GraphicsApi::release()
 {
+}
+void
+GraphicsApi::addActorToRenderFrame(Actor* actor)
+{
+  m_renderActors.push_back(actor);
+}
+Vector<Actor*>
+GraphicsApi::getRenderFrameActors()
+{
+  return m_renderActors;
+}
+void
+GraphicsApi::clearRenderFrameActors()
+{
+  m_renderActors.clear();
 }
 }

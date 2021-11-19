@@ -10,6 +10,8 @@
 #include <eeRasterizerState.h>
 #include <eeActor.h>
 #include <eeCTransform.h>
+#include <eeCModel.h>
+#include <eeCRender.h>
 
 #include <eeMath.h>
 
@@ -42,6 +44,8 @@ using eeEngineSDK::Byte;
 using eeEngineSDK::Texture;
 using eeEngineSDK::Component;
 using eeEngineSDK::CTransform;
+using eeEngineSDK::CModel;
+using eeEngineSDK::CRender;
 
 
 using eeEngineSDK::eFILTER;
@@ -445,8 +449,9 @@ bool BaseAppTest1::initResources()
 
 
   m_actorTest = std::make_shared<Actor>();
-  m_actorTest->addComponent<CTransform>();
-  SPtr<CTransform> transform = m_actorTest->getComponent<CTransform>();
+  m_actorTest->init();
+  m_actorTest->addComponent<CModel>();
+  m_actorTest->addComponent<CRender>();
 
   return true;
 }
@@ -458,6 +463,8 @@ void BaseAppTest1::update(float deltaTime)
   static Quaternion rot(Vector3f(0.0f, 0.0f, 0.0f));
   rot = Quaternion((rot.getEuclidean() + Vector3f(deltaTime * .5f, 0.0f, 0.0f)));
   m_model->setRotation(rot);
+
+  m_actorTest->update();
 }
 
 void BaseAppTest1::render()

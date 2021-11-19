@@ -502,6 +502,16 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   getBasics() const { return nullptr; }
 
 
+  virtual void
+  addActorToRenderFrame(Actor* actor);
+
+  virtual Vector<Actor*>
+  getRenderFrameActors();
+
+  virtual void
+  clearRenderFrameActors();
+
+
  protected:
   /**
   * @brief
@@ -515,5 +525,10 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   */
   virtual void
   drawIndexed(int32 /*indicesCount*/) const {}
+
+
+
+
+  Vector<Actor*> m_renderActors;
 };
 }

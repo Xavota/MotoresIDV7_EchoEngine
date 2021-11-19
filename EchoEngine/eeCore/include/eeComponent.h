@@ -6,6 +6,8 @@ enum class eCOMPONENT_TYPE
 {
   NONE = -1,
   TRANSFORM,
+  MODEL,
+  RENDER,
   COUNT
 };
 
@@ -16,7 +18,7 @@ public:
   ~Component() = default;
 
   virtual void
-  Update(SPtr<Actor> /*actor*/) {}
+  update(Actor* /*actor*/) {}
 
   virtual eCOMPONENT_TYPE
   getType()
