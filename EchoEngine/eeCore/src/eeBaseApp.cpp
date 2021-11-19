@@ -103,6 +103,10 @@ void
 BaseApp::render()
 {
 }
+void BaseApp::endFrame()
+{
+  GraphicsApi::instance().clearRenderFrameActors();
+}
 void
 BaseApp::destroy()
 {

@@ -6,6 +6,9 @@
 #include "eeObject.h"
 #include "eeModel.h"
 #include "eeMesh.h"
+#include "eeCTransform.h"
+#include "eeCModel.h"
+#include "eeActor.h"
 
 namespace eeEngineSDK {
 bool
@@ -17,7 +20,6 @@ void
 GraphicsApi::drawObject(SPtr<Object> obj)
 {
   //m_basics.m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
 
 
   const Vector<Pair<SPtr<Mesh>, uint8>>& meshes = obj->getModel()->getMeshes();
@@ -36,6 +38,30 @@ GraphicsApi::drawObject(SPtr<Object> obj)
 
     GraphicsApi::instance().unsetVertexBuffers(1u, 0u);
   }  
+}
+void GraphicsApi::drawObject(Actor* act)
+{
+  SPtr<CTransform> transform = act->getComponent<CTransform>();
+
+  if (!transform)
+    return;
+
+  const Vector<Pair<SPtr<Mesh>, uint8>>& meshes = obj->getModel()->getMeshes();
+  const Vector< SPtr<Texture>>& textures = obj->getModel()->getTextures();
+
+  transform->getModelBuffer()->setInVertex(0u);
+
+  for (const Pair<SPtr<Mesh>, uint8>& m : meshes)
+  {
+    m.first->set();
+
+    GraphicsApi::instance().setTextures({ textures[m.second] }, 0u);
+
+    drawIndexed(m.first->getIndexCount());
+
+
+    GraphicsApi::instance().unsetVertexBuffers(1u, 0u);
+  }
 }
 void
 GraphicsApi::release()

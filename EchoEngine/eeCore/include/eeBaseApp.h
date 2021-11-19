@@ -88,6 +88,16 @@ class EE_CORE_EXPORT BaseApp : public Module<BaseApp>
   */
   virtual void
   render();
+  /**
+  * @brief
+  * Ends the frame.
+  *
+  * @description
+  * The last function to be called every frame. Ends every thing thing that
+  * needs to.
+  */
+  void
+  endFrame();
 
   /**
   * @brief

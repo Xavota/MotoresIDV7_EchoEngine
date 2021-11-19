@@ -12,8 +12,34 @@ class EE_CORE_EXPORT CTransform : public Component
   CTransform();
   ~CTransform() = default;
 
+  /**
+  * @brief
+  * Getter for the model matrix.
+  *
+  * @description
+  * Returns the model matrix of the transformations.
+  *
+  * @return
+  * The model matrix of the transformations.
+  */
   virtual Matrix4f
   getModelMatrix();
+
+  /**
+  * @brief
+  * Getter for the model buffer.
+  *
+  * @description
+  * Returns the model buffer of the transformations.
+  *
+  * @return
+  * The model buffer of the transformations.
+  */
+  virtual SPtr<ConstantBuffer>
+  getModelBuffer()
+  {
+    return m_modelMatrixBuff;
+  }
 
   /**
   * @brief
@@ -103,5 +129,10 @@ class EE_CORE_EXPORT CTransform : public Component
   * The scale of the actor.
   */
   Vector3f m_scale;
+
+  /**
+  * The constant buffer for the model matrix of the object.
+  */
+  SPtr<ConstantBuffer> m_modelMatrixBuff;
 };
 }

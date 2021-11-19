@@ -336,6 +336,19 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
 
   /**
   * @brief
+  * Draws the actor.
+  *
+  * @description
+  * Draws the given actor.
+  *
+  * @param obj
+  * The actor to draw.
+  */
+  virtual void
+  drawObject(Actor* act);
+
+  /**
+  * @brief
   * Shows in screen.
   *
   * @description

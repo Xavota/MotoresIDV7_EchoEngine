@@ -519,6 +519,12 @@ void BaseAppTest1::render()
   //GraphicsApi::instance().drawObject(m_cube);
   GraphicsApi::instance().drawObject(m_model);
 
+  int32 rActorsCount = GraphicsApi::instance().getRenderFrameActors().size();
+  for (int32 i = 0; i < rActorsCount; ++i)
+  {
+    
+  }
+
 
   GraphicsApi::instance().unsetRenderTargets();
   GraphicsApi::instance().unsetTextures(1u, 0u);
