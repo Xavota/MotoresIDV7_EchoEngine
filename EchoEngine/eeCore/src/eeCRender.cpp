@@ -4,7 +4,6 @@
 namespace eeEngineSDK {
 CRender::CRender()
 {
-  m_type = eCOMPONENT_TYPE::RENDER;
 }
 void CRender::update(Actor* actor)
 {

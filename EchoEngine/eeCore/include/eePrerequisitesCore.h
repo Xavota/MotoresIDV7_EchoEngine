@@ -75,6 +75,9 @@ class Texture;
 class Actor;
 class Component;
 class CTransform;
+class CModel;
+class CRender;
+class CCamera;
 
 class ResourceManager;
 }

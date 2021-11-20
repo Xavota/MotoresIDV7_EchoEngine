@@ -7,8 +7,6 @@ m_position(0.0f, 0.0f, 0.0f),
 m_rotation(Vector3f( 0.0f,0.0f,0.0f )),
 m_scale(1.0f, 1.0f, 1.0f)
 {
-  m_type = eCOMPONENT_TYPE::TRANSFORM;
-
   m_modelMatrixBuff = GraphicsApi::instance().createConstantBufferPtr();
   Matrix4f modelMat = getModelMatrix();
   m_modelMatrixBuff->initData(sizeof(Matrix4f),

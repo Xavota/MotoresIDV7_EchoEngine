@@ -98,14 +98,14 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>EE_CORE_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;$(DEVLIBS)Gainput/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Assimp/lib/$(PlatformTarget)/;$(DEVLIBS)Gainput/lib/$(PlatformTarget)/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>eeUtilitiesd.lib;assimp-vc142-mtd.lib;gainput-d.lib;gainputstatic-d.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Assimp/lib/$(PlatformTarget)/</AdditionalLibraryDirectories>
+      <AdditionalDependencies>eeUtilitiesd.lib;assimp-vc142-mtd.lib</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -117,7 +117,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>EE_CORE_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;$(DEVLIBS)Gainput/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
@@ -125,8 +125,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Assimp/lib/$(PlatformTarget)/;$(DEVLIBS)Gainput/lib/$(PlatformTarget)/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>eeUtilities.lib;%(AdditionalDependencies);assimp-vc142-mt.lib;gainput.lib;gainputstatic.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Assimp/lib/$(PlatformTarget)/</AdditionalLibraryDirectories>
+      <AdditionalDependencies>eeUtilities.lib;%(AdditionalDependencies);assimp-vc142-mt.lib</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -136,14 +136,14 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>EE_CORE_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;$(DEVLIBS)Gainput/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Assimp/lib/$(PlatformTarget)/;$(DEVLIBS)Gainput/lib/$(PlatformTarget)/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>eeUtilitiesd.lib;assimp-vc142-mtd.lib;gainput-d.lib;gainputstatic-d.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Assimp/lib/$(PlatformTarget)/</AdditionalLibraryDirectories>
+      <AdditionalDependencies>eeUtilitiesd.lib;assimp-vc142-mtd.lib</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -155,7 +155,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>EE_CORE_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;$(DEVLIBS)Gainput/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
@@ -163,8 +163,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Assimp/lib/$(PlatformTarget)/;$(DEVLIBS)Gainput/lib/$(PlatformTarget)/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>eeUtilities.lib;%(AdditionalDependencies);assimp-vc142-mt.lib;gainput.lib;gainputstatic.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Assimp/lib/$(PlatformTarget)/</AdditionalLibraryDirectories>
+      <AdditionalDependencies>eeUtilities.lib;%(AdditionalDependencies);assimp-vc142-mt.lib</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -174,6 +174,7 @@
     <ClCompile Include="src\eeBaseApp.cpp" />
     <ClCompile Include="src\eeBlendState.cpp" />
     <ClCompile Include="src\eeBuffer.cpp" />
+    <ClCompile Include="src\eeCCamera.cpp" />
     <ClCompile Include="src\eeCModel.cpp" />
     <ClCompile Include="src\eeComponent.cpp" />
     <ClCompile Include="src\eeConstantBuffer.cpp" />
@@ -203,6 +204,7 @@
     <ClInclude Include="include\eeBaseApp.h" />
     <ClInclude Include="include\eeBlendState.h" />
     <ClInclude Include="include\eeBuffer.h" />
+    <ClInclude Include="include\eeCCamera.h" />
     <ClInclude Include="include\eeCModel.h" />
     <ClInclude Include="include\eeComponent.h" />
     <ClInclude Include="include\eeConstantBuffer.h" />

@@ -2,10 +2,12 @@
 #include "eeResourceManager.h"
 #pragma warning(push, 0)   
 #include <windows.h>
+#include <windowsx.h>
 #pragma warning(pop)   
 #include <eeCoreConfiguration.h>
 
 //#include <eeMath.h>
+#include <eeInput.h>
 
 namespace eeEngineSDK {
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -24,6 +26,80 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     PostQuitMessage(0);
     break;
 
+  case WM_KEYDOWN:
+    if (wParam == 'Q')
+    {
+      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::Q, true);
+    }
+    else if (wParam == 'W')
+    {
+      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::W, true);
+    }
+    else if (wParam == 'E')
+    {
+      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::E, true);
+    }
+    else if (wParam == 'A')
+    {
+      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::A, true);
+    }
+    else if (wParam == 'S')
+    {
+      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::S, true);
+    }
+    else if (wParam == 'D')
+    {
+      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::D, true);
+    }
+    break;
+
+  case WM_KEYUP:
+    if (wParam == 'Q')
+    {
+      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::Q, false);
+    }
+    else if (wParam == 'W')
+    {
+      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::W, false);
+    }
+    else if (wParam == 'E')
+    {
+      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::E, false);
+    }
+    else if (wParam == 'A')
+    {
+      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::A, false);
+    }
+    else if (wParam == 'S')
+    {
+      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::S, false);
+    }
+    else if (wParam == 'D')
+    {
+      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::D, false);
+    }
+    break;
+
+  case WM_LBUTTONDOWN:
+    Input::instance().setMouseClickInputPressed(Input::eMOUSE_CLICK::LEFT_CLICK, true);
+    break;
+
+  case WM_RBUTTONDOWN:
+    Input::instance().setMouseClickInputPressed(Input::eMOUSE_CLICK::RIGHT_CLICK, true);
+    break;
+
+  case WM_LBUTTONUP:
+    Input::instance().setMouseClickInputPressed(Input::eMOUSE_CLICK::LEFT_CLICK, false);
+    break;
+
+  case WM_RBUTTONUP:
+    Input::instance().setMouseClickInputPressed(Input::eMOUSE_CLICK::RIGHT_CLICK, false);
+    break;
+
+  case WM_MOUSEMOVE:
+    Input::instance().setMousePosition({ GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) });
+  break;
+
   default:
     return DefWindowProc(hWnd, message, wParam, lParam);
   }
@@ -40,7 +116,7 @@ DX11GraphicsApi::~DX11GraphicsApi()
 bool
 DX11GraphicsApi::initialize()
 {
-  std::cout << "Initialized form DX11" << std::endl;
+  //std::cout << "Initialized form DX11" << std::endl;
 
   if (!GraphicsApi::initialize())
   {

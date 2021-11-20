@@ -46,8 +46,10 @@ void GraphicsApi::drawObject(Actor* act)
   if (!transform)
     return;
 
-  const Vector<Pair<SPtr<Mesh>, uint8>>& meshes = obj->getModel()->getMeshes();
-  const Vector< SPtr<Texture>>& textures = obj->getModel()->getTextures();
+  SPtr<CModel> model = act->getComponent<CModel>();
+
+  const Vector<Pair<SPtr<Mesh>, uint8>>& meshes = model->getModel()->getMeshes();
+  const Vector< SPtr<Texture>>& textures = model->getModel()->getTextures();
 
   transform->getModelBuffer()->setInVertex(0u);
 

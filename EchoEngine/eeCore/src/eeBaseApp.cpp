@@ -3,6 +3,7 @@
 #include "eeDLLDynamics.h"
 #include "eeGraficsApi.h"
 #include "eeResourceManager.h"
+#include "eeInput.h"
 
 namespace eeEngineSDK {
 int32
@@ -54,6 +55,8 @@ BaseApp::mainLoop()
     start = std::chrono::high_resolution_clock::now();
     update(dt);
     render();
+
+    endFrame();
   }
 
   destroy();
@@ -75,13 +78,14 @@ BaseApp::init()
 bool BaseApp::initSystems()
 {
   ResourceManager::startUp();
+  Input::startUp();
 
-  m_mouseID = m_inManager.CreateDevice<gainput::InputDeviceMouse>();
-
-  m_inManager.SetDisplaySize(1280, 720);
-
-  m_inMap = std::make_shared<gainput::InputMap>(m_inManager);
-  m_inMap->MapBool(0, m_mouseID, gainput::MouseButtonLeft);
+  //m_mouseID = m_inManager.CreateDevice<gainput::InputDeviceMouse>();
+  //
+  //m_inManager.SetDisplaySize(1280, 720);
+  //
+  //m_inMap = std::make_shared<gainput::InputMap>(m_inManager);
+  //m_inMap->MapBool(0, m_mouseID, gainput::MouseButtonLeft);
 
   return true;
 }
@@ -92,12 +96,12 @@ BaseApp::processEvents()
 void
 BaseApp::update(float /*deltaTime*/)
 {
-  m_inManager.Update();
-
-  if (m_inMap->GetBoolWasDown(0))
-  {
-    std::cout << "Funciona!" << std::endl;
-  }
+  //m_inManager.Update();
+  //
+  //if (m_inMap->GetBoolWasDown(0))
+  //{
+  //  std::cout << "Funciona!" << std::endl;
+  //}
 }
 void
 BaseApp::render()
@@ -106,6 +110,7 @@ BaseApp::render()
 void BaseApp::endFrame()
 {
   GraphicsApi::instance().clearRenderFrameActors();
+  Input::instance().update();
 }
 void
 BaseApp::destroy()

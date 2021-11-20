@@ -1,32 +1,48 @@
+/************************************************************************/
+/**
+ * @file eeInput.h
+ * @author Diego Castellanos
+ * @date 16/11/21
+ * @brief
+ * The input manager for the api.
+ *
+ * @bug Not bug Known.
+ */
+ /************************************************************************/
+
 #pragma once
 #include "eePrerequisitesCore.h"
 
 namespace eeEngineSDK{
-enum class eCOMPONENT_TYPE
+namespace eCOMPONENT_TYPE {
+enum E
 {
   NONE = -1,
   TRANSFORM,
   MODEL,
   RENDER,
+  CAMERA,
   COUNT
 };
+}
 
 class EE_CORE_EXPORT Component
 {
 public:
+  enum { CmpType = eCOMPONENT_TYPE::NONE };
+
   Component() = default;
   ~Component() = default;
 
   virtual void
   update(Actor* /*actor*/) {}
 
-  virtual eCOMPONENT_TYPE
+  virtual int32
   getType()
   {
-    return m_type;
+    return CmpType;
   }
 
  protected:
-  eCOMPONENT_TYPE m_type = eCOMPONENT_TYPE::NONE;
 };
 }

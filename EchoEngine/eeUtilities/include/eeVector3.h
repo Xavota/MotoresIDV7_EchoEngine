@@ -559,6 +559,39 @@ class EE_UTILITY_EXPORT Vector3f
   bool
   operator!=(const Vector3f& other) const;
 
+  /**
+  * @brief
+  * The multiplication of the vector with a matrix.
+  *
+  * @description
+  * Returns a vector with the multiplication of it with a matrix.
+  *
+  * @param other
+  * The matrix for the operation.
+  *
+  * @return
+  * The multiplication of the vector with the matrix.
+  */
+  Vector3f
+  operator*(const Matrix3f& other) const;
+  /**
+  * @brief
+  * Makes the original vector equal to the itself times a matrix.
+  *
+  * @description
+  * Makes every component of the original vector equal to the components
+  * of it self times the matrix.
+  *
+  * @param other
+  * The matrix to whom is gonna be multiplied.
+  *
+  * @return
+  * The original vector after the operation.
+  */
+  Vector3f&
+  operator*=(const Matrix3f& other);
+
+
  public:
   /**
   * @brief

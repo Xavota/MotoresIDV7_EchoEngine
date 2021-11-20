@@ -44,7 +44,7 @@ ResourceManager::loadModelFromFile(const String& fileName,
     return nullptr;
   }
 
-  if (fileName != "")
+  if (fileName == "")
   {
     std::cout << "Empty info loading model" << std::endl;
     return nullptr;

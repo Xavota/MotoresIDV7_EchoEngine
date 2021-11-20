@@ -42,9 +42,7 @@ inline SPtr<T> Actor::getComponent()
   uint32 compCount = m_components.size();
   for (uint32 i = 0; i != compCount; ++i)
   {
-    T a;
-    //auto candidate = std::dynamic_pointer_cast<T>(m_components[i]);
-    if (m_components[i]->getType() == a.getType())
+    if (m_components[i]->getType() == T::CmpType)
     {
       return std::reinterpret_pointer_cast<T>(m_components[i]);
     }

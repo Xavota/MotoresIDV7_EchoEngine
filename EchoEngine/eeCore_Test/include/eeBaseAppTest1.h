@@ -10,6 +10,7 @@ using eeEngineSDK::RenderTarget;
 using eeEngineSDK::DepthStencil;
 using eeEngineSDK::RasterizerState;
 using eeEngineSDK::Actor;
+using eeEngineSDK::CCamera;
 
 class BaseAppTest1 : public BaseApp
 {
@@ -100,5 +101,8 @@ class BaseAppTest1 : public BaseApp
 
 
   SPtr<Actor> m_actorTest;
+
+  SPtr<CCamera> m_camera;
+
 };
 

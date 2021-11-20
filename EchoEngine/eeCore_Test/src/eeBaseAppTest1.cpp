@@ -12,8 +12,10 @@
 #include <eeCTransform.h>
 #include <eeCModel.h>
 #include <eeCRender.h>
+#include <eeCCamera.h>
 
 #include <eeMath.h>
+#include <eeInput.h>
 
 using eeEngineSDK::eeConfigurations::screenWidth;
 using eeEngineSDK::eeConfigurations::screenHeight;
@@ -46,6 +48,9 @@ using eeEngineSDK::Component;
 using eeEngineSDK::CTransform;
 using eeEngineSDK::CModel;
 using eeEngineSDK::CRender;
+using eeEngineSDK::Input;
+using eeEngineSDK::CameraDesc;
+using eeEngineSDK::eCAMERA_PROJECTION_TYPE;
 
 
 using eeEngineSDK::eFILTER;
@@ -325,11 +330,11 @@ bool BaseAppTest1::initResources()
   m_model = std::make_shared<Object>();
   m_model->loadFromFile
   (
-    "Models/plant.obj",
+    "Models/Rammer_225_Large.obj.obj",
 
-    Vector3f(0.0f, 0.0f, 0.0f),
+    Vector3f(1.0f, 0.0f, 0.0f),
     Quaternion(Vector3f(0.0f, 0.0f, 0.0f)),
-    Vector3f(0.1f, 0.10f, 0.10f)
+    Vector3f(0.01f, 0.01f, 0.01f)
   );
 
   m_SAQ = std::make_shared<Object>();
@@ -391,21 +396,21 @@ bool BaseAppTest1::initResources()
     Quaternion(Vector3f(0.0f, 0.0f, 0.0f)),
     Vector3f(1.0f, 1.0f, 1.0f)
   );
-
-
-
+  
+  
+  
   if (!ResourceManager::instance().loadVertexShaderFromFile("Shaders/TestVShader.hlsl",
-                                                            "TestVS"))
+    "TestVS"))
   {
     return false;
   }
   if (!ResourceManager::instance().loadPixelShaderFromFile("Shaders/TestPShader.hlsl",
-                                                           "TestPS"))
+    "TestPS"))
   {
     return false;
   }
-
-
+  
+  
   if (!ResourceManager::instance().loadVertexShaderFromFile("Shaders/TestVSSAQ.hlsl",
     "TestSAQVS"))
   {
@@ -416,43 +421,69 @@ bool BaseAppTest1::initResources()
   {
     return false;
   }
-
+  
   m_viewMatrixBuffer = GraphicsApi::instance().createConstantBufferPtr();
   m_projectionMatrixBuffer = GraphicsApi::instance().createConstantBufferPtr();
   m_viewMatrixBuffer->initData(sizeof(Matrix4f), sizeof(Matrix4f), nullptr);
   m_projectionMatrixBuffer->initData(sizeof(Matrix4f), sizeof(Matrix4f), nullptr);
-
-
+  
+  
   RasteraizerDesc rasDesc;
   memset(&rasDesc, 0, sizeof(rasDesc));
   rasDesc.cullMode = eeEngineSDK::eCULL_MODE::FRONT;
   rasDesc.fillMode = eeEngineSDK::eFILL_MODE::SOLID;
   rasDesc.frontCounterClockwise = true;
-
+  
   m_rasterizer = GraphicsApi::instance().createRasterizerStatePtr();
   if (!m_rasterizer->create(rasDesc))
   {
     return false;
   }
-
-
+  
+  
   memset(&rasDesc, 0, sizeof(rasDesc));
   rasDesc.cullMode = eeEngineSDK::eCULL_MODE::FRONT;
   rasDesc.fillMode = eeEngineSDK::eFILL_MODE::SOLID;
   rasDesc.frontCounterClockwise = true;
-
+  
   m_rasterizer2 = GraphicsApi::instance().createRasterizerStatePtr();
   if (!m_rasterizer2->create(rasDesc))
   {
     return false;
   }
-
-
+  
+  
   m_actorTest = std::make_shared<Actor>();
   m_actorTest->init();
+  m_actorTest->getComponent<CTransform>()->setScale({ 0.1f, 0.1f, 0.1f });
   m_actorTest->addComponent<CModel>();
+  m_actorTest->getComponent<CModel>()->setModel
+  (
+    ResourceManager::instance().loadModelFromFile
+    (
+      "Models/plant.obj",
+      "ActorTest1"
+    )
+  );
   m_actorTest->addComponent<CRender>();
+  
+  
+  
+  m_camera = std::make_shared<CCamera>();
+  CameraDesc camDesc;
+  camDesc.eyePos = { 0.0f, 3.0f, -6.0f };
+  camDesc.lookAt = { 0.0f, 1.0f, 0.0f };
+  camDesc.upVector = { 0.0f, 1.0f, 0.0f };
 
+  camDesc.projectionType = eCAMERA_PROJECTION_TYPE::PERSPECTIVE;
+  camDesc.fovAngleY = 0.785398163f;
+  camDesc.viewSize = { static_cast<float>(screenWidth),
+                       static_cast<float>(screenHeight) };
+  camDesc.nearZ = 0.01f;
+  camDesc.farZ = 100.0f;
+
+  m_camera->init(camDesc);
+  
   return true;
 }
 
@@ -465,6 +496,41 @@ void BaseAppTest1::update(float deltaTime)
   m_model->setRotation(rot);
 
   m_actorTest->update();
+
+
+  Vector3f cameraMovement = { 0.0f, 0.0f, 0.0f };
+  if (Input::instance().getKeyboardInputIsPressed(eeEngineSDK::Input::eKEYBOARD::W))
+  {
+    cameraMovement += m_camera->getFront();
+  }
+  if (Input::instance().getKeyboardInputIsPressed(eeEngineSDK::Input::eKEYBOARD::S))
+  {
+    cameraMovement -= m_camera->getFront();
+  }
+  if (Input::instance().getKeyboardInputIsPressed(eeEngineSDK::Input::eKEYBOARD::A))
+  {
+    cameraMovement -= m_camera->getRight();
+  }
+  if (Input::instance().getKeyboardInputIsPressed(eeEngineSDK::Input::eKEYBOARD::D))
+  {
+    cameraMovement += m_camera->getRight();
+  }
+  if (Input::instance().getKeyboardInputIsPressed(eeEngineSDK::Input::eKEYBOARD::Q))
+  {
+    cameraMovement += m_camera->getUpVector();
+  }
+  if (Input::instance().getKeyboardInputIsPressed(eeEngineSDK::Input::eKEYBOARD::E))
+  {
+    cameraMovement -= m_camera->getUpVector();
+  }
+  m_camera->setEyePosition(m_camera->getEyePosition() + cameraMovement * deltaTime * 10.0f);
+  m_camera->setLookAtPosition(m_camera->getLookAtPosition() + cameraMovement * deltaTime * 10.0f);
+
+
+  if (Input::instance().getMouseClickInputIsPressed(eeEngineSDK::Input::eMOUSE_CLICK::RIGHT_CLICK))
+  {
+    m_camera->rotateCamera(Quaternion(Vector3f(Input::instance().getMouseMovement().y * deltaTime * 1.0f, Input::instance().getMouseMovement().x * deltaTime * 1.0f, 0.0f)));
+  }
 }
 
 void BaseAppTest1::render()
@@ -490,17 +556,11 @@ void BaseAppTest1::render()
 
   // Create view/proj matrices
   Matrix4f view = Matrix4f::IDENTITY;
-  view = Matrix4f::viewMatrix(Vector3f(0.0f, 3.0f, -6.0f),
-                              Vector3f(0.0f, 1.0f, 0.0f),
-                              Vector3f(0.0f, 1.0f, 0.0f)).getTranspose();
+  view = m_camera->getViewMatrix().getTranspose();
   m_viewMatrixBuffer->updateData(reinterpret_cast<Byte*>(&view));
 
   Matrix4f proj = Matrix4f::IDENTITY;
-  proj = Matrix4f::perspectiveMatrix(0.785398163f,
-                                     static_cast<float>(screenWidth) /
-                                     static_cast<float>(screenHeight),
-                                     0.01f,
-                                     100.0f).getTranspose();
+  proj = m_camera->getProjectionMatrix().getTranspose();
   m_projectionMatrixBuffer->updateData(reinterpret_cast<Byte*>(&proj));
 
 
@@ -519,10 +579,11 @@ void BaseAppTest1::render()
   //GraphicsApi::instance().drawObject(m_cube);
   GraphicsApi::instance().drawObject(m_model);
 
-  int32 rActorsCount = GraphicsApi::instance().getRenderFrameActors().size();
+  Vector<Actor*> rActors = GraphicsApi::instance().getRenderFrameActors();
+  int32 rActorsCount = rActors.size();
   for (int32 i = 0; i < rActorsCount; ++i)
   {
-    
+    GraphicsApi::instance().drawObject(rActors[i]);
   }
 
 

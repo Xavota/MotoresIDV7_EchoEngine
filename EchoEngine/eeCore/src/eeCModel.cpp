@@ -3,7 +3,6 @@
 namespace eeEngineSDK {
 CModel::CModel()
 {
-  m_type = eCOMPONENT_TYPE::MODEL;
 }
 void CModel::setModel(SPtr<Model> model)
 {

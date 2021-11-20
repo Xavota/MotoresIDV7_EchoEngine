@@ -1,4 +1,6 @@
+#include "..\include\eeVector3.h"
 #include "eeVector3.h"
+#include "eeMatrix3.h"
 #include "eeMath.h"
 
 namespace eeEngineSDK
@@ -221,6 +223,29 @@ Vector3f::operator!=(const Vector3f& other) const
   return !(*this == other);
 }
 
+Vector3f
+Vector3f::operator*(const Matrix3f& other) const
+{
+  Vector3f r;
+
+  r.x = other.m_00 * this->x +
+        other.m_01 * this->y +
+        other.m_02 * this->z;
+  r.y = other.m_10 * this->x +
+        other.m_11 * this->y +
+        other.m_12 * this->z;
+  r.z = other.m_20 * this->x +
+        other.m_21 * this->y +
+        other.m_22 * this->z;
+
+  return r;
+}
+Vector3f&
+Vector3f::operator*=(const Matrix3f& other)
+{
+  *this = *this * other;
+  return *this;
+}
 
 
 
