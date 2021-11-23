@@ -101,8 +101,7 @@ class BaseAppTest1 : public BaseApp
 
 
   SPtr<Actor> m_actorTest;
-
-  SPtr<CCamera> m_camera;
+  SPtr<Actor> m_player;
 
 };
 

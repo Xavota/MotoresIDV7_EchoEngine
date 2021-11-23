@@ -29,10 +29,10 @@ enum class eCAMERA_PROJECTION_TYPE
 };
 
 struct CameraDesc
-{
-  Vector3f eyePos = { 0.0f, 0.0f, 0.0f };
-  Vector3f lookAt = { 0.0f, 0.0f, 0.0f };
-  Vector3f upVector = { 0.0f, 0.0f, 0.0f };
+{ 
+  //Vector3f eyePos = { 0.0f, 0.0f, 0.0f };
+  //Vector3f lookAt = { 0.0f, 0.0f, 0.0f };
+  //Vector3f upVector = { 0.0f, 0.0f, 0.0f };
 
   eCAMERA_PROJECTION_TYPE projectionType = eCAMERA_PROJECTION_TYPE::NONE;
   float fovAngleY = 0.0f;
@@ -53,12 +53,15 @@ class EE_CORE_EXPORT CCamera : public Component
     return CmpType;
   }
 
-  CCamera() = default;
+  CCamera();
   ~CCamera() = default;
 
   void
   init(CameraDesc desc);
 
+
+  void
+  update(Actor* actor) override;
 
   void
   setEyePosition(Vector3f pos);

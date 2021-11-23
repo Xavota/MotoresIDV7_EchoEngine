@@ -84,6 +84,13 @@ Vector3f::truncate(float newSize)
   *this = n * newSize;
   return *this;
 }
+String
+Vector3f::toString()
+{
+  return "{ x:" + std::to_string(x) + ", y:"
+                + std::to_string(y) + ", z:"
+                + std::to_string(z) + " }";
+}
 Vector3f
 Vector3f::operator+(const Vector3f& other) const
 {

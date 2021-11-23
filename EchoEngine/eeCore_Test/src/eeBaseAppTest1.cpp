@@ -469,11 +469,11 @@ bool BaseAppTest1::initResources()
   
   
   
-  m_camera = std::make_shared<CCamera>();
+  //m_camera = std::make_shared<CCamera>();
   CameraDesc camDesc;
-  camDesc.eyePos = { 0.0f, 3.0f, -6.0f };
-  camDesc.lookAt = { 0.0f, 1.0f, 0.0f };
-  camDesc.upVector = { 0.0f, 1.0f, 0.0f };
+  //camDesc.eyePos = { 0.0f, 3.0f, -6.0f };
+  //camDesc.lookAt = { 0.0f, 1.0f, 0.0f };
+  //camDesc.upVector = { 0.0f, 1.0f, 0.0f };
 
   camDesc.projectionType = eCAMERA_PROJECTION_TYPE::PERSPECTIVE;
   camDesc.fovAngleY = 0.785398163f;
@@ -482,7 +482,13 @@ bool BaseAppTest1::initResources()
   camDesc.nearZ = 0.01f;
   camDesc.farZ = 100.0f;
 
-  m_camera->init(camDesc);
+  //m_camera->init(camDesc);
+
+  m_player = std::make_shared<Actor>();
+  m_player->init();
+  m_player->getComponent<CTransform>()->setPosition({0.0f, 3.0f, -6.0f });
+  m_player->addComponent<CCamera>();
+  m_player->getComponent<CCamera>()->init(camDesc);
   
   return true;
 }
@@ -491,46 +497,60 @@ void BaseAppTest1::update(float deltaTime)
 {
   BaseApp::update(deltaTime);
 
-  static Quaternion rot(Vector3f(0.0f, 0.0f, 0.0f));
-  rot = Quaternion((rot.getEuclidean() + Vector3f(deltaTime * .5f, 0.0f, 0.0f)));
-  m_model->setRotation(rot);
+  static Quaternion rot1(Vector3f(0.0f, 0.0f, 0.0f));
+  rot1 = Quaternion((rot1.getEuclidean() + Vector3f(deltaTime * .5f, 0.0f, 0.0f)));
+  m_model->setRotation(rot1);
 
   m_actorTest->update();
 
+  SPtr<CTransform> trans = nullptr;
+  if (m_player)
+    trans = m_player->getComponent<CTransform>();
+
+  Quaternion rot;
+  if (trans)
+    rot = trans->getRotation();
 
   Vector3f cameraMovement = { 0.0f, 0.0f, 0.0f };
   if (Input::instance().getKeyboardInputIsPressed(eeEngineSDK::Input::eKEYBOARD::W))
   {
-    cameraMovement += m_camera->getFront();
+    cameraMovement += rot.getFrontVector();
   }
   if (Input::instance().getKeyboardInputIsPressed(eeEngineSDK::Input::eKEYBOARD::S))
   {
-    cameraMovement -= m_camera->getFront();
+    cameraMovement -= rot.getFrontVector();
   }
   if (Input::instance().getKeyboardInputIsPressed(eeEngineSDK::Input::eKEYBOARD::A))
   {
-    cameraMovement -= m_camera->getRight();
+    cameraMovement -= rot.getRightVector();
   }
   if (Input::instance().getKeyboardInputIsPressed(eeEngineSDK::Input::eKEYBOARD::D))
   {
-    cameraMovement += m_camera->getRight();
+    cameraMovement += rot.getRightVector();
   }
   if (Input::instance().getKeyboardInputIsPressed(eeEngineSDK::Input::eKEYBOARD::Q))
   {
-    cameraMovement += m_camera->getUpVector();
+    cameraMovement += rot.getUpVector();
   }
   if (Input::instance().getKeyboardInputIsPressed(eeEngineSDK::Input::eKEYBOARD::E))
   {
-    cameraMovement -= m_camera->getUpVector();
+    cameraMovement -= rot.getUpVector();
   }
-  m_camera->setEyePosition(m_camera->getEyePosition() + cameraMovement * deltaTime * 10.0f);
-  m_camera->setLookAtPosition(m_camera->getLookAtPosition() + cameraMovement * deltaTime * 10.0f);
+  trans->setPosition(trans->getPosition() + cameraMovement * deltaTime * 10.0f);
 
-
+  SPtr<CCamera> camera = m_player->getComponent<CCamera>();
   if (Input::instance().getMouseClickInputIsPressed(eeEngineSDK::Input::eMOUSE_CLICK::RIGHT_CLICK))
   {
-    m_camera->rotateCamera(Quaternion(Vector3f(Input::instance().getMouseMovement().y * deltaTime * 1.0f, Input::instance().getMouseMovement().x * deltaTime * 1.0f, 0.0f)));
+    //camera->rotateCamera(Quaternion(Vector3f(Input::instance().getMouseMovement().y * deltaTime * 1.0f, Input::instance().getMouseMovement().x * deltaTime * 1.0f, 0.0f)));
+    //trans->setRotation(trans->getRotation() * Quaternion(Vector3f(Input::instance().getMouseMovement().y * deltaTime * 1.0f, Input::instance().getMouseMovement().x * deltaTime * 1.0f, 0.0f)));
+    std::cout << trans->getRotation().toString() << std::endl;
+    std::cout << Quaternion::createFromAxisAngle(Vector3f(1.0f, 0.0f, 0.0f), Input::instance().getMouseMovement().y * deltaTime * 1.0f).toString() << std::endl;
+    trans->setRotation(trans->getRotation() * Quaternion::createFromAxisAngle(Vector3f(1.0f, 0.0f, 0.0f), Input::instance().getMouseMovement().y * deltaTime * 1.0f));
+
+    std::cout << trans->getRotation().toString() << std::endl << std::endl;
   }
+
+  m_player->update();
 }
 
 void BaseAppTest1::render()
@@ -552,15 +572,17 @@ void BaseAppTest1::render()
   ResourceManager::instance().getResourcePixelShader("TestPS");
   ps->use();
 
-
+  SPtr<CCamera> camera = m_player->getComponent<CCamera>();
 
   // Create view/proj matrices
   Matrix4f view = Matrix4f::IDENTITY;
-  view = m_camera->getViewMatrix().getTranspose();
+  if (camera)
+    view = camera->getViewMatrix().getTranspose();
   m_viewMatrixBuffer->updateData(reinterpret_cast<Byte*>(&view));
 
   Matrix4f proj = Matrix4f::IDENTITY;
-  proj = m_camera->getProjectionMatrix().getTranspose();
+  if (camera)
+    proj = camera->getProjectionMatrix().getTranspose();
   m_projectionMatrixBuffer->updateData(reinterpret_cast<Byte*>(&proj));
 
 

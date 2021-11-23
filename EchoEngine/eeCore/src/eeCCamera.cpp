@@ -1,14 +1,17 @@
 #include "eeCCamera.h"
 #include "eeMatrix3.h"
 
+#include "eeActor.h"
+#include "eeCTransform.h"
+
 namespace eeEngineSDK {
+CCamera::CCamera()
+{
+  m_upVector = Vector3f::UP;
+}
 void
 CCamera::init(CameraDesc desc)
 {
-  m_eyePos = desc.eyePos;
-  m_lookAt = desc.lookAt;
-  m_upVector = desc.upVector;
-
   m_projectionType = desc.projectionType;
   m_fovAngleY = desc.fovAngleY;
   m_viewSize = desc.viewSize;
@@ -17,6 +20,19 @@ CCamera::init(CameraDesc desc)
 
   m_dirtyView = true;
   m_dirtyProj = true;
+}
+void
+CCamera::update(Actor* actor)
+{
+  if (!actor)
+    return;
+  SPtr<CTransform> transform = actor->getComponent<CTransform>();
+  if (!transform)
+    return;
+
+  m_eyePos = transform->getPosition();
+  m_lookAt = m_eyePos + transform->getRotation().getFrontVector();
+  m_dirtyView = true;
 }
 void
 CCamera::setEyePosition(Vector3f pos)

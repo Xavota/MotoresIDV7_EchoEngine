@@ -176,6 +176,20 @@ class EE_UTILITY_EXPORT Vector3f
   Vector3f
   truncate(float newSize);
   
+
+  /**
+  * @brief
+  * Returns a string of the vector.
+  *
+  * @description
+  * Return a string with the format "{ x:0, y:0, z:0 }.
+  *
+  * @return
+  * The string vector.
+  */
+  String
+  toString();
+
   /**
   * @brief
   * The sum of two vectors.

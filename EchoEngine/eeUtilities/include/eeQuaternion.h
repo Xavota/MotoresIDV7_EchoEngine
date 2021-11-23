@@ -90,11 +90,37 @@ class EE_UTILITY_EXPORT Quaternion
   */
   void
   conjugate();
+  /**
+  * @brief
+  * The normalization of the quaternion.
+  *
+  * @description
+  * Returns an unitary quaternion with the same angle
+  * of the original.
+  *
+  * @return
+  * The quaternion normalized.
+  */
+  Quaternion
+  getNormalize() const;
+  /**
+  * @brief
+  * Normalizes the quaternion.
+  *
+  * @description
+  * Modifies the quaternion to its unitary form, maintaining its angle
+  * and returns this new quaternion.
+  *
+  * @return
+  * The quaternion normalized.
+  */
+  Quaternion
+  normalize();
   
 
   /**
   * @brief
-  * The euclidean angles represented in the cuaternion.
+  * The euclidean angles represented in the quaternion.
   *
   * @description
   * Returns the transformation of the quaternion to euclidean angles.
@@ -160,6 +186,72 @@ class EE_UTILITY_EXPORT Quaternion
   */
   Vector3f
   rotateVector(const Vector3f& vec);
+  /**
+  * @brief
+  * Creates a quaternion within a 3D axis.
+  *
+  * @description
+  * Creates a quaternion around an axis and an angle.
+  *
+  * @param axis
+  * The axis that the quaternion will be formed.
+  * @param angle
+  * The angle to be rotated.
+  */
+  static Quaternion
+  createFromAxisAngle(const Vector3f axis,
+                      const float& angle);
+
+  /**
+  * @brief
+  * Returns a direction vector.
+  *
+  * @description
+  * Rotates a front vector to get the direction of the quaternion.
+  *
+  * @return
+  * The front vector.
+  */
+  Vector3f
+  getFrontVector();
+  /**
+  * @brief
+  * Returns the right of the direction vector.
+  *
+  * @description
+  * Rotates a right vector to get the right direction of the quaternion.
+  *
+  * @return
+  * The right vector.
+  */
+  Vector3f
+  getRightVector();
+  /**
+  * @brief
+  * Returns the up of the direction vector.
+  *
+  * @description
+  * Rotates an up vector to get the up direction of the quaternion.
+  *
+  * @return
+  * The up vector.
+  */
+  Vector3f
+  getUpVector();
+
+
+  /**
+  * @brief
+  * Returns a string of the quaternion.
+  *
+  * @description
+  * Return a string with the format "{ 0i, 0j, 0k, 0 }.
+  *
+  * @return
+  * The string quaternion.
+  */
+  String
+  toString();
 
   /**
   * @brief

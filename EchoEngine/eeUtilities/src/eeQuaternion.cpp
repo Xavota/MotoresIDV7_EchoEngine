@@ -24,16 +24,34 @@ Quaternion::~Quaternion()
 {
 }
 
-Quaternion Quaternion::getConjugate()
+Quaternion
+Quaternion::getConjugate()
 {
   return Quaternion(w, -x, -y, -z);
 }
 
-void Quaternion::conjugate()
+void
+Quaternion::conjugate()
 {
   x = -x;
   y = -y;
   z = -z;
+}
+Quaternion
+Quaternion::getNormalize() const
+{
+  float rad = Math::sqrt(x * x + y * y + z * z + w * w);
+  return Quaternion(x / rad, y / rad, z / rad, w / rad);
+}
+Quaternion
+Quaternion::normalize()
+{
+  float rad = Math::sqrt(x * x + y * y + z * z + w * w);
+  x /= rad;
+  y /= rad;
+  z /= rad;
+  w /= rad;
+  return *this;
 }
 
 Vector3f 
@@ -91,12 +109,62 @@ Quaternion::getRotationMatrix()
 Vector3f 
 Quaternion::rotateVector(const Vector3f& vec)
 {
-  Quaternion P(0, vec.x, vec.y, vec.z);
-  Quaternion R = *this * P * getConjugate();
-  return Vector3f(R.x, R.y, R.z);
+  float num = x * 2.0f;
+  float num2 = y * 2.0f;
+  float num3 = z * 2.0f;
+  float num4 = x * num;
+  float num5 = y * num2;
+  float num6 = z * num3;
+  float num7 = x * num2;
+  float num8 = x * num3;
+  float num9 = y * num3;
+  float num10 = w * num;
+  float num11 = w * num2;
+  float num12 = w * num3;
+  Vector3f result;
+  result.x = (1.0f - (num5 + num6)) * vec.x + (num7 - num12) * vec.y + (num8 + num11) * vec.z;
+  result.y = (num7 + num12) * vec.x + (1.0f - (num4 + num6)) * vec.y + (num9 - num10) * vec.z;
+  result.z = (num8 - num11) * vec.x + (num9 + num10) * vec.y + (1.0f - (num4 + num5)) * vec.z;
+  return result.getNormalize();
+}
+Quaternion
+Quaternion::createFromAxisAngle(const Vector3f axis,
+                                const float& angle)
+{
+  float factor = sinf(angle / 2.0f);
+
+  Quaternion quat;
+  quat.x = axis.x * factor;
+  quat.y = axis.y * factor;
+  quat.z = axis.z * factor;
+
+  quat.w = cosf(angle / 2.0f);
+  return quat.getNormalize();
+}
+Vector3f Quaternion::getFrontVector()
+{
+  return rotateVector(Vector3f::FORWARD);
 }
 
-Quaternion& 
+Vector3f Quaternion::getRightVector()
+{
+  return rotateVector(Vector3f::RIGHT);
+}
+
+Vector3f Quaternion::getUpVector()
+{
+  return rotateVector(Vector3f::UP);
+}
+
+String Quaternion::toString()
+{
+  return "{ " + std::to_string(x) + "i, "
+              + std::to_string(y) + "j, "
+              + std::to_string(z) + "k, "
+              + std::to_string(w) + " }";
+}
+
+Quaternion&
 Quaternion::operator*(const Quaternion& other)
 {
   Quaternion r(
