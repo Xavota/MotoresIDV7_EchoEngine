@@ -156,7 +156,7 @@ Vector3f Quaternion::getUpVector()
   return rotateVector(Vector3f::UP);
 }
 
-String Quaternion::toString()
+String Quaternion::toString() const
 {
   return "{ " + std::to_string(x) + "i, "
               + std::to_string(y) + "j, "
@@ -164,16 +164,27 @@ String Quaternion::toString()
               + std::to_string(w) + " }";
 }
 
-Quaternion&
+Quaternion
 Quaternion::operator*(const Quaternion& other)
 {
+  //std::cout << "this: " << this->toString() << std::endl;
+  //std::cout << "other: " << other.toString() << std::endl;
+  float nx = this->w * other.w - this->x * other.x - this->y * other.y - this->z * other.z;
+  //std::cout << "this->w * other.w - this->x * other.x - this->y * other.y - this->z * other.z: "
+  //<< this->w << " * " << other.w << " - " << this->x << " * " << other.x << " - " << this->y << " * " << other.y << " - " << this->z << " * " << other.z << ": " << nx << std::endl;
+  float ny = this->w * other.x + this->x * other.w + this->y * other.z - this->z * other.y;
+  //std::cout << "ny: " << ny << std::endl;
+  float nz = this->w * other.y - this->x * other.z + this->y * other.w + this->z * other.x;
+  //std::cout << "nz: " << nz << std::endl;
+  float nw = this->w * other.z + this->x * other.y - this->y * other.x + this->z * other.w;
+  //std::cout << "nw: " << nw << std::endl;
   Quaternion r(
     this->w * other.w - this->x * other.x - this->y * other.y - this->z * other.z,
     this->w * other.x + this->x * other.w + this->y * other.z - this->z * other.y,
     this->w * other.y - this->x * other.z + this->y * other.w + this->z * other.x,
     this->w * other.z + this->x * other.y - this->y * other.x + this->z * other.w
   );
-  return *this;
+  return r;
 }
 bool Quaternion::operator==(const Quaternion& other) const
 {

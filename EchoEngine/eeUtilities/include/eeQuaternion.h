@@ -251,7 +251,7 @@ class EE_UTILITY_EXPORT Quaternion
   * The string quaternion.
   */
   String
-  toString();
+  toString() const;
 
   /**
   * @brief
@@ -267,7 +267,7 @@ class EE_UTILITY_EXPORT Quaternion
   * @return
   * The multiplication of the two quaternions.
   */
-  Quaternion&
+  Quaternion
   operator*(const Quaternion& other);
 
   /**

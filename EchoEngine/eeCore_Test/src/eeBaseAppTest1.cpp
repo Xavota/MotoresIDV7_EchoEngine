@@ -545,7 +545,9 @@ void BaseAppTest1::update(float deltaTime)
     //trans->setRotation(trans->getRotation() * Quaternion(Vector3f(Input::instance().getMouseMovement().y * deltaTime * 1.0f, Input::instance().getMouseMovement().x * deltaTime * 1.0f, 0.0f)));
     std::cout << trans->getRotation().toString() << std::endl;
     std::cout << Quaternion::createFromAxisAngle(Vector3f(1.0f, 0.0f, 0.0f), Input::instance().getMouseMovement().y * deltaTime * 1.0f).toString() << std::endl;
-    trans->setRotation(trans->getRotation() * Quaternion::createFromAxisAngle(Vector3f(1.0f, 0.0f, 0.0f), Input::instance().getMouseMovement().y * deltaTime * 1.0f));
+    //std::cout << (trans->getRotation() * Quaternion::createFromAxisAngle(Vector3f(1.0f, 0.0f, 0.0f), Input::instance().getMouseMovement().y * deltaTime * 1.0f)).toString() << std::endl;
+
+    trans->setRotation(trans->getRotation() * Quaternion::createFromAxisAngle(Vector3f(0.0f, 0.0f, 1.0f), Input::instance().getMouseMovement().y * deltaTime * 1.0f));
 
     std::cout << trans->getRotation().toString() << std::endl << std::endl;
   }
