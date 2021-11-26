@@ -340,7 +340,7 @@ void BaseAppTest1::update(float deltaTime)
 
 void BaseAppTest1::render()
 {
-  Vector<CCamera*> activeCams = GraphicsApi::instance().getActiveCameras();
+  Vector<SPtr<CCamera>> activeCams = GraphicsApi::instance().getActiveCameras();
   float color[4] = { 0.3f, 0.5f, 0.8f, 1.0f };
 
 

@@ -21,7 +21,7 @@ class EE_CORE_EXPORT Scene
   ~Scene() = default;
 
   Vector<SPtr<Actor>>
-  getAllRenderableActorsInside(CCamera* camera);
+  getAllRenderableActorsInside(SPtr<CCamera> camera);
 
   SPtr<Actor>
   addActor(String name);

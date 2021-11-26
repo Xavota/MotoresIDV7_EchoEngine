@@ -516,9 +516,9 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
 
 
   virtual void
-  addActorToRenderFrame(Actor* actor);
+  addActorToRenderFrame(SPtr<Actor> actor);
 
-  virtual Vector<Actor*>
+  virtual Vector<SPtr<Actor>>
   getRenderFrameActors();
 
   virtual void
@@ -526,9 +526,9 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
 
   
   virtual void
-  addActiveCamera(CCamera* camera);
+  addActiveCamera(SPtr<CCamera> camera);
 
-  virtual Vector<CCamera*>
+  virtual Vector<SPtr<CCamera>>
   getActiveCameras();
 
   virtual void
@@ -551,7 +551,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
 
 
 
-  Vector<Actor*> m_renderActors;
-  Vector<CCamera*> m_activeCameras;
+  Vector<SPtr<Actor>> m_renderActors;
+  Vector<SPtr<CCamera>> m_activeCameras;
 };
 }

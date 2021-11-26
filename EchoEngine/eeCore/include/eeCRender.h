@@ -30,6 +30,6 @@ class EE_CORE_EXPORT CRender : public Component
   ~CRender() = default;
 
   virtual void
-  update(Actor* actor) override;
+  update(SPtr<Actor> actor) override;
 };
 }

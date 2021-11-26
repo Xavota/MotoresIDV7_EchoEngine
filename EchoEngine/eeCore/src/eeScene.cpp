@@ -6,7 +6,7 @@
 
 namespace eeEngineSDK {
 Vector<SPtr<Actor>>
-Scene::getAllRenderableActorsInside(CCamera* camera)
+Scene::getAllRenderableActorsInside(SPtr<CCamera> camera)
 {
   Vector<SPtr<Actor>> renderActors;
   for (auto& act : m_actors)
@@ -33,7 +33,7 @@ Scene::addActor(String name)
     return nullptr;
   }
 
-  m_actors[name] = std::make_shared<Actor>();
+  m_actors[name] = std::make_shared<Actor>(name);
   m_actors[name]->init();
   return m_actors[name];
 }

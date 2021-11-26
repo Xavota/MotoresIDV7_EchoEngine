@@ -34,7 +34,7 @@ CCamera::init(CameraDesc desc)
   m_depthStencil->create(1280, 720);
 }
 void
-CCamera::update(Actor* actor)
+CCamera::update(SPtr<Actor> actor)
 {
   if (!actor)
     return;
@@ -48,7 +48,8 @@ CCamera::update(Actor* actor)
   m_dirtyFrustum = true;
 
   if (m_active)
-    GraphicsApi::instance().addActiveCamera(this);
+    GraphicsApi::instance().addActiveCamera(
+                   std::reinterpret_pointer_cast<CCamera>(shared_from_this()));
 }
 void
 CCamera::setEyePosition(Vector3f pos)

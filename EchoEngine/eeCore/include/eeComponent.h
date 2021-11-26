@@ -26,7 +26,7 @@ enum E
 };
 }
 
-class EE_CORE_EXPORT Component
+class EE_CORE_EXPORT Component : public std::enable_shared_from_this<Component>
 {
 public:
   enum { CmpType = eCOMPONENT_TYPE::NONE };
@@ -35,7 +35,7 @@ public:
   ~Component() = default;
 
   virtual void
-  update(Actor* /*actor*/) {}
+  update(SPtr<Actor> /*actor*/) {}
 
   virtual int32
   getType()

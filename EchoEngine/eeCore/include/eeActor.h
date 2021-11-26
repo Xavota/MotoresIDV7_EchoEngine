@@ -16,10 +16,10 @@
 #include "eeComponent.h"
 
 namespace eeEngineSDK{
-class EE_CORE_EXPORT Actor
+class EE_CORE_EXPORT Actor : public std::enable_shared_from_this<Actor>
 {
  public:
-  Actor() = default;
+  Actor(String name);
   ~Actor() = default;
 
   void
@@ -44,12 +44,19 @@ class EE_CORE_EXPORT Actor
   void
   setActive(bool active);
 
+  void
+  AtttchTo(SPtr<Actor> parent);
+
  private:
   Vector<SPtr<Component>> m_components;
 
   Vector<SPtr<Actor>> m_childs;
 
+  SPtr<Actor> m_parent = nullptr;
+
   bool m_active = true;
+
+  String m_name;
 };
 template<class T>
 FORCEINLINE void

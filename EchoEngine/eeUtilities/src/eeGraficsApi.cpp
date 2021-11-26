@@ -71,11 +71,11 @@ GraphicsApi::release()
 {
 }
 void
-GraphicsApi::addActorToRenderFrame(Actor* actor)
+GraphicsApi::addActorToRenderFrame(SPtr<Actor> actor)
 {
   m_renderActors.push_back(actor);
 }
-Vector<Actor*>
+Vector<SPtr<Actor>>
 GraphicsApi::getRenderFrameActors()
 {
   return m_renderActors;
@@ -86,11 +86,11 @@ GraphicsApi::clearRenderFrameActors()
   m_renderActors.clear();
 }
 void
-GraphicsApi::addActiveCamera(CCamera* camera)
+GraphicsApi::addActiveCamera(SPtr<CCamera> camera)
 {
   m_activeCameras.push_back(camera);
 }
-Vector<CCamera*>
+Vector<SPtr<CCamera>>
 GraphicsApi::getActiveCameras()
 {
   return m_activeCameras;

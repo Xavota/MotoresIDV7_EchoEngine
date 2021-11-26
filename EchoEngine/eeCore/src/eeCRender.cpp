@@ -5,7 +5,7 @@ namespace eeEngineSDK {
 CRender::CRender()
 {
 }
-void CRender::update(Actor* actor)
+void CRender::update(SPtr<Actor> actor)
 {
   GraphicsApi::instance().addActorToRenderFrame(actor);
 }

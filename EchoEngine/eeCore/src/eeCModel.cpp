@@ -7,7 +7,7 @@ namespace eeEngineSDK {
 CModel::CModel()
 {
 }
-void CModel::update(Actor* actor)
+void CModel::update(SPtr<Actor> actor)
 {
   SPtr<CTransform> trans = actor->getComponent<CTransform>();
   if (trans)

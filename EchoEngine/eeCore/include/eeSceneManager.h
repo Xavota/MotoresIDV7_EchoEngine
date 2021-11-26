@@ -30,7 +30,7 @@ class EE_CORE_EXPORT SceneManager : public Module<SceneManager>
   getScene(String name);
 
   Vector<SPtr<Actor>>
-  getAllRenderableActorsInside(CCamera* camera);
+  getAllRenderableActorsInside(SPtr<CCamera> camera);
 
 
  private:

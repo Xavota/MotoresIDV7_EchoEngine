@@ -62,7 +62,7 @@ class EE_CORE_EXPORT CCamera : public Component
 
 
   void
-  update(Actor* actor) override;
+  update(SPtr<Actor> actor) override;
 
   void
   setEyePosition(Vector3f pos);

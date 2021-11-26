@@ -32,7 +32,7 @@ class EE_CORE_EXPORT CModel : public Component
   ~CModel() = default;
 
   void
-  update(Actor* actor) override;
+  update(SPtr<Actor> actor) override;
 
   virtual void
   setModel(SPtr<Model> model);

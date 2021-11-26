@@ -39,7 +39,7 @@ SceneManager::getScene(String name)
   return m_scenes[name];
 }
 Vector<SPtr<Actor>>
-SceneManager::getAllRenderableActorsInside(CCamera* camera)
+SceneManager::getAllRenderableActorsInside(SPtr<CCamera> camera)
 {
   Vector<SPtr<Actor>> renderActors;
   for (auto& sc : m_scenes)
