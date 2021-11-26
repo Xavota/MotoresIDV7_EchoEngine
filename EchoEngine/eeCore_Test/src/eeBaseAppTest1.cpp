@@ -3,6 +3,8 @@
 #include <eePixelShader.h>
 #include <eeGraficsApi.h>
 #include <eeResourceManager.h>
+#include <eeSceneManager.h>
+#include <eeScene.h>
 #include <eeObject.h>
 #include <eeCoreConfiguration.h>
 #include <eeRenderTarget.h>
@@ -23,6 +25,8 @@ using eeEngineSDK::eeConfigurations::screenHeight;
 
 using eeEngineSDK::GraphicsApi;
 using eeEngineSDK::ResourceManager;
+using eeEngineSDK::SceneManager;
+using eeEngineSDK::Scene;
 using eeEngineSDK::Vector4f;
 using eeEngineSDK::Vector3f;
 using eeEngineSDK::Vector2f;
@@ -113,229 +117,10 @@ bool BaseAppTest1::initResources()
   GraphicsApi::instance().setViewports({ desc });
 
 
+
   GraphicsApi::instance().setPrimitiveTopology(ePRIMITIVE_TOPOLOGY::TRIANGLELIST);
 
 
-  m_cube = std::make_shared<Object>();
-  m_cube->loadFromModel
-  (
-    Model::cube,
-    Vector3f(0.0f, 0.0f, 0.0f),
-    Quaternion(Vector3f(0.0f, 0.0f, 0.0f)),
-    Vector3f(1.0f, 1.0f, 1.0f)
-  );
-  /*m_cube->loadFromModel
-  (
-    ResourceManager::instance().loadModelFromMeshesArray
-    (
-      Vector<Pair<SPtr<Mesh>, uint8>>
-      {
-        make_pair
-        (
-          ResourceManager::instance().loadMeshFromVertexArray
-          <SimpleVertex, uint32>
-          (
-            Vector<SimpleVertex>
-            {
-              SimpleVertex
-              {
-                Vector4f(-1.0f,  1.0f, -1.0f, 1.0f),
-                Vector4f(0.0f,  0.0f,  0.0f, 0.0f),
-                Vector4f(0.0f,  1.0f,  0.0f, 0.0f)
-              },
-              SimpleVertex
-              {
-                Vector4f(1.0f,  1.0f, -1.0f, 1.0f),
-                Vector4f(1.0f,  0.0f,  0.0f, 0.0f),
-                Vector4f(0.0f,  1.0f,  0.0f, 0.0f)
-              },
-              SimpleVertex
-              {
-                Vector4f(1.0f,  1.0f,  1.0f, 1.0f),
-                Vector4f(1.0f,  1.0f,  0.0f, 0.0f),
-                Vector4f(0.0f,  1.0f,  0.0f, 0.0f)
-              },
-              SimpleVertex
-              {
-                Vector4f(-1.0f,  1.0f,  1.0f, 1.0f),
-                Vector4f(0.0f,  1.0f,  0.0f, 0.0f),
-                Vector4f(0.0f,  1.0f,  0.0f, 0.0f)
-              },
-              
-              SimpleVertex
-              {
-                Vector4f(-1.0f, -1.0f, -1.0f, 1.0f),
-                Vector4f(0.0f,  0.0f,  0.0f, 0.0f),
-                Vector4f(0.0f, -1.0f,  0.0f, 0.0f)
-              },
-              SimpleVertex
-              {
-                Vector4f(1.0f, -1.0f, -1.0f, 1.0f),
-                Vector4f(1.0f,  0.0f,  0.0f, 0.0f),
-                Vector4f(0.0f, -1.0f,  0.0f, 0.0f)
-              },
-              SimpleVertex
-              {
-                Vector4f(1.0f, -1.0f,  1.0f, 1.0f),
-                Vector4f(1.0f,  1.0f,  0.0f, 0.0f),
-                Vector4f(0.0f, -1.0f,  0.0f, 0.0f)
-              },
-              SimpleVertex
-              {
-                Vector4f(-1.0f, -1.0f,  1.0f, 1.0f),
-                Vector4f(0.0f,  1.0f,  0.0f, 0.0f),
-                Vector4f(0.0f, -1.0f,  0.0f, 0.0f)
-              },
-              
-              SimpleVertex
-              {
-                Vector4f(-1.0f, -1.0f,  1.0f, 1.0f),
-                Vector4f(0.0f,  1.0f,  0.0f, 0.0f),
-                Vector4f(-1.0f,  0.0f,  0.0f, 0.0f)
-              },
-              SimpleVertex
-              {
-                Vector4f(-1.0f, -1.0f, -1.0f, 1.0f),
-                Vector4f(0.0f,  0.0f,  0.0f, 0.0f),
-                Vector4f(-1.0f,  0.0f,  0.0f, 0.0f)
-              },
-              SimpleVertex
-              {
-                Vector4f(-1.0f,  1.0f, -1.0f, 1.0f),
-                Vector4f(1.0f,  0.0f,  0.0f, 0.0f),
-                Vector4f(-1.0f,  0.0f,  0.0f, 0.0f)
-              },
-              SimpleVertex
-              {
-                Vector4f(-1.0f,  1.0f,  1.0f, 1.0f),
-                Vector4f(1.0f,  1.0f,  0.0f, 0.0f),
-                Vector4f(-1.0f,  0.0f,  0.0f, 0.0f)
-              },
-              
-              SimpleVertex
-              {
-                Vector4f(1.0f, -1.0f,  1.0f, 1.0f),
-                Vector4f(0.0f,  1.0f,  0.0f, 0.0f),
-                Vector4f(1.0f,  0.0f,  0.0f, 0.0f)
-              },
-              SimpleVertex
-              {
-                Vector4f(1.0f, -1.0f, -1.0f, 1.0f),
-                Vector4f(0.0f,  0.0f,  0.0f, 0.0f),
-                Vector4f(1.0f,  0.0f,  0.0f, 0.0f)
-              },
-              SimpleVertex
-              {
-                Vector4f(1.0f,  1.0f, -1.0f, 1.0f),
-                Vector4f(1.0f,  0.0f,  0.0f, 0.0f),
-                Vector4f(1.0f,  0.0f,  0.0f, 0.0f)
-              },
-              SimpleVertex
-              {
-                Vector4f(1.0f,  1.0f,  1.0f, 1.0f),
-                Vector4f(1.0f,  1.0f,  0.0f, 0.0f),
-                Vector4f(1.0f,  0.0f,  0.0f, 0.0f)
-              },
-              
-              SimpleVertex
-              {
-                Vector4f(-1.0f, -1.0f, -1.0f, 1.0f),
-                Vector4f(0.0f,  0.0f,  0.0f, 0.0f),
-                Vector4f(0.0f,  0.0f, -1.0f, 0.0f)
-              },
-              SimpleVertex
-              {
-                Vector4f(1.0f, -1.0f, -1.0f, 1.0f),
-                Vector4f(1.0f,  0.0f,  0.0f, 0.0f),
-                Vector4f(0.0f,  0.0f, -1.0f, 0.0f)
-              },
-              SimpleVertex
-              {
-                Vector4f(1.0f,  1.0f, -1.0f, 1.0f),
-                Vector4f(1.0f,  1.0f,  0.0f, 0.0f),
-                Vector4f(0.0f,  0.0f, -1.0f, 0.0f)
-              },
-              SimpleVertex
-              {
-                Vector4f(-1.0f,  1.0f, -1.0f, 1.0f),
-                Vector4f(0.0f,  1.0f,  0.0f, 0.0f),
-                Vector4f(0.0f,  0.0f, -1.0f, 0.0f)
-              },
-              
-              SimpleVertex
-              {
-                Vector4f(-1.0f, -1.0f,  1.0f, 1.0f),
-                Vector4f(0.0f,  0.0f,  0.0f, 0.0f),
-                Vector4f(0.0f,  0.0f,  1.0f, 0.0f)
-              },
-              SimpleVertex
-              {
-                Vector4f(1.0f, -1.0f,  1.0f, 1.0f),
-                Vector4f(1.0f,  0.0f,  0.0f, 0.0f),
-                Vector4f(0.0f,  0.0f, -1.0f, 0.0f)
-              },
-              SimpleVertex
-              {
-                Vector4f(1.0f,  1.0f,  1.0f, 1.0f),
-                Vector4f(1.0f,  1.0f,  0.0f, 0.0f),
-                Vector4f(0.0f,  0.0f, -1.0f, 0.0f)
-              },
-              SimpleVertex
-              {
-                Vector4f(-1.0f,  1.0f,  1.0f, 1.0f),
-                Vector4f(0.0f,  1.0f,  0.0f, 0.0f),
-                Vector4f(0.0f,  0.0f, -1.0f, 0.0f)
-              }
-            },
-            Vector<uint32>
-            {
-              3, 1, 0,
-              2, 1, 3,
-              
-              6, 4, 5,
-              7, 4, 6,
-              
-              11, 9, 8,
-              10, 9, 11,
-              
-              14, 12, 13,
-              15, 12, 14,
-              
-              19, 17, 16,
-              18, 17, 19,
-              
-              22, 20, 21,
-              23, 20, 22
-            },
-            "TestCubeMesh1"
-          ),
-          1u
-        )
-      },
-      {
-        ResourceManager::instance().loadTextureFromFile
-        (
-          "pepe.png",
-          "TestTexture",
-          samDesc
-        )
-      },
-      "TestCube"
-    ),
-    Vector3f(0.0f, 0.0f, 0.0f),
-    Quaternion(Vector3f(0.0f, 0.0f, 0.0f)),
-    Vector3f(1.0f, 1.0f, 1.0f)
-  );/**/
-
-  m_model = std::make_shared<Object>();
-  m_model->loadFromFile
-  (
-    "Models/Rammer_225_Large.obj.obj",
-
-    Vector3f(1.0f, 0.0f, 0.0f),
-    Quaternion(Vector3f(0.0f, 0.0f, 0.0f)),
-    Vector3f(0.01f, 0.01f, 0.01f)
-  );
 
   m_SAQ = std::make_shared<Object>();
   m_SAQ->loadFromModel
@@ -452,28 +237,16 @@ bool BaseAppTest1::initResources()
     return false;
   }
   
+
+
+  SPtr<Scene> scene = SceneManager::instance().addScene("Main");
+  scene->setActive(true);
+
+
+
+  SPtr<Actor> actor = scene->addActor("Player");
   
-  m_actorTest = std::make_shared<Actor>();
-  m_actorTest->init();
-  m_actorTest->getComponent<CTransform>()->setScale({ 0.1f, 0.1f, 0.1f });
-  m_actorTest->addComponent<CModel>();
-  m_actorTest->getComponent<CModel>()->setModel
-  (
-    ResourceManager::instance().loadModelFromFile
-    (
-      "Models/plant.obj",
-      "ActorTest1"
-    )
-  );
-  m_actorTest->addComponent<CRender>();
-  
-  
-  
-  //m_camera = std::make_shared<CCamera>();
   CameraDesc camDesc;
-  //camDesc.eyePos = { 0.0f, 3.0f, -6.0f };
-  //camDesc.lookAt = { 0.0f, 1.0f, 0.0f };
-  //camDesc.upVector = { 0.0f, 1.0f, 0.0f };
 
   camDesc.projectionType = eCAMERA_PROJECTION_TYPE::PERSPECTIVE;
   camDesc.fovAngleY = 0.785398163f;
@@ -482,13 +255,27 @@ bool BaseAppTest1::initResources()
   camDesc.nearZ = 0.01f;
   camDesc.farZ = 100.0f;
 
-  //m_camera->init(camDesc);
+  actor->init();
+  actor->getComponent<CTransform>()->setPosition({ 0.0f, 3.0f, -6.0f });
+  actor->addComponent<CCamera>();
+  actor->getComponent<CCamera>()->init(camDesc);
+  actor->getComponent<CCamera>()->setMain(true);
 
-  m_player = std::make_shared<Actor>();
-  m_player->init();
-  m_player->getComponent<CTransform>()->setPosition({0.0f, 3.0f, -6.0f });
-  m_player->addComponent<CCamera>();
-  m_player->getComponent<CCamera>()->init(camDesc);
+
+
+  actor = scene->addActor("Test");
+  actor->init();
+  actor->getComponent<CTransform>()->setScale({ 0.1f, 0.1f, 0.1f });
+  actor->addComponent<CModel>();
+  actor->getComponent<CModel>()->setModel
+  (
+    ResourceManager::instance().loadModelFromFile
+    (
+      "Models/plant.obj",
+      "ActorTest1"
+    )
+  );
+  actor->addComponent<CRender>();
   
   return true;
 }
@@ -497,15 +284,18 @@ void BaseAppTest1::update(float deltaTime)
 {
   BaseApp::update(deltaTime);
 
+  SPtr<Actor> actor = SceneManager::instance().getScene("Main")->getActor("Test");
   static Quaternion rot1(Vector3f(0.0f, 0.0f, 0.0f));
   rot1 = Quaternion((rot1.getEuclidean() + Vector3f(deltaTime * .5f, 0.0f, 0.0f)));
-  m_model->setRotation(rot1);
+  actor->getComponent<CTransform>()->setRotation(rot1);
 
-  m_actorTest->update();
+  actor->update();
 
+
+  actor = SceneManager::instance().getScene("Main")->getActor("Player");
   SPtr<CTransform> trans = nullptr;
-  if (m_player)
-    trans = m_player->getComponent<CTransform>();
+  if (actor)
+    trans = actor->getComponent<CTransform>();
 
   Quaternion rot;
   if (trans)
@@ -537,86 +327,85 @@ void BaseAppTest1::update(float deltaTime)
     cameraMovement -= rot.getUpVector();
   }
   trans->setPosition(trans->getPosition() + cameraMovement * deltaTime * 10.0f);
-
-  SPtr<CCamera> camera = m_player->getComponent<CCamera>();
+  
   if (Input::instance().getMouseClickInputIsPressed(eeEngineSDK::Input::eMOUSE_CLICK::RIGHT_CLICK))
   {
-    //camera->rotateCamera(Quaternion(Vector3f(Input::instance().getMouseMovement().y * deltaTime * 1.0f, Input::instance().getMouseMovement().x * deltaTime * 1.0f, 0.0f)));
-    //trans->setRotation(trans->getRotation() * Quaternion(Vector3f(Input::instance().getMouseMovement().y * deltaTime * 1.0f, Input::instance().getMouseMovement().x * deltaTime * 1.0f, 0.0f)));
-    std::cout << trans->getRotation().toString() << std::endl;
-    std::cout << Quaternion::createFromAxisAngle(Vector3f(1.0f, 0.0f, 0.0f), Input::instance().getMouseMovement().y * deltaTime * 1.0f).toString() << std::endl;
-    //std::cout << (trans->getRotation() * Quaternion::createFromAxisAngle(Vector3f(1.0f, 0.0f, 0.0f), Input::instance().getMouseMovement().y * deltaTime * 1.0f)).toString() << std::endl;
-
-    trans->setRotation(trans->getRotation() * Quaternion::createFromAxisAngle(Vector3f(0.0f, 0.0f, 1.0f), Input::instance().getMouseMovement().y * deltaTime * 1.0f));
-
-    std::cout << trans->getRotation().toString() << std::endl << std::endl;
+    Quaternion rot2 = trans->getRotation();
+    rot2 = Quaternion((rot2.getEuclidean() + Vector3f(Input::instance().getMouseMovement().y * deltaTime * 1.0f, Input::instance().getMouseMovement().x * deltaTime * 1.0f, 0.0f)));
+    trans->setRotation(rot2);
   }
 
-  m_player->update();
+  actor->update();
 }
 
 void BaseAppTest1::render()
 {
-  // Clean and set back buffer and depth stencil
-  float color[4] = {0.3f, 0.5f, 0.8f, 1.0f};
-  GraphicsApi::instance().clearRenderTargets({m_rtv2}, color);
-  GraphicsApi::instance().cleanDepthStencils({m_dsv2});
-  GraphicsApi::instance().setRenderTargets({m_rtv2}, m_dsv2);
+  Vector<CCamera*> activeCams = GraphicsApi::instance().getActiveCameras();
+  float color[4] = { 0.3f, 0.5f, 0.8f, 1.0f };
 
 
 
   // Load shaders
   SPtr<VertexShader> vs =
-  ResourceManager::instance().getResourceVertexShader("TestVS");
+    ResourceManager::instance().getResourceVertexShader("TestVS");
   vs->use();
 
   SPtr<PixelShader> ps =
-  ResourceManager::instance().getResourcePixelShader("TestPS");
+    ResourceManager::instance().getResourcePixelShader("TestPS");
   ps->use();
 
-  SPtr<CCamera> camera = m_player->getComponent<CCamera>();
-
-  // Create view/proj matrices
-  Matrix4f view = Matrix4f::IDENTITY;
-  if (camera)
-    view = camera->getViewMatrix().getTranspose();
-  m_viewMatrixBuffer->updateData(reinterpret_cast<Byte*>(&view));
-
-  Matrix4f proj = Matrix4f::IDENTITY;
-  if (camera)
-    proj = camera->getProjectionMatrix().getTranspose();
-  m_projectionMatrixBuffer->updateData(reinterpret_cast<Byte*>(&proj));
-
-
-
-  // Set buffers
-  GraphicsApi::instance().setVSConstantBuffers
-  (
-    { m_viewMatrixBuffer, m_projectionMatrixBuffer },
-    1u
-  );
-
-
-  m_rasterizer->use();
-  // Draws the object
-  //GraphicsApi::instance().drawObject(m_triangle);
-  //GraphicsApi::instance().drawObject(m_cube);
-  GraphicsApi::instance().drawObject(m_model);
-
-  Vector<Actor*> rActors = GraphicsApi::instance().getRenderFrameActors();
-  int32 rActorsCount = rActors.size();
-  for (int32 i = 0; i < rActorsCount; ++i)
+  for (auto& cam : activeCams)
   {
-    GraphicsApi::instance().drawObject(rActors[i]);
+    // Clean and set back buffer and depth stencil
+    GraphicsApi::instance().clearRenderTargets({ cam->getRenderTarget() }, color);
+    GraphicsApi::instance().cleanDepthStencils({ cam->getDepthStencil() });
+    GraphicsApi::instance().setRenderTargets({ cam->getRenderTarget() }, cam->getDepthStencil());
+
+
+
+    // Create view/proj matrices
+    Matrix4f view = Matrix4f::IDENTITY;
+    if (cam)
+      view = cam->getViewMatrix().getTranspose();
+    m_viewMatrixBuffer->updateData(reinterpret_cast<Byte*>(&view));
+
+    Matrix4f proj = Matrix4f::IDENTITY;
+    if (cam)
+      proj = cam->getProjectionMatrix().getTranspose();
+    m_projectionMatrixBuffer->updateData(reinterpret_cast<Byte*>(&proj));
+
+
+
+    // Set buffers
+    GraphicsApi::instance().setVSConstantBuffers
+    (
+      { m_viewMatrixBuffer, m_projectionMatrixBuffer },
+      1u
+    );
+
+    m_rasterizer->use();
+
+
+
+    //Draw in-cam actors
+    Vector<SPtr<Actor>> rActors =
+     SceneManager::instance().getAllRenderableActorsInside(cam);
+    int32 rActorsCount = rActors.size();
+    for (int32 i = 0; i < rActorsCount; ++i)
+    {
+      GraphicsApi::instance().drawObject(rActors[i].get());
+    }
+
+
+
+    //Unbind buffers
+    GraphicsApi::instance().unsetRenderTargets();
+    GraphicsApi::instance().unsetTextures(1u, 0u);
+    GraphicsApi::instance().unsetVSConstantBuffers(3u, 0u);
   }
 
 
-  GraphicsApi::instance().unsetRenderTargets();
-  GraphicsApi::instance().unsetTextures(1u, 0u);
-  GraphicsApi::instance().unsetVSConstantBuffers(3u, 0u);
-
-
-
+  //Set Back Buffer
   GraphicsApi::instance().clearRenderTargets({ m_rtv }, color);
   GraphicsApi::instance().cleanDepthStencils({ m_dsv });
   GraphicsApi::instance().setRenderTargets({ m_rtv }, m_dsv);
@@ -624,14 +413,23 @@ void BaseAppTest1::render()
 
 
   // Load shaders
-  vs = ResourceManager::instance().getResourceVertexShader("TestSAQVS");
-  vs->use();
+  ResourceManager::instance().getResourceVertexShader("TestSAQVS")->use();
 
-  ps = ResourceManager::instance().getResourcePixelShader("TestSAQPS");
-  ps->use();
+  ResourceManager::instance().getResourcePixelShader("TestSAQPS")->use();
 
 
+
+  //Set the main camera render target texture to the SAQ and renders it to the
+  //back buffer
   m_rasterizer2->use();
+  for (auto& cam : activeCams)
+  {
+    if (cam->isMain())
+    {
+      m_SAQ->getModel()->setTexture(cam->getRenderTarget()->getAsTexture(), 1);
+      break;
+    }
+  }
   GraphicsApi::instance().drawObject(m_SAQ);
 
 

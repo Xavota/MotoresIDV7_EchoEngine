@@ -4,6 +4,7 @@
 #include "eeGraficsApi.h"
 #include "eeResourceManager.h"
 #include "eeInput.h"
+#include "eeSceneManager.h"
 
 namespace eeEngineSDK {
 int32
@@ -79,6 +80,7 @@ bool BaseApp::initSystems()
 {
   ResourceManager::startUp();
   Input::startUp();
+  SceneManager::startUp();
 
   //m_mouseID = m_inManager.CreateDevice<gainput::InputDeviceMouse>();
   //
@@ -110,6 +112,7 @@ BaseApp::render()
 void BaseApp::endFrame()
 {
   GraphicsApi::instance().clearRenderFrameActors();
+  GraphicsApi::instance().clearActiveCameras();
   Input::instance().update();
 }
 void
@@ -118,5 +121,6 @@ BaseApp::destroy()
   GraphicsApi::instance().release();
   GraphicsApi::shutDown();
   ResourceManager::shutDown();
+  SceneManager::shutDown();
 }
 }

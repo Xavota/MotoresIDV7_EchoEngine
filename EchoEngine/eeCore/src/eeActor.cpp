@@ -19,4 +19,12 @@ void
 Actor::destroy()
 {
 }
+bool Actor::isActive()
+{
+  return m_active;
+}
+void Actor::setActive(bool active)
+{
+  m_active = active;
+}
 }

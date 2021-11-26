@@ -193,7 +193,9 @@
     <ClCompile Include="src\eeRenderTarget.cpp" />
     <ClCompile Include="src\eeResourceManager.cpp" />
     <ClCompile Include="src\eeSamplerState.cpp" />
+    <ClCompile Include="src\eeScene.cpp" />
     <ClCompile Include="src\eeSceneGraph.cpp" />
+    <ClCompile Include="src\eeSceneManager.cpp" />
     <ClCompile Include="src\eeTexture.cpp" />
     <ClCompile Include="src\eeVertexBuffer.cpp" />
     <ClCompile Include="src\eeVertexShader.cpp" />
@@ -226,7 +228,9 @@
     <ClInclude Include="include\eeRenderTarget.h" />
     <ClInclude Include="include\eeResourceManager.h" />
     <ClInclude Include="include\eeSamplerState.h" />
+    <ClInclude Include="include\eeScene.h" />
     <ClInclude Include="include\eeSceneGraph.h" />
+    <ClInclude Include="include\eeSceneManager.h" />
     <ClInclude Include="include\eeVertex.h" />
     <ClInclude Include="include\eeTexture.h" />
     <ClInclude Include="include\eeVertexBuffer.h" />

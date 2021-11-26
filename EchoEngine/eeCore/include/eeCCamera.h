@@ -18,6 +18,7 @@
 #include "eeVector2.h"
 #include "eeQuaternion.h"
 #include "eeMatrix4.h"
+#include <eePlane.h>
 
 namespace eeEngineSDK{
 enum class eCAMERA_PROJECTION_TYPE
@@ -110,15 +111,37 @@ class EE_CORE_EXPORT CCamera : public Component
   getFront();
   Vector3f
   getRight();
+  Vector3f
+  getUp();
 
   Matrix4f
   getViewMatrix();
 
   Matrix4f
   getProjectionMatrix();
+
+
+  bool
+  isActive();
+  void
+  setActive(bool active);
   
+  bool
+  isMain();
+  void
+  setMain(bool active);
+
+  SPtr<RenderTarget>
+  getRenderTarget();
+  
+  SPtr<DepthStencil>
+  getDepthStencil();
+
+  bool
+  isModelOnCamera(SPtr<CModel> ActorModel);
 
  private:
+  // Camera info
   Vector3f m_eyePos = {0.0f, 0.0f, 0.0f};
   Vector3f m_lookAt = {0.0f, 0.0f, 0.0f};
   Vector3f m_upVector = {0.0f, 0.0f, 0.0f};
@@ -129,9 +152,29 @@ class EE_CORE_EXPORT CCamera : public Component
   float m_nearZ = 0.0f;
   float m_farZ = 0.0f;
 
+
+  // Matrices
   Matrix4f m_viewMat = Matrix4f::IDENTITY;
   bool m_dirtyView = false;
   Matrix4f m_projectionMat = Matrix4f::IDENTITY;
   bool m_dirtyProj = false;
+
+
+  // Render
+  bool m_active = true;
+  bool m_main = false;
+
+  SPtr<RenderTarget> m_renderTarget;
+  SPtr<DepthStencil> m_depthStencil;
+
+
+  // Frustum
+  Plane m_nearPlane;
+  Plane m_farPlane;
+  Plane m_leftPlane;
+  Plane m_rightPlane;
+  Plane m_topPlane;
+  Plane m_downPlane;
+  bool m_dirtyFrustum = true;
 };
 }

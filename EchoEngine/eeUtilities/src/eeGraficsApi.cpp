@@ -39,7 +39,8 @@ GraphicsApi::drawObject(SPtr<Object> obj)
     GraphicsApi::instance().unsetVertexBuffers(1u, 0u);
   }  
 }
-void GraphicsApi::drawObject(Actor* act)
+void
+GraphicsApi::drawObject(Actor* act)
 {
   SPtr<CTransform> transform = act->getComponent<CTransform>();
 
@@ -83,5 +84,20 @@ void
 GraphicsApi::clearRenderFrameActors()
 {
   m_renderActors.clear();
+}
+void
+GraphicsApi::addActiveCamera(CCamera* camera)
+{
+  m_activeCameras.push_back(camera);
+}
+Vector<CCamera*>
+GraphicsApi::getActiveCameras()
+{
+  return m_activeCameras;
+}
+void
+GraphicsApi::clearActiveCameras()
+{
+  m_activeCameras.clear();
 }
 }

@@ -13,6 +13,8 @@
 #pragma once
 #include "eePrerequisitesCore.h"
 #include "eeMesh.h"
+#include <eeSphere.h>
+#include <eeBox.h>
 
 namespace eeEngineSDK {
 /**
@@ -43,6 +45,10 @@ class EE_CORE_EXPORT Model
   *
   * @param fileName
   * The name of the file containing the model.
+  * @param boundSphere
+  * A resulting bounding sphere with the max distance to the center.
+  * @param fileName
+  * A resulting bounding box with the max points to the center.
   *
   * @return
   * Weather it succeed or failed to initialize.
@@ -58,6 +64,10 @@ class EE_CORE_EXPORT Model
   *
   * @param meshes
   * The array of meshes.
+  * @param boundSphere
+  * A resulting bounding sphere with the max distance to the center.
+  * @param fileName
+  * A resulting bounding box with the max points to the center.
   *
   * @return
   * Weather it succeed or failed to initialize.
@@ -77,6 +87,10 @@ class EE_CORE_EXPORT Model
   * will use.
   * @param textures
   * The array of textures for the model.
+  * @param boundSphere
+  * A resulting bounding sphere with the max distance to the center.
+  * @param fileName
+  * A resulting bounding box with the max points to the center.
   *
   * @return
   * Weather it succeed or failed to initialize.
@@ -133,18 +147,70 @@ class EE_CORE_EXPORT Model
   */
   virtual Vector<SPtr<Texture>>
   getTextures();
+  /**
+  * @brief
+  * Setter for the textures.
+  *
+  * @description
+  * Sets a new array of textures.
+  *
+  * @param textures
+  * The new array of textures.
+  */
+  virtual void
+  setTextures(Vector<SPtr<Texture>> textures);
+  /**
+  * @brief
+  * Setter for a texture.
+  *
+  * @description
+  * Sets a new texture in the given index.
+  *
+  * @param texture
+  * The new texture.
+  * @param index
+  * The index of the texture.
+  */
+  virtual void
+  setTexture(SPtr<Texture> texture, int32 index);
+
+  const Sphere&
+  getBoundingSphere();
+  const BoxAAB&
+  getBoundingBox();
 
 
+  static void
+  initPrimitives();
 
-
-  static void initPrimitives();
-
+  /**
+  * A pre-charged cube model
+  */
   static SPtr<Model> cube;
+  /**
+  * A pre-charged tetrahedron model
+  */
   static SPtr<Model> tetrahedron;
+  /**
+  * A pre-charged cone model
+  */
   static SPtr<Model> cone;
+  /**
+  * A pre-charged cylinder model
+  */
   static SPtr<Model> cylinder;
+  /**
+  * A pre-charged sphere model
+  */
   static SPtr<Model> sphere;
+  /**
+  * A pre-charged capsule model
+  */
   static SPtr<Model> capsule;
+  /**
+  * A pre-charged SAQ model
+  */
+  static SPtr<Model> SAQ;
 
  private:
   /**
@@ -155,5 +221,14 @@ class EE_CORE_EXPORT Model
   * The vector of textures for the meshes.
   */
   Vector<SPtr<Texture>> m_textures;
+
+  /**
+  * A sphere bounding all the model.
+  */
+  Sphere m_boundSphere;
+  /**
+  * A cube bounding all the model.
+  */
+  BoxAAB m_boundCube;
 };
 }

@@ -524,6 +524,15 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   virtual void
   clearRenderFrameActors();
 
+  
+  virtual void
+  addActiveCamera(CCamera* camera);
+
+  virtual Vector<CCamera*>
+  getActiveCameras();
+
+  virtual void
+  clearActiveCameras();
 
  protected:
   /**
@@ -543,5 +552,6 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
 
 
   Vector<Actor*> m_renderActors;
+  Vector<CCamera*> m_activeCameras;
 };
 }

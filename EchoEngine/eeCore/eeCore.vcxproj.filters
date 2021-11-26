@@ -10,10 +10,16 @@
     <Filter Include="include\Platform">
       <UniqueIdentifier>{aacd84e0-924e-45da-a81f-0a2f4ce4a1d7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\Components">
+    <Filter Include="include\SceneGraph">
+      <UniqueIdentifier>{ea0023f0-159d-409f-9f65-e9fb21edb80c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\SceneGraph\Components">
       <UniqueIdentifier>{e2444e55-f22a-45bc-b606-41b26a46319e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Components">
+    <Filter Include="src\SceneGraph">
+      <UniqueIdentifier>{96934ff6-d536-4cc3-b24e-42fcda7c0ac9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\SceneGraph\Components">
       <UniqueIdentifier>{0bbef58c-4df7-4dec-b875-207c6f4b55b9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -78,9 +84,6 @@
     <ClInclude Include="include\eeSamplerState.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\eeActor.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\eeBlendState.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -93,25 +96,36 @@
     <ClInclude Include="include\eeRasterizerState.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\eeSceneGraph.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\eeCoreDefines.h">
       <Filter>include\Platform</Filter>
     </ClInclude>
     <ClInclude Include="include\eeComponent.h">
-      <Filter>include\Components</Filter>
+      <Filter>include\SceneGraph\Components</Filter>
     </ClInclude>
     <ClInclude Include="include\eeCTransform.h">
-      <Filter>include\Components</Filter>
+      <Filter>include\SceneGraph\Components</Filter>
     </ClInclude>
     <ClInclude Include="include\eeCModel.h">
-      <Filter>include\Components</Filter>
+      <Filter>include\SceneGraph\Components</Filter>
     </ClInclude>
     <ClInclude Include="include\eeCRender.h">
-      <Filter>include\Components</Filter>
+      <Filter>include\SceneGraph\Components</Filter>
     </ClInclude>
-    <ClInclude Include="include\eeCCamera.h" />
+    <ClInclude Include="include\eeActor.h">
+      <Filter>include\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeSceneGraph.h">
+      <Filter>include\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeSceneManager.h">
+      <Filter>include\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeScene.h">
+      <Filter>include\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeCCamera.h">
+      <Filter>include\SceneGraph\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeBuffer.cpp">
@@ -165,9 +179,6 @@
     <ClCompile Include="src\eeSamplerState.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\eeActor.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\eeBlendState.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -180,21 +191,32 @@
     <ClCompile Include="src\eeRasterizerState.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\eeSceneGraph.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\eeComponent.cpp">
-      <Filter>src\Components</Filter>
+      <Filter>src\SceneGraph\Components</Filter>
     </ClCompile>
     <ClCompile Include="src\eeCTransform.cpp">
-      <Filter>src\Components</Filter>
+      <Filter>src\SceneGraph\Components</Filter>
     </ClCompile>
     <ClCompile Include="src\eeCModel.cpp">
-      <Filter>src\Components</Filter>
+      <Filter>src\SceneGraph\Components</Filter>
     </ClCompile>
     <ClCompile Include="src\eeCRender.cpp">
-      <Filter>src\Components</Filter>
+      <Filter>src\SceneGraph\Components</Filter>
     </ClCompile>
-    <ClCompile Include="src\eeCCamera.cpp" />
+    <ClCompile Include="src\eeActor.cpp">
+      <Filter>src\SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeScene.cpp">
+      <Filter>src\SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeSceneGraph.cpp">
+      <Filter>src\SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeSceneManager.cpp">
+      <Filter>src\SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeCCamera.cpp">
+      <Filter>src\SceneGraph\Components</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 #include "eeModel.h"
 #include "eeResourceManager.h"
 #include <eeQuaternion.h>
+#include <eeMath.h>
 #pragma warning(push, 0)   
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -264,6 +265,9 @@ Model::loadFromFile(const String& fileName)
 
       /*  LOAD MESH  */
 
+  Vector3f maxBound(-99999.99f, -99999.99f, -99999.99f);
+  Vector3f minBound( 99999.99f,  99999.99f,  99999.99f);
+  float maxDistance = 0.0f;
       //----Vertices----
   for (uint32 i = 0; i < scene->mNumMeshes; ++i)
   {
@@ -276,9 +280,21 @@ Model::loadFromFile(const String& fileName)
       if (scene->mMeshes[i]->HasPositions())
       {
         v.position.x = scene->mMeshes[i]->mVertices[j].x;
+        maxBound.x = v.position.x > maxBound.x ? v.position.x : maxBound.x;
+        minBound.x = v.position.x < minBound.x ? v.position.x : minBound.x;
         v.position.y = scene->mMeshes[i]->mVertices[j].y;
+        maxBound.y = v.position.y > maxBound.y ? v.position.y : maxBound.y;
+        minBound.y = v.position.y < minBound.y ? v.position.y : minBound.y;
         v.position.z = scene->mMeshes[i]->mVertices[j].z;
+        maxBound.z = v.position.z > maxBound.z ? v.position.z : maxBound.z;
+        minBound.z = v.position.z < minBound.z ? v.position.z : minBound.z;
         v.position.w = 1.0f;
+
+        float distance = Math::pow(Math::pow(v.position.x, 2.0f)
+                                 + Math::pow(v.position.y, 2.0f)
+                                 + Math::pow(v.position.z, 2.0f), 0.5f);
+
+        maxDistance = distance > maxDistance ? distance : maxDistance;
       }
       else
       {
@@ -385,6 +401,12 @@ Model::loadFromFile(const String& fileName)
     vertices.clear();
   }
 
+  m_boundSphere.setCenter({ 0.0f, 0.0f, 0.0f });
+  m_boundSphere.setRadious(maxDistance);
+
+  m_boundCube.setA({ minBound.x, maxBound.y, maxBound.z });
+  m_boundCube.setSize(maxBound - minBound);
+
   return true;
 }
 bool
@@ -457,6 +479,29 @@ Vector<SPtr<Texture>> Model::getTextures()
 {
   return m_textures;
 }
+void Model::setTextures(Vector<SPtr<Texture>> textures)
+{
+  m_textures = textures;
+}
+void Model::setTexture(SPtr<Texture> texture, int32 index)
+{
+  if (m_textures.size() > index)
+  {
+    m_textures[index] = texture;
+  }
+}
+
+const Sphere&
+Model::getBoundingSphere()
+{
+  return m_boundSphere;
+}
+
+const BoxAAB&
+Model::getBoundingBox()
+{
+  return m_boundCube;
+}
 
 SPtr<Model> Model::cube = nullptr;
 SPtr<Model> Model::tetrahedron = nullptr;
@@ -464,6 +509,7 @@ SPtr<Model> Model::cone = nullptr;
 SPtr<Model> Model::cylinder = nullptr;
 SPtr<Model> Model::sphere = nullptr;
 SPtr<Model> Model::capsule = nullptr;
+SPtr<Model> Model::SAQ = nullptr;
 void Model::initPrimitives()
 {
   Vector<SimpleVertex> vertices;

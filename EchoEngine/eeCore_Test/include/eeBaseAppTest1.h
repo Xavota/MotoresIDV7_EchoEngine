@@ -67,18 +67,6 @@ class BaseAppTest1 : public BaseApp
 
 
  private:
-  /*
-  * A triangle object, loaded manually.
-  */
-  SPtr<Object> m_triangle;
-  /*
-  * A cube object, loaded manually.
-  */
-  SPtr<Object> m_cube;
-  /*
-  * An object loaded from a file.
-  */
-  SPtr<Object> m_model;
   SPtr<Object> m_SAQ;
 
   /*
@@ -100,8 +88,8 @@ class BaseAppTest1 : public BaseApp
   SPtr<RasterizerState> m_rasterizer2;
 
 
-  SPtr<Actor> m_actorTest;
-  SPtr<Actor> m_player;
+  //SPtr<Actor> m_actorTest;
+  //SPtr<Actor> m_player;
 
 };
 

@@ -100,6 +100,7 @@ Plane::setNormal(const Vector3f& normal)
   x = nom.x;
   y = nom.y;
   z = nom.z;
+  //d = Vector3f(x, y, z).dot(d);
 }
 bool
 Plane::intersects(const Vector3f& point)

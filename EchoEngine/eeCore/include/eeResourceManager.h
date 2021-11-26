@@ -68,7 +68,8 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
   * Weather it succeed or failed to initialize.
   */
   SPtr<Model> 
-  loadModelFromFile(const String& fileName, const String resourceName);
+  loadModelFromFile(const String& fileName,
+                    const String resourceName);
   /**
   * @brief
   * Initializes the model.

@@ -72,6 +72,9 @@ class Mesh;
 class Model;
 class Object;
 class Texture;
+
+class SceneManager;
+class Scene;
 class Actor;
 class Component;
 class CTransform;

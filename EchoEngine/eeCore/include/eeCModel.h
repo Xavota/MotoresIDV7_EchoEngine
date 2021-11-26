@@ -13,6 +13,8 @@
 #pragma once
 #include "eePrerequisitesCore.h"
 #include "eeComponent.h"
+#include <eeSphere.h>
+#include <eeBox.h>
 
 namespace eeEngineSDK{
 class EE_CORE_EXPORT CModel : public Component
@@ -29,13 +31,26 @@ class EE_CORE_EXPORT CModel : public Component
   CModel();
   ~CModel() = default;
 
+  void
+  update(Actor* actor) override;
+
   virtual void
   setModel(SPtr<Model> model);
 
   virtual SPtr<Model>
   getModel();
 
+  
+  const Sphere&
+  getBoundingSphere();
+  const BoxAAB&
+  getBoundingBox();
+
  private:
   SPtr<Model> m_model;
+
+  Sphere m_boundSphere;
+  float m_originRadious = 0.0f;
+  BoxAAB m_boundBox;
 };
 }

@@ -1,3 +1,15 @@
+/************************************************************************/
+/**
+ * @file eeInput.h
+ * @author Diego Castellanos
+ * @date 16/11/21
+ * @brief
+ * The input manager for the api.
+ *
+ * @bug Not bug Known.
+ */
+ /************************************************************************/
+
 #pragma once
 #include <memory>
 #include "eePrerequisitesCore.h"
@@ -27,8 +39,17 @@ class EE_CORE_EXPORT Actor
   void
   destroy();
 
+  bool
+  isActive();
+  void
+  setActive(bool active);
+
  private:
   Vector<SPtr<Component>> m_components;
+
+  Vector<SPtr<Actor>> m_childs;
+
+  bool m_active = true;
 };
 template<class T>
 FORCEINLINE void
