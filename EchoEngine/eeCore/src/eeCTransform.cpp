@@ -1,5 +1,6 @@
 #include "eeCTransform.h"
 #include "eeGraficsApi.h"
+#include <eeVector4.h>
 
 namespace eeEngineSDK {
 CTransform::CTransform() :
@@ -41,6 +42,17 @@ CTransform::getPosition()
 {
   return m_position;
 }
+Vector3f CTransform::getGlobalPosition()
+{
+  Matrix4f transform = Matrix4f::IDENTITY;
+  if (m_parent)
+  {
+    transform = m_parent->getModelMatrix();
+  }
+  Vector4f worldPos = transform *
+                      Vector4f(m_position.x, m_position.y, m_position.z, 1.0f);
+  return Vector3f(worldPos.x, worldPos.y, worldPos.z);
+}
 void
 CTransform::setPosition(const Vector3f& pos)
 {
@@ -57,6 +69,15 @@ CTransform::getRotation()
 {
   return m_rotation;
 }
+Quaternion CTransform::getGlobalRotation()
+{
+  Quaternion globalRot;
+  if (m_parent)
+  {
+    globalRot = m_parent->getRotation();
+  }
+  return Quaternion(m_rotation.getEuclidean() + globalRot.getEuclidean());
+}
 void
 CTransform::setRotation(const Quaternion& rot)
 {
@@ -72,6 +93,15 @@ Vector3f
 CTransform::getScale()
 {
   return m_scale;
+}
+Vector3f CTransform::getGlobalScale()
+{
+  Vector3f globalScale;
+  if (m_parent)
+  {
+    globalScale = m_parent->getScale();
+  }
+  return m_scale * globalScale;
 }
 void
 CTransform::setScale(const Vector3f& scale)

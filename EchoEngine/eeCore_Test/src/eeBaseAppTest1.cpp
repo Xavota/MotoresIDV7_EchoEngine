@@ -217,7 +217,7 @@ bool BaseAppTest1::initResources()
   RasteraizerDesc rasDesc;
   memset(&rasDesc, 0, sizeof(rasDesc));
   rasDesc.cullMode = eeEngineSDK::eCULL_MODE::FRONT;
-  rasDesc.fillMode = eeEngineSDK::eFILL_MODE::WIREFRAME;
+  rasDesc.fillMode = eeEngineSDK::eFILL_MODE::SOLID;
   rasDesc.frontCounterClockwise = true;
   
   m_rasterizer = GraphicsApi::instance().createRasterizerStatePtr();
@@ -276,7 +276,7 @@ bool BaseAppTest1::initResources()
   (
     ResourceManager::instance().loadModelFromFile
     (
-      "Models/plant.obj",
+      "Models/steve.fbx",
       "ActorTest1"
     )
   );
@@ -442,7 +442,7 @@ void BaseAppTest1::render()
 
     //Draw in-cam actors
     Vector<SPtr<Actor>> rActors =
-     SceneManager::instance().getAllRenderableActorsInside(cam);
+     SceneManager::instance().getAllRenderableActorsInside(activeCams[0]);
     int32 rActorsCount = rActors.size();
     for (int32 i = 0; i < rActorsCount; ++i)
     {

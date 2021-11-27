@@ -12,9 +12,9 @@ void CModel::update(SPtr<Actor> actor)
   SPtr<CTransform> trans = actor->getComponent<CTransform>();
   if (trans)
   {
-    m_boundSphere.setCenter(trans->getPosition());
+    m_boundSphere.setCenter(trans->getGlobalPosition());
 
-    Vector3f scale = trans->getScale();
+    Vector3f scale = trans->getGlobalScale();
     float radScale = scale.x > scale.y ? scale.x : scale.y;
     radScale = radScale > scale.z ? radScale : scale.z;
 

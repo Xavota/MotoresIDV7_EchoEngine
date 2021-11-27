@@ -69,13 +69,25 @@ class EE_CORE_EXPORT CTransform : public Component
   * Getter for the position.
   *
   * @description
-  * Returns the position of the object.
+  * Returns the local position of the object.
   *
   * @return
   * The position of the object.
   */
   virtual Vector3f
   getPosition();
+  /**
+  * @brief
+  * Getter for the position.
+  *
+  * @description
+  * Returns the world position of the object.
+  *
+  * @return
+  * The position of the object.
+  */
+  virtual Vector3f
+  getGlobalPosition();
   /**
   * @brief
   * Setter for the position.
@@ -94,13 +106,25 @@ class EE_CORE_EXPORT CTransform : public Component
   * Getter for the rotation.
   *
   * @description
-  * Returns the rotation of the object.
+  * Returns the local rotation of the object.
   *
   * @return
   * The rotation of the object.
   */
   virtual Quaternion
   getRotation();
+  /**
+  * @brief
+  * Getter for the rotation.
+  *
+  * @description
+  * Returns the world rotation of the object.
+  *
+  * @return
+  * The rotation of the object.
+  */
+  virtual Quaternion
+  getGlobalRotation();
   /**
   * @brief
   * Setter for the rotation.
@@ -119,13 +143,25 @@ class EE_CORE_EXPORT CTransform : public Component
   * Getter for the scale.
   *
   * @description
-  * Returns the scale of the object.
+  * Returns the local scale of the object.
   *
   * @return
   * The scale of the object.
   */
   virtual Vector3f
   getScale();
+  /**
+  * @brief
+  * Getter for the global scale.
+  *
+  * @description
+  * Returns the world scale of the object.
+  *
+  * @return
+  * The scale of the object.
+  */
+  virtual Vector3f
+  getGlobalScale();
   /**
   * @brief
   * Setter for the scale.
