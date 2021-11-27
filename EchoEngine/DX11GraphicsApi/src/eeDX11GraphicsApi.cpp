@@ -51,6 +51,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
       Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::D, true);
     }
+    else if(wParam == 9) // TAB
+    {
+      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::TAB, true);
+    }
     break;
 
   case WM_KEYUP:
@@ -77,6 +81,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     else if (wParam == 'D')
     {
       Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::D, false);
+    }
+    else if (wParam == 9) // TAB
+    {
+      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::TAB, false);
     }
     break;
 

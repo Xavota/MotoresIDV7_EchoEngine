@@ -35,6 +35,7 @@ public:
     A,
     S,
     D,
+    TAB,
     COUNT
   };
 

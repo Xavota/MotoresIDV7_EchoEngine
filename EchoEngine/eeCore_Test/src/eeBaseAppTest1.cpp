@@ -54,6 +54,7 @@ using eeEngineSDK::CModel;
 using eeEngineSDK::CRender;
 using eeEngineSDK::Input;
 using eeEngineSDK::CameraDesc;
+using eeEngineSDK::String;
 using eeEngineSDK::eCAMERA_PROJECTION_TYPE;
 
 
@@ -216,7 +217,7 @@ bool BaseAppTest1::initResources()
   RasteraizerDesc rasDesc;
   memset(&rasDesc, 0, sizeof(rasDesc));
   rasDesc.cullMode = eeEngineSDK::eCULL_MODE::FRONT;
-  rasDesc.fillMode = eeEngineSDK::eFILL_MODE::SOLID;
+  rasDesc.fillMode = eeEngineSDK::eFILL_MODE::WIREFRAME;
   rasDesc.frontCounterClockwise = true;
   
   m_rasterizer = GraphicsApi::instance().createRasterizerStatePtr();
@@ -243,8 +244,6 @@ bool BaseAppTest1::initResources()
   scene->setActive(true);
 
 
-
-  SPtr<Actor> actor = scene->addActor("Player");
   
   CameraDesc camDesc;
 
@@ -255,16 +254,22 @@ bool BaseAppTest1::initResources()
   camDesc.nearZ = 0.01f;
   camDesc.farZ = 100.0f;
 
-  actor->init();
+  SPtr<Actor> actor = scene->addActor("Player");
   actor->getComponent<CTransform>()->setPosition({ 0.0f, 3.0f, -6.0f });
+  actor->getComponent<CTransform>()->setScale({ 0.1f, 0.1f, 0.1f });
   actor->addComponent<CCamera>();
   actor->getComponent<CCamera>()->init(camDesc);
   actor->getComponent<CCamera>()->setMain(true);
+  actor->addComponent<CModel>();
+  actor->getComponent<CModel>()->setModel
+  (
+    Model::cube
+  );
+  actor->addComponent<CRender>();
 
 
 
   actor = scene->addActor("Test");
-  actor->init();
   actor->getComponent<CTransform>()->setScale({ 0.1f, 0.1f, 0.1f });
   actor->addComponent<CModel>();
   actor->getComponent<CModel>()->setModel
@@ -277,6 +282,31 @@ bool BaseAppTest1::initResources()
   );
   actor->addComponent<CRender>();
   
+
+
+  actor = scene->addActor("AtatchToActor");
+  actor->AttachTo(scene->getActor("Player"));
+  actor->getComponent<CTransform>()->setPosition({ 0.0f, 0.0f, 30.0f });
+  actor->addComponent<CModel>();
+  actor->getComponent<CModel>()->setModel
+  (
+    Model::cube
+  );
+  actor->addComponent<CRender>();
+
+
+  actor = scene->addActor("Player2");
+  actor->getComponent<CTransform>()->setPosition({ 5.0f, 3.0f, -6.0f });
+  actor->getComponent<CTransform>()->setScale({ 0.1f, 0.1f, 0.1f });
+  actor->addComponent<CCamera>();
+  actor->getComponent<CCamera>()->init(camDesc);
+  actor->addComponent<CModel>();
+  actor->getComponent<CModel>()->setModel
+  (
+    Model::cube
+  );
+  actor->addComponent<CRender>();
+
   return true;
 }
 
@@ -284,15 +314,37 @@ void BaseAppTest1::update(float deltaTime)
 {
   BaseApp::update(deltaTime);
 
-  SPtr<Actor> actor = SceneManager::instance().getScene("Main")->getActor("Test");
+
+  SPtr<Scene> scene = SceneManager::instance().getScene("Main");
+
+  static String activePlayerName = "Player";
+  if (Input::instance().getKeyboardInputPressed(eeEngineSDK::Input::eKEYBOARD::TAB))
+  {
+    scene->getActor(activePlayerName)->getComponent<CCamera>()->setMain(false);
+
+    if (activePlayerName == "Player")
+    {
+      activePlayerName = "Player2";
+    }
+    else
+    {
+      activePlayerName = "Player";
+    }
+
+    scene->getActor(activePlayerName)->getComponent<CCamera>()->setMain(true);
+  }
+
+
+
+
+  SPtr<Actor> actor = scene->getActor("Test");
   static Quaternion rot1(Vector3f(0.0f, 0.0f, 0.0f));
   rot1 = Quaternion((rot1.getEuclidean() + Vector3f(deltaTime * .5f, 0.0f, 0.0f)));
   actor->getComponent<CTransform>()->setRotation(rot1);
 
-  actor->update();
 
 
-  actor = SceneManager::instance().getScene("Main")->getActor("Player");
+  actor = scene->getActor(activePlayerName);
   SPtr<CTransform> trans = nullptr;
   if (actor)
     trans = actor->getComponent<CTransform>();
@@ -335,7 +387,8 @@ void BaseAppTest1::update(float deltaTime)
     trans->setRotation(rot2);
   }
 
-  actor->update();
+
+  SceneManager::instance().update();
 }
 
 void BaseAppTest1::render()

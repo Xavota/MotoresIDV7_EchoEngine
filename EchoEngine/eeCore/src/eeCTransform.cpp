@@ -13,10 +13,26 @@ m_scale(1.0f, 1.0f, 1.0f)
                               sizeof(Matrix4f),
                               reinterpret_cast<Byte*>(&modelMat));
 }
+void CTransform::update(SPtr<Actor> actor)
+{
+  if (m_dirtyModelMatrix)
+  {
+    m_dirtyModelMatrix = false;
+
+    Matrix4f modelMat = getModelMatrix();
+    m_modelMatrixBuff->updateData(reinterpret_cast<Byte*>(&modelMat));
+  }
+}
 Matrix4f
 CTransform::getModelMatrix()
 {
-  return Matrix4f::translationMatrix(m_position) *
+  Matrix4f transform = Matrix4f::IDENTITY;
+  if (m_parent)
+  {
+    transform = m_parent->getModelMatrix();
+  }
+  return transform *
+         Matrix4f::translationMatrix(m_position) *
          Matrix4f::rotationMatrix(m_rotation.getEuclidean()) *
          Matrix4f::scaleMatrix(m_scale);
 }
@@ -28,9 +44,13 @@ CTransform::getPosition()
 void
 CTransform::setPosition(const Vector3f& pos)
 {
+  m_dirtyModelMatrix = true;
+  for (auto& child : m_childs)
+  {
+    child->m_dirtyModelMatrix = true;
+  }
+
   m_position = pos;
-  Matrix4f modelMat = getModelMatrix();
-  m_modelMatrixBuff->updateData(reinterpret_cast<Byte*>(&modelMat));
 }
 Quaternion
 CTransform::getRotation()
@@ -40,9 +60,13 @@ CTransform::getRotation()
 void
 CTransform::setRotation(const Quaternion& rot)
 {
+  m_dirtyModelMatrix = true;
+  for (auto& child : m_childs)
+  {
+    child->m_dirtyModelMatrix = true;
+  }
+
   m_rotation = rot;
-  Matrix4f modelMat = getModelMatrix();
-  m_modelMatrixBuff->updateData(reinterpret_cast<Byte*>(&modelMat));
 }
 Vector3f
 CTransform::getScale()
@@ -52,8 +76,24 @@ CTransform::getScale()
 void
 CTransform::setScale(const Vector3f& scale)
 {
+  m_dirtyModelMatrix = true;
+  for (auto& child : m_childs)
+  {
+    child->m_dirtyModelMatrix = true;
+  }
+
   m_scale = scale;
-  Matrix4f modelMat = getModelMatrix();
-  m_modelMatrixBuff->updateData(reinterpret_cast<Byte*>(&modelMat));
+}
+void CTransform::attatchTo(SPtr<CTransform> transformParent)
+{
+  if (m_parent)
+  {
+    m_parent->m_childs.erase(m_parent->m_childs.begin() + m_childIndex);
+  }
+
+  m_parent = transformParent;
+  m_childIndex = m_parent->m_childs.size();
+  m_parent->m_childs.push_back(
+                 std::reinterpret_pointer_cast<CTransform>(shared_from_this()));
 }
 }

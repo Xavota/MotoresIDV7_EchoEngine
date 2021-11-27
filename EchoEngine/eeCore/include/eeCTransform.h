@@ -32,6 +32,9 @@ class EE_CORE_EXPORT CTransform : public Component
   CTransform();
   ~CTransform() = default;
 
+  void
+  update(SPtr<Actor> actor) override;
+
   /**
   * @brief
   * Getter for the model matrix.
@@ -136,6 +139,10 @@ class EE_CORE_EXPORT CTransform : public Component
   virtual void
   setScale(const Vector3f& scale);
 
+
+  virtual void
+  attatchTo(SPtr<CTransform> transformParent);
+
  private:
   /**
   * The position of the actor.
@@ -154,5 +161,12 @@ class EE_CORE_EXPORT CTransform : public Component
   * The constant buffer for the model matrix of the object.
   */
   SPtr<ConstantBuffer> m_modelMatrixBuff;
+
+
+  bool m_dirtyModelMatrix = true;
+
+  Vector<SPtr<CTransform>> m_childs;
+  SPtr<CTransform> m_parent;
+  int32 m_childIndex = -1;
 };
 }

@@ -2,13 +2,14 @@
 #include <windows.h>
 
 namespace eeEngineSDK {
-void Input::update()
+void
+Input::update()
 {
-  for (Pair<eKEYBOARD, InputInfo> i : m_keyboardInputMap)
+  for (auto& i : m_keyboardInputMap)
   {
     i.second.wasPressed = i.second.isPressed;
   }
-  for (Pair<eMOUSE_CLICK, InputInfo> i : m_mouseClicksInputMap)
+  for (auto& i : m_mouseClicksInputMap)
   {
     i.second.wasPressed = i.second.isPressed;
   }
