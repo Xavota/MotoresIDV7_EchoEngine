@@ -179,6 +179,7 @@
     <ClCompile Include="src\eeComponent.cpp" />
     <ClCompile Include="src\eeConstantBuffer.cpp" />
     <ClCompile Include="src\eeCRender.cpp" />
+    <ClCompile Include="src\eeCSkeletalMesh.cpp" />
     <ClCompile Include="src\eeCTransform.cpp" />
     <ClCompile Include="src\eeDepthStencil.cpp" />
     <ClCompile Include="src\eeDepthStencilState.cpp" />
@@ -196,6 +197,7 @@
     <ClCompile Include="src\eeScene.cpp" />
     <ClCompile Include="src\eeSceneGraph.cpp" />
     <ClCompile Include="src\eeSceneManager.cpp" />
+    <ClCompile Include="src\eeSkeletalMesh.cpp" />
     <ClCompile Include="src\eeTexture.cpp" />
     <ClCompile Include="src\eeVertexBuffer.cpp" />
     <ClCompile Include="src\eeVertexShader.cpp" />
@@ -213,6 +215,7 @@
     <ClInclude Include="include\eeCoreConfiguration.h" />
     <ClInclude Include="include\eeCoreDefines.h" />
     <ClInclude Include="include\eeCRender.h" />
+    <ClInclude Include="include\eeCSkeletalMesh.h" />
     <ClInclude Include="include\eeCTransform.h" />
     <ClInclude Include="include\eeDepthStencil.h" />
     <ClInclude Include="include\eeDepthStencilState.h" />
@@ -231,6 +234,7 @@
     <ClInclude Include="include\eeScene.h" />
     <ClInclude Include="include\eeSceneGraph.h" />
     <ClInclude Include="include\eeSceneManager.h" />
+    <ClInclude Include="include\eeSkeletalMesh.h" />
     <ClInclude Include="include\eeVertex.h" />
     <ClInclude Include="include\eeTexture.h" />
     <ClInclude Include="include\eeVertexBuffer.h" />

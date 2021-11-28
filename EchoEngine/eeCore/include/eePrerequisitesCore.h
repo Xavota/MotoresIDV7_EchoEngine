@@ -72,6 +72,7 @@ class Mesh;
 class Model;
 class Object;
 class Texture;
+class SkeletalMesh;
 
 class SceneManager;
 class Scene;
@@ -81,6 +82,7 @@ class CTransform;
 class CModel;
 class CRender;
 class CCamera;
+class CSkeletalMesh;
 
 class ResourceManager;
 }

@@ -139,6 +139,25 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
 
   /**
   * @brief
+  * Initializes a skeletal mesh.
+  *
+  * @description
+  * Initializes a skeletal mesh from a file and stores it with the given name.
+  *
+  * @param fileName
+  * The name of the file containing the skeletal mesh.
+  * @param resourceName
+  * The name that the resource will be stored with.
+  *
+  * @return
+  * Weather it succeed or failed to initialize.
+  */
+  SPtr<SkeletalMesh> 
+  loadSkeletalMeshFromFile(const String& fileName,
+                           const String& resourceName);
+
+  /**
+  * @brief
   * Initializes the shader.
   *
   * @description
@@ -194,10 +213,10 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
                           const String& resourceName);
   /**
   * @brief
-  * Initializes the shader.
+  * Initializes a shader.
   *
   * @description
-  * Initializes the shader from a string and stores it with the given name.
+  * Initializes a shader from a string and stores it with the given name.
   *
   * @param fileName
   * The string for the shader to compile.
@@ -295,13 +314,17 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
   */
   Map<String, SPtr<Texture>> m_textures;
   /**
+  * The meshes stored.
+  */
+  Map<String, SPtr<Mesh>> m_meshes;
+  /**
   * The models stored.
   */
   Map<String, SPtr<Model>> m_models;
   /**
-  * The meshes stored.
+  * The skeletal meshes stored.
   */
-  Map<String, SPtr<Mesh>> m_meshes;
+  Map<String, SPtr<SkeletalMesh>> m_skeletalMeshes;
   /**
   * The vertex shaders stored.
   */

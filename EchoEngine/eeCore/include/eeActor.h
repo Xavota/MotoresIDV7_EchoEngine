@@ -45,7 +45,7 @@ class EE_CORE_EXPORT Actor : public std::enable_shared_from_this<Actor>
   setActive(bool active);
 
   void
-  AttachTo(SPtr<Actor> parent);
+  attachTo(SPtr<Actor> parent);
 
  private:
   Vector<SPtr<Component>> m_components;

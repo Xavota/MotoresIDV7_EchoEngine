@@ -5,6 +5,7 @@
 #include "eeVertexShader.h"
 #include "eePixelShader.h"
 #include "eeGraficsApi.h"
+#include "eeSkeletalMesh.h"
 
 namespace eeEngineSDK
 {
@@ -113,7 +114,33 @@ ResourceManager::loadModelFromMeshesArray(const Vector<Pair<SPtr<Mesh>, uint8>>&
 
 
 
-SPtr<VertexShader> 
+SPtr<SkeletalMesh>
+ResourceManager::loadSkeletalMeshFromFile(const String& fileName,
+                                          const String& resourceName)
+{
+  if (m_skeletalMeshes.find(resourceName) != m_skeletalMeshes.end())
+  {
+    std::cout << "Resource already with this name" << std::endl;
+    return nullptr;
+  }
+
+  if (fileName == "")
+  {
+    std::cout << "Empty info loading model" << std::endl;
+    return nullptr;
+  }
+
+  SPtr<SkeletalMesh> skeletal = std::make_shared<SkeletalMesh>();
+  if (!skeletal->loadFromFile(fileName))
+  {
+    return nullptr;
+  }
+
+  m_skeletalMeshes.insert(make_pair(resourceName, skeletal));
+  return m_skeletalMeshes[resourceName];
+}
+
+SPtr<VertexShader>
 ResourceManager::loadVertexShaderFromFile(const String& fileName, 
                                           const String& resourceName)
 {

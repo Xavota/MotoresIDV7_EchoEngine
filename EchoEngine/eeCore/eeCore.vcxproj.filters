@@ -126,6 +126,8 @@
     <ClInclude Include="include\eeCCamera.h">
       <Filter>include\SceneGraph\Components</Filter>
     </ClInclude>
+    <ClInclude Include="include\eeSkeletalMesh.h" />
+    <ClInclude Include="include\eeCSkeletalMesh.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeBuffer.cpp">
@@ -218,5 +220,7 @@
     <ClCompile Include="src\eeCCamera.cpp">
       <Filter>src\SceneGraph\Components</Filter>
     </ClCompile>
+    <ClCompile Include="src\eeSkeletalMesh.cpp" />
+    <ClCompile Include="src\eeCSkeletalMesh.cpp" />
   </ItemGroup>
 </Project>

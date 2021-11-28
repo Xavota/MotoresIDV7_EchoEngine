@@ -31,7 +31,7 @@ void Actor::setActive(bool active)
 {
   m_active = active;
 }
-void Actor::AttachTo(SPtr<Actor> parent)
+void Actor::attachTo(SPtr<Actor> parent)
 {
   if (m_parent)
   {

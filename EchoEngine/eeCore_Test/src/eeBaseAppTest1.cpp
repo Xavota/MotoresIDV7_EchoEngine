@@ -280,12 +280,23 @@ bool BaseAppTest1::initResources()
       "ActorTest1"
     )
   );
+  samDesc.filter = eFILTER::MIN_MAG_MIP_POINT;
+  actor->getComponent<CModel>()->getModel()->setTexture
+  (
+    ResourceManager::instance().loadTextureFromFile
+    (
+      "Textures/steve.png",
+      "SteveTex",
+      samDesc
+    ),
+    0
+  );
   actor->addComponent<CRender>();
   
 
 
   actor = scene->addActor("AtatchToActor");
-  actor->AttachTo(scene->getActor("Player"));
+  actor->attachTo(scene->getActor("Player"));
   actor->getComponent<CTransform>()->setPosition({ 0.0f, 0.0f, 30.0f });
   actor->addComponent<CModel>();
   actor->getComponent<CModel>()->setModel
