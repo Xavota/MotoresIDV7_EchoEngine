@@ -7,6 +7,13 @@
 #include "eeGraficsApi.h"
 #include "eeSkeletalMesh.h"
 
+
+#pragma warning(push, 0)   
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+#pragma warning(pop)
+
 namespace eeEngineSDK
 {
 SPtr<Texture> 
@@ -51,11 +58,52 @@ ResourceManager::loadModelFromFile(const String& fileName,
     return nullptr;
   }
 
-  SPtr<Model> model = std::make_shared<Model>();
-  if (!model->loadFromFile(fileName))
+  Assimp::Importer* importer = nullptr;
+  const aiScene* scene = nullptr;
+
+  importer = new Assimp::Importer();
+  scene = importer->ReadFile
+  (
+    fileName,
+    aiProcessPreset_TargetRealtime_MaxQuality
+    | aiProcess_ConvertToLeftHanded
+  );
+  if (!scene)
   {
+    std::cout << importer->GetErrorString() << std::endl;
     return nullptr;
   }
+
+
+  SPtr<Model> model = std::make_shared<Model>();
+  if (scene->HasAnimations())
+  {
+    SPtr<SkeletalMesh> skMesh =
+    loadSkeletalMeshFromFile(fileName, resourceName + "_sk");
+
+    if (skMesh)
+    {
+      if (!model->loadFromFile(fileName, skMesh))
+      {
+        return nullptr;
+      }
+    }
+    else
+    {
+      if (!model->loadFromFile(fileName))
+      {
+        return nullptr;
+      }
+    }
+  }
+  else
+  {
+    if (!model->loadFromFile(fileName))
+    {
+      return nullptr;
+    }
+  }
+
 
   m_models.insert(make_pair(resourceName, model));
   return m_models[resourceName];

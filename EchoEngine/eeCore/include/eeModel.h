@@ -45,16 +45,29 @@ class EE_CORE_EXPORT Model
   *
   * @param fileName
   * The name of the file containing the model.
-  * @param boundSphere
-  * A resulting bounding sphere with the max distance to the center.
-  * @param fileName
-  * A resulting bounding box with the max points to the center.
   *
   * @return
   * Weather it succeed or failed to initialize.
   */
   virtual bool
   loadFromFile(const String& fileName);
+  /**
+  * @brief
+  * Initializes the model.
+  *
+  * @description
+  * Initializes the model from a file and a skeletal mesh.
+  *
+  * @param fileName
+  * The name of the file containing the model.
+  * @param skMesh
+  * The skeletal mesh from where it's gonna get the bone data.
+  *
+  * @return
+  * Weather it succeed or failed to initialize.
+  */
+  virtual bool
+  loadFromFile(const String& fileName, SPtr<const SkeletalMesh> skMesh);
   /**
   * @brief
   * Initializes the model.

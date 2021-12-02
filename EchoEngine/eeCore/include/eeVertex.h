@@ -57,24 +57,24 @@ struct ComplexVertex
   /**
    * The position of the vertex.
    */
-  Vector3f position;
+  Vector4f position;
   /**
    * The texture coordinates of the vertex.
    */
-  Vector2f uvCoord;
+  Vector4f uvCoord;
   /**
    * The normal direction of the vertex.
    */
-  Vector3f normal;
+  Vector4f normal;
 
   /**
    * The binormal direction of the vertex.
    */
-  Vector3f binormal;
+  Vector4f binormal;
   /**
    * The tangent direction of the vertex.
    */
-  Vector3f tangent;
+  Vector4f tangent;
 };
 /**
  * @brief
@@ -86,15 +86,15 @@ struct SimpleAnimVertex
   /**
    * The position of the vertex.
    */
-  Vector3f position;
+  Vector4f position;
   /**
    * The texture coordinates of the vertex.
    */
-  Vector2f uvCoord;
+  Vector4f uvCoord;
   /**
    * The normal direction of the vertex.
    */
-  Vector3f normal;
+  Vector4f normal;
 
   /**
    * The indices of the bones that affects the vertex.
@@ -116,15 +116,15 @@ struct SimpleBigAnimVertex
   /**
    * The position of the vertex.
    */
-  Vector3f position;
+  Vector4f position;
   /**
    * The texture coordinates of the vertex.
    */
-  Vector2f uvCoord;
+  Vector4f uvCoord;
   /**
    * The normal direction of the vertex.
    */
-  Vector3f normal;
+  Vector4f normal;
 
   /**
    * The indices of the bones that affects the vertex.
@@ -145,24 +145,24 @@ struct ComplexAnimVertex
   /**
    * The position of the vertex.
    */
-  Vector3f position;
+  Vector4f position;
   /**
    * The texture coordinates of the vertex.
    */
-  Vector2f uvCoord;
+  Vector4f uvCoord;
   /**
    * The normal direction of the vertex.
    */
-  Vector3f normal;
+  Vector4f normal;
 
   /**
    * The binormal direction of the vertex.
    */
-  Vector3f binormal;
+  Vector4f binormal;
   /**
    * The tangent direction of the vertex.
    */
-  Vector3f tangent;
+  Vector4f tangent;
 
   /**
    * The indices of the bones that affects the vertex.
@@ -184,24 +184,24 @@ struct ComplexBigAnimVertex
   /**
    * The position of the vertex.
    */
-  Vector3f position;
+  Vector4f position;
   /**
    * The texture coordinates of the vertex.
    */
-  Vector2f uvCoord;
+  Vector4f uvCoord;
   /**
    * The normal direction of the vertex.
    */
-  Vector3f normal;
+  Vector4f normal;
 
   /**
    * The binormal direction of the vertex.
    */
-  Vector3f binormal;
+  Vector4f binormal;
   /**
    * The tangent direction of the vertex.
    */
-  Vector3f tangent;
+  Vector4f tangent;
 
   /**
    * The indices of the bones that affects the vertex.

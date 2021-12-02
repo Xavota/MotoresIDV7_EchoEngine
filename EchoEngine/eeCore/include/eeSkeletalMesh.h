@@ -14,6 +14,8 @@
 #include "eePrerequisitesCore.h"
 #include <eeMatrix4.h>
 
+class aiNode;
+
 namespace eeEngineSDK {
 struct VertexWeight
 {
@@ -45,13 +47,25 @@ class SkeletalMesh
   bool
   loadFromFile(String fileName);
 
+  const Vector<Vector<Bone>>&
+  getBonesData() const;
+  const Vector<Bone>&
+  getBonesDataForMesh(int32 index) const;
+
+  void
+  BoneTransform(const aiNode* root, int meshIndex);
+  void
+  ReadNodeHeirarchy(const aiNode* pNode,
+                    const Matrix4f& ParentTransform,
+                    int meshIndex);
+
  private:
   SPtr<ConstantBuffer> m_matricesBuffer;
 
-  std::vector<std::vector<Bone>> m_bonesPerMesh;
+  Vector<Vector<Bone>> m_bonesPerMesh;
 
   Vector<Matrix4f> m_globalInverseTransforms;
-  std::vector<std::map<std::string, int32>> m_boneMappings;
-  std::vector<int32> m_numsBones;
+  Vector<Map<String, int32>> m_boneMappings;
+  Vector<int32> m_numsBones;
 };
 }
