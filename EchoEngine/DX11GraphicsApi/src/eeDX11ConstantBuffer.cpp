@@ -4,9 +4,10 @@
 #include <eeMatrix4.h>
 
 namespace eeEngineSDK {
-bool DX11ConstantBuffer::initData(uint32 dataSize,
-                                               uint32 batchSize,
-                                               const Byte* data)
+bool
+DX11ConstantBuffer::initData(uint32 dataSize,
+                             uint32 batchSize,
+                             const Byte* data)
 {
   const DX11Basics* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
@@ -19,7 +20,7 @@ bool DX11ConstantBuffer::initData(uint32 dataSize,
   D3D11_BUFFER_DESC bd;
   ZeroMemory(&bd, sizeof(bd));
   bd.Usage = D3D11_USAGE_DEFAULT;
-  bd.ByteWidth = sizeof(Matrix4f);
+  bd.ByteWidth = dataSize;
   bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
   bd.CPUAccessFlags = 0;
   HRESULT hr = basics->m_device->CreateBuffer(&bd, NULL, &m_buffer);
@@ -31,7 +32,8 @@ bool DX11ConstantBuffer::initData(uint32 dataSize,
 
   return true;
 }
-void DX11ConstantBuffer::updateData(const Byte* data)
+void
+DX11ConstantBuffer::updateData(const Byte* data)
 {
   const DX11Basics* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
@@ -45,11 +47,13 @@ void DX11ConstantBuffer::updateData(const Byte* data)
                                              0u,
                                              0u);
 }
-void DX11ConstantBuffer::release()
+void
+DX11ConstantBuffer::release()
 {
   DX11SAFE_RELEASE(m_buffer);
 }
-void DX11ConstantBuffer::setInVertex(uint32 index)
+void
+DX11ConstantBuffer::setInVertex(uint32 index)
 {
   const DX11Basics* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
@@ -64,7 +68,8 @@ void DX11ConstantBuffer::setInVertex(uint32 index)
                                                 1u,
                                                 &m_buffer);
 }
-void DX11ConstantBuffer::setInPixel(uint32 index)
+void
+DX11ConstantBuffer::setInPixel(uint32 index)
 {
   const DX11Basics* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());

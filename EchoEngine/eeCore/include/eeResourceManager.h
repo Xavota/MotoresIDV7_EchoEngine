@@ -155,6 +155,24 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
   SPtr<SkeletalMesh> 
   loadSkeletalMeshFromFile(const String& fileName,
                            const String& resourceName);
+  /**
+  * @brief
+  * Initializes a skeletal mesh.
+  *
+  * @description
+  * Initializes a skeletal mesh from a file and stores it with the given name.
+  *
+  * @param fileName
+  * The name of the file containing the skeletal mesh.
+  * @param resourceName
+  * The name that the resource will be stored with.
+  *
+  * @return
+  * Weather it succeed or failed to initialize.
+  */
+  SPtr<Animation> 
+  loadAnimationFromFile(const String& fileName,
+                        const String& resourceName);
 
   /**
   * @brief
@@ -277,6 +295,36 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
   getResourceMesh(const String& resourceName);
   /**
   * @brief
+  * Gets a skeletal mesh.
+  *
+  * @description
+  * Gets a skeletal mesh by a resource name.
+  *
+  * @param resourceName
+  * The name of the resource.
+  *
+  * @return
+  * The skeletal mesh with that name
+  */
+  SPtr<SkeletalMesh>
+  getResourceSkeletalMesh(const String& resourceName);
+  /**
+  * @brief
+  * Gets an animation.
+  *
+  * @description
+  * Gets an animation by a resource name.
+  *
+  * @param resourceName
+  * The name of the resource.
+  *
+  * @return
+  * The animation with that name
+  */
+  SPtr<Animation>
+  getResourceAnimation(const String& resourceName);
+  /**
+  * @brief
   * Gets a vertex shader.
   *
   * @description
@@ -325,6 +373,10 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
   * The skeletal meshes stored.
   */
   Map<String, SPtr<SkeletalMesh>> m_skeletalMeshes;
+  /**
+  * The animations stored.
+  */
+  Map<String, SPtr<Animation>> m_animations;
   /**
   * The vertex shaders stored.
   */

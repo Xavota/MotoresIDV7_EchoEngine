@@ -128,6 +128,9 @@
     </ClInclude>
     <ClInclude Include="include\eeSkeletalMesh.h" />
     <ClInclude Include="include\eeCSkeletalMesh.h" />
+    <ClInclude Include="include\eeAnimation.h" />
+    <ClInclude Include="include\eeCAnimation.h" />
+    <ClInclude Include="include\eeTime.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeBuffer.cpp">
@@ -222,5 +225,8 @@
     </ClCompile>
     <ClCompile Include="src\eeSkeletalMesh.cpp" />
     <ClCompile Include="src\eeCSkeletalMesh.cpp" />
+    <ClCompile Include="src\eeAnimation.cpp" />
+    <ClCompile Include="src\eeCAnimation.cpp" />
+    <ClCompile Include="src\eeTime.cpp" />
   </ItemGroup>
 </Project>

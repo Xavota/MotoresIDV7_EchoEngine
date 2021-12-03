@@ -29,7 +29,7 @@ struct Bone
   Bone(String name, Vector<VertexWeight> vertexWeights, Matrix4f offsetMatrix);
   ~Bone();
 
-  void AddBoneData(VertexWeight vw);
+  void addBoneData(VertexWeight vw);
 
   String m_name;
   Vector<VertexWeight> m_vertexWeights;
@@ -47,17 +47,29 @@ class SkeletalMesh
   bool
   loadFromFile(String fileName);
 
-  const Vector<Vector<Bone>>&
-  getBonesData() const;
+  Vector<Vector<Bone>>&
+  getBonesData();
   const Vector<Bone>&
   getBonesDataForMesh(int32 index) const;
 
+  Vector<Map<String, int32>>&
+  getBoneMapping();
+  Vector<Matrix4f>&
+  getGlobalInverseTransforms();
+
   void
-  BoneTransform(const aiNode* root, int meshIndex);
+  boneTransform(const aiNode* root, int meshIndex);
   void
-  ReadNodeHeirarchy(const aiNode* pNode,
+  readNodeHeirarchy(const aiNode* pNode,
                     const Matrix4f& ParentTransform,
                     int meshIndex);
+
+  Vector<Matrix4f>
+  getBonesMatrices(int meshNum);
+
+
+  void
+  use(int meshNum);
 
  private:
   SPtr<ConstantBuffer> m_matricesBuffer;

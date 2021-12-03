@@ -6,6 +6,7 @@
 #include "eePixelShader.h"
 #include "eeGraficsApi.h"
 #include "eeSkeletalMesh.h"
+#include "eeAnimation.h"
 
 
 #pragma warning(push, 0)   
@@ -188,6 +189,31 @@ ResourceManager::loadSkeletalMeshFromFile(const String& fileName,
   return m_skeletalMeshes[resourceName];
 }
 
+SPtr<Animation>
+ResourceManager::loadAnimationFromFile(const String& fileName, const String& resourceName)
+{
+  if (m_animations.find(resourceName) != m_animations.end())
+  {
+    std::cout << "Resource already with this name" << std::endl;
+    return nullptr;
+  }
+
+  if (fileName == "")
+  {
+    std::cout << "Empty info loading model" << std::endl;
+    return nullptr;
+  }
+
+  SPtr<Animation> anim = std::make_shared<Animation>();
+  if (!anim->loadFromFile(fileName))
+  {
+    return nullptr;
+  }
+
+  m_animations.insert(make_pair(resourceName, anim));
+  return m_animations[resourceName];
+}
+
 SPtr<VertexShader>
 ResourceManager::loadVertexShaderFromFile(const String& fileName, 
                                           const String& resourceName)
@@ -290,6 +316,22 @@ SPtr<Mesh> ResourceManager::getResourceMesh(const String& resourceName)
   if (m_meshes.find(resourceName) != m_meshes.end())
   {
     return m_meshes[resourceName];
+  }
+  return nullptr;
+}
+SPtr<SkeletalMesh> ResourceManager::getResourceSkeletalMesh(const String& resourceName)
+{
+  if (m_skeletalMeshes.find(resourceName) != m_skeletalMeshes.end())
+  {
+    return m_skeletalMeshes[resourceName];
+  }
+  return nullptr;
+}
+SPtr<Animation> ResourceManager::getResourceAnimation(const String& resourceName)
+{
+  if (m_animations.find(resourceName) != m_animations.end())
+  {
+    return m_animations[resourceName];
   }
   return nullptr;
 }

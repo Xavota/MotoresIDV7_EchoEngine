@@ -1,4 +1,6 @@
 #include "eeSkeletalMesh.h"
+#include "eeConstantBuffer.h"
+#include "eeGraficsApi.h"
 #pragma warning(push, 0)   
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -8,7 +10,7 @@
 namespace eeEngineSDK{
 Bone::Bone(String name,
            Vector<VertexWeight> vertexWeights,
-					 Matrix4f offsetMatrix)
+           Matrix4f offsetMatrix)
 {
   m_name = name;
   m_vertexWeights = vertexWeights;
@@ -17,7 +19,8 @@ Bone::Bone(String name,
 Bone::~Bone()
 {
 }
-void Bone::AddBoneData(VertexWeight vw)
+void
+Bone::addBoneData(VertexWeight vw)
 {
   m_vertexWeights.push_back(vw);
 }
@@ -82,7 +85,7 @@ SkeletalMesh::loadFromFile(String fileName)
                             scene->mMeshes[i]->mBones[j]->mWeights[k].mVertexId;
           float weight = scene->mMeshes[i]->mBones[j]->mWeights[k].mWeight;
 
-          m_bonesPerMesh[i][boneIndex].AddBoneData({ vertexID, weight });
+          m_bonesPerMesh[i][boneIndex].addBoneData({ vertexID, weight });
         }
       }
     }
@@ -90,18 +93,21 @@ SkeletalMesh::loadFromFile(String fileName)
 
   for (int i = 0; i < scene->mNumMeshes; i++)
   {
-    BoneTransform(scene->mRootNode, i);
+    boneTransform(scene->mRootNode, i);
   }
+
+  m_matricesBuffer = GraphicsApi::instance().createConstantBufferPtr();
+  m_matricesBuffer->initData(100 * sizeof(Matrix4f), sizeof(Matrix4f), nullptr);
 
   return true;
 }
 void
-SkeletalMesh::BoneTransform(const aiNode* root, int meshIndex)
+SkeletalMesh::boneTransform(const aiNode* root, int meshIndex)
 {
-  ReadNodeHeirarchy(root, Matrix4f::IDENTITY, meshIndex);
+  readNodeHeirarchy(root, Matrix4f::IDENTITY, meshIndex);
 }
 void
-SkeletalMesh::ReadNodeHeirarchy(const aiNode* pNode,
+SkeletalMesh::readNodeHeirarchy(const aiNode* pNode,
                                 const Matrix4f& ParentTransform,
                                 int meshIndex)
 {
@@ -126,11 +132,11 @@ SkeletalMesh::ReadNodeHeirarchy(const aiNode* pNode,
 
   for (int i = 0; i < pNode->mNumChildren; i++)
   {
-    ReadNodeHeirarchy(pNode->mChildren[i], GlobalTransformation, meshIndex);
+    readNodeHeirarchy(pNode->mChildren[i], GlobalTransformation, meshIndex);
   }
 }
-const Vector<Vector<Bone>>&
-SkeletalMesh::getBonesData() const
+Vector<Vector<Bone>>&
+SkeletalMesh::getBonesData()
 {
   return m_bonesPerMesh;
 }
@@ -141,5 +147,44 @@ SkeletalMesh::getBonesDataForMesh(int32 index) const
     return m_bonesPerMesh[index];
   else
     return Vector<Bone>();
+}
+
+Vector<Map<String, int32>>&
+SkeletalMesh::getBoneMapping()
+{
+  return m_boneMappings;
+}
+
+Vector<Matrix4f>&
+SkeletalMesh::getGlobalInverseTransforms()
+{
+  return m_globalInverseTransforms;
+}
+
+std::vector<Matrix4f>
+SkeletalMesh::getBonesMatrices(int meshNum)
+{
+  std::vector<Matrix4f> bonesMatrices(100);
+  if (m_bonesPerMesh.size() > meshNum)
+  {
+    for (int i = 0; i < m_bonesPerMesh[meshNum].size(); i++)
+    {
+      //bonesMatrices[i] = m_bonesPerMesh[meshNum][i].m_offsetMatrix;
+      if (i >= bonesMatrices.size())
+      {
+        break;
+      }
+      bonesMatrices[i] = m_bonesPerMesh[meshNum][i].m_finalTransformation;
+    }
+  }
+
+  return bonesMatrices;
+}
+void
+SkeletalMesh::use(int meshNum)
+{
+  Vector<Matrix4f> mats = getBonesMatrices(meshNum);
+  m_matricesBuffer->updateData(reinterpret_cast<Byte*>(mats.data()));
+  m_matricesBuffer->setInVertex(3);
 }
 }

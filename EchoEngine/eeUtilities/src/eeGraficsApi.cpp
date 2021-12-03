@@ -7,6 +7,8 @@
 #include "eeModel.h"
 #include "eeMesh.h"
 #include "eeCTransform.h"
+#include "eeCSkeletalMesh.h"
+#include "eeSkeletalMesh.h"
 #include "eeCModel.h"
 #include "eeActor.h"
 
@@ -48,20 +50,31 @@ GraphicsApi::drawObject(Actor* act)
     return;
 
   SPtr<CModel> model = act->getComponent<CModel>();
+  if (!model)
+  {
+    return;
+  }
 
   const Vector<Pair<SPtr<Mesh>, uint8>>& meshes = model->getModel()->getMeshes();
+  int32 meshesCount = meshes.size();
   const Vector< SPtr<Texture>>& textures = model->getModel()->getTextures();
+
+  const SPtr<CSkeletalMesh> skeletal = act->getComponent<CSkeletalMesh>();
 
   transform->getModelBuffer()->setInVertex(0u);
 
-  for (const Pair<SPtr<Mesh>, uint8>& m : meshes)
+  for (int32 i = 0; i < meshesCount; ++i)
   {
-    m.first->set();
+    meshes[i].first->set();
 
-    GraphicsApi::instance().setTextures({ textures[m.second] }, 0u);
+    GraphicsApi::instance().setTextures({ textures[meshes[i].second] }, 0u);
 
-    drawIndexed(m.first->getIndexCount());
+    if (skeletal)
+    {
+      skeletal->getSkeletal()->use(i);
+    }
 
+    drawIndexed(meshes[i].first->getIndexCount());
 
     GraphicsApi::instance().unsetVertexBuffers(1u, 0u);
   }

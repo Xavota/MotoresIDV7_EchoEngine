@@ -73,6 +73,7 @@ class Model;
 class Object;
 class Texture;
 class SkeletalMesh;
+class Animation;
 
 class SceneManager;
 class Scene;

@@ -672,11 +672,12 @@ bool Model::loadFromFile(const String& fileName, SPtr<const SkeletalMesh> skMesh
   //----Vertices----
   for (uint32 i = 0; i < scene->mNumMeshes; ++i)
   {
-    Vector<SimpleBigAnimVertex<16>> vertices;
+    Vector<SimpleBigAnimVertex<6>> vertices;
 
     for (uint32 j = 0; j < scene->mMeshes[i]->mNumVertices; ++j)
     {
-      SimpleBigAnimVertex<16> v;
+      SimpleBigAnimVertex<6> v;
+      memset(&v, 0, sizeof(SimpleBigAnimVertex<6>));
       //---Pos
       if (scene->mMeshes[i]->HasPositions())
       {

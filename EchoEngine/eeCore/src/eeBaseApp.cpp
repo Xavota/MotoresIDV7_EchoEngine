@@ -5,6 +5,7 @@
 #include "eeResourceManager.h"
 #include "eeInput.h"
 #include "eeSceneManager.h"
+#include "eeTime.h"
 
 namespace eeEngineSDK {
 int32
@@ -54,6 +55,7 @@ BaseApp::mainLoop()
     auto end = std::chrono::high_resolution_clock::now();
     float dt = std::chrono::duration<float>(end - start).count();
     start = std::chrono::high_resolution_clock::now();
+    Time::instance().updateDeltaTime(dt);
     update(dt);
     render();
 
@@ -81,6 +83,7 @@ bool BaseApp::initSystems()
   ResourceManager::startUp();
   Input::startUp();
   SceneManager::startUp();
+  Time::startUp();
 
   //m_mouseID = m_inManager.CreateDevice<gainput::InputDeviceMouse>();
   //

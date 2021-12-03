@@ -14,7 +14,7 @@
 #include "eeComponent.h"
 
 namespace eeEngineSDK{
-class CSkeletalMesh : public Component
+class EE_CORE_EXPORT CSkeletalMesh : public Component
 {
 public:
   enum { CmpType = eCOMPONENT_TYPE::SKELETAL_MESH };

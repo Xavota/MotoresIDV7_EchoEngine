@@ -23,6 +23,7 @@ enum E
   RENDER,
   CAMERA,
   SKELETAL_MESH,
+  ANIMATION,
   COUNT
 };
 }

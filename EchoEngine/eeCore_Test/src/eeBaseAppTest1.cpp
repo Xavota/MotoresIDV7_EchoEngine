@@ -15,6 +15,8 @@
 #include <eeCModel.h>
 #include <eeCRender.h>
 #include <eeCCamera.h>
+#include <eeCSkeletalMesh.h>
+#include <eeCAnimation.h>
 
 #include <eeMath.h>
 #include <eeInput.h>
@@ -37,6 +39,8 @@ using eeEngineSDK::SimpleVertex;
 using eeEngineSDK::Object;
 using eeEngineSDK::Model;
 using eeEngineSDK::Mesh;
+using eeEngineSDK::SkeletalMesh;
+using eeEngineSDK::Animation;
 using eeEngineSDK::Vector;
 using eeEngineSDK::Pair;
 using eeEngineSDK::uint8;
@@ -52,6 +56,8 @@ using eeEngineSDK::Component;
 using eeEngineSDK::CTransform;
 using eeEngineSDK::CModel;
 using eeEngineSDK::CRender;
+using eeEngineSDK::CSkeletalMesh;
+using eeEngineSDK::CAnimation;
 using eeEngineSDK::Input;
 using eeEngineSDK::CameraDesc;
 using eeEngineSDK::String;
@@ -195,6 +201,17 @@ bool BaseAppTest1::initResources()
   {
     return false;
   }
+
+  if (!ResourceManager::instance().loadVertexShaderFromFile("Shaders/TestVSAnimShader.hlsl",
+    "TestVSAnim"))
+  {
+    return false;
+  }
+  if (!ResourceManager::instance().loadPixelShaderFromFile("Shaders/TestPSAnimShader.hlsl",
+    "TestPSAnim"))
+  {
+    return false;
+  }
   
   
   if (!ResourceManager::instance().loadVertexShaderFromFile("Shaders/TestVSSAQ.hlsl",
@@ -271,6 +288,7 @@ bool BaseAppTest1::initResources()
 
   actor = scene->addActor("Test");
   actor->getComponent<CTransform>()->setScale({ 0.1f, 0.1f, 0.1f });
+  actor->getComponent<CTransform>()->setPosition({ 3.0f, 0.0f, 0.0f });
   actor->addComponent<CModel>();
   actor->getComponent<CModel>()->setModel
   (
@@ -290,6 +308,34 @@ bool BaseAppTest1::initResources()
       samDesc
     ),
     0
+  );
+  actor->addComponent<CRender>();
+
+
+  actor = scene->addActor("AnimTest");
+  actor->getComponent<CTransform>()->setScale({ 0.01f, 0.01f, 0.01f });
+  actor->addComponent<CModel>();
+  actor->getComponent<CModel>()->setModel
+  (
+    ResourceManager::instance().loadModelFromFile
+    (
+      "Models/boblampclean.md5mesh",
+      "ActorTest2"
+    )
+  );
+  actor->addComponent<CSkeletalMesh>();
+  actor->getComponent<CSkeletalMesh>()->setSkeletal
+  (
+    ResourceManager::instance().getResourceSkeletalMesh("ActorTest2_sk")
+  );
+  actor->addComponent<CAnimation>();
+  actor->getComponent<CAnimation>()->setAnimation
+  (
+    ResourceManager::instance().loadAnimationFromFile
+    (
+      "Models/boblampclean.md5anim",
+      "AnimationTest1"
+    )
   );
   actor->addComponent<CRender>();
   
@@ -412,11 +458,13 @@ void BaseAppTest1::render()
   // Load shaders
   SPtr<VertexShader> vs =
     ResourceManager::instance().getResourceVertexShader("TestVS");
-  vs->use();
+  SPtr<VertexShader> animVS =
+    ResourceManager::instance().getResourceVertexShader("TestVSAnim");
 
   SPtr<PixelShader> ps =
     ResourceManager::instance().getResourcePixelShader("TestPS");
-  ps->use();
+  SPtr<PixelShader> animPS =
+    ResourceManager::instance().getResourcePixelShader("TestPSAnim");
 
   for (auto& cam : activeCams)
   {
@@ -451,13 +499,28 @@ void BaseAppTest1::render()
 
 
 
+
+    vs->use();
+    ps->use();
+
     //Draw in-cam actors
     Vector<SPtr<Actor>> rActors =
      SceneManager::instance().getAllRenderableActorsInside(activeCams[0]);
     int32 rActorsCount = rActors.size();
     for (int32 i = 0; i < rActorsCount; ++i)
     {
-      GraphicsApi::instance().drawObject(rActors[i].get());
+      if (!rActors[i]->getComponent<CSkeletalMesh>())
+        GraphicsApi::instance().drawObject(rActors[i].get());
+    }
+
+
+    animVS->use();
+    animPS->use();
+
+    for (int32 i = 0; i < rActorsCount; ++i)
+    {
+      if (rActors[i]->getComponent<CSkeletalMesh>())
+        GraphicsApi::instance().drawObject(rActors[i].get());
     }
 
 

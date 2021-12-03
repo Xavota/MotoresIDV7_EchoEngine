@@ -170,10 +170,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\eeUtilities\src\eeGraficsApi.cpp" />
+    <ClCompile Include="src\eeAnimation.cpp" />
     <ClCompile Include="src\eeActor.cpp" />
     <ClCompile Include="src\eeBaseApp.cpp" />
     <ClCompile Include="src\eeBlendState.cpp" />
     <ClCompile Include="src\eeBuffer.cpp" />
+    <ClCompile Include="src\eeCAnimation.cpp" />
     <ClCompile Include="src\eeCCamera.cpp" />
     <ClCompile Include="src\eeCModel.cpp" />
     <ClCompile Include="src\eeComponent.cpp" />
@@ -199,15 +201,18 @@
     <ClCompile Include="src\eeSceneManager.cpp" />
     <ClCompile Include="src\eeSkeletalMesh.cpp" />
     <ClCompile Include="src\eeTexture.cpp" />
+    <ClCompile Include="src\eeTime.cpp" />
     <ClCompile Include="src\eeVertexBuffer.cpp" />
     <ClCompile Include="src\eeVertexShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\eeUtilities\include\eeGraficsApi.h" />
+    <ClInclude Include="include\eeAnimation.h" />
     <ClInclude Include="include\eeActor.h" />
     <ClInclude Include="include\eeBaseApp.h" />
     <ClInclude Include="include\eeBlendState.h" />
     <ClInclude Include="include\eeBuffer.h" />
+    <ClInclude Include="include\eeCAnimation.h" />
     <ClInclude Include="include\eeCCamera.h" />
     <ClInclude Include="include\eeCModel.h" />
     <ClInclude Include="include\eeComponent.h" />
@@ -235,6 +240,7 @@
     <ClInclude Include="include\eeSceneGraph.h" />
     <ClInclude Include="include\eeSceneManager.h" />
     <ClInclude Include="include\eeSkeletalMesh.h" />
+    <ClInclude Include="include\eeTime.h" />
     <ClInclude Include="include\eeVertex.h" />
     <ClInclude Include="include\eeTexture.h" />
     <ClInclude Include="include\eeVertexBuffer.h" />
