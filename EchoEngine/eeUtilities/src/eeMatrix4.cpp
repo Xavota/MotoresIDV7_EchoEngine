@@ -341,7 +341,7 @@ Matrix4f::operator*(const Matrix4f& other) const
     + this->m_02 * other.m_22 + this->m_03 * other.m_32,
     this->m_00 * other.m_03 + this->m_01 * other.m_13 
     + this->m_02 * other.m_23 + this->m_03 * other.m_33,
-
+  
     this->m_10 * other.m_00 + this->m_11 * other.m_10 
     + this->m_12 * other.m_20 + this->m_13 * other.m_30,
     this->m_10 * other.m_01 + this->m_11 * other.m_11 
@@ -350,7 +350,7 @@ Matrix4f::operator*(const Matrix4f& other) const
     + this->m_12 * other.m_22 + this->m_13 * other.m_32,
     this->m_10 * other.m_03 + this->m_11 * other.m_13 
     + this->m_12 * other.m_23 + this->m_13 * other.m_33, 
-
+  
     this->m_20 * other.m_00 + this->m_21 * other.m_10 
     + this->m_22 * other.m_20 + this->m_23 * other.m_30,
     this->m_20 * other.m_01 + this->m_21 * other.m_11 
@@ -359,7 +359,7 @@ Matrix4f::operator*(const Matrix4f& other) const
     + this->m_22 * other.m_22 + this->m_23 * other.m_32,
     this->m_20 * other.m_03 + this->m_21 * other.m_13 
     + this->m_22 * other.m_23 + this->m_23 * other.m_33, 
-
+  
     this->m_30 * other.m_00 + this->m_31 * other.m_10 
     + this->m_32 * other.m_20 + this->m_33 * other.m_30,
     this->m_30 * other.m_01 + this->m_31 * other.m_11 

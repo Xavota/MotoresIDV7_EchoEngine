@@ -1,6 +1,8 @@
 #include "eeSceneManager.h"
 #include "eeScene.h"
 
+#include <eeMemoryManager.h>
+
 namespace eeEngineSDK {
 void
 SceneManager::update()
@@ -23,7 +25,7 @@ SceneManager::addScene(String name)
     return nullptr;
   }
 
-  m_scenes[name] = std::make_shared<Scene>();
+  m_scenes[name] = MemoryManager::instance().newPtr<Scene>();
   m_scenes[name]->init();
   return m_scenes[name];
 }

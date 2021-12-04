@@ -3,7 +3,7 @@
 #include "eeCSkeletalMesh.h"
 #include "eeSkeletalMesh.h"
 #include "eeAnimation.h"
-#include "eeTime.h"
+#include <eeTime.h>
 
 namespace eeEngineSDK{
 void
@@ -13,11 +13,10 @@ CAnimation::update(SPtr<Actor> actor)
   if (skMesh)
   {
     int32 bonesPerMesh = skMesh->getSkeletal()->getBonesData().size();
+    //m_anim->addTotalTime(Time::instance().getDeltaTime());
     for (int32 i = 0; i < bonesPerMesh; ++i)
     {
-      m_anim->boneTransform(Time::instance().getDeltaTime(),
-                            i,
-                            skMesh->getSkeletal());
+      m_anim->boneTransform(i, skMesh->getSkeletal());
     }
   }
 }

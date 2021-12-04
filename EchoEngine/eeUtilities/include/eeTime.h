@@ -2,7 +2,7 @@
 /**
  * @file eeInput.h
  * @author Diego Castellanos
- * @date 17/11/21
+ * @date 02/12/21
  * @brief
  * The input manager for the api.
  *
@@ -11,25 +11,26 @@
  /************************************************************************/
 
 #pragma once
-#include "eePrerequisitesCore.h"
+#include "eePrerequisitesUtilities.h"
 #include <eeModule.h>
 
 namespace eeEngineSDK {
-class EE_CORE_EXPORT Time : public Module<Time>
+class EE_UTILITY_EXPORT Time : public Module<Time>
 {
- public:
-  Time() = default;
+public:
+  Time();
   ~Time() = default;
 
   float
-  getDeltaTime();
+    getDeltaTime();
 
- private:
+private:
   friend class BaseApp;
 
   void
-  updateDeltaTime(float dt);
+    update();
 
+  std::chrono::steady_clock::time_point m_start;
   float m_deltaTime = 0.0f;
 };
 }

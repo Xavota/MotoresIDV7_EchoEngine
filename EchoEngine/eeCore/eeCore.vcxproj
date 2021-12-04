@@ -201,7 +201,6 @@
     <ClCompile Include="src\eeSceneManager.cpp" />
     <ClCompile Include="src\eeSkeletalMesh.cpp" />
     <ClCompile Include="src\eeTexture.cpp" />
-    <ClCompile Include="src\eeTime.cpp" />
     <ClCompile Include="src\eeVertexBuffer.cpp" />
     <ClCompile Include="src\eeVertexShader.cpp" />
   </ItemGroup>
@@ -240,7 +239,6 @@
     <ClInclude Include="include\eeSceneGraph.h" />
     <ClInclude Include="include\eeSceneManager.h" />
     <ClInclude Include="include\eeSkeletalMesh.h" />
-    <ClInclude Include="include\eeTime.h" />
     <ClInclude Include="include\eeVertex.h" />
     <ClInclude Include="include\eeTexture.h" />
     <ClInclude Include="include\eeVertexBuffer.h" />

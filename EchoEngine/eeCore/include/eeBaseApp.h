@@ -72,12 +72,9 @@ class EE_CORE_EXPORT BaseApp : public Module<BaseApp>
   *
   * @description
   * Updates everything in the app every frame.
-  *
-  * @param deltaTime
-  * The time elapsed since the last frame.
   */
   virtual void
-  update(float deltaTime);
+  update();
 
   /**
   * @brief

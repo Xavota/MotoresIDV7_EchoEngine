@@ -20,6 +20,8 @@
 #include "eePixelShader.h"
 #include <eeModule.h>
 
+#include <eeMemoryManager.h>
+
 namespace eeEngineSDK {
 /**
  * @brief
@@ -109,8 +111,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
   * Weather it succeed or failed to initialize.
   */
   SPtr<Model>
-  loadModelFromMeshesArray(const Vector<Pair<SPtr<Mesh>, uint8>>& meshes,
-                           const Vector<SPtr<Texture>>& textures,
+  loadModelFromMeshesArray(const Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>& meshes,
                            const String resourceName);
 
   /**
@@ -398,7 +399,7 @@ ResourceManager::loadMeshFromVertexArray(const Vector<V>& vertices,
     return nullptr;
   }
 
-  SPtr<Mesh> mesh = std::make_shared<Mesh>();
+  SPtr<Mesh> mesh = MemoryManager::instance().newPtr<Mesh>();
   if (!mesh->loadFromArray<V, I>(vertices, indices))
   {
     return nullptr;

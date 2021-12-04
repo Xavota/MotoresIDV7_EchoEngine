@@ -75,6 +75,8 @@
     <ClInclude Include="include\eeDLLDynamics.h">
       <Filter>include\Platform</Filter>
     </ClInclude>
+    <ClInclude Include="include\eeMemoryManager.h" />
+    <ClInclude Include="include\eeTime.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eePlatformMath.cpp">
@@ -122,5 +124,7 @@
     <ClCompile Include="src\eeDLLDynamics.cpp">
       <Filter>src\Platform</Filter>
     </ClCompile>
+    <ClCompile Include="src\eeMemoryManager.cpp" />
+    <ClCompile Include="src\eeTime.cpp" />
   </ItemGroup>
 </Project>

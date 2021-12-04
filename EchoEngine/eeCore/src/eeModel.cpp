@@ -9,6 +9,8 @@
 #include <assimp/postprocess.h>
 #pragma warning(pop)
 
+#include <eeMemoryManager.h>
+
 namespace eeEngineSDK {
 bool
 Model::loadFromFile(const String& fileName)
@@ -53,8 +55,6 @@ Model::loadFromFile(const String& fileName)
 
 
   /*  GET TEXTURES  */
-
-  m_textures.push_back(ResourceManager::instance().getResourceTexture("Default"));
 
   /*for (int32 j = 0; j < scene->mNumMeshes; j++)
   {
@@ -395,7 +395,7 @@ Model::loadFromFile(const String& fileName)
           indices,
           "Mesh_" + name + std::to_string(m_meshes.size())
         ),
-        0
+        ResourceManager::instance().getResourceTexture("Default")
       )
     );
 
@@ -453,8 +453,6 @@ bool Model::loadFromFile(const String& fileName, SPtr<const SkeletalMesh> skMesh
 
 
   /*  GET TEXTURES  */
-
-  m_textures.push_back(ResourceManager::instance().getResourceTexture("Default"));
 
   /*for (int32 j = 0; j < scene->mNumMeshes; j++)
   {
@@ -831,7 +829,7 @@ bool Model::loadFromFile(const String& fileName, SPtr<const SkeletalMesh> skMesh
           indices,
           "Mesh_" + name + std::to_string(m_meshes.size())
         ),
-        0
+        ResourceManager::instance().getResourceTexture("Default")
       )
     );
 
@@ -850,8 +848,6 @@ bool Model::loadFromFile(const String& fileName, SPtr<const SkeletalMesh> skMesh
 bool
 Model::loadFromMeshes(Vector<SPtr<Mesh>> meshes)
 {
-  m_textures.push_back(ResourceManager::instance().getResourceTexture("Default"));
-
   if (meshes.empty())
   {
     std::cout << "Empty info loading model" << std::endl;
@@ -861,16 +857,19 @@ Model::loadFromMeshes(Vector<SPtr<Mesh>> meshes)
   for (SPtr<Mesh> m : meshes)
   {
     //m_meshes.push_back(MakePair<Mesh&, uint8>(m, 0u));
-    m_meshes.push_back(Pair<SPtr<Mesh>, uint8>(m, static_cast<uint8>(0u)));
+    m_meshes.push_back(
+      Pair<SPtr<Mesh>, SPtr<Texture>>
+      (
+        m,
+        ResourceManager::instance().getResourceTexture("Default")
+        )
+    );
   }
   return true;
 }
 bool
-Model::loadFromMeshes(const Vector<Pair<SPtr<Mesh>, uint8>>& meshes,
-                      const Vector<SPtr<Texture>>& textures)
+Model::loadFromMeshes(const Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>& meshes)
 {
-  m_textures.push_back(ResourceManager::instance().getResourceTexture("Default"));
-
   if (meshes.empty())
   {
     std::cout << "Empty info loading model" << std::endl;
@@ -878,14 +877,9 @@ Model::loadFromMeshes(const Vector<Pair<SPtr<Mesh>, uint8>>& meshes,
   }
 
   m_meshes = meshes;
-  uint32 texturesCount = static_cast<uint32>(textures.size());
-  for (uint32 i = 0; i < texturesCount; ++i)
-  {
-    m_textures.push_back(textures[i]);
-  }
   return true;
 }
-Vector<Pair<SPtr<Mesh>, uint8>> Model::getMeshes()
+Vector<Pair<SPtr<Mesh>, SPtr<Texture>>> Model::getMeshes()
 {
   return m_meshes;
 }
@@ -900,10 +894,17 @@ void Model::setMeshes(Vector<SPtr<Mesh>> meshes)
   for (SPtr<Mesh> m : meshes)
   {
     //m_meshes.push_back(MakePair<Mesh&, uint8>(m, 0u));
-    m_meshes.push_back(Pair<SPtr<Mesh>, uint8>(m, static_cast<uint8>(0u)));
+    m_meshes.push_back
+    (
+      Pair<SPtr<Mesh>, SPtr<Texture>>
+      (
+        m,
+        ResourceManager::instance().getResourceTexture("Default")
+      )
+    );
   }
 }
-void Model::setMeshes(Vector<Pair<SPtr<Mesh>, uint8>> meshes)
+void Model::setMeshes(Vector<Pair<SPtr<Mesh>, SPtr<Texture>>> meshes)
 {
   if (meshes.empty())
   {
@@ -915,17 +916,18 @@ void Model::setMeshes(Vector<Pair<SPtr<Mesh>, uint8>> meshes)
 }
 Vector<SPtr<Texture>> Model::getTextures()
 {
-  return m_textures;
-}
-void Model::setTextures(Vector<SPtr<Texture>> textures)
-{
-  m_textures = textures;
+  Vector<SPtr<Texture>> textures;
+  for (auto& m : m_meshes)
+  {
+    textures.push_back(m.second);
+  }
+  return textures;
 }
 void Model::setTexture(SPtr<Texture> texture, int32 index)
 {
-  if (m_textures.size() > index)
+  if (m_meshes.size() > index)
   {
-    m_textures[index] = texture;
+    m_meshes[index].second = texture;
   }
 }
 
@@ -1134,14 +1136,14 @@ void Model::initPrimitives()
   };
 
 
-  SPtr<Mesh> cubeMesh = std::make_shared<Mesh>();
+  SPtr<Mesh> cubeMesh = MemoryManager::instance().newPtr<Mesh>();
   cubeMesh->loadFromArray
   (
     vertices,
     indices
   );
 
-  cube = std::make_shared<Model>();
+  cube = MemoryManager::instance().newPtr<Model>();
   cube->loadFromMeshes
   (
     Vector<SPtr<Mesh>>

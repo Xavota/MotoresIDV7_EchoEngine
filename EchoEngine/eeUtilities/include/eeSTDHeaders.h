@@ -9,6 +9,7 @@
 #include <memory>
 #include <cmath>
 #include <fstream>
+#include <chrono>
 
 namespace eeEngineSDK
 {

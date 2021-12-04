@@ -95,6 +95,7 @@ class EE_CORE_EXPORT Texture
   release() {};
 
 
- private:
+ protected:
+   String name;
 };
 }

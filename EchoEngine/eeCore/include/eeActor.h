@@ -15,6 +15,8 @@
 #include "eePrerequisitesCore.h"
 #include "eeComponent.h"
 
+#include <eeMemoryManager.h>
+
 namespace eeEngineSDK{
 class EE_CORE_EXPORT Actor : public std::enable_shared_from_this<Actor>
 {
@@ -62,7 +64,7 @@ template<class T>
 FORCEINLINE void
 Actor::addComponent()
 {
-  m_components.push_back(std::make_shared<T>());
+  m_components.push_back(MemoryManager::instance().newPtr<T>());
 }
 template<class T>
 inline SPtr<T> Actor::getComponent()

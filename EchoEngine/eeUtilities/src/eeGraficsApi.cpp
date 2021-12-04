@@ -24,16 +24,15 @@ GraphicsApi::drawObject(SPtr<Object> obj)
   //m_basics.m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 
-  const Vector<Pair<SPtr<Mesh>, uint8>>& meshes = obj->getModel()->getMeshes();
-  const Vector< SPtr<Texture>>& textures = obj->getModel()->getTextures();
+  const Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>& meshes = obj->getModel()->getMeshes();
 
   obj->getModelBuffer()->setInVertex(0u);
 
-  for (const Pair<SPtr<Mesh>, uint8>& m : meshes)
+  for (const auto& m : meshes)
   {
     m.first->set();
 
-    GraphicsApi::instance().setTextures({textures[m.second]}, 0u);
+    GraphicsApi::instance().setTextures({m.second}, 0u);
 
     drawIndexed(m.first->getIndexCount());
 
@@ -55,9 +54,8 @@ GraphicsApi::drawObject(Actor* act)
     return;
   }
 
-  const Vector<Pair<SPtr<Mesh>, uint8>>& meshes = model->getModel()->getMeshes();
+  const Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>& meshes = model->getModel()->getMeshes();
   int32 meshesCount = meshes.size();
-  const Vector< SPtr<Texture>>& textures = model->getModel()->getTextures();
 
   const SPtr<CSkeletalMesh> skeletal = act->getComponent<CSkeletalMesh>();
 
@@ -67,7 +65,7 @@ GraphicsApi::drawObject(Actor* act)
   {
     meshes[i].first->set();
 
-    GraphicsApi::instance().setTextures({ textures[meshes[i].second] }, 0u);
+    GraphicsApi::instance().setTextures({ meshes[i].second }, 0u);
 
     if (skeletal)
     {
@@ -77,6 +75,7 @@ GraphicsApi::drawObject(Actor* act)
     drawIndexed(meshes[i].first->getIndexCount());
 
     GraphicsApi::instance().unsetVertexBuffers(1u, 0u);
+    GraphicsApi::instance().unsetTextures(1u, 0u);
   }
 }
 void

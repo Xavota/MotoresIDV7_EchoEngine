@@ -44,23 +44,25 @@ SkeletalMesh::loadFromFile(String fileName)
     std::cout << importer->GetErrorString() << std::endl;
     return false;
   }
+  scene->mRootNode->mChildren[1]->mChildren;
 
   for (int32 i = 0; i < scene->mNumMeshes; i++)
   {
-    m_bonesPerMesh.push_back(std::vector<Bone>(100));
-    m_boneMappings.push_back(std::map<std::string, int32>());
+    m_bonesPerMesh.push_back(Vector<Bone>(100));
+    m_boneMappings.push_back(Map<String, int32>());
     m_numsBones.push_back(0);
 
-    aiMatrix4x4 globalTransform = scene->mRootNode->mTransformation.Inverse();
+    aiMatrix4x4 globalTransform = scene->mRootNode->mTransformation;
+    globalTransform.Inverse();
     m_globalInverseTransforms.push_back(
-      Matrix4f(&globalTransform.a1).getTranspose());
+      Matrix4f(&globalTransform.a1));
 
     if (scene->mMeshes[i]->HasBones())
     {
       for (int32 j = 0; j < scene->mMeshes[i]->mNumBones; j++)
       {
         uint32 boneIndex = 0;
-        std::string name = scene->mMeshes[i]->mBones[j]->mName.C_Str();
+        String name = scene->mMeshes[i]->mBones[j]->mName.C_Str();
 
         if (m_boneMappings[i].find(name) == m_boneMappings[i].end())
         {
@@ -111,7 +113,7 @@ SkeletalMesh::readNodeHeirarchy(const aiNode* pNode,
                                 const Matrix4f& ParentTransform,
                                 int meshIndex)
 {
-  std::string NodeName(pNode->mName.data);
+  String NodeName(pNode->mName.data);
 
   //trans
   float m[16];
@@ -120,9 +122,10 @@ SkeletalMesh::readNodeHeirarchy(const aiNode* pNode,
 
   Matrix4f GlobalTransformation = ParentTransform * NodeTransformation;
 
+
   if (m_boneMappings[meshIndex].find(NodeName) != m_boneMappings[meshIndex].end())
   {
-    unsigned int BoneIndex = m_boneMappings[meshIndex][NodeName];
+    uint32 BoneIndex = m_boneMappings[meshIndex][NodeName];
 
     m_bonesPerMesh[meshIndex][BoneIndex].m_finalTransformation =
                           m_globalInverseTransforms[meshIndex] *
@@ -161,10 +164,10 @@ SkeletalMesh::getGlobalInverseTransforms()
   return m_globalInverseTransforms;
 }
 
-std::vector<Matrix4f>
+Vector<Matrix4f>
 SkeletalMesh::getBonesMatrices(int meshNum)
 {
-  std::vector<Matrix4f> bonesMatrices(100);
+  Vector<Matrix4f> bonesMatrices(100);
   if (m_bonesPerMesh.size() > meshNum)
   {
     for (int i = 0; i < m_bonesPerMesh[meshNum].size(); i++)

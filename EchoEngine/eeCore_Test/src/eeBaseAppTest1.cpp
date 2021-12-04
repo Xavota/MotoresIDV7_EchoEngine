@@ -20,6 +20,8 @@
 
 #include <eeMath.h>
 #include <eeInput.h>
+#include <eeMemoryManager.h>
+#include <eeTime.h>
 
 using eeEngineSDK::eeConfigurations::screenWidth;
 using eeEngineSDK::eeConfigurations::screenHeight;
@@ -62,6 +64,9 @@ using eeEngineSDK::Input;
 using eeEngineSDK::CameraDesc;
 using eeEngineSDK::String;
 using eeEngineSDK::eCAMERA_PROJECTION_TYPE;
+
+using eeEngineSDK::MemoryManager;
+using eeEngineSDK::Time;
 
 
 using eeEngineSDK::eFILTER;
@@ -129,12 +134,12 @@ bool BaseAppTest1::initResources()
 
 
 
-  m_SAQ = std::make_shared<Object>();
+  m_SAQ = MemoryManager::instance().newPtr<Object>();
   m_SAQ->loadFromModel
   (
     ResourceManager::instance().loadModelFromMeshesArray
     (
-      Vector<Pair<SPtr<Mesh>, uint8>>
+      Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>
       {
         make_pair
         (
@@ -175,12 +180,8 @@ bool BaseAppTest1::initResources()
             },
             "MeshSAQ1"
           ),
-          1u
+          m_rtv2->getAsTexture()
         )
-      },
-      Vector<SPtr<Texture>>
-      {
-        m_rtv2->getAsTexture()
       },
       "SAQ"
     ),
@@ -261,9 +262,12 @@ bool BaseAppTest1::initResources()
   scene->setActive(true);
 
 
-  
-  CameraDesc camDesc;
 
+  SPtr<Actor> actor;
+
+
+
+  CameraDesc camDesc;
   camDesc.projectionType = eCAMERA_PROJECTION_TYPE::PERSPECTIVE;
   camDesc.fovAngleY = 0.785398163f;
   camDesc.viewSize = { static_cast<float>(screenWidth),
@@ -271,12 +275,38 @@ bool BaseAppTest1::initResources()
   camDesc.nearZ = 0.01f;
   camDesc.farZ = 100.0f;
 
-  SPtr<Actor> actor = scene->addActor("Player");
+  actor = scene->addActor("Player");
   actor->getComponent<CTransform>()->setPosition({ 0.0f, 3.0f, -6.0f });
   actor->getComponent<CTransform>()->setScale({ 0.1f, 0.1f, 0.1f });
   actor->addComponent<CCamera>();
   actor->getComponent<CCamera>()->init(camDesc);
   actor->getComponent<CCamera>()->setMain(true);
+  actor->addComponent<CModel>();
+  actor->getComponent<CModel>()->setModel
+  (
+    Model::cube
+  );
+  actor->addComponent<CRender>();
+
+
+
+  actor = scene->addActor("AtatchToActor");
+  actor->attachTo(scene->getActor("Player"));
+  actor->getComponent<CTransform>()->setPosition({ 0.0f, 0.0f, 30.0f });
+  actor->addComponent<CModel>();
+  actor->getComponent<CModel>()->setModel
+  (
+    Model::cube
+  );
+  actor->addComponent<CRender>();
+
+
+
+  actor = scene->addActor("Player2");
+  actor->getComponent<CTransform>()->setPosition({ 5.0f, 3.0f, -6.0f });
+  actor->getComponent<CTransform>()->setScale({ 0.1f, 0.1f, 0.1f });
+  actor->addComponent<CCamera>();
+  actor->getComponent<CCamera>()->init(camDesc);
   actor->addComponent<CModel>();
   actor->getComponent<CModel>()->setModel
   (
@@ -298,7 +328,6 @@ bool BaseAppTest1::initResources()
       "ActorTest1"
     )
   );
-  samDesc.filter = eFILTER::MIN_MAG_MIP_POINT;
   actor->getComponent<CModel>()->getModel()->setTexture
   (
     ResourceManager::instance().loadTextureFromFile
@@ -312,8 +341,10 @@ bool BaseAppTest1::initResources()
   actor->addComponent<CRender>();
 
 
+
   actor = scene->addActor("AnimTest");
-  actor->getComponent<CTransform>()->setScale({ 0.01f, 0.01f, 0.01f });
+  actor->getComponent<CTransform>()->setScale({ 0.03f, 0.03f, 0.03f });
+  actor->getComponent<CTransform>()->setRotation(Quaternion({ Math::kPI * 0.5f, 0.0f, 0.0f }));
   actor->addComponent<CModel>();
   actor->getComponent<CModel>()->setModel
   (
@@ -322,6 +353,66 @@ bool BaseAppTest1::initResources()
       "Models/boblampclean.md5mesh",
       "ActorTest2"
     )
+  );
+  actor->getComponent<CModel>()->getModel()->setTexture
+  (
+    ResourceManager::instance().loadTextureFromFile
+    (
+      "Textures/guard1_body.jpg",
+      "ActorTest2_T1",
+      samDesc
+    ),
+    0
+  );
+  actor->getComponent<CModel>()->getModel()->setTexture
+  (
+    ResourceManager::instance().loadTextureFromFile
+    (
+      "Textures/guard1_face.jpg",
+      "ActorTest2_T2",
+      samDesc
+    ),
+    1
+  );
+  actor->getComponent<CModel>()->getModel()->setTexture
+  (
+    ResourceManager::instance().loadTextureFromFile
+    (
+      "Textures/guard1_helmet.jpg",
+      "ActorTest2_T3",
+      samDesc
+    ),
+    2
+  );
+  actor->getComponent<CModel>()->getModel()->setTexture
+  (
+    ResourceManager::instance().loadTextureFromFile
+    (
+      "Textures/iron_grill.jpg",
+      "ActorTest2_T4",
+      samDesc
+    ),
+    3
+  );
+  actor->getComponent<CModel>()->getModel()->setTexture
+  (
+    ResourceManager::instance().loadTextureFromFile
+    (
+      "Textures/round_grill.jpg",
+      "ActorTest2_T5",
+      samDesc
+    ),
+    4
+  );
+  actor->getComponent<CModel>()->getModel()->setTexture
+  (
+    ResourceManager::instance().loadTextureFromFile
+    (
+      "Textures/guard1_body.jpg",
+      "ActorTest2_T6",
+      samDesc
+    ),
+    5
   );
   actor->addComponent<CSkeletalMesh>();
   actor->getComponent<CSkeletalMesh>()->setSkeletal
@@ -338,38 +429,43 @@ bool BaseAppTest1::initResources()
     )
   );
   actor->addComponent<CRender>();
-  
 
 
-  actor = scene->addActor("AtatchToActor");
-  actor->attachTo(scene->getActor("Player"));
-  actor->getComponent<CTransform>()->setPosition({ 0.0f, 0.0f, 30.0f });
+
+  actor = scene->addActor("AnimTest2");
+  actor->getComponent<CTransform>()->setScale({ 0.01f, 0.01f, 0.01f });
+  actor->getComponent<CTransform>()->setPosition({ -3.0f, 0.0f, 0.0f });
   actor->addComponent<CModel>();
   actor->getComponent<CModel>()->setModel
   (
-    Model::cube
+    ResourceManager::instance().loadModelFromFile
+    (
+      "Models/Scary_Clown_Walk.fbx",
+      "ActorTest3"
+    )
   );
-  actor->addComponent<CRender>();
-
-
-  actor = scene->addActor("Player2");
-  actor->getComponent<CTransform>()->setPosition({ 5.0f, 3.0f, -6.0f });
-  actor->getComponent<CTransform>()->setScale({ 0.1f, 0.1f, 0.1f });
-  actor->addComponent<CCamera>();
-  actor->getComponent<CCamera>()->init(camDesc);
-  actor->addComponent<CModel>();
-  actor->getComponent<CModel>()->setModel
+  actor->addComponent<CSkeletalMesh>();
+  actor->getComponent<CSkeletalMesh>()->setSkeletal
   (
-    Model::cube
+    ResourceManager::instance().getResourceSkeletalMesh("ActorTest3_sk")
+  );
+  actor->addComponent<CAnimation>();
+  actor->getComponent<CAnimation>()->setAnimation
+  (
+    ResourceManager::instance().loadAnimationFromFile
+    (
+      "Models/Scary_Clown_Walk.fbx",
+      "AnimationTest2"
+    )
   );
   actor->addComponent<CRender>();
 
   return true;
 }
 
-void BaseAppTest1::update(float deltaTime)
+void BaseAppTest1::update()
 {
-  BaseApp::update(deltaTime);
+  BaseApp::update();
 
 
   SPtr<Scene> scene = SceneManager::instance().getScene("Main");
@@ -396,12 +492,14 @@ void BaseAppTest1::update(float deltaTime)
 
   SPtr<Actor> actor = scene->getActor("Test");
   static Quaternion rot1(Vector3f(0.0f, 0.0f, 0.0f));
-  rot1 = Quaternion((rot1.getEuclidean() + Vector3f(deltaTime * .5f, 0.0f, 0.0f)));
+  rot1 = Quaternion((rot1.getEuclidean() +
+                  Vector3f(Time::instance().getDeltaTime() * .5f, 0.0f, 0.0f)));
   actor->getComponent<CTransform>()->setRotation(rot1);
 
 
 
   actor = scene->getActor(activePlayerName);
+  //actor = scene->getActor("Player");
   SPtr<CTransform> trans = nullptr;
   if (actor)
     trans = actor->getComponent<CTransform>();
@@ -435,12 +533,19 @@ void BaseAppTest1::update(float deltaTime)
   {
     cameraMovement -= rot.getUpVector();
   }
-  trans->setPosition(trans->getPosition() + cameraMovement * deltaTime * 10.0f);
+  trans->setPosition(trans->getPosition() +
+                      cameraMovement * Time::instance().getDeltaTime() * 10.0f);
   
   if (Input::instance().getMouseClickInputIsPressed(eeEngineSDK::Input::eMOUSE_CLICK::RIGHT_CLICK))
   {
     Quaternion rot2 = trans->getRotation();
-    rot2 = Quaternion((rot2.getEuclidean() + Vector3f(Input::instance().getMouseMovement().y * deltaTime * 1.0f, Input::instance().getMouseMovement().x * deltaTime * 1.0f, 0.0f)));
+    rot2 = Quaternion((rot2.getEuclidean() +
+                       Vector3f(Input::instance().getMouseMovement().y *
+                       Time::instance().getDeltaTime() *
+                       1.0f,
+                       Input::instance().getMouseMovement().x *
+                       Time::instance().getDeltaTime() * 1.0f,
+                       0.0f)));
     trans->setRotation(rot2);
   }
 
@@ -465,6 +570,8 @@ void BaseAppTest1::render()
     ResourceManager::instance().getResourcePixelShader("TestPS");
   SPtr<PixelShader> animPS =
     ResourceManager::instance().getResourcePixelShader("TestPSAnim");
+
+  m_rasterizer->use();
 
   for (auto& cam : activeCams)
   {
@@ -495,18 +602,26 @@ void BaseAppTest1::render()
       1u
     );
 
-    m_rasterizer->use();
 
 
+    Vector<SPtr<Actor>> rActors =
+      SceneManager::instance().getAllRenderableActorsInside(activeCams[0]);
+    int32 rActorsCount = rActors.size();
 
+    animVS->use();
+    animPS->use();
+
+    //Draw in-cam skeletal actors
+    for (int32 i = 0; i < rActorsCount; ++i)
+    {
+      if (rActors[i]->getComponent<CSkeletalMesh>())
+        GraphicsApi::instance().drawObject(rActors[i].get());
+    }
 
     vs->use();
     ps->use();
 
     //Draw in-cam actors
-    Vector<SPtr<Actor>> rActors =
-     SceneManager::instance().getAllRenderableActorsInside(activeCams[0]);
-    int32 rActorsCount = rActors.size();
     for (int32 i = 0; i < rActorsCount; ++i)
     {
       if (!rActors[i]->getComponent<CSkeletalMesh>())
@@ -514,20 +629,9 @@ void BaseAppTest1::render()
     }
 
 
-    animVS->use();
-    animPS->use();
-
-    for (int32 i = 0; i < rActorsCount; ++i)
-    {
-      if (rActors[i]->getComponent<CSkeletalMesh>())
-        GraphicsApi::instance().drawObject(rActors[i].get());
-    }
-
-
 
     //Unbind buffers
     GraphicsApi::instance().unsetRenderTargets();
-    GraphicsApi::instance().unsetTextures(1u, 0u);
     GraphicsApi::instance().unsetVSConstantBuffers(3u, 0u);
   }
 
@@ -553,7 +657,7 @@ void BaseAppTest1::render()
   {
     if (cam->isMain())
     {
-      m_SAQ->getModel()->setTexture(cam->getRenderTarget()->getAsTexture(), 1);
+      m_SAQ->getModel()->setTexture(cam->getRenderTarget()->getAsTexture(), 0);
       break;
     }
   }

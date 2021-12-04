@@ -92,25 +92,16 @@ class EE_CORE_EXPORT Model
   * Initializes the model.
   *
   * @description
-  * Initializes the model from an array of pairs of meshes and texture indices
-  * and its respective textures.
+  * Initializes the model from an array of pairs of meshes and textures.
   *
   * @param meshes
-  * The array of pair of meshes and texture indices, indicating with texture it
-  * will use.
-  * @param textures
-  * The array of textures for the model.
-  * @param boundSphere
-  * A resulting bounding sphere with the max distance to the center.
-  * @param fileName
-  * A resulting bounding box with the max points to the center.
+  * The array of pair of meshes and textures.
   *
   * @return
   * Weather it succeed or failed to initialize.
   */
   virtual bool
-  loadFromMeshes(const Vector<Pair<SPtr<Mesh>, uint8>>& meshes,
-                 const Vector<SPtr<Texture>>& textures);
+  loadFromMeshes(const Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>& meshes);
 
   /**
   * @brief
@@ -120,9 +111,9 @@ class EE_CORE_EXPORT Model
   * Returns the vector of pairs of meshes and texture indices.
   *
   * @return
-  * The vector of pairs of meshes and texture indices.
+  * The vector of pairs of meshes and texture.
   */
-  virtual Vector<Pair<SPtr<Mesh>, uint8>>
+  virtual Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>
   getMeshes();
   /**
   * @brief
@@ -147,7 +138,7 @@ class EE_CORE_EXPORT Model
   * The new array of meshes with its texture indices.
   */
   virtual void
-  setMeshes(Vector<Pair<SPtr<Mesh>, uint8>> meshes);
+  setMeshes(Vector<Pair<SPtr<Mesh>, SPtr<Texture>>> meshes);
   /**
   * @brief
   * Getter for the texture data.
@@ -160,18 +151,6 @@ class EE_CORE_EXPORT Model
   */
   virtual Vector<SPtr<Texture>>
   getTextures();
-  /**
-  * @brief
-  * Setter for the textures.
-  *
-  * @description
-  * Sets a new array of textures.
-  *
-  * @param textures
-  * The new array of textures.
-  */
-  virtual void
-  setTextures(Vector<SPtr<Texture>> textures);
   /**
   * @brief
   * Setter for a texture.
@@ -229,11 +208,7 @@ class EE_CORE_EXPORT Model
   /**
   * The vector of pairs of meshes and texture indices.
   */
-  Vector<Pair<SPtr<Mesh>, uint8>> m_meshes;
-  /**
-  * The vector of textures for the meshes.
-  */
-  Vector<SPtr<Texture>> m_textures;
+  Vector<Pair<SPtr<Mesh>, SPtr<Texture>>> m_meshes;
 
   /**
   * A sphere bounding all the model.

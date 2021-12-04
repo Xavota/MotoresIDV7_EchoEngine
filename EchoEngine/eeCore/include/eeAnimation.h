@@ -67,14 +67,16 @@ class Animation
   Animation() = default;
   ~Animation() = default;
 
+  void
+  addTotalTime(float dt);
+
   bool
   loadFromFile(String fileName);
   void
   storeNodes(aiNode* current, Node* storage);
 
   void
-  boneTransform(float TimeInSeconds,
-                int32 meshIndex,
+  boneTransform(int32 meshIndex,
                 SPtr<SkeletalMesh> skMesh);
   void
   readNodeHeirarchy(float AnimationTime,
@@ -87,15 +89,15 @@ class Animation
   findNodeAnim(aiAnimation* anim, String name);
 
   void
-  calcInterpolatedScaling(aiVector3D* Out,
+  calcInterpolatedScaling(aiVector3D& Out,
                           float AnimationTime,
                           const aiNodeAnim* pNodeAnim);
   void
-  calcInterpolatedRotation(aiQuaternion* Out,
+  calcInterpolatedRotation(aiQuaternion& Out,
                            float AnimationTime,
                            const aiNodeAnim* pNodeAnim);
   void
-  calcInterpolatedPosition(aiVector3D* Out,
+  calcInterpolatedPosition(aiVector3D& Out,
                            float AnimationTime,
                            const aiNodeAnim* pNodeAnim);
 

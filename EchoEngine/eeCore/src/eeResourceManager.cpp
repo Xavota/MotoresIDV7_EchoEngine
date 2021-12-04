@@ -15,6 +15,8 @@
 #include <assimp/postprocess.h>
 #pragma warning(pop)
 
+#include <eeMemoryManager.h>
+
 namespace eeEngineSDK
 {
 SPtr<Texture> 
@@ -76,7 +78,7 @@ ResourceManager::loadModelFromFile(const String& fileName,
   }
 
 
-  SPtr<Model> model = std::make_shared<Model>();
+  SPtr<Model> model = MemoryManager::instance().newPtr<Model>();
   if (scene->HasAnimations())
   {
     SPtr<SkeletalMesh> skMesh =
@@ -125,7 +127,7 @@ ResourceManager::loadModelFromMeshesArray(const Vector<SPtr<Mesh>>& meshes,
     return nullptr;
   }
 
-  SPtr<Model> model = std::make_shared<Model>();
+  SPtr<Model> model = MemoryManager::instance().newPtr<Model>();
   if (!model->loadFromMeshes(meshes))
   {
     return nullptr;
@@ -135,9 +137,9 @@ ResourceManager::loadModelFromMeshesArray(const Vector<SPtr<Mesh>>& meshes,
   return m_models[resourceName];
 }
 SPtr<Model>
-ResourceManager::loadModelFromMeshesArray(const Vector<Pair<SPtr<Mesh>, uint8>>& meshes,
-                                          const Vector<SPtr<Texture>>& textures,
-                                          const String resourceName)
+ResourceManager::loadModelFromMeshesArray(
+  const Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>& meshes,
+  const String resourceName)
 {
   if (m_meshes.find(resourceName) != m_meshes.end())
   {
@@ -151,8 +153,8 @@ ResourceManager::loadModelFromMeshesArray(const Vector<Pair<SPtr<Mesh>, uint8>>&
     return nullptr;
   }
 
-  SPtr<Model> model = std::make_shared<Model>();
-  if (!model->loadFromMeshes(meshes, textures))
+  SPtr<Model> model = MemoryManager::instance().newPtr<Model>();
+  if (!model->loadFromMeshes(meshes))
   {
     return nullptr;
   }
@@ -179,7 +181,7 @@ ResourceManager::loadSkeletalMeshFromFile(const String& fileName,
     return nullptr;
   }
 
-  SPtr<SkeletalMesh> skeletal = std::make_shared<SkeletalMesh>();
+  SPtr<SkeletalMesh> skeletal = MemoryManager::instance().newPtr<SkeletalMesh>();
   if (!skeletal->loadFromFile(fileName))
   {
     return nullptr;
@@ -204,7 +206,7 @@ ResourceManager::loadAnimationFromFile(const String& fileName, const String& res
     return nullptr;
   }
 
-  SPtr<Animation> anim = std::make_shared<Animation>();
+  SPtr<Animation> anim = MemoryManager::instance().newPtr<Animation>();
   if (!anim->loadFromFile(fileName))
   {
     return nullptr;

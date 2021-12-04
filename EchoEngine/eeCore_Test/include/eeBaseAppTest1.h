@@ -43,7 +43,7 @@ class BaseAppTest1 : public BaseApp
   * The time elapsed since the last frame.
   */
   virtual void
-  update(float deltaTime) override;
+  update() override;
 
   /**
   * @brief

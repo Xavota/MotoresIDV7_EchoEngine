@@ -6,6 +6,8 @@
 #include <d3dx11.h>
 #pragma warning(pop)   
 
+#include <eeMemoryManager.h>
+
 namespace eeEngineSDK {
 DX11Texture::~DX11Texture()
 {
@@ -27,8 +29,11 @@ bool DX11Texture::loadFromFile(const String fileName, SamplerStateDesc desc)
     return false;
 
 
-  m_sampler = std::make_shared<DX11SamplerState>();
+  m_sampler = MemoryManager::instance().newPtr<DX11SamplerState>();
   m_sampler->create(desc);
+
+
+  name = fileName;
 
   return true;
 }
@@ -54,7 +59,7 @@ bool DX11Texture::loadFromBuffer(void* buffer, SamplerStateDesc desc)
   if (FAILED(hr))
     return false;
 
-  m_sampler = std::make_shared<DX11SamplerState>();
+  m_sampler = MemoryManager::instance().newPtr<DX11SamplerState>();
   m_sampler->create(desc);
 
   return true;
