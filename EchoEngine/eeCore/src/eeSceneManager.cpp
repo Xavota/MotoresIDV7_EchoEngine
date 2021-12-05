@@ -20,8 +20,8 @@ SceneManager::addScene(String name)
 {
   if (m_scenes.find(name) != m_scenes.end())
   {
-    std::cout << "ERROR TRYING TO ADD SCENE" << std::endl;
-    std::cout << "Scene already with that name!" << std::endl;
+    eeOStream::print("ERROR TRYING TO ADD SCENE"); eeOStream::endl();
+    eeOStream::print("Scene already with that name!"); eeOStream::endl();
     return nullptr;
   }
 
@@ -34,8 +34,8 @@ SceneManager::getScene(String name)
 {
   if (m_scenes.find(name) == m_scenes.end())
   {
-    std::cout << "ERROR TRYING TO GET SCENE" << std::endl;
-    std::cout << "Not a scene with that name!" << std::endl;
+    eeOStream::print("ERROR TRYING TO GET SCENE"); eeOStream::endl();
+    eeOStream::print("Not a scene with that name!"); eeOStream::endl();
     return nullptr;
   }
   return m_scenes[name];

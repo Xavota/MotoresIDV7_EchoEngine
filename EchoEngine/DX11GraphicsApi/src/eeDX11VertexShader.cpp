@@ -127,7 +127,7 @@ DX11VertexShader::createInputLayout(ID3DBlob* pShaderBlob)
   pVertexShaderReflection->GetDesc(&shaderDesc);
 
   // Read input layout description from shader info
-  std::vector<D3D11_INPUT_ELEMENT_DESC> inputLayoutDesc;
+  Vector<D3D11_INPUT_ELEMENT_DESC> inputLayoutDesc;
   for (uint32 i = 0; i < shaderDesc.InputParameters; i++)
   {
     D3D11_SIGNATURE_PARAMETER_DESC paramDesc;

@@ -77,6 +77,7 @@
     </ClInclude>
     <ClInclude Include="include\eeMemoryManager.h" />
     <ClInclude Include="include\eeTime.h" />
+    <ClInclude Include="include\eeOStream.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eePlatformMath.cpp">
@@ -126,5 +127,7 @@
     </ClCompile>
     <ClCompile Include="src\eeMemoryManager.cpp" />
     <ClCompile Include="src\eeTime.cpp" />
+    <ClCompile Include="src\eeOStream.cpp" />
+    <ClCompile Include="src\eeSTDHeaders.cpp" />
   </ItemGroup>
 </Project>

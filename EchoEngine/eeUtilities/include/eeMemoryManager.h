@@ -21,9 +21,9 @@ class EE_UTILITY_EXPORT MemoryManager : public Module<MemoryManager>
   MemoryManager() = default;
   ~MemoryManager() = default;
 
-  template<class T>
+  template<class T/*, class... _Types*/>
   FORCEINLINE SPtr<T>
-  newPtr();
+  newPtr(/*_Types&&... _Args*/);
 
   template<class T, class U>
   FORCEINLINE SPtr<T>
@@ -35,11 +35,11 @@ class EE_UTILITY_EXPORT MemoryManager : public Module<MemoryManager>
 
  private:
 };
-template<class T>
+template<class T/*, class... _Types*/>
 FORCEINLINE SPtr<T>
-MemoryManager::newPtr()
+MemoryManager::newPtr(/*_Types&&... _Args*/)
 {
-  return std::make_shared<T>();
+  return std::make_shared<T>(/*_Args*/);
 }
 template<class T, class U>
 FORCEINLINE SPtr<T>

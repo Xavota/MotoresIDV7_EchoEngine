@@ -22,7 +22,7 @@ Animation::loadFromFile(String fileName)
   );
   if (!scene)
   {
-    std::cout << importer->GetErrorString() << std::endl;
+    eeOStream::print(importer->GetErrorString()); eeOStream::endl();
     return false;
   }
 

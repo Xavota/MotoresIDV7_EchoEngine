@@ -19,8 +19,7 @@ Rectangle::Rectangle(const Vector2f& A, const Vector2f& size) :
   //       && "Size can't be negative!");
   if (size.x < 0.0f || size.y < 0.0f)
   {
-    //Cout << "Size can't be negative!\n";
-    std::cout << "Size can't be negative!\n";
+    eeOStream::print("Size can't be negative!"); eeOStream::endl();
   }
 #endif
 }
@@ -37,8 +36,7 @@ Rectangle::Rectangle(const float Ax,
   //       && "Size can't be negative!");
   if (width < 0.0f || height < 0.0f)
   {
-    //Cout << "Size can't be negative!\n";
-    std::cout << "Size can't be negative!\n";
+    eeOStream::print("Size can't be negative!"); eeOStream::endl();
   }
 #endif
 }

@@ -28,7 +28,7 @@ enum E
 };
 }
 
-class EE_CORE_EXPORT Component : public std::enable_shared_from_this<Component>
+class EE_CORE_EXPORT Component : public EnableSPtrFromThis<Component>
 {
 public:
   enum { CmpType = eCOMPONENT_TYPE::NONE };

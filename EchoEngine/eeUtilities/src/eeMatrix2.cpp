@@ -13,8 +13,7 @@ Matrix2f::Matrix2f()
 
 Matrix2f::Matrix2f(float src[4])
 {
-  //Copy(m, m + 4, src);
-  std::copy(src, src + 4, m);
+  memcpy(m, src, sizeof(float) * 4);
 }
 
 
@@ -157,9 +156,7 @@ Matrix2i::Matrix2i()
 
 Matrix2i::Matrix2i(int32 src[4])
 {
-  //memcpy(m, src, sizeof(int32) * 4);
-  //Copy(m, m + 4, src);
-  std::copy(src, src + 4, m);
+  memcpy(m, src, sizeof(int32) * 4);
 }
 
 Matrix2i::Matrix2i(int32 _00, int32 _01, int32 _10, int32 _11) : m_00(_00),
@@ -285,9 +282,7 @@ Matrix2u::Matrix2u()
 
 Matrix2u::Matrix2u(uint32 src[4])
 {
-  //memcpy(m, src, sizeof(uint32) * 4);
-  //Copy(m, m + 4, src);
-  std::copy(src, src + 4, m);
+  memcpy(m, src, sizeof(uint32) * 4);
 }
 
 Matrix2u::Matrix2u(uint32 _00, uint32 _01, uint32 _10, uint32 _11) : m_00(_00),

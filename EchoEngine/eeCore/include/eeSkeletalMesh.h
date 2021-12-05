@@ -38,7 +38,7 @@ struct Bone
   Matrix4f m_finalTransformation;
 };
 
-class SkeletalMesh
+class EE_CORE_EXPORT SkeletalMesh
 {
  public:
   SkeletalMesh() = default;

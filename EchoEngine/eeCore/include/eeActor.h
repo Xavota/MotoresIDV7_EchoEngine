@@ -18,7 +18,7 @@
 #include <eeMemoryManager.h>
 
 namespace eeEngineSDK{
-class EE_CORE_EXPORT Actor : public std::enable_shared_from_this<Actor>
+class EE_CORE_EXPORT Actor : public EnableSPtrFromThis<Actor>
 {
  public:
   Actor(String name);
@@ -74,7 +74,7 @@ inline SPtr<T> Actor::getComponent()
   {
     if (m_components[i]->getType() == T::CmpType)
     {
-      return std::reinterpret_pointer_cast<T>(m_components[i]);
+      return MemoryManager::instance().reinterpretPtr<T>(m_components[i]);
     }
   }
   return nullptr;

@@ -568,6 +568,96 @@ public:
   abs(const float _val);
   /**
   * @brief
+  * Returns a number with a needed sign.
+  *
+  * @description
+  * Composes a floating point value with the magnitude of mag and the sign of
+  * sgn.
+  *
+  * @param _mag
+  * The number to apply the sign.
+  * @param _sgn
+  * The number to get the sign.
+  *
+  * @return
+  * The absolute value.
+  */
+  static FORCEINLINE float
+  copysign(float _mag, float _sgn);
+  /**
+  * @brief
+  * Returns a number with a needed sign.
+  *
+  * @description
+  * Composes a floating point value with the magnitude of mag and the sign of
+  * sgn.
+  *
+  * @param _mag
+  * The number to apply the sign.
+  * @param _sgn
+  * The number to get the sign.
+  *
+  * @return
+  * The absolute value.
+  */
+  static FORCEINLINE float
+  copysignf(float _mag, float _sgn);
+  /**
+  * @brief
+  * Returns a number with a needed sign.
+  *
+  * @description
+  * Composes a floating point value with the magnitude of mag and the sign of
+  * sgn.
+  *
+  * @param _mag
+  * The number to apply the sign.
+  * @param _sgn
+  * The number to get the sign.
+  *
+  * @return
+  * The absolute value.
+  */
+  static FORCEINLINE double
+  copysign(double _mag, double _sgn);
+  /**
+  * @brief
+  * Returns a number with a needed sign.
+  *
+  * @description
+  * Composes a floating point value with the magnitude of mag and the sign of
+  * sgn.
+  *
+  * @param _mag
+  * The number to apply the sign.
+  * @param _sgn
+  * The number to get the sign.
+  *
+  * @return
+  * The absolute value.
+  */
+  static FORCEINLINE long double
+  copysign(long double _mag, long double _sgn);
+  /**
+  * @brief
+  * Returns a number with a needed sign.
+  *
+  * @description
+  * Composes a floating point value with the magnitude of mag and the sign of
+  * sgn.
+  *
+  * @param _mag
+  * The number to apply the sign.
+  * @param _sgn
+  * The number to get the sign.
+  *
+  * @return
+  * The absolute value.
+  */
+  static FORCEINLINE long double
+  copysignl(long double _mag, long double _sgn);
+  /**
+  * @brief
   * The maximum value.
   *
   * @description
@@ -1235,6 +1325,31 @@ FORCEINLINE float
 PlatformMath::abs(const float _val)
 {
   return sqrt(_val * _val);
+}
+inline float
+PlatformMath::copysign(float _mag, float _sgn)
+{
+  return std::copysign(_mag, _sgn);
+}
+inline float
+PlatformMath::copysignf(float _mag, float _sgn)
+{
+  return std::copysignf(_mag, _sgn);
+}
+inline double
+PlatformMath::copysign(double _mag, double _sgn)
+{
+  return std::copysign(_mag, _sgn);
+}
+inline long double
+PlatformMath::copysign(long double _mag, long double _sgn)
+{
+  return std::copysign(_mag, _sgn);
+}
+inline long double
+PlatformMath::copysignl(long double _mag, long double _sgn)
+{
+  return std::copysignl(_mag, _sgn);
 }
 inline float PlatformMath::max(const float _val1, const float _val2)
 {

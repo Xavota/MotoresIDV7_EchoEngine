@@ -132,7 +132,7 @@ Mesh::loadFromArray(const Vector<V>& vertices,
 {
   if (vertices.empty() || indices.empty())
   {
-    std::cout << "Empty info loading mesh" << std::endl;
+    eeOStream::print("Empty info loading mesh"); eeOStream::endl();
     return false;
   }
 

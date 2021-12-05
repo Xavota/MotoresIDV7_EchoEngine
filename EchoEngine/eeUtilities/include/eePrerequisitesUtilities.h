@@ -4,6 +4,9 @@
 #include "eePlatformTypes.h"
 #include "eeSTDHeaders.h"
 
+#include "eeMemoryManager.h"
+#include "eeOStream.h"
+
 namespace eeEngineSDK {
 class Vector2f;
 class Vector2i;

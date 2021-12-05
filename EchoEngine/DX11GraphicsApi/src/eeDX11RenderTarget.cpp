@@ -72,7 +72,7 @@ DX11RenderTarget::createAsIOTexture()
   samDesc.minLOD = 0;
   samDesc.maxLOD = D3D11_FLOAT32_MAX;
 
-  m_inTexture = std::make_shared<DX11Texture>();
+  m_inTexture = MemoryManager::instance().newPtr<DX11Texture>();
   if (m_inTexture->loadFromBuffer(reinterpret_cast<void*>(Tex), samDesc))
   {
     DX11SAFE_RELEASE(Tex);
@@ -99,7 +99,7 @@ DX11RenderTarget::set(SPtr<DepthStencil> stencil)
   if (stencil)
   {
     SPtr<DX11DepthStencil> ds =
-    std::reinterpret_pointer_cast<DX11DepthStencil>(stencil);
+      MemoryManager::instance().reinterpretPtr<DX11DepthStencil>(stencil);
     depthStencilView = ds->getResource();
   }
 

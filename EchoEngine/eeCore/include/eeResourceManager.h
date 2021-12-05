@@ -395,7 +395,7 @@ ResourceManager::loadMeshFromVertexArray(const Vector<V>& vertices,
 {
   if (m_meshes.find(resourceName) != m_meshes.end())
   {
-    std::cout << "Resource already with this name" << std::endl;
+    eeOStream::print("Resource already with this name"); eeOStream::endl();
     return nullptr;
   }
 

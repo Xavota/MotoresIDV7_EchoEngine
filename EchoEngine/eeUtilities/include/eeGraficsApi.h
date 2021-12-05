@@ -393,7 +393,10 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   * The pointer to a texture depending on the api.
   */
   FORCEINLINE virtual SPtr<Texture>
-  createTexturePtr() const { return std::make_shared<Texture>(); }
+  createTexturePtr() const
+  {
+    return MemoryManager::instance().newPtr<Texture>();
+  }
 
   /**
   * @brief
@@ -406,7 +409,10 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   * The pointer to a vertex shader depending on the api.
   */
   FORCEINLINE virtual SPtr<VertexShader>
-  createVertexShaderPtr() const { return std::make_shared<VertexShader>(); }
+  createVertexShaderPtr() const
+  {
+    return MemoryManager::instance().newPtr<VertexShader>();
+  }
 
   /**
   * @brief
@@ -419,7 +425,10 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   * The pointer to a pixel shader depending on the api.
   */
   FORCEINLINE virtual SPtr<PixelShader>
-  createPixelShaderPtr() const { return std::make_shared<PixelShader>(); }
+  createPixelShaderPtr() const
+  {
+    return MemoryManager::instance().newPtr<PixelShader>();
+  }
 
   /**
   * @brief
@@ -432,7 +441,10 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   * The pointer to a vertex buffer depending on the api.
   */
   FORCEINLINE virtual SPtr<VertexBuffer>
-  createVertexBufferPtr() const { return std::make_shared<VertexBuffer>(); }
+  createVertexBufferPtr() const
+  {
+    return MemoryManager::instance().newPtr<VertexBuffer>();
+  }
 
   /**
   * @brief
@@ -445,7 +457,10 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   * The pointer to a index buffer depending on the api.
   */
   FORCEINLINE virtual SPtr<IndexBuffer>
-  createIndexBufferPtr() const { return std::make_shared<IndexBuffer>(); }
+  createIndexBufferPtr() const
+  {
+    return MemoryManager::instance().newPtr<IndexBuffer>();
+  }
 
   /**
   * @brief
@@ -458,7 +473,10 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   * The pointer to a vertex constant depending on the api.
   */
   FORCEINLINE virtual SPtr<ConstantBuffer>
-  createConstantBufferPtr() const { return std::make_shared<ConstantBuffer>(); }
+  createConstantBufferPtr() const
+  {
+    return MemoryManager::instance().newPtr<ConstantBuffer>();
+  }
 
   /**
   * @brief
@@ -471,7 +489,10 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   * The pointer to a render target depending on the api.
   */
   FORCEINLINE virtual SPtr<RenderTarget>
-  createRenderTragetPtr() const { return std::make_shared<RenderTarget>(); }
+  createRenderTragetPtr() const
+  {
+    return MemoryManager::instance().newPtr<RenderTarget>();
+  }
 
   /**
   * @brief
@@ -484,7 +505,10 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   * The pointer to a depth stencil depending on the api.
   */
   FORCEINLINE virtual SPtr<DepthStencil>
-  createDepthStencilPtr() const { return std::make_shared<DepthStencil>(); }
+  createDepthStencilPtr() const
+  {
+    return MemoryManager::instance().newPtr<DepthStencil>();
+  }
 
   /**
   * @brief
@@ -497,7 +521,10 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   * The pointer to a rasterizer state depending on the api.
   */
   FORCEINLINE virtual SPtr<RasterizerState>
-  createRasterizerStatePtr() const { return std::make_shared<RasterizerState>(); }
+  createRasterizerStatePtr() const
+  {
+    return MemoryManager::instance().newPtr<RasterizerState>();
+  }
 
 
 

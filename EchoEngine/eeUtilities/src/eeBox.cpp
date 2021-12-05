@@ -18,8 +18,7 @@ BoxAAB::BoxAAB(const Vector3f A, const Vector3f size) : m_a(A), m_size(size)
   //       && "Size can't be negative!");
   if (size.x < 0.0f || size.y < 0.0f || size.z < 0.0f)
   {
-    //Cout << "Size can't be negative!\n";
-    std::cout << "Size can't be negative!\n";
+    eeOStream::print("Size can't be negative!"); eeOStream::endl();
   }
 #endif
 }

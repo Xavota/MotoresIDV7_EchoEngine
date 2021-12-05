@@ -66,7 +66,7 @@ Quaternion::getEuclidean()
   // pitch (y-axis rotation)
   float sinp = 2 * (w * y - z * x);
   if (Math::abs(sinp) >= 1)
-    angles.y = std::copysign(Math::kPI / 2, sinp); // use 90 degrees if out of range
+    angles.y = Math::copysign(Math::kPI / 2, sinp); // use 90 degrees if out of range
   else
     angles.y = Math::asin(sinp);
 
@@ -158,26 +158,19 @@ Vector3f Quaternion::getUpVector()
 
 String Quaternion::toString() const
 {
-  return "{ " + std::to_string(x) + "i, "
-              + std::to_string(y) + "j, "
-              + std::to_string(z) + "k, "
-              + std::to_string(w) + " }";
+  return "{ " + eeToString(x) + "i, "
+              + eeToString(y) + "j, "
+              + eeToString(z) + "k, "
+              + eeToString(w) + " }";
 }
 
 Quaternion
 Quaternion::operator*(const Quaternion& other)
 {
-  //std::cout << "this: " << this->toString() << std::endl;
-  //std::cout << "other: " << other.toString() << std::endl;
   float nx = this->w * other.w - this->x * other.x - this->y * other.y - this->z * other.z;
-  //std::cout << "this->w * other.w - this->x * other.x - this->y * other.y - this->z * other.z: "
-  //<< this->w << " * " << other.w << " - " << this->x << " * " << other.x << " - " << this->y << " * " << other.y << " - " << this->z << " * " << other.z << ": " << nx << std::endl;
   float ny = this->w * other.x + this->x * other.w + this->y * other.z - this->z * other.y;
-  //std::cout << "ny: " << ny << std::endl;
   float nz = this->w * other.y - this->x * other.z + this->y * other.w + this->z * other.x;
-  //std::cout << "nz: " << nz << std::endl;
   float nw = this->w * other.z + this->x * other.y - this->y * other.x + this->z * other.w;
-  //std::cout << "nw: " << nw << std::endl;
   Quaternion r(
     this->w * other.w - this->x * other.x - this->y * other.y - this->z * other.z,
     this->w * other.x + this->x * other.w + this->y * other.z - this->z * other.y,

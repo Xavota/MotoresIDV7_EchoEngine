@@ -87,9 +87,9 @@ Vector3f::truncate(float newSize)
 String
 Vector3f::toString()
 {
-  return "{ x:" + std::to_string(x) + ", y:"
-                + std::to_string(y) + ", z:"
-                + std::to_string(z) + " }";
+  return "{ x:" + eeToString(x) + ", y:"
+                + eeToString(y) + ", z:"
+                + eeToString(z) + " }";
 }
 Vector3f
 Vector3f::operator+(const Vector3f& other) const

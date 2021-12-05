@@ -147,9 +147,7 @@ Matrix4f::Matrix4f()
 }
 Matrix4f::Matrix4f(float src[16])
 {
-  //memcpy(m, src, sizeof(float) * 16);
-  //Copy(m, m + 16, src);
-  std::copy(src, src + 16, m);
+  memcpy(m, src, sizeof(float) * 16);
 }
 Matrix4f::Matrix4f(float _00, float _01, float _02, float _03,
                    float _10, float _11, float _12, float _13,
@@ -471,9 +469,7 @@ Matrix4i::Matrix4i()
 }
 Matrix4i::Matrix4i(int32 src[16])
 {
-  //memcpy(m, src, sizeof(int32) * 16);
-  //Copy(m, m + 16, src);
-  std::copy(src, src + 16, m);
+  memcpy(m, src, sizeof(int32) * 16);
 }
 Matrix4i::Matrix4i(int32 _00, int32 _01, int32 _02, int32 _03,
                    int32 _10, int32 _11, int32 _12, int32 _13,
@@ -727,9 +723,7 @@ Matrix4u::Matrix4u()
 }
 Matrix4u::Matrix4u(uint32 src[16])
 {
-  //memcpy(m, src, sizeof(uint32) * 16);
-  //Copy(m, m + 16, src);
-  std::copy(src, src + 16, m);
+  memcpy(m, src, sizeof(uint32) * 16);
 }
 Matrix4u::Matrix4u(uint32 _00, uint32 _01, uint32 _02, uint32 _03,
                    uint32 _10, uint32 _11, uint32 _12, uint32 _13,

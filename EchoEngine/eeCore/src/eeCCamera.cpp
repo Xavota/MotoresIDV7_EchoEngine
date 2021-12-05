@@ -49,7 +49,7 @@ CCamera::update(SPtr<Actor> actor)
 
   if (m_active)
     GraphicsApi::instance().addActiveCamera(
-                   std::reinterpret_pointer_cast<CCamera>(shared_from_this()));
+         MemoryManager::instance().reinterpretPtr<CCamera>(shared_from_this()));
 }
 void
 CCamera::setEyePosition(Vector3f pos)

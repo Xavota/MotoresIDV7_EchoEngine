@@ -12,7 +12,7 @@ Object::loadFromFile(const String& fileName,
 {
   // Load from resource manager
 
-  m_model = std::make_shared<Model>();
+  m_model = MemoryManager::instance().newPtr<Model>();
   if (!m_model->loadFromFile(fileName))
   {
     return false; 
@@ -38,7 +38,7 @@ Object::loadFromModel(SPtr<Model> model,
 {
   if (!model)
   {
-    std::cout << "There is no model here..." << std::endl;
+    eeOStream::print("There is no model here..."); eeOStream::endl();
     return false;
   }
 

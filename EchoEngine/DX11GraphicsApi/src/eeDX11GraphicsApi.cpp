@@ -124,8 +124,6 @@ DX11GraphicsApi::~DX11GraphicsApi()
 bool
 DX11GraphicsApi::initialize()
 {
-  //std::cout << "Initialized form DX11" << std::endl;
-
   if (!GraphicsApi::initialize())
   {
     return false;
@@ -265,13 +263,13 @@ DX11GraphicsApi::setRenderTargets(Vector<SPtr<RenderTarget>> rtvs,
   SPtr<DX11DepthStencil> ds = nullptr;
   if (dsv)
   {
-    ds = std::reinterpret_pointer_cast<DX11DepthStencil>(dsv);
+    ds = MemoryManager::instance().reinterpretPtr<DX11DepthStencil>(dsv);
   }
 
   for (SPtr<RenderTarget> r : rtvs)
   {
     SPtr<DX11RenderTarget> rt = 
-    std::reinterpret_pointer_cast<DX11RenderTarget>(r);
+      MemoryManager::instance().reinterpretPtr<DX11RenderTarget>(r);
 
     if (rt)
     {
@@ -297,7 +295,8 @@ void DX11GraphicsApi::setTextures(Vector<SPtr<Texture>> textures,
 
   for (SPtr<Texture> tex : textures)
   {
-    SPtr<DX11Texture> t = std::reinterpret_pointer_cast<DX11Texture>(tex);
+    SPtr<DX11Texture> t =
+    MemoryManager::instance().reinterpretPtr<DX11Texture>(tex);
 
     if (t)
     {
@@ -335,7 +334,7 @@ void DX11GraphicsApi::setVSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
   for (SPtr<ConstantBuffer> buff : buffers)
   {
     SPtr<DX11ConstantBuffer> b =
-    std::reinterpret_pointer_cast<DX11ConstantBuffer>(buff);
+      MemoryManager::instance().reinterpretPtr<DX11ConstantBuffer>(buff);
 
     if (b)
     {
@@ -373,7 +372,7 @@ void DX11GraphicsApi::setPSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
   for (SPtr<ConstantBuffer> buff : buffers)
   {
     SPtr<DX11ConstantBuffer> b =
-    std::reinterpret_pointer_cast<DX11ConstantBuffer>(buff);
+      MemoryManager::instance().reinterpretPtr<DX11ConstantBuffer>(buff);
 
     if (b)
     {
@@ -413,7 +412,7 @@ void DX11GraphicsApi::setVertexBuffers(Vector<SPtr<VertexBuffer>> buffers,
   for (SPtr<VertexBuffer> buff : buffers)
   {
     SPtr<DX11VertexBuffer> b =
-      std::reinterpret_pointer_cast<DX11VertexBuffer>(buff);
+      MemoryManager::instance().reinterpretPtr<DX11VertexBuffer>(buff);
 
     if (b)
     {
@@ -461,7 +460,7 @@ void DX11GraphicsApi::setIndexBuffer(SPtr<IndexBuffer> buffer, uint32 offset)
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   SPtr<DX11IndexBuffer> buf =
-  std::reinterpret_pointer_cast<DX11IndexBuffer>(buffer);
+    MemoryManager::instance().reinterpretPtr<DX11IndexBuffer>(buffer);
 
   if (buffer->getBatchSize() == 2)
   {

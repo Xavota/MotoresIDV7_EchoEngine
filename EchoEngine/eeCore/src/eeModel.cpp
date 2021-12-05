@@ -27,7 +27,7 @@ Model::loadFromFile(const String& fileName)
   );
   if (!scene)
   {
-    std::cout << importer->GetErrorString() << std::endl;
+    eeOStream::print(importer->GetErrorString()); eeOStream::endl();
     return false;
   }
 
@@ -107,7 +107,7 @@ Model::loadFromFile(const String& fileName)
         }
         else
         {
-          std::vector<string> completePathDiffuse(1);
+          Vector<string> completePathDiffuse(1);
           completePathDiffuse[0].append(fileName.c_str());
           completePathDiffuse[0].append("/../../Textures/M_");
           completePathDiffuse[0].append(name.c_str());
@@ -151,7 +151,7 @@ Model::loadFromFile(const String& fileName)
     /*  }
       else
       {
-        std::vector<string> completePathDiffuse(1);
+        Vector<string> completePathDiffuse(1);
         completePathDiffuse[0].append(fileName.c_str());
         completePathDiffuse[0].append("/../../Textures/M_");
         completePathDiffuse[0].append(name.c_str());
@@ -393,7 +393,7 @@ Model::loadFromFile(const String& fileName)
         (
           vertices,
           indices,
-          "Mesh_" + name + std::to_string(m_meshes.size())
+          "Mesh_" + name + eeToString(m_meshes.size())
         ),
         ResourceManager::instance().getResourceTexture("Default")
       )
@@ -425,7 +425,7 @@ bool Model::loadFromFile(const String& fileName, SPtr<const SkeletalMesh> skMesh
   );
   if (!scene)
   {
-    std::cout << importer->GetErrorString() << std::endl;
+    eeOStream::print(importer->GetErrorString()); eeOStream::endl();
     return false;
   }
 
@@ -505,7 +505,7 @@ bool Model::loadFromFile(const String& fileName, SPtr<const SkeletalMesh> skMesh
         }
         else
         {
-          std::vector<string> completePathDiffuse(1);
+          Vector<string> completePathDiffuse(1);
           completePathDiffuse[0].append(fileName.c_str());
           completePathDiffuse[0].append("/../../Textures/M_");
           completePathDiffuse[0].append(name.c_str());
@@ -549,7 +549,7 @@ bool Model::loadFromFile(const String& fileName, SPtr<const SkeletalMesh> skMesh
     /*  }
       else
       {
-        std::vector<string> completePathDiffuse(1);
+        Vector<string> completePathDiffuse(1);
         completePathDiffuse[0].append(fileName.c_str());
         completePathDiffuse[0].append("/../../Textures/M_");
         completePathDiffuse[0].append(name.c_str());
@@ -806,7 +806,7 @@ bool Model::loadFromFile(const String& fileName, SPtr<const SkeletalMesh> skMesh
 
           if (!yes)
           {
-            std::cout << "No more bone space" << std::endl;
+            eeOStream::print("No more bone space"); eeOStream::endl();
           }
         }
       }
@@ -827,7 +827,7 @@ bool Model::loadFromFile(const String& fileName, SPtr<const SkeletalMesh> skMesh
         (
           vertices,
           indices,
-          "Mesh_" + name + std::to_string(m_meshes.size())
+          "Mesh_" + name + eeToString(m_meshes.size())
         ),
         ResourceManager::instance().getResourceTexture("Default")
       )
@@ -850,7 +850,7 @@ Model::loadFromMeshes(Vector<SPtr<Mesh>> meshes)
 {
   if (meshes.empty())
   {
-    std::cout << "Empty info loading model" << std::endl;
+    eeOStream::print("Empty info loading model"); eeOStream::endl();
     return false;
   }
 
@@ -872,7 +872,7 @@ Model::loadFromMeshes(const Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>& meshes)
 {
   if (meshes.empty())
   {
-    std::cout << "Empty info loading model" << std::endl;
+    eeOStream::print("Empty info loading model"); eeOStream::endl();
     return false;
   }
 
@@ -887,7 +887,7 @@ void Model::setMeshes(Vector<SPtr<Mesh>> meshes)
 {
   if (meshes.empty())
   {
-    std::cout << "Empty info loading model" << std::endl;
+    eeOStream::print("Empty info loading model"); eeOStream::endl();
     return;
   }
 
@@ -908,7 +908,7 @@ void Model::setMeshes(Vector<Pair<SPtr<Mesh>, SPtr<Texture>>> meshes)
 {
   if (meshes.empty())
   {
-    std::cout << "Empty info loading model" << std::endl;
+    eeOStream::print("Empty info loading model"); eeOStream::endl();
     return;
   }
 

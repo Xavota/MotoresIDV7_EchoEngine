@@ -387,7 +387,10 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
   * The pointer to a texture depending on the api.
   */
   FORCEINLINE SPtr<Texture>
-  createTexturePtr() const override { return std::make_shared<DX11Texture>(); }
+  createTexturePtr() const override
+  {
+    return MemoryManager::instance().newPtr<DX11Texture>();
+  }
 
   /**
   * @brief
@@ -400,7 +403,10 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
   * The pointer to a vertex shader depending on the api.
   */
   FORCEINLINE virtual SPtr<VertexShader>
-  createVertexShaderPtr() const override { return std::make_shared<DX11VertexShader>(); }
+  createVertexShaderPtr() const override
+  {
+    return MemoryManager::instance().newPtr<DX11VertexShader>();
+  }
 
   /**
   * @brief
@@ -413,7 +419,10 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
   * The pointer to a pixel shader depending on the api.
   */
   FORCEINLINE virtual SPtr<PixelShader>
-  createPixelShaderPtr() const override { return std::make_shared<DX11PixelShader>(); }
+  createPixelShaderPtr() const override
+  {
+    return MemoryManager::instance().newPtr<DX11PixelShader>();
+  }
 
   /**
   * @brief
@@ -426,7 +435,10 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
   * The pointer to a vertex buffer depending on the api.
   */
   FORCEINLINE virtual SPtr<VertexBuffer>
-  createVertexBufferPtr() const override { return std::make_shared<DX11VertexBuffer>(); }
+  createVertexBufferPtr() const override
+  {
+    return MemoryManager::instance().newPtr<DX11VertexBuffer>();
+  }
 
   /**
   * @brief
@@ -439,7 +451,10 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
   * The pointer to a index buffer depending on the api.
   */
   FORCEINLINE virtual SPtr<IndexBuffer>
-  createIndexBufferPtr() const override { return std::make_shared<DX11IndexBuffer>(); }
+  createIndexBufferPtr() const override 
+  {
+    return MemoryManager::instance().newPtr<DX11IndexBuffer>();
+  }
 
   /**
   * @brief
@@ -452,7 +467,10 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
   * The pointer to a vertex constant depending on the api.
   */
   FORCEINLINE virtual SPtr<ConstantBuffer>
-  createConstantBufferPtr() const override { return std::make_shared<DX11ConstantBuffer>(); }
+  createConstantBufferPtr() const override
+  {
+    return MemoryManager::instance().newPtr<DX11ConstantBuffer>();
+  }
 
   /**
   * @brief
@@ -465,7 +483,10 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
   * The pointer to a render target depending on the api.
   */
   FORCEINLINE virtual SPtr<RenderTarget>
-  createRenderTragetPtr() const { return std::make_shared<DX11RenderTarget>(); }
+  createRenderTragetPtr() const override
+  {
+    return MemoryManager::instance().newPtr<DX11RenderTarget>();
+  }
 
   /**
   * @brief
@@ -478,7 +499,10 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
   * The pointer to a depth stencil depending on the api.
   */
   FORCEINLINE virtual SPtr<DepthStencil>
-  createDepthStencilPtr() const { return std::make_shared<DX11DepthStencil>(); }
+  createDepthStencilPtr() const override
+  {
+    return MemoryManager::instance().newPtr<DX11DepthStencil>();
+  }
 
   /**
   * @brief
@@ -491,7 +515,10 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
   * The pointer to a rasterizer state depending on the api.
   */
   FORCEINLINE virtual SPtr<RasterizerState>
-  createRasterizerStatePtr() const { return std::make_shared<DX11RasterizerState>(); }
+  createRasterizerStatePtr() const override
+  {
+    return MemoryManager::instance().newPtr<DX11RasterizerState>();
+  }
 
 
 

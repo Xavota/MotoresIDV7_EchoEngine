@@ -124,6 +124,6 @@ void CTransform::attatchTo(SPtr<CTransform> transformParent)
   m_parent = transformParent;
   m_childIndex = m_parent->m_childs.size();
   m_parent->m_childs.push_back(
-                 std::reinterpret_pointer_cast<CTransform>(shared_from_this()));
+      MemoryManager::instance().reinterpretPtr<CTransform>(shared_from_this()));
 }
 }

@@ -28,11 +28,12 @@ Scene::addActor(String name)
 {
   if (m_actors.find(name) != m_actors.end())
   {
-    std::cout << "ERROR TRYING TO ADD ACTOR TO SCENE" << std::endl;
-    std::cout << "Actor already with that name!" << std::endl;
+    eeOStream::print("ERROR TRYING TO ADD ACTOR TO SCENE"); eeOStream::endl();
+    eeOStream::print("Actor already with that name!"); eeOStream::endl();
     return nullptr;
   }
 
+  //m_actors[name] = MemoryManager::instance().newPtr<Actor>(name);
   m_actors[name] = std::make_shared<Actor>(name);
   m_actors[name]->init();
   return m_actors[name];
@@ -42,8 +43,8 @@ Scene::getActor(String name)
 {
   if (m_actors.find(name) == m_actors.end())
   {
-    std::cout << "ERROR TRYING TO GET ACTOR" << std::endl;
-    std::cout << "Not an actor with that name!" << std::endl;
+    eeOStream::print("ERROR TRYING TO GET ACTOR"); eeOStream::endl();
+    eeOStream::print("Not an actor with that name!"); eeOStream::endl();
     return nullptr;
   }
   return m_actors[name];
