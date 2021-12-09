@@ -4,7 +4,7 @@
  * @author Diego Castellanos
  * @date 07/10/21
  * @brief
- * The model to be renderized, contains meshes and textures.
+ * The model to be rendered, contains meshes and textures.
  *
  * @bug Not bug Known.
  */
@@ -19,7 +19,7 @@
 namespace eeEngineSDK {
 /**
  * @brief
- * The model to be renderized, contains meshes and textures.
+ * The model to be rendered, contains meshes and textures.
  */
 class EE_CORE_EXPORT Model
 {
@@ -166,12 +166,40 @@ class EE_CORE_EXPORT Model
   virtual void
   setTexture(SPtr<Texture> texture, int32 index);
 
+  /**
+  * @brief
+  * Gets the bounding sphere for the model.
+  *
+  * @description
+  * Returns a bounding sphere, with a radius of the furthest vertex to the
+  * origin.
+  *
+  * @return
+  * A bounding sphere, with a radius of the furthest vertex to the origin.
+  */
   const Sphere&
   getBoundingSphere();
+  /**
+  * @brief
+  * Gets the bounding box for the model.
+  *
+  * @description
+  * Returns a bounding box, with corners on the furthest x, y, z coordinates.
+  *
+  * @return
+  * A bounding box, with corners on the furthest x, y, z coordinates.
+  */
   const BoxAAB&
   getBoundingBox();
 
 
+  /**
+  * @brief
+  * Initializes the primitive models.
+  *
+  * @description
+  * Initializes the primitive pre-charged models.
+  */
   static void
   initPrimitives();
 

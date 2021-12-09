@@ -1,3 +1,14 @@
+/************************************************************************/
+/**
+ * @file eePrerequisitesCore.h
+ * @author Diego Castellanos
+ * @date 01/10/21
+ * @brief The prerequisites for all the Core module.
+ *
+ * @bug Not bug Known.
+ */
+ /************************************************************************/
+
 #pragma once
 
 #include <eePrerequisitesUtilities.h>
@@ -38,6 +49,9 @@
 #endif
 
 
+
+#define EE_NO_EXIST_RETURN(x) if (!x) return;
+#define EE_NO_EXIST_BREAK(x) if (!x) break;
 
 
 

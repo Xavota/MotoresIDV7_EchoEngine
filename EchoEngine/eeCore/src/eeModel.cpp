@@ -27,7 +27,7 @@ Model::loadFromFile(const String& fileName)
   );
   if (!scene)
   {
-    eeOStream::print(importer->GetErrorString()); eeOStream::endl();
+    eeOut << importer->GetErrorString() << eeEndl;
     return false;
   }
 
@@ -425,7 +425,7 @@ bool Model::loadFromFile(const String& fileName, SPtr<const SkeletalMesh> skMesh
   );
   if (!scene)
   {
-    eeOStream::print(importer->GetErrorString()); eeOStream::endl();
+    eeOut << importer->GetErrorString() << eeEndl;
     return false;
   }
 
@@ -788,12 +788,12 @@ bool Model::loadFromFile(const String& fileName, SPtr<const SkeletalMesh> skMesh
 
     if (!bones.empty())
     {
-      for (int j = 0; j < bones.size(); j++)
+      for (uint32 j = 0; j < bones.size(); j++)
       {
-        for (int k = 0; k < bones[j].m_vertexWeights.size(); k++)
+        for (uint32 k = 0; k < bones[j].m_vertexWeights.size(); k++)
         {
           bool yes = false;
-          for (int l = 0; l < 16; l++)
+          for (uint32 l = 0; l < 16; l++)
           {
             if (vertices[bones[j].m_vertexWeights[k].m_vertexID].boneWeights[l] == 0.0f)
             {
@@ -806,14 +806,14 @@ bool Model::loadFromFile(const String& fileName, SPtr<const SkeletalMesh> skMesh
 
           if (!yes)
           {
-            eeOStream::print("No more bone space"); eeOStream::endl();
+            eeOut << "No more bone space" << eeEndl;
           }
         }
       }
     }
     else
     {
-      for (int j = 0; j < vertices.size(); j++)
+      for (uint32 j = 0; j < vertices.size(); j++)
       {
         vertices[j].boneIndices[0] = -1;
       }
@@ -850,7 +850,7 @@ Model::loadFromMeshes(Vector<SPtr<Mesh>> meshes)
 {
   if (meshes.empty())
   {
-    eeOStream::print("Empty info loading model"); eeOStream::endl();
+    eeOut << "Empty info loading model" << eeEndl;
     return false;
   }
 
@@ -872,7 +872,7 @@ Model::loadFromMeshes(const Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>& meshes)
 {
   if (meshes.empty())
   {
-    eeOStream::print("Empty info loading model"); eeOStream::endl();
+    eeOut << "Empty info loading model" << eeEndl;
     return false;
   }
 
@@ -887,7 +887,7 @@ void Model::setMeshes(Vector<SPtr<Mesh>> meshes)
 {
   if (meshes.empty())
   {
-    eeOStream::print("Empty info loading model"); eeOStream::endl();
+    eeOut << "Empty info loading model" << eeEndl;
     return;
   }
 
@@ -908,7 +908,7 @@ void Model::setMeshes(Vector<Pair<SPtr<Mesh>, SPtr<Texture>>> meshes)
 {
   if (meshes.empty())
   {
-    eeOStream::print("Empty info loading model"); eeOStream::endl();
+    eeOut << "Empty info loading model" << eeEndl;
     return;
   }
 
@@ -925,7 +925,7 @@ Vector<SPtr<Texture>> Model::getTextures()
 }
 void Model::setTexture(SPtr<Texture> texture, int32 index)
 {
-  if (m_meshes.size() > index)
+  if (static_cast<int32>(m_meshes.size()) > index)
   {
     m_meshes[index].second = texture;
   }

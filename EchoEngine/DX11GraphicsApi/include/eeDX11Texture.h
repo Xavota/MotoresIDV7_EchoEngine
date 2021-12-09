@@ -74,6 +74,16 @@ public:
   bool
   loadFromBuffer(void* buffer, SamplerStateDesc desc) override;
 
+  /**
+  * @brief
+  * Gets the resource data.
+  *
+  * @description
+  * Returns the low level graphic api data of the resource.
+  *
+  * @return
+  * Low level graphic api data of the resource.
+  */
   ID3D11ShaderResourceView*
   getResource() { return m_tex; }
 

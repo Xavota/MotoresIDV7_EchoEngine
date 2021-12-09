@@ -1,10 +1,10 @@
 /************************************************************************/
 /**
- * @file eeInput.h
+ * @file eeScene.h
  * @author Diego Castellanos
  * @date 24/11/21
  * @brief
- * The input manager for the api.
+ * The scene, contains the actors graph.
  *
  * @bug Not bug Known.
  */
@@ -14,40 +14,166 @@
 #include "eePrerequisitesCore.h"
 
 namespace eeEngineSDK{
+/**
+* @brief
+* The scene, contains the actors graph.
+*/
 class EE_CORE_EXPORT Scene
 {
  public:
+  /**
+  * @brief
+  * Default constructor.
+  */
   Scene() = default;
+  /**
+  * @brief
+  * Default destructor.
+  */
   ~Scene() = default;
 
+  /**
+  * @brief
+  * Gets all actors of the scene inside the camera.
+  *
+  * @description
+  * Gets all actors of the scene that are inside the frustum of the camera and
+  * have a model and a render component.
+  *
+  * @param camera
+  * The camera to check the frustum.
+  *
+  * @return
+  * All actors inside.
+  */
   Vector<SPtr<Actor>>
   getAllRenderableActorsInside(SPtr<CCamera> camera);
 
+  /**
+  * @brief
+  * Adds a new actor to the scene.
+  *
+  * @description
+  * Adds a new actor to the scene and initializes it, with a name to identify
+  * it.
+  *
+  * @param name
+  * The name to identify the actor.
+  *
+  * @return
+  * The ptr to the new actor.
+  */
   SPtr<Actor>
   addActor(String name);
+  /**
+  * @brief
+  * Gets an actor by its name.
+  *
+  * @description
+  * Returns an actor by its identifying name.
+  *
+  * @param name
+  * The name of the looking actor.
+  *
+  * @return
+  * The looked actor, nullptr if couldn't found it.
+  */
   SPtr<Actor>
   getActor(String name);
 
+  /**
+  * @brief
+  * Initializes the scene.
+  *
+  * @description
+  * Initializes everything the scene needs.
+  */
   void
   init();
 
+  /**
+  * @brief
+  * Updates the scene.
+  *
+  * @description
+  * Updates the scene and all the active actors.
+  */
   void
   update();
 
+  /**
+  * @brief
+  * Releases the memory.
+  *
+  * @description
+  * Cleans all the allocated memory.
+  */
+  void
+  release();
+
+  /**
+  * @brief
+  * Gets if the scene is active.
+  *
+  * @description
+  * Returns true if the scene is active to be updated and rendered.
+  *
+  * @return
+  * True if the scene is active to be updated and rendered.
+  */
   bool
   isActive();
+  /**
+  * @brief
+  * Sets if the scene is active.
+  *
+  * @description
+  * Sets true if the scene is active to be updated and rendered.
+  *
+  * @param active
+  * True if the scene is active to be updated and rendered.
+  */
   void
   setActive(bool active);
-  
+
+  /**
+  * @brief
+  * Gets if the scene is off active.
+  *
+  * @description
+  * Returns true if the scene is active to be updated but not rendered.
+  *
+  * @return
+  * True if the scene is active to be updated but not rendered.
+  */
   bool
   isOffActive();
+  /**
+  * @brief
+  * Sets if the scene is off active.
+  *
+  * @description
+  * Sets true if the scene is active to be updated but not rendered.
+  *
+  * @param active
+  * True if the scene is active to be updated but not rendered.
+  */
   void
   setOffActive(bool active);
 
  private:
+  /**
+  * The actors in the scene.
+  */
   Map<String, SPtr<Actor>> m_actors;
 
+  /**
+  * If the scene is active to be updated and rendered.
+  */
   bool m_active = false;
+  /**
+  * If the scene is active to be updated but not rendered.
+  */
   bool m_offActive = false;
 };
 }

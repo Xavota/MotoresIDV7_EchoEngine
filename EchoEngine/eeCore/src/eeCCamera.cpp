@@ -34,13 +34,11 @@ CCamera::init(CameraDesc desc)
   m_depthStencil->create(1280, 720);
 }
 void
-CCamera::update(SPtr<Actor> actor)
+CCamera::update()
 {
-  if (!actor)
-    return;
-  SPtr<CTransform> transform = actor->getComponent<CTransform>();
-  if (!transform)
-    return;
+  EE_NO_EXIST_RETURN(m_actor);
+
+  SPtr<CTransform> transform = m_actor->getTransform();
 
   m_eyePos = transform->getPosition();
   m_lookAt = m_eyePos + transform->getRotation().getFrontVector();
@@ -51,44 +49,15 @@ CCamera::update(SPtr<Actor> actor)
     GraphicsApi::instance().addActiveCamera(
          MemoryManager::instance().reinterpretPtr<CCamera>(shared_from_this()));
 }
-void
-CCamera::setEyePosition(Vector3f pos)
-{
-  m_eyePos = pos;
-
-  m_dirtyView = true;
-}
 Vector3f
 CCamera::getEyePosition()
 {
   return m_eyePos;
 }
-void
-CCamera::setLookAtPosition(Vector3f pos)
-{
-  m_lookAt = pos;
-
-  m_dirtyView = true;
-}
 Vector3f
 CCamera::getLookAtPosition()
 {
   return m_lookAt;
-}
-void CCamera::rotateCamera(Quaternion rot)
-{
-  m_lookAt -= m_eyePos;
-  
-  m_lookAt *= Matrix3f::rotationMatrix(rot.getEuclidean());
-  
-  m_lookAt += m_eyePos;
-}
-void
-CCamera::setUpVector(Vector3f pos)
-{
-  m_upVector = pos;
-
-  m_dirtyView = true;
 }
 Vector3f
 CCamera::getUpVector()
@@ -155,17 +124,20 @@ CCamera::getFarPlane()
 {
   return m_farZ;
 }
-Vector3f CCamera::getFront()
+Vector3f
+CCamera::getFront()
 {
   return (m_lookAt - m_eyePos).getNormalize();
 }
-Vector3f CCamera::getRight()
+Vector3f
+CCamera::getRight()
 {
   Vector3f front = getFront();
 
   return -front.cross(m_upVector).getNormalize();
 }
-Vector3f CCamera::getUp()
+Vector3f
+CCamera::getUp()
 {
   return getFront().cross(getRight());
 }
@@ -208,32 +180,42 @@ CCamera::getProjectionMatrix()
   }
   return m_projectionMat;
 }
-bool CCamera::isActive()
+bool
+CCamera::isActive()
 {
   return m_active;
 }
-void CCamera::setActive(bool active)
+void
+CCamera::setActive(bool active)
 {
   m_active = active;
 }
-bool CCamera::isMain()
+bool
+CCamera::isMain()
 {
   return m_main;
 }
-void CCamera::setMain(bool active)
+void
+CCamera::setMain(bool active)
 {
   m_main = active;
 }
-SPtr<RenderTarget> CCamera::getRenderTarget()
+SPtr<RenderTarget>
+CCamera::getRenderTarget()
 {
   return m_renderTarget;
 }
-SPtr<DepthStencil> CCamera::getDepthStencil()
+SPtr<DepthStencil>
+CCamera::getDepthStencil()
 {
   return m_depthStencil;
 }
-bool CCamera::isModelOnCamera(SPtr<CModel> ActorModel)
+bool
+CCamera::isModelOnCamera(SPtr<CModel> ActorModel)
 {
+  if (!ActorModel)
+    return false;
+
   if (m_dirtyFrustum)
   {
     m_dirtyFrustum = false;

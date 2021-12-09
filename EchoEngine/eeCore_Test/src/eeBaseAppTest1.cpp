@@ -78,13 +78,6 @@ using eeEngineSDK::SamplerStateDesc;
 using eeEngineSDK::ViewportDesc;
 using eeEngineSDK::RasteraizerDesc;
 
-BaseAppTest1::BaseAppTest1()
-{
-}
-
-BaseAppTest1::~BaseAppTest1()
-{
-}
 
 bool BaseAppTest1::initResources()
 {
@@ -98,7 +91,9 @@ bool BaseAppTest1::initResources()
   samDesc.minLOD = 0;
   samDesc.maxLOD = Math::kMAX_FLOAT;
 
-  ResourceManager::instance().loadTextureFromFile("Textures/Default.png", "Default", samDesc);
+  ResourceManager::instance().loadTextureFromFile("Textures/Default.png",
+                                                  "Default",
+                                                  samDesc);
 
   Model::initPrimitives();
 
@@ -112,16 +107,10 @@ bool BaseAppTest1::initResources()
   m_dsv = GraphicsApi::instance().createDepthStencilPtr();
   m_dsv->create(screenWidth, screenHeight);
 
-  m_rtv2 = GraphicsApi::instance().createRenderTragetPtr();
-  m_rtv2->createAsIOTexture();
-
-  m_dsv2 = GraphicsApi::instance().createDepthStencilPtr();
-  m_dsv2->create(screenWidth, screenHeight);
-
   ViewportDesc desc;
   memset(&desc, 0, sizeof(desc));
-  desc.width = screenWidth;
-  desc.height = screenHeight;
+  desc.width = static_cast<float>(screenWidth);
+  desc.height = static_cast<float>(screenHeight);
   desc.maxDepth = 0;
   desc.minDepth = 0;
   desc.topLeftX = 0;
@@ -180,7 +169,7 @@ bool BaseAppTest1::initResources()
             },
             "MeshSAQ1"
           ),
-          m_rtv2->getAsTexture()
+          nullptr
         )
       },
       "SAQ"
@@ -276,8 +265,8 @@ bool BaseAppTest1::initResources()
   camDesc.farZ = 100.0f;
 
   actor = scene->addActor("Player");
-  actor->getComponent<CTransform>()->setPosition({ 0.0f, 3.0f, -6.0f });
-  actor->getComponent<CTransform>()->setScale({ 0.1f, 0.1f, 0.1f });
+  actor->getTransform()->setPosition({ 0.0f, 3.0f, -6.0f });
+  actor->getTransform()->setScale({ 0.1f, 0.1f, 0.1f });
   actor->addComponent<CCamera>();
   actor->getComponent<CCamera>()->init(camDesc);
   actor->getComponent<CCamera>()->setMain(true);
@@ -292,7 +281,7 @@ bool BaseAppTest1::initResources()
 
   actor = scene->addActor("AtatchToActor");
   actor->attachTo(scene->getActor("Player"));
-  actor->getComponent<CTransform>()->setPosition({ 0.0f, 0.0f, 30.0f });
+  actor->getTransform()->setPosition({ 0.0f, 0.0f, 30.0f });
   actor->addComponent<CModel>();
   actor->getComponent<CModel>()->setModel
   (
@@ -303,8 +292,8 @@ bool BaseAppTest1::initResources()
 
 
   actor = scene->addActor("Player2");
-  actor->getComponent<CTransform>()->setPosition({ 5.0f, 3.0f, -6.0f });
-  actor->getComponent<CTransform>()->setScale({ 0.1f, 0.1f, 0.1f });
+  actor->getTransform()->setPosition({ 5.0f, 3.0f, -6.0f });
+  actor->getTransform()->setScale({ 0.1f, 0.1f, 0.1f });
   actor->addComponent<CCamera>();
   actor->getComponent<CCamera>()->init(camDesc);
   actor->addComponent<CModel>();
@@ -317,8 +306,8 @@ bool BaseAppTest1::initResources()
 
 
   actor = scene->addActor("Test");
-  actor->getComponent<CTransform>()->setScale({ 0.1f, 0.1f, 0.1f });
-  actor->getComponent<CTransform>()->setPosition({ 3.0f, 0.0f, 0.0f });
+  actor->getTransform()->setScale({ 0.1f, 0.1f, 0.1f });
+  actor->getTransform()->setPosition({ 3.0f, 0.0f, 0.0f });
   actor->addComponent<CModel>();
   actor->getComponent<CModel>()->setModel
   (
@@ -343,8 +332,10 @@ bool BaseAppTest1::initResources()
 
 
   actor = scene->addActor("AnimTest");
-  actor->getComponent<CTransform>()->setScale({ 0.03f, 0.03f, 0.03f });
-  actor->getComponent<CTransform>()->setRotation(Quaternion({ Math::kPI * 0.5f, 0.0f, 0.0f }));
+  actor->getTransform()->setScale({ 0.03f, 0.03f, 0.03f });
+  actor->getTransform()->setRotation(Quaternion({ Math::kPI * 0.5f,
+                                                              0.0f,
+                                                              0.0f }));
   actor->addComponent<CModel>();
   actor->getComponent<CModel>()->setModel
   (
@@ -433,8 +424,8 @@ bool BaseAppTest1::initResources()
 
 
   actor = scene->addActor("AnimTest2");
-  actor->getComponent<CTransform>()->setScale({ 0.01f, 0.01f, 0.01f });
-  actor->getComponent<CTransform>()->setPosition({ -3.0f, 0.0f, 0.0f });
+  actor->getTransform()->setScale({ 0.01f, 0.01f, 0.01f });
+  actor->getTransform()->setPosition({ -3.0f, 0.0f, 0.0f });
   actor->addComponent<CModel>();
   actor->getComponent<CModel>()->setModel
   (
@@ -469,11 +460,14 @@ void BaseAppTest1::update()
 
 
   SPtr<Scene> scene = SceneManager::instance().getScene("Main");
+  EE_NO_EXIST_RETURN(scene);
 
   static String activePlayerName = "Player";
   if (Input::instance().getKeyboardInputPressed(eeEngineSDK::Input::eKEYBOARD::TAB))
   {
-    scene->getActor(activePlayerName)->getComponent<CCamera>()->setMain(false);
+    if (scene->getActor(activePlayerName)
+     && scene->getActor(activePlayerName)->getComponent<CCamera>())
+      scene->getActor(activePlayerName)->getComponent<CCamera>()->setMain(false);
 
     if (activePlayerName == "Player")
     {
@@ -484,69 +478,92 @@ void BaseAppTest1::update()
       activePlayerName = "Player";
     }
 
-    scene->getActor(activePlayerName)->getComponent<CCamera>()->setMain(true);
+    if (scene->getActor(activePlayerName)
+     && scene->getActor(activePlayerName)->getComponent<CCamera>())
+      scene->getActor(activePlayerName)->getComponent<CCamera>()->setMain(true);
   }
 
 
 
 
   SPtr<Actor> actor = scene->getActor("Test");
-  static Quaternion rot1(Vector3f(0.0f, 0.0f, 0.0f));
-  rot1 = Quaternion((rot1.getEuclidean() +
-                  Vector3f(Time::instance().getDeltaTime() * .5f, 0.0f, 0.0f)));
-  actor->getComponent<CTransform>()->setRotation(rot1);
+  if (actor)
+  {
+    static Quaternion rot1(Vector3f(0.0f, 0.0f, 0.0f));
+    rot1 = Quaternion((rot1.getEuclidean() +
+                    Vector3f(Time::instance().getDeltaTime() * .5f, 0.0f, 0.0f)));
+    actor->getTransform()->setRotation(rot1);
+  }
 
 
 
   actor = scene->getActor(activePlayerName);
-  //actor = scene->getActor("Player");
+
   SPtr<CTransform> trans = nullptr;
   if (actor)
-    trans = actor->getComponent<CTransform>();
+    trans = actor->getTransform();
 
   Quaternion rot;
   if (trans)
+  {
     rot = trans->getRotation();
 
-  Vector3f cameraMovement = { 0.0f, 0.0f, 0.0f };
-  if (Input::instance().getKeyboardInputIsPressed(eeEngineSDK::Input::eKEYBOARD::W))
-  {
-    cameraMovement += rot.getFrontVector();
-  }
-  if (Input::instance().getKeyboardInputIsPressed(eeEngineSDK::Input::eKEYBOARD::S))
-  {
-    cameraMovement -= rot.getFrontVector();
-  }
-  if (Input::instance().getKeyboardInputIsPressed(eeEngineSDK::Input::eKEYBOARD::A))
-  {
-    cameraMovement -= rot.getRightVector();
-  }
-  if (Input::instance().getKeyboardInputIsPressed(eeEngineSDK::Input::eKEYBOARD::D))
-  {
-    cameraMovement += rot.getRightVector();
-  }
-  if (Input::instance().getKeyboardInputIsPressed(eeEngineSDK::Input::eKEYBOARD::Q))
-  {
-    cameraMovement += rot.getUpVector();
-  }
-  if (Input::instance().getKeyboardInputIsPressed(eeEngineSDK::Input::eKEYBOARD::E))
-  {
-    cameraMovement -= rot.getUpVector();
-  }
-  trans->setPosition(trans->getPosition() +
-                      cameraMovement * Time::instance().getDeltaTime() * 10.0f);
-  
-  if (Input::instance().getMouseClickInputIsPressed(eeEngineSDK::Input::eMOUSE_CLICK::RIGHT_CLICK))
-  {
-    Quaternion rot2 = trans->getRotation();
-    rot2 = Quaternion((rot2.getEuclidean() +
-                       Vector3f(Input::instance().getMouseMovement().y *
-                       Time::instance().getDeltaTime() *
-                       1.0f,
-                       Input::instance().getMouseMovement().x *
-                       Time::instance().getDeltaTime() * 1.0f,
-                       0.0f)));
-    trans->setRotation(rot2);
+    Vector3f cameraMovement = { 0.0f, 0.0f, 0.0f };
+    if (Input::instance().getKeyboardInputIsPressed(
+                                              eeEngineSDK::Input::eKEYBOARD::W))
+    {
+      cameraMovement += rot.getFrontVector();
+    }
+    if (Input::instance().getKeyboardInputIsPressed(
+                                              eeEngineSDK::Input::eKEYBOARD::S))
+    {
+      cameraMovement -= rot.getFrontVector();
+    }
+    if (Input::instance().getKeyboardInputIsPressed(
+                                              eeEngineSDK::Input::eKEYBOARD::A))
+    {
+      cameraMovement -= rot.getRightVector();
+    }
+    if (Input::instance().getKeyboardInputIsPressed(
+                                              eeEngineSDK::Input::eKEYBOARD::D))
+    {
+      cameraMovement += rot.getRightVector();
+    }
+    if (Input::instance().getKeyboardInputIsPressed(
+                                              eeEngineSDK::Input::eKEYBOARD::Q))
+    {
+      cameraMovement += rot.getUpVector();
+    }
+    if (Input::instance().getKeyboardInputIsPressed(
+                                              eeEngineSDK::Input::eKEYBOARD::E))
+    {
+      cameraMovement -= rot.getUpVector();
+    }
+    trans->setPosition(trans->getPosition() +
+      cameraMovement * Time::instance().getDeltaTime() * 10.0f);
+
+    if (Input::instance().getMouseClickInputIsPressed(
+                                 eeEngineSDK::Input::eMOUSE_CLICK::RIGHT_CLICK))
+    {
+      Quaternion rot2 = trans->getRotation();
+      rot2 = Quaternion
+      (
+        (
+          rot2.getEuclidean() +
+          Vector3f
+          (
+            Input::instance().getMouseMovement().y *
+            Time::instance().getDeltaTime() *
+            1.0f,
+            Input::instance().getMouseMovement().x *
+            Time::instance().getDeltaTime() *
+            1.0f,
+            0.0f
+          )
+        )
+      );
+      trans->setRotation(rot2);
+    }
   }
 
 
@@ -606,7 +623,7 @@ void BaseAppTest1::render()
 
     Vector<SPtr<Actor>> rActors =
       SceneManager::instance().getAllRenderableActorsInside(activeCams[0]);
-    int32 rActorsCount = rActors.size();
+    int32 rActorsCount = static_cast<int32>(rActors.size());
 
     animVS->use();
     animPS->use();
@@ -615,7 +632,7 @@ void BaseAppTest1::render()
     for (int32 i = 0; i < rActorsCount; ++i)
     {
       if (rActors[i]->getComponent<CSkeletalMesh>())
-        GraphicsApi::instance().drawObject(rActors[i].get());
+        GraphicsApi::instance().drawObject(rActors[i]);
     }
 
     vs->use();
@@ -625,7 +642,7 @@ void BaseAppTest1::render()
     for (int32 i = 0; i < rActorsCount; ++i)
     {
       if (!rActors[i]->getComponent<CSkeletalMesh>())
-        GraphicsApi::instance().drawObject(rActors[i].get());
+        GraphicsApi::instance().drawObject(rActors[i]);
     }
 
 

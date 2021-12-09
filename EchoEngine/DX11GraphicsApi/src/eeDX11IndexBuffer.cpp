@@ -26,7 +26,7 @@ bool DX11IndexBuffer::initData(uint32 dataSize,
   HRESULT hr = basics->m_device->CreateBuffer(&bd, &sd, &m_buffer);
   if (FAILED(hr))
   {
-    m_buffer->Release();
+    DX11SAFE_RELEASE(m_buffer);
     return false;
   }
 
@@ -49,10 +49,7 @@ void DX11IndexBuffer::updateData(const Byte* data)
 
 void DX11IndexBuffer::release()
 {
-  if (m_buffer)
-  {
-    m_buffer->Release();
-  }
+  DX11SAFE_RELEASE(m_buffer);
 }
 
 void DX11IndexBuffer::set()

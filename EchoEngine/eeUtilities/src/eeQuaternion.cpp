@@ -167,10 +167,6 @@ String Quaternion::toString() const
 Quaternion
 Quaternion::operator*(const Quaternion& other)
 {
-  float nx = this->w * other.w - this->x * other.x - this->y * other.y - this->z * other.z;
-  float ny = this->w * other.x + this->x * other.w + this->y * other.z - this->z * other.y;
-  float nz = this->w * other.y - this->x * other.z + this->y * other.w + this->z * other.x;
-  float nw = this->w * other.z + this->x * other.y - this->y * other.x + this->z * other.w;
   Quaternion r(
     this->w * other.w - this->x * other.x - this->y * other.y - this->z * other.z,
     this->w * other.x + this->x * other.w + this->y * other.z - this->z * other.y,

@@ -7,36 +7,44 @@ namespace eeEngineSDK {
 CModel::CModel()
 {
 }
-void CModel::update(SPtr<Actor> actor)
+void
+CModel::update()
 {
-  SPtr<CTransform> trans = actor->getComponent<CTransform>();
-  if (trans)
-  {
-    m_boundSphere.setCenter(trans->getGlobalPosition());
+  EE_NO_EXIST_RETURN(m_actor);
 
-    Vector3f scale = trans->getGlobalScale();
-    float radScale = scale.x > scale.y ? scale.x : scale.y;
-    radScale = radScale > scale.z ? radScale : scale.z;
+  SPtr<CTransform> trans = m_actor->getTransform();
 
-    m_boundSphere.setRadious(m_originRadious * radScale);
-  }
+  m_boundSphere.setCenter(trans->getGlobalPosition());
+
+  Vector3f scale = trans->getGlobalScale();
+  float radScale = scale.x > scale.y ? scale.x : scale.y;
+  radScale = radScale > scale.z ? radScale : scale.z;
+
+  m_boundSphere.setRadious(m_originRadious * radScale);
+
 }
-void CModel::setModel(SPtr<Model> model)
+void
+CModel::setModel(SPtr<Model> model)
 {
   m_model = model;
+  EE_NO_EXIST_RETURN(m_model);
+
   m_boundSphere = m_model->getBoundingSphere();
 
   m_originRadious = m_boundSphere.getRadious();
 }
-SPtr<Model> CModel::getModel()
+SPtr<Model>
+CModel::getModel()
 {
   return m_model;
 }
-const Sphere& CModel::getBoundingSphere()
+const
+Sphere& CModel::getBoundingSphere()
 {
   return m_boundSphere;
 }
-const BoxAAB& CModel::getBoundingBox()
+const
+BoxAAB& CModel::getBoundingBox()
 {
   return m_boundBox;
 }

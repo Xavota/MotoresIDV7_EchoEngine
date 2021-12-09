@@ -1,10 +1,10 @@
 /************************************************************************/
 /**
- * @file eeInput.h
+ * @file eeCTransform.h
  * @author Diego Castellanos
  * @date 17/11/21
  * @brief
- * The input manager for the api.
+ * The transform component.
  *
  * @bug Not bug Known.
  */
@@ -18,22 +18,55 @@
 #include "eeQuaternion.h"
 
 namespace eeEngineSDK {
+/**
+* @brief
+* The transform component.
+*/
 class EE_CORE_EXPORT CTransform : public Component
 {
  public:
+  /**
+  * @brief
+  * The enum for identifying the component type.
+  */
   enum { CmpType = eCOMPONENT_TYPE::TRANSFORM };
 
+  /**
+  * @brief
+  * Returns the component type.
+  *
+  * @description
+  * Returns the component type.
+  *
+  * @return
+  * The component type.
+  */
   virtual int32
   getType() override
   {
     return CmpType;
   }
-  
+
+  /**
+  * @brief
+  * Default constructor.
+  */
   CTransform();
+  /**
+  * @brief
+  * Default destructor.
+  */
   ~CTransform() = default;
 
+  /**
+  * @brief
+  * Updates the transform logic.
+  *
+  * @description
+  * Updates the model matrix buffer if it needs to.
+  */
   void
-  update(SPtr<Actor> actor) override;
+  update() override;
 
   /**
   * @brief
@@ -95,7 +128,7 @@ class EE_CORE_EXPORT CTransform : public Component
   * @description
   * Sets a new position for the object
   *
-  * @param
+  * @param pos
   * The new position for the object.
   */
   virtual void
@@ -132,7 +165,7 @@ class EE_CORE_EXPORT CTransform : public Component
   * @description
   * Sets a new rotation for the object
   *
-  * @param
+  * @param rot
   * The new rotation for the object.
   */
   virtual void
@@ -169,13 +202,23 @@ class EE_CORE_EXPORT CTransform : public Component
   * @description
   * Sets a new scale for the object
   *
-  * @param
+  * @param scale
   * The new scale for the object.
   */
   virtual void
   setScale(const Vector3f& scale);
 
 
+  /**
+  * @brief
+  * Attach the transform to a parent transform.
+  *
+  * @description
+  * Attach the transform to a parent transform to adopt the transformations.
+  *
+  * @param transformParent  
+  * The new parent transform.
+  */
   virtual void
   attatchTo(SPtr<CTransform> transformParent);
 
@@ -199,10 +242,22 @@ class EE_CORE_EXPORT CTransform : public Component
   SPtr<ConstantBuffer> m_modelMatrixBuff;
 
 
+  /**
+  * The dirty flag of the model matrix.
+  */
   bool m_dirtyModelMatrix = true;
 
+  /**
+  * The transform component children.
+  */
   Vector<SPtr<CTransform>> m_childs;
+  /**
+  * The transform component parent.
+  */
   SPtr<CTransform> m_parent;
+  /**
+  * The child index on the parent transform.
+  */
   int32 m_childIndex = -1;
 };
 }

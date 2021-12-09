@@ -2,7 +2,7 @@
 
 namespace eeEngineSDK{
 void
-CSkeletalMesh::update(SPtr<Actor> actor)
+CSkeletalMesh::update()
 {
 }
 SPtr<SkeletalMesh>

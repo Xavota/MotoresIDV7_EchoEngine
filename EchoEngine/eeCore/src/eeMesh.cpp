@@ -3,8 +3,8 @@
 namespace eeEngineSDK {
 Mesh::~Mesh()
 {
-  m_vertexData->release();
-  m_indexData->release();
+  MemoryManager::instance().safeRelease(m_vertexData);
+  MemoryManager::instance().safeRelease(m_indexData);
 }
 void Mesh::set()
 {

@@ -1,3 +1,14 @@
+/************************************************************************/
+/**
+ * @file eePrerequisitesCore.h
+ * @author Diego Castellanos
+ * @date 10/10/21
+ * @brief A derived class of BaseApp, for testing porpoise.
+ *
+ * @bug Not bug Known.
+ */
+ /************************************************************************/
+
 #pragma once
 #include <eeBaseApp.h>
 
@@ -12,11 +23,23 @@ using eeEngineSDK::RasterizerState;
 using eeEngineSDK::Actor;
 using eeEngineSDK::CCamera;
 
+/**
+* @brief
+* A derived class of BaseApp, for testing porpoise.
+*/
 class BaseAppTest1 : public BaseApp
 {
  public:
-  BaseAppTest1();
-  ~BaseAppTest1();
+  /**
+  * @brief
+  * Default constructor
+  */
+  BaseAppTest1() = default;
+  /**
+  * @brief
+  * Default destructor
+  */
+  ~BaseAppTest1() = default;
 
   /**
   * @brief
@@ -67,29 +90,37 @@ class BaseAppTest1 : public BaseApp
 
 
  private:
+  /*
+  * A Screen Align Quad, used for rendering textures of a render target on
+  * another
+  */
   SPtr<Object> m_SAQ;
 
   /*
-  * The buffer for the view matrix
+  * The buffer for the view matrix.
   */
   SPtr<ConstantBuffer> m_viewMatrixBuffer;
   /*
-  * The buffer for the projection matrix
+  * The buffer for the projection matrix.
   */
   SPtr<ConstantBuffer> m_projectionMatrixBuffer;
 
+  /*
+  * The back buffer.
+  */
   SPtr<RenderTarget> m_rtv;
+  /*
+  * The depth stencil of the back buffer
+  */
   SPtr<DepthStencil> m_dsv;
 
-  SPtr<RenderTarget> m_rtv2;
-  SPtr<DepthStencil> m_dsv2;
-
+  /*
+  * A rasterizer for on world objects rendering.
+  */
   SPtr<RasterizerState> m_rasterizer;
+  /*
+  * A rasterizer for on screen rendering.
+  */
   SPtr<RasterizerState> m_rasterizer2;
-
-
-  //SPtr<Actor> m_actorTest;
-  //SPtr<Actor> m_player;
-
 };
 

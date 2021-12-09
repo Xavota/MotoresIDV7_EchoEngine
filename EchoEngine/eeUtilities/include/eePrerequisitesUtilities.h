@@ -1,3 +1,15 @@
+/************************************************************************/
+/**
+ * @file eeDLLDynamics.h
+ * @author Diego Castellanos
+ * @date 02/09/21
+ * @brief All the includes and forward declarations needed for the Utilities
+ * module.
+ *
+ * @bug Not bug Known.
+ */
+ /************************************************************************/
+
 #pragma once
 
 #include "eePlatformDefines.h"
@@ -5,7 +17,6 @@
 #include "eeSTDHeaders.h"
 
 #include "eeMemoryManager.h"
-#include "eeOStream.h"
 
 namespace eeEngineSDK {
 class Vector2f;
@@ -39,4 +50,6 @@ class Rectangle;
 class Capsule;
 
 class Quaternion;
+
+class Time;
 }

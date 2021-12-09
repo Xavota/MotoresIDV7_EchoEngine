@@ -1,6 +1,6 @@
 /************************************************************************/
 /**
- * @file eeGraphicsApir.h
+ * @file eeDX11GraphicsApi.h
  * @author Diego Castellanos
  * @date 15/10/21
  * @brief
@@ -58,10 +58,10 @@ struct DX11Basics
 class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
 {
  public:
-   /**
-   * @brief
-   * Default constructor
-   */
+  /**
+  * @brief
+  * Default constructor
+  */
   DX11GraphicsApi() = default;
   /**
   * @brief

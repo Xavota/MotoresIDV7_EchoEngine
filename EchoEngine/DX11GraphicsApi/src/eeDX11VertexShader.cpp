@@ -10,10 +10,7 @@
 namespace eeEngineSDK {
 DX11VertexShader::~DX11VertexShader()
 {
-  if (m_shader)
-  {
-    m_shader->Release();
-  }
+  DX11SAFE_RELEASE(m_shader);
 }
 
 bool 
@@ -52,10 +49,10 @@ DX11VertexShader::compileFromFile(const String& fileName)
   if (FAILED(hr))
   {
     if (pVSBlob)
-      pVSBlob->Release();
+      DX11SAFE_RELEASE(pVSBlob);
     if (pErrorBlob != nullptr)
       OutputDebugStringA((char*)pErrorBlob->GetBufferPointer());
-    if (pErrorBlob) pErrorBlob->Release();
+    DX11SAFE_RELEASE(pErrorBlob);
 
     String msg = "The FX file cannot be compiled. Please run this ";
     msg.append("executable from the directory that contains the FX file.");
@@ -64,7 +61,7 @@ DX11VertexShader::compileFromFile(const String& fileName)
 
     return false;
   }
-  if (pErrorBlob) pErrorBlob->Release();
+  DX11SAFE_RELEASE(pErrorBlob);
 
 
   // Create the vertex shader
@@ -74,15 +71,13 @@ DX11VertexShader::compileFromFile(const String& fileName)
                                             &m_shader);
   if (FAILED(hr))
   {
-    if (pVSBlob)
-      pVSBlob->Release();
+    DX11SAFE_RELEASE(pVSBlob);
     return false;
   }
 
 
   hr = createInputLayout(pVSBlob);
-  if (pVSBlob)
-    pVSBlob->Release();
+  DX11SAFE_RELEASE(pVSBlob);
   if (FAILED(hr))
   {
     return false;
@@ -192,7 +187,7 @@ DX11VertexShader::createInputLayout(ID3DBlob* pShaderBlob)
                                                    &m_inputLayout);
 
   //Free allocation shader reflection memory
-  pVertexShaderReflection->Release();
+  DX11SAFE_RELEASE(pVertexShaderReflection);
   return hr;
 }
 }

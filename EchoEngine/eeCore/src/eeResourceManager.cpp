@@ -26,13 +26,13 @@ ResourceManager::loadTextureFromFile(const String& fileName,
 {
   if (m_meshes.find(resourceName) != m_meshes.end())
   {
-    eeOStream::print("Resource already with this name"); eeOStream::endl();
+    eeOut << "Resource already with this name" << eeEndl;
     return nullptr;
   }
 
   if (fileName == "")
   {
-    eeOStream::print("Empty info loading texture"); eeOStream::endl();
+    eeOut << "Empty info loading texture" << eeEndl;
     return nullptr;
   }
 
@@ -51,13 +51,13 @@ ResourceManager::loadModelFromFile(const String& fileName,
 {
   if (m_meshes.find(resourceName) != m_meshes.end())
   {
-    eeOStream::print("Resource already with this name"); eeOStream::endl();
+    eeOut << "Resource already with this name" << eeEndl;
     return nullptr;
   }
 
   if (fileName == "")
   {
-    eeOStream::print("Empty info loading model"); eeOStream::endl();
+    eeOut << "Empty info loading model" << eeEndl;
     return nullptr;
   }
 
@@ -73,7 +73,7 @@ ResourceManager::loadModelFromFile(const String& fileName,
   );
   if (!scene)
   {
-    eeOStream::print(importer->GetErrorString()); eeOStream::endl();
+    eeOut << importer->GetErrorString() << eeEndl;
     return nullptr;
   }
 
@@ -117,13 +117,13 @@ ResourceManager::loadModelFromMeshesArray(const Vector<SPtr<Mesh>>& meshes,
 {
   if (m_meshes.find(resourceName) != m_meshes.end())
   {
-    eeOStream::print("Resource already with this name"); eeOStream::endl();
+    eeOut << "Resource already with this name" << eeEndl;
     return nullptr;
   }
 
   if (meshes.empty())
   {
-    eeOStream::print("Empty info loading model"); eeOStream::endl();
+    eeOut << "Empty info loading model" << eeEndl;
     return nullptr;
   }
 
@@ -143,13 +143,13 @@ ResourceManager::loadModelFromMeshesArray(
 {
   if (m_meshes.find(resourceName) != m_meshes.end())
   {
-    eeOStream::print("Resource already with this name"); eeOStream::endl();
+    eeOut << "Resource already with this name" << eeEndl;
     return nullptr;
   }
 
   if (meshes.empty())
   {
-    eeOStream::print("Empty info loading model"); eeOStream::endl();
+    eeOut << "Empty info loading model" << eeEndl;
     return nullptr;
   }
 
@@ -171,13 +171,13 @@ ResourceManager::loadSkeletalMeshFromFile(const String& fileName,
 {
   if (m_skeletalMeshes.find(resourceName) != m_skeletalMeshes.end())
   {
-    eeOStream::print("Resource already with this name"); eeOStream::endl();
+    eeOut << "Resource already with this name" << eeEndl;
     return nullptr;
   }
 
   if (fileName == "")
   {
-    eeOStream::print("Empty info loading skeletal mesh"); eeOStream::endl();
+    eeOut << "Empty info loading skeletal mesh" << eeEndl;
     return nullptr;
   }
 
@@ -196,13 +196,13 @@ ResourceManager::loadAnimationFromFile(const String& fileName, const String& res
 {
   if (m_animations.find(resourceName) != m_animations.end())
   {
-    eeOStream::print("Resource already with this name"); eeOStream::endl();
+    eeOut << "Resource already with this name" << eeEndl;
     return nullptr;
   }
 
   if (fileName == "")
   {
-    eeOStream::print("Empty info loading animation"); eeOStream::endl();
+    eeOut << "Empty info loading animation" << eeEndl;
     return nullptr;
   }
 
@@ -222,7 +222,7 @@ ResourceManager::loadVertexShaderFromFile(const String& fileName,
 {
   if (m_vertexShaders.find(resourceName) != m_vertexShaders.end())
   {
-    eeOStream::print("Resource already with this name"); eeOStream::endl();
+    eeOut << "Resource already with this name" << eeEndl;
     return nullptr;
   }
 
@@ -242,7 +242,7 @@ ResourceManager::loadVertexShaderFromString(const String& shaderString,
 {
   if (m_vertexShaders.find(resourceName) != m_vertexShaders.end())
   {
-    eeOStream::print("Resource already with this name"); eeOStream::endl();
+    eeOut << "Resource already with this name" << eeEndl;
     return nullptr;
   }
 
@@ -262,7 +262,7 @@ ResourceManager::loadPixelShaderFromFile(const String& fileName,
 {
   if (m_pixelShaders.find(resourceName) != m_pixelShaders.end())
   {
-    eeOStream::print("Resource already with this name"); eeOStream::endl();
+    eeOut << "Resource already with this name" << eeEndl;
     return nullptr;
   }
 
@@ -282,7 +282,7 @@ ResourceManager::loadPixelShaderFromString(const String& shaderString,
 {
   if (m_pixelShaders.find(resourceName) != m_pixelShaders.end())
   {
-    eeOStream::print("Resource already with this name"); eeOStream::endl();
+    eeOut << "Resource already with this name" << eeEndl;
     return nullptr;
   }
 

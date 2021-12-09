@@ -1,45 +1,96 @@
 /************************************************************************/
 /**
- * @file eeInput.h
+ * @file eeMemoryManager.h
  * @author Diego Castellanos
  * @date 03/12/21
  * @brief
- * The input manager for the api.
+ * For managing the memory allocation and release.
  *
  * @bug Not bug Known.
  */
  /************************************************************************/
 
 #pragma once
-#include "eePrerequisitesUtilities.h"
 #include "eeModule.h"
 
 namespace eeEngineSDK{
+/**
+* @brief
+* For managing the memory allocation and release.
+*/
 class EE_UTILITY_EXPORT MemoryManager : public Module<MemoryManager>
 {
  public:
+  /**
+  * @brief
+  * The default constructor.
+  */
   MemoryManager() = default;
+  /**
+  * @brief
+  * The default destructor.
+  */
   ~MemoryManager() = default;
 
-  template<class T/*, class... _Types*/>
+  /**
+  * @brief
+  * Creates a smart ptr.
+  *
+  * @description
+  * Creates a new smart pointer of the template class.
+  *
+  * @param _Args
+  * The arguments of the constructor for the object.
+  *
+  * @return
+  * The instance of the new SPtr.
+  */
+  template<class T, class... _Types>
   FORCEINLINE SPtr<T>
-  newPtr(/*_Types&&... _Args*/);
+  newPtr(_Types&&... _Args);
 
+  /**
+  * @brief
+  * Reinterpret a smart ptr.
+  *
+  * @description
+  * Reinterprets a SPtr changing it for other type of class, indicated in the
+  * template class.
+  *
+  * @param ptr
+  * The SPtr to reinterpret.
+  *
+  * @return
+  * The instance of a SPtr reinterpreted.
+  */
   template<class T, class U>
   FORCEINLINE SPtr<T>
   reinterpretPtr(SPtr<U> ptr);
 
+  /**
+  * @brief
+  * Releases the memory.
+  *
+  * @description
+  * Releases the memory of certain types of classes.
+  *
+  * @param ptr
+  * The object to be released.
+  *
+  * @return
+  * True if it succeeded to release.
+  */
   template<class T>
   FORCEINLINE bool
   safeRelease(SPtr<T> ptr);
 
  private:
 };
-template<class T/*, class... _Types*/>
+template<class T, class... _Types>
 FORCEINLINE SPtr<T>
-MemoryManager::newPtr(/*_Types&&... _Args*/)
+MemoryManager::newPtr(_Types&&... _Args)
 {
-  return std::make_shared<T>(/*_Args*/);
+  return std::make_shared<T>(std::forward<_Types>(_Args)...);
 }
 template<class T, class U>
 FORCEINLINE SPtr<T>

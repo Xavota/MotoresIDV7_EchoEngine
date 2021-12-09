@@ -41,21 +41,18 @@ GraphicsApi::drawObject(SPtr<Object> obj)
   }  
 }
 void
-GraphicsApi::drawObject(Actor* act)
+GraphicsApi::drawObject(SPtr<Actor> act)
 {
-  SPtr<CTransform> transform = act->getComponent<CTransform>();
+  EE_NO_EXIST_RETURN(act);
 
-  if (!transform)
-    return;
+  SPtr<CTransform> transform = act->getTransform();
 
   SPtr<CModel> model = act->getComponent<CModel>();
-  if (!model)
-  {
-    return;
-  }
+  EE_NO_EXIST_RETURN(model);
+  EE_NO_EXIST_RETURN(model->getModel());
 
   const Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>& meshes = model->getModel()->getMeshes();
-  int32 meshesCount = meshes.size();
+  int32 meshesCount = static_cast<uint32>(meshes.size());
 
   const SPtr<CSkeletalMesh> skeletal = act->getComponent<CSkeletalMesh>();
 
@@ -63,14 +60,14 @@ GraphicsApi::drawObject(Actor* act)
 
   for (int32 i = 0; i < meshesCount; ++i)
   {
+    if (!meshes[i].first) break;
+
     meshes[i].first->set();
 
     GraphicsApi::instance().setTextures({ meshes[i].second }, 0u);
 
-    if (skeletal)
-    {
+    if (skeletal && skeletal->getSkeletal())
       skeletal->getSkeletal()->use(i);
-    }
 
     drawIndexed(meshes[i].first->getIndexCount());
 
@@ -85,6 +82,7 @@ GraphicsApi::release()
 void
 GraphicsApi::addActorToRenderFrame(SPtr<Actor> actor)
 {
+  EE_NO_EXIST_RETURN(actor);
   m_renderActors.push_back(actor);
 }
 Vector<SPtr<Actor>>
@@ -100,6 +98,7 @@ GraphicsApi::clearRenderFrameActors()
 void
 GraphicsApi::addActiveCamera(SPtr<CCamera> camera)
 {
+  EE_NO_EXIST_RETURN(camera);
   m_activeCameras.push_back(camera);
 }
 Vector<SPtr<CCamera>>

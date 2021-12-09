@@ -7,10 +7,7 @@
 
 eeEngineSDK::DX11PixelShader::~DX11PixelShader()
 {
-  if (m_shader)
-  {
-    m_shader->Release();
-  }
+  DX11SAFE_RELEASE(m_shader);
 }
 
 bool eeEngineSDK::DX11PixelShader::compileFromFile(const String& fileName)
@@ -40,19 +37,19 @@ bool eeEngineSDK::DX11PixelShader::compileFromFile(const String& fileName)
   {
     if (pErrorBlob != NULL)
       OutputDebugStringA((char*)pErrorBlob->GetBufferPointer());
-    if (pErrorBlob) pErrorBlob->Release();
+    DX11SAFE_RELEASE(pErrorBlob);
 
     MessageBox(NULL,
       "The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", "Error", MB_OK);
 
     return false;
   }
-  if (pErrorBlob) pErrorBlob->Release();
+  DX11SAFE_RELEASE(pErrorBlob);
 
 
   // Create the pixel shader
   hr = basics->m_device->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), NULL, &m_shader);
-  pPSBlob->Release();
+  DX11SAFE_RELEASE(pPSBlob);
   if (FAILED(hr))
     return false;
 

@@ -54,7 +54,7 @@ bool DX11Texture::loadFromBuffer(void* buffer, SamplerStateDesc desc)
   srvDesc.Format = tempDesc.Format;
   srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
   srvDesc.Texture2D.MostDetailedMip = 0;
-  srvDesc.Texture2D.MipLevels = -1; // same as orig texture
+  srvDesc.Texture2D.MipLevels = static_cast<uint32>(-1); // same as orig texture
   HRESULT hr = basics->m_device->CreateShaderResourceView(texBuff, &srvDesc, &m_tex);
   if (FAILED(hr))
     return false;
@@ -78,6 +78,6 @@ void DX11Texture::use()
 void DX11Texture::release()
 {
   DX11SAFE_RELEASE(m_tex);
-  m_sampler->release();
+  MemoryManager::instance().safeRelease<SamplerState>(m_sampler);
 }
 }

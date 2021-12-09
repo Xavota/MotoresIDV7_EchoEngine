@@ -451,7 +451,7 @@ Matrix4f::operator*=(float k)
 bool
 Matrix4f::operator==(const Matrix4f& other)
 {
-  for (int i = 0; i < 16; ++i)
+  for (int32 i = 0; i < 16; ++i)
   {
     if (Math::abs(this->m[i] - other.m[i]) > 
         Math::kFLOAT_EQUAL_SMALL_DIFFERENCE)
@@ -706,7 +706,7 @@ Matrix4i::operator*=(int32 k)
 bool
 Matrix4i::operator==(const Matrix4i& other)
 {
-  for (int i = 0; i < 16; ++i)
+  for (int32 i = 0; i < 16; ++i)
   {
     if (this->m[i] != other.m[i])
     {
@@ -960,7 +960,7 @@ Matrix4u::operator*=(uint32 k)
 bool
 Matrix4u::operator==(const Matrix4u& other)
 {
-  for (int i = 0; i < 16; ++i)
+  for (int32 i = 0; i < 16; ++i)
   {
     if (this->m[i] != other.m[i])
     {

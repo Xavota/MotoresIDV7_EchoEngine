@@ -45,10 +45,7 @@ void DX11VertexBuffer::updateData(const Byte* data)
 }
 void DX11VertexBuffer::release()
 {
-  if (m_buffer)
-  {
-    m_buffer->Release();
-  }
+  DX11SAFE_RELEASE(m_buffer);
 }
 void DX11VertexBuffer::set()
 {

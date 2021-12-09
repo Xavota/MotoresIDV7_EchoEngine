@@ -46,114 +46,83 @@ eeToString(const uint64 i)
 {
   return std::to_string(i);
 }
-//const eeOStream&
-//operator<<(const eeOStream& os, const eeOStream& str)
-//{
-//  if (str.m_end)
-//    std::cout << std::endl;
-//  return os;
-//}
-//const eeOStream&
-//operator<<(const eeOStream& os, const char c)
-//{
-//  std::cout << c;
-//  return os;
-//}
-//const eeOStream&
-//operator<<(const eeOStream& os, const String& str)
-//{
-//  std::cout << str;
-//  return os;
-//}
-//const eeOStream&
-//operator<<(const eeOStream& os, const int8 i)
-//{
-//  std::cout << i;
-//  return os;
-//}
-//const eeOStream&
-//operator<<(const eeOStream& os, const int16 i)
-//{
-//  std::cout << i;
-//  return os;
-//}
-//const eeOStream&
-//operator<<(const eeOStream& os, const int32 i)
-//{
-//  std::cout << i;
-//  return os;
-//}
-//const eeOStream&
-//operator<<(const eeOStream& os, const int64 i)
-//{
-//  std::cout << i;
-//  return os;
-//}
-//const eeOStream&
-//operator<<(const eeOStream& os, const bool b)
-//{
-//  std::cout << b;
-//  return os;
-//}
-void
-eeOStream::print(const char c)
+const OStream&
+operator<<(const OStream& os, const OStream& other)
+{
+  if (other.m_end)
+    std::cout << std::endl;
+  return os;
+}
+const OStream&
+operator<<(const OStream& os, const char c)
 {
   std::cout << c;
+  return os;
 }
-void
-eeOStream::print(const String& str)
+const OStream&
+operator<<(const OStream& os, const String& str)
 {
   std::cout << str;
+  return os;
 }
-void
-eeOStream::print(const int8 i)
+const OStream&
+operator<<(const OStream& os, const int8 i)
 {
   std::cout << i;
+  return os;
 }
-void
-eeOStream::print(const int16 i)
+const OStream&
+operator<<(const OStream& os, const int16 i)
 {
   std::cout << i;
+  return os;
 }
-void
-eeOStream::print(const int32 i)
+const OStream&
+operator<<(const OStream& os, const int32 i)
 {
   std::cout << i;
+  return os;
 }
-void
-eeOStream::print(const int64 i)
+const OStream&
+operator<<(const OStream& os, const int64 i)
 {
   std::cout << i;
+  return os;
 }
-void eeOStream::print(const uint8 i)
+const OStream&
+operator<<(const OStream& os, const uint8 i)
 {
   std::cout << i;
+  return os;
 }
-void eeOStream::print(const uint16 i)
+const OStream&
+operator<<(const OStream& os, const uint16 i)
 {
   std::cout << i;
+  return os;
 }
-void eeOStream::print(const uint32 i)
+const OStream&
+operator<<(const OStream& os, const uint32 i)
 {
   std::cout << i;
+  return os;
 }
-void eeOStream::print(const uint64 i)
+const OStream&
+operator<<(const OStream& os, const uint64 i)
 {
   std::cout << i;
+  return os;
 }
-void
-eeOStream::print(const float f)
+const OStream&
+operator<<(const OStream& os, const float f)
 {
   std::cout << f;
+  return os;
 }
-void
-eeOStream::print(const bool b)
+const OStream&
+operator<<(const OStream& os, const bool b)
 {
   std::cout << b;
-}
-void
-eeOStream::endl()
-{
-  std::cout << std::endl;
+  return os;
 }
 }

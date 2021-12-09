@@ -13,7 +13,7 @@ DLLDynamics::initialize(const String dllPath)
 
   if (!m_dllInstance)
   {
-    eeOStream::print("Could not load Dll"); eeOStream::endl();
+    eeOut << "Could not load Dll" << eeEndl;
     return false;
   }
 
@@ -22,7 +22,7 @@ DLLDynamics::initialize(const String dllPath)
   void* hGetProcIDDLL = dlopen(dllPath.c_str(), RTLD_LAZY);
   if (!hGetProcIDDLL)
   {
-    eeOStream::print("Could not load Dll"); eeOStream::endl();
+    eeOut << "Could not load Dll" << eeEndl;
     return 1;
   }
 
@@ -43,14 +43,14 @@ DLLDynamics::getFunction(const String functName)
 
   if (!function)
   {
-    eeOStream::print("Could not find function"); eeOStream::endl();
+    eeOut << "Could not load function" << eeEndl;
     return nullptr;
   }
 #else
   foo function = (foo)dlsym(m_dllInstance, "initPlugin");
   if (!function())
   {
-    eeOStream::print("Could not find function"); eeOStream::endl();
+    eeOut << "Could not load function" << eeEndl;
     return nullptr;
   }
 #endif

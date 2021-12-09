@@ -1,3 +1,15 @@
+/************************************************************************/
+/**
+ * @file eePrerequisitesDX11.h
+ * @author Diego Castellanos
+ * @date 14/10/21
+ * @brief
+ * Everything the Graphics Module for DirectX 11 needs.
+ *
+ * @bug Not bug Known.
+ */
+ /************************************************************************/
+
 #pragma once
 #include <eePrerequisitesCore.h>
 

@@ -71,6 +71,16 @@ class DX11ConstantBuffer : public ConstantBuffer
   virtual void
   updateData(const Byte* data);
 
+  /**
+  * @brief
+  * Gets the resource data.
+  *
+  * @description
+  * Returns the low level graphic api data of the resource.
+  *
+  * @return
+  * Low level graphic api data of the resource.
+  */
   ID3D11Buffer*
   getResource() { return m_buffer; }
   

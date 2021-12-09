@@ -190,7 +190,7 @@ class EE_UTILITY_EXPORT Plane : public Vector3f
   * Returns true if the first plane intersects the second.
   *
   * @param plane
-  * The second plane to check if it's touching the firts.
+  * The second plane to check if it's touching the first.
   *
   * @return
   * Whether it's intersecting or not.

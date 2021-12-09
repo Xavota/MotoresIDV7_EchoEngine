@@ -96,6 +96,9 @@ class EE_CORE_EXPORT Texture
 
 
  protected:
-   String name;
+  /**
+  * The name of the texture.
+  */
+  String name;
 };
 }

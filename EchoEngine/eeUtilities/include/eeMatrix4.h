@@ -455,15 +455,72 @@ public:
   static Matrix4f
   scaleMatrix(const Vector3f& scale);
 
+  /**
+  * @brief
+  * Calculates a view matrix.
+  *
+  * @description
+  * Gives a view matrix using the eye, lookAt and world up vector.
+  *
+  * @param eye
+  * The world position of the camera.
+  * @param lookAt
+  * The position on world that the camera is looking at.
+  * @param worldUp
+  * The world up vector.
+  *
+  * @return
+  * A view matrix.
+  */
   static Matrix4f
   viewMatrix(const Vector3f& eye, 
              const Vector3f& lookAt, 
              const Vector3f& worldUp);
+  /**
+  * @brief
+  * Calculates an orthographic matrix.
+  *
+  * @description
+  * Gives an orthographic matrix using with, height, and near and far distance
+  * plane.
+  *
+  * @param ViewWidth
+  * The width of the screen.
+  * @param ViewHeight
+  * The height of the screen.
+  * @param NearZ
+  * The distance to near plane of the camera.
+  * @param FarZ
+  * The distance to far plane of the camera.
+  *
+  * @return
+  * An orthographic matrix.
+  */
   static Matrix4f
   orthograficMatrixMatrix(float ViewWidth, 
                           float ViewHeight, 
                           float NearZ, 
                           float FarZ);
+  /**
+  * @brief
+  * Calculates a perspective matrix.
+  *
+  * @description
+  * Gives a perspective matrix using the Y field of view angle, the aspect ratio
+  * of the screen, and near and far distance plane.
+  *
+  * @param FovAngleY
+  * The Y field of view angle.
+  * @param AspectRatio
+  * The aspect ratio of the screen.
+  * @param NearZ
+  * The distance to near plane of the camera.
+  * @param FarZ
+  * The distance to far plane of the camera.
+  *
+  * @return
+  * An orthographic matrix.
+  */
   static Matrix4f
   perspectiveMatrix(float FovAngleY, 
                     float AspectRatio, 

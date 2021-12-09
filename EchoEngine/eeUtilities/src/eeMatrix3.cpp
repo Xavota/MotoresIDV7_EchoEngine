@@ -254,7 +254,7 @@ Matrix3f::operator*=(float k)
 bool
 Matrix3f::operator==(const Matrix3f& other)
 {
-  for (int i = 0; i < 9; ++i)
+  for (int32 i = 0; i < 9; ++i)
   {
     if (Math::abs(this->m[i] - other.m[i]) > 
         Math::kFLOAT_EQUAL_SMALL_DIFFERENCE)
@@ -412,7 +412,7 @@ Matrix3i::operator*=(int32 k)
 bool
 Matrix3i::operator==(const Matrix3i& other)
 {
-  for (int i = 0; i < 9; ++i)
+  for (int32 i = 0; i < 9; ++i)
   {
     if (this->m[i] != other.m[i])
     {
@@ -569,7 +569,7 @@ Matrix3u::operator*=(uint32 k)
 bool
 Matrix3u::operator==(const Matrix3u& other)
 {
-  for (int i = 0; i < 9; ++i)
+  for (int32 i = 0; i < 9; ++i)
   {
     if (this->m[i] != other.m[i])
     {

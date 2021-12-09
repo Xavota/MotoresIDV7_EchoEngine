@@ -38,7 +38,7 @@ Object::loadFromModel(SPtr<Model> model,
 {
   if (!model)
   {
-    eeOStream::print("There is no model here..."); eeOStream::endl();
+    eeOut << "There is no model here..." << eeEndl;
     return false;
   }
 

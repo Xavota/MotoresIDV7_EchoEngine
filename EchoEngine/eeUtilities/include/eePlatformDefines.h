@@ -1,3 +1,14 @@
+/************************************************************************/
+/**
+ * @file eePlatformDefines.h
+ * @author Diego Castellanos
+ * @date 02/09/21
+ * @brief All the defines needed for the Utilities module.
+ *
+ * @bug Not bug Known.
+ */
+ /************************************************************************/
+
 #pragma once
 
 

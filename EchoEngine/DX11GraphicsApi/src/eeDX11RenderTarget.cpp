@@ -22,7 +22,7 @@ DX11RenderTarget::createAsBackBuffer()
   basics->m_device->CreateRenderTargetView(pBackBuffer,
                                           nullptr,
                                           &m_renderTarget);
-  pBackBuffer->Release();
+  DX11SAFE_RELEASE(pBackBuffer);
 
 
   return true;
@@ -117,20 +117,14 @@ DX11RenderTarget::clean(float r, float g, float b, float a)
   const DX11Basics* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
-  float clearColor[4] = { r,g,b,1.0f };
+  float clearColor[4] = { r,g,b,a };
   basics->m_deviceContext->ClearRenderTargetView(m_renderTarget, clearColor);
 }
 
 void
 DX11RenderTarget::release()
 {
-  if (m_renderTarget)
-  {
-    m_renderTarget->Release();
-  }
-  if (m_inTexture)
-  {
-    m_inTexture->release();
-  }
+  DX11SAFE_RELEASE(m_renderTarget);
+  MemoryManager::instance().safeRelease<Texture>(m_inTexture);
 }
 }

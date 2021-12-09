@@ -41,12 +41,12 @@ SkeletalMesh::loadFromFile(String fileName)
   );
   if (!scene)
   {
-    eeOStream::print(importer->GetErrorString()); eeOStream::endl();
+    eeOut << importer->GetErrorString() << eeEndl;
     return false;
   }
   scene->mRootNode->mChildren[1]->mChildren;
 
-  for (int32 i = 0; i < scene->mNumMeshes; i++)
+  for (uint32 i = 0; i < scene->mNumMeshes; i++)
   {
     m_bonesPerMesh.push_back(Vector<Bone>(100));
     m_boneMappings.push_back(Map<String, int32>());
@@ -59,7 +59,7 @@ SkeletalMesh::loadFromFile(String fileName)
 
     if (scene->mMeshes[i]->HasBones())
     {
-      for (int32 j = 0; j < scene->mMeshes[i]->mNumBones; j++)
+      for (uint32 j = 0; j < scene->mMeshes[i]->mNumBones; j++)
       {
         uint32 boneIndex = 0;
         String name = scene->mMeshes[i]->mBones[j]->mName.C_Str();
@@ -77,11 +77,12 @@ SkeletalMesh::loadFromFile(String fileName)
         m_boneMappings[i][name] = boneIndex;
 
         m_bonesPerMesh[i][boneIndex].m_name = name;
-        m_bonesPerMesh[i][boneIndex].m_offsetMatrix =
-              Matrix4f(&scene->mMeshes[i]->mBones[boneIndex]->mOffsetMatrix.a1);
+        float m[16];
+        memcpy(m, &scene->mMeshes[i]->mBones[boneIndex]->mOffsetMatrix.a1, sizeof(float) * 16);
+        m_bonesPerMesh[i][boneIndex].m_offsetMatrix = Matrix4f(m);
         m_bonesPerMesh[i][boneIndex].m_finalTransformation =
                                     m_bonesPerMesh[i][boneIndex].m_offsetMatrix;
-        for (int32 k = 0; k < scene->mMeshes[i]->mBones[j]->mNumWeights; k++)
+        for (uint32 k = 0; k < scene->mMeshes[i]->mBones[j]->mNumWeights; k++)
         {
           uint32 vertexID =
                             scene->mMeshes[i]->mBones[j]->mWeights[k].mVertexId;
@@ -93,7 +94,7 @@ SkeletalMesh::loadFromFile(String fileName)
     }
   }
 
-  for (int i = 0; i < scene->mNumMeshes; i++)
+  for (uint32 i = 0; i < scene->mNumMeshes; i++)
   {
     boneTransform(scene->mRootNode, i);
   }
@@ -104,14 +105,14 @@ SkeletalMesh::loadFromFile(String fileName)
   return true;
 }
 void
-SkeletalMesh::boneTransform(const aiNode* root, int meshIndex)
+SkeletalMesh::boneTransform(const aiNode* root, int32 meshIndex)
 {
   readNodeHeirarchy(root, Matrix4f::IDENTITY, meshIndex);
 }
 void
 SkeletalMesh::readNodeHeirarchy(const aiNode* pNode,
                                 const Matrix4f& ParentTransform,
-                                int meshIndex)
+                                int32 meshIndex)
 {
   String NodeName(pNode->mName.data);
 
@@ -133,7 +134,7 @@ SkeletalMesh::readNodeHeirarchy(const aiNode* pNode,
                           m_bonesPerMesh[meshIndex][BoneIndex].m_offsetMatrix;
   }
 
-  for (int i = 0; i < pNode->mNumChildren; i++)
+  for (uint32 i = 0; i < pNode->mNumChildren; i++)
   {
     readNodeHeirarchy(pNode->mChildren[i], GlobalTransformation, meshIndex);
   }
@@ -143,13 +144,16 @@ SkeletalMesh::getBonesData()
 {
   return m_bonesPerMesh;
 }
+Vector<Bone> tempEmptyR;
 const Vector<Bone>&
 SkeletalMesh::getBonesDataForMesh(int32 index) const
 {
-  if (m_bonesPerMesh.size() > index)
+  if (static_cast<int32>(m_bonesPerMesh.size()) > index)
     return m_bonesPerMesh[index];
   else
-    return Vector<Bone>();
+  {
+    return tempEmptyR;
+  }
 }
 
 Vector<Map<String, int32>>&
@@ -165,12 +169,12 @@ SkeletalMesh::getGlobalInverseTransforms()
 }
 
 Vector<Matrix4f>
-SkeletalMesh::getBonesMatrices(int meshNum)
+SkeletalMesh::getBonesMatrices(int32 meshNum)
 {
   Vector<Matrix4f> bonesMatrices(100);
-  if (m_bonesPerMesh.size() > meshNum)
+  if (static_cast<int32>(m_bonesPerMesh.size()) > meshNum)
   {
-    for (int i = 0; i < m_bonesPerMesh[meshNum].size(); i++)
+    for (uint32 i = 0; i < m_bonesPerMesh[meshNum].size(); i++)
     {
       //bonesMatrices[i] = m_bonesPerMesh[meshNum][i].m_offsetMatrix;
       if (i >= bonesMatrices.size())
@@ -184,7 +188,7 @@ SkeletalMesh::getBonesMatrices(int meshNum)
   return bonesMatrices;
 }
 void
-SkeletalMesh::use(int meshNum)
+SkeletalMesh::use(int32 meshNum)
 {
   Vector<Matrix4f> mats = getBonesMatrices(meshNum);
   m_matricesBuffer->updateData(reinterpret_cast<Byte*>(mats.data()));

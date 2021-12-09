@@ -109,6 +109,9 @@ BaseApp::destroy()
   GraphicsApi::instance().release();
   GraphicsApi::shutDown();
   ResourceManager::shutDown();
+  Input::shutDown();
   SceneManager::shutDown();
+  MemoryManager::shutDown();
+  Time::shutDown();
 }
 }

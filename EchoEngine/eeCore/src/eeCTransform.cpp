@@ -14,8 +14,11 @@ m_scale(1.0f, 1.0f, 1.0f)
                               sizeof(Matrix4f),
                               reinterpret_cast<Byte*>(&modelMat));
 }
-void CTransform::update(SPtr<Actor> actor)
+void
+CTransform::update()
 {
+  EE_NO_EXIST_RETURN(m_actor);
+
   if (m_dirtyModelMatrix)
   {
     m_dirtyModelMatrix = false;
@@ -42,7 +45,8 @@ CTransform::getPosition()
 {
   return m_position;
 }
-Vector3f CTransform::getGlobalPosition()
+Vector3f
+CTransform::getGlobalPosition()
 {
   Matrix4f transform = Matrix4f::IDENTITY;
   if (m_parent)
@@ -69,7 +73,8 @@ CTransform::getRotation()
 {
   return m_rotation;
 }
-Quaternion CTransform::getGlobalRotation()
+Quaternion
+CTransform::getGlobalRotation()
 {
   Quaternion globalRot;
   if (m_parent)
@@ -94,7 +99,8 @@ CTransform::getScale()
 {
   return m_scale;
 }
-Vector3f CTransform::getGlobalScale()
+Vector3f
+CTransform::getGlobalScale()
 {
   Vector3f globalScale;
   if (m_parent)
@@ -114,7 +120,8 @@ CTransform::setScale(const Vector3f& scale)
 
   m_scale = scale;
 }
-void CTransform::attatchTo(SPtr<CTransform> transformParent)
+void
+CTransform::attatchTo(SPtr<CTransform> transformParent)
 {
   if (m_parent)
   {
@@ -122,7 +129,9 @@ void CTransform::attatchTo(SPtr<CTransform> transformParent)
   }
 
   m_parent = transformParent;
-  m_childIndex = m_parent->m_childs.size();
+  EE_NO_EXIST_RETURN(m_parent);
+
+  m_childIndex = static_cast<int32>(m_parent->m_childs.size());
   m_parent->m_childs.push_back(
       MemoryManager::instance().reinterpretPtr<CTransform>(shared_from_this()));
 }

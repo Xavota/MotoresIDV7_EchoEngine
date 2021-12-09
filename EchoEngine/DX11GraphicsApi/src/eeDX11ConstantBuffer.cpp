@@ -26,7 +26,7 @@ DX11ConstantBuffer::initData(uint32 dataSize,
   HRESULT hr = basics->m_device->CreateBuffer(&bd, NULL, &m_buffer);
   if (FAILED(hr))
   {
-    m_buffer->Release();
+    DX11SAFE_RELEASE(m_buffer);
     return false;
   }
 

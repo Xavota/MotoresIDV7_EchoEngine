@@ -7,17 +7,21 @@
 
 namespace eeEngineSDK{
 void
-CAnimation::update(SPtr<Actor> actor)
+CAnimation::update()
 {
-  SPtr<CSkeletalMesh> skMesh = actor->getComponent<CSkeletalMesh>();
-  if (skMesh)
+  EE_NO_EXIST_RETURN(m_actor);
+  EE_NO_EXIST_RETURN(m_anim);
+
+  SPtr<CSkeletalMesh> skMesh = m_actor->getComponent<CSkeletalMesh>();
+  EE_NO_EXIST_RETURN(skMesh);
+  EE_NO_EXIST_RETURN(skMesh->getSkeletal());
+
+  int32 bonesPerMesh =
+  static_cast<int32>(skMesh->getSkeletal()->getBonesData().size());
+  m_anim->addTotalTime(Time::instance().getDeltaTime());
+  for (int32 i = 0; i < bonesPerMesh; ++i)
   {
-    int32 bonesPerMesh = skMesh->getSkeletal()->getBonesData().size();
-    //m_anim->addTotalTime(Time::instance().getDeltaTime());
-    for (int32 i = 0; i < bonesPerMesh; ++i)
-    {
-      m_anim->boneTransform(i, skMesh->getSkeletal());
-    }
+    m_anim->boneTransform(i, skMesh->getSkeletal());
   }
 }
 SPtr<Animation>
@@ -28,6 +32,7 @@ CAnimation::getAnimation()
 void
 CAnimation::setAnimation(SPtr<Animation> anim)
 {
+  EE_NO_EXIST_RETURN(anim);
   m_anim = anim;
 }
 }

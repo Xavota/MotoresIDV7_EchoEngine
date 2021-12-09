@@ -312,7 +312,7 @@ class EE_UTILITY_EXPORT Quaternion
     /*
     * All the components of the quaternion in an array
     */
-    float wxyz[4];
+    float wxyz[4] = { 0.0f,0.0f,0.0f,0.0f};
   };
 };
 }

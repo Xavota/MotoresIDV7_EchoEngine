@@ -1,8 +1,23 @@
+/************************************************************************/
+/**
+ * @file eeCoreDefines.h
+ * @author Diego Castellanos
+ * @date 15/10/21
+ * @brief All the enumerators and structures needed for the graphic module.
+ *
+ * @bug Not bug Known.
+ */
+ /************************************************************************/
+
 #pragma once
 #include "eePrerequisitesCore.h"
 
 
 namespace eeEngineSDK {
+/**
+* @brief
+* Filter for the sampler.
+*/
 enum class eFILTER
 {
   MIN_MAG_MIP_POINT,
@@ -43,6 +58,10 @@ enum class eFILTER
   MAXIMUM_ANISOTROPIC
 };
 
+/**
+* @brief
+* How to interpret the UVs outside the range 0.0 - 1.0
+*/
 enum class eTEXTURE_ADDRESS_MODE
 {
   WRAP,
@@ -52,6 +71,10 @@ enum class eTEXTURE_ADDRESS_MODE
   MIRROR_ONCE
 };
 
+/**
+* @brief
+* Comparison function.
+*/
 enum class eCOMPARISON_FUNC
 {
   NEVER,
@@ -64,6 +87,10 @@ enum class eCOMPARISON_FUNC
   ALWAYS
 };
 
+/**
+* @brief
+* How to render the vertices.
+*/
 enum class ePRIMITIVE_TOPOLOGY
 {
   UNDEFINED = 0,
@@ -78,6 +105,10 @@ enum class ePRIMITIVE_TOPOLOGY
   TRIANGLESTRIP_ADJ = 13
 }; 
 
+/**
+* @brief
+* Format for read the texture info.
+*/
 enum class eFORMAT
 {
   UNKNOWN = 0,
@@ -180,9 +211,13 @@ enum class eFORMAT
   BC7_TYPELESS = 97,
   BC7_UNORM = 98,
   BC7_UNORM_SRGB = 99,
-  FORCE_UINT = 0xffffffff
+  //FORCE_UINT = 0xffffffff
 };
 
+/**
+* @brief
+* Usage for the buffers.
+*/
 enum class eUSAGE
 {
   DEFAULT = 0,
@@ -191,6 +226,10 @@ enum class eUSAGE
   STAGING = 3
 };
 
+/**
+* @brief
+* Dimension of the textures.
+*/
 enum class eSRV_DIMENSION
 {
   UNKNOWN = 0,
@@ -207,12 +246,20 @@ enum class eSRV_DIMENSION
   BUFFEREX = 11
 };
 
+/**
+* @brief
+* Fill mode for the triangles.
+*/
 enum class eFILL_MODE
 {
   WIREFRAME = 2,
   SOLID = 3
 };
 
+/**
+* @brief
+* Cull mode, to render front, back or both.
+*/
 enum class eCULL_MODE
 {
   NONE = 1,
@@ -220,12 +267,20 @@ enum class eCULL_MODE
   BACK = 3
 };
 
+/**
+* @brief
+* Depth write mask.
+*/
 enum class eDEPTH_WRITE_MASK
 {
   ZERO,
   ALL
 };
 
+/**
+* @brief
+* Stencil operations.
+*/
 enum eSTENCIL_OP
 {
   KEEP,
@@ -238,6 +293,10 @@ enum eSTENCIL_OP
   DECR
 };
 
+/**
+* @brief
+* Blend info for blend state.
+*/
 enum class eBLEND
 {
   ZERO,
@@ -259,6 +318,10 @@ enum class eBLEND
   INV_SRC1_ALPHA
 };
 
+/**
+* @brief
+* Blend operation for blend state.
+*/
 enum class eBLEND_OP
 {
  ADD,
@@ -276,6 +339,10 @@ enum class eBLEND_OP
 
 
 
+/**
+* @brief
+* Descriptor for the viewport.
+*/
 struct ViewportDesc
 {
   float topLeftX;
@@ -286,6 +353,10 @@ struct ViewportDesc
   float maxDepth;
 };
 
+/**
+* @brief
+* Descriptor for the sampler state.
+*/
 struct SamplerStateDesc
 {
   eFILTER               filter;
@@ -300,12 +371,20 @@ struct SamplerStateDesc
   float                 maxLOD;
 };
 
+/**
+* @brief
+* Descriptor for the sample.
+*/
 struct SampleDesc
 {
   uint32 count;
   uint32 quality;
 };
 
+/**
+* @brief
+* Descriptor for a texture 2D buffer.
+*/
 struct Texture2DDesc
 {
   uint32     width;
@@ -320,86 +399,134 @@ struct Texture2DDesc
   uint32     miscFlags;
 };
 
+/**
+* @brief
+* Buffer Shader Resource View.
+*/
 struct BufferSRV
 {
   union
   {
-    unsigned int firstElement;
-    unsigned int elementOffset;
+    uint32 firstElement;
+    uint32 elementOffset;
   };
   union
   {
-    unsigned int numElements;
-    unsigned int elementWidth;
+    uint32 numElements;
+    uint32 elementWidth;
   };
 };
 
+/**
+* @brief
+* Texture 1D Shader Resource View.
+*/
 struct Tex1DSRV
 {
-  unsigned int mostDetailedMip;
-  unsigned int mipLevels;
+  uint32 mostDetailedMip;
+  uint32 mipLevels;
 };
 
+/**
+* @brief
+* Texture 1D Array Shader Resource View.
+*/
 struct Tex1dArraySRV
 {
-  unsigned int mostDetailedMip;
-  unsigned int mipLevels;
-  unsigned int firstArraySlice;
-  unsigned int arraySize;
+  uint32 mostDetailedMip;
+  uint32 mipLevels;
+  uint32 firstArraySlice;
+  uint32 arraySize;
 };
 
+/**
+* @brief
+* Texture 2D Shader Resource View.
+*/
 struct Tex2DSRV
 {
-  unsigned int mostDetailedMip;
-  unsigned int mipLevels;
+  uint32 mostDetailedMip;
+  uint32 mipLevels;
 };
 
+/**
+* @brief
+* Texture 2D Array Shader Resource View.
+*/
 struct Tex2dArraySRV
 {
-  unsigned int mostDetailedMip;
-  unsigned int mipLevels;
-  unsigned int firstArraySlice;
-  unsigned int arraySize;
+  uint32 mostDetailedMip;
+  uint32 mipLevels;
+  uint32 firstArraySlice;
+  uint32 arraySize;
 };
 
+/**
+* @brief
+* Texture 2D Ms Shader Resource View.
+*/
 struct Tex2DMsSRV
 {
-  unsigned int unusedField_NothingToDefine;
+  uint32 unusedField_NothingToDefine;
 };
 
+/**
+* @brief
+* Texture 2D Ms Array Shader Resource View.
+*/
 struct Tex2DMsArraySRV
 {
-  unsigned int firstArraySlice;
-  unsigned int arraySize;
+  uint32 firstArraySlice;
+  uint32 arraySize;
 };
 
+/**
+* @brief
+* Texture 3D Shader Resource View.
+*/
 struct Tex3DSRV
 {
-  unsigned int mostDetailedMip;
-  unsigned int mipLevels;
+  uint32 mostDetailedMip;
+  uint32 mipLevels;
 };
 
+/**
+* @brief
+* Texture cube Shader Resource View.
+*/
 struct TexcubeSRV
 {
-  unsigned int mostDetailedMip;
-  unsigned int mipLevels;
+  uint32 mostDetailedMip;
+  uint32 mipLevels;
 };
 
+/**
+* @brief
+* Texture cube array Shader Resource View.
+*/
 struct TexcubeArraySRV
 {
-  unsigned int mostDetailedMip;
-  unsigned int mipLevels;
-  unsigned int first2DArrayFace;
-  unsigned int numCubes;
+  uint32 mostDetailedMip;
+  uint32 mipLevels;
+  uint32 first2DArrayFace;
+  uint32 numCubes;
 };
 
+/**
+* @brief
+* Buffer Ex Shader Resource View.
+*/
 struct BufferExSRV
 {
-  unsigned int firstElement;
-  unsigned int numElements;
-  unsigned int flags;
+  uint32 firstElement;
+  uint32 numElements;
+  uint32 flags;
 };
 
+/**
+* @brief
+* Descriptor for shader resource view.
+*/
 struct ShaderResourceViewDesc
 {
   eFORMAT        format;
@@ -420,6 +547,10 @@ struct ShaderResourceViewDesc
   };
 };
 
+/**
+* @brief
+* Descriptor for a rasterizer state.
+*/
 struct RasteraizerDesc
 {
   eFILL_MODE fillMode;
@@ -434,6 +565,10 @@ struct RasteraizerDesc
   bool       antialiasedLineEnable;
 };
 
+/**
+* @brief
+* Descriptor for depth stencil operation.
+*/
 struct DepthStencilOPDesc
 {
   eSTENCIL_OP      stencilFailOp;
@@ -442,6 +577,10 @@ struct DepthStencilOPDesc
   eCOMPARISON_FUNC stencilFunc;
 };
 
+/**
+* @brief
+* Descriptor for a depth stencil.
+*/
 struct DepthStencilDesc
 {
   bool               depthEnable;
@@ -454,6 +593,10 @@ struct DepthStencilDesc
   DepthStencilOPDesc backFace;
 };
 
+/**
+* @brief
+* Descriptor for a render target blend state.
+*/
 struct RenderTargetBlendDesc
 {
   bool      blendEnable;
@@ -466,6 +609,10 @@ struct RenderTargetBlendDesc
   uint8     renderTargetWriteMask;
 };
 
+/**
+* @brief
+* Descriptor for a blend state.
+*/
 struct BlendDesc
 {
   bool                  alphaToCoverageEnable;

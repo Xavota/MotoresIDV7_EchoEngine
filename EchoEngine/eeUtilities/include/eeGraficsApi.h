@@ -90,7 +90,6 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   *
   * @description
   * Clears the active render target with the given color.
-  * **TODO: NEEDS TO BE REFACTORED TO USE THE RENDER TARGETS AND DEPTH STENCILS**
   *
   * @param r
   * Red part of the color. From 0 to 1 inclusive.
@@ -154,8 +153,8 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   * The first index for the texture indices.
   */
   virtual void
-  setTextures(Vector<SPtr<Texture>> textures,
-              uint32 startSlot) {}
+  setTextures(Vector<SPtr<Texture>> /*textures*/,
+              uint32 /*startSlot*/) {}
 
   /**
   * @brief
@@ -170,7 +169,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   * The first index for the texture indices.
   */
   virtual void
-  unsetTextures(uint32 textureCount, uint32 startSlot) {}
+  unsetTextures(uint32 /*textureCount*/, uint32 /*startSlot*/) {}
 
   /**
   * @brief
@@ -185,8 +184,8 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   * The first index for the buffers indices.
   */
   virtual void
-  setVSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
-                       uint32 startSlot) {}
+  setVSConstantBuffers(Vector<SPtr<ConstantBuffer>> /*buffers*/,
+                       uint32 /*startSlot*/) {}
 
   /**
   * @brief
@@ -201,7 +200,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   * The first index for the buffers indices.
   */
   virtual void
-  unsetVSConstantBuffers(uint32 buffersCount, uint32 startSlot) {}
+  unsetVSConstantBuffers(uint32 /*buffersCount*/, uint32 /*startSlot*/) {}
 
   /**
   * @brief
@@ -216,8 +215,8 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   * The first index for the buffers indices.
   */
   virtual void
-  setPSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
-                       uint32 startSlot) {}
+  setPSConstantBuffers(Vector<SPtr<ConstantBuffer>> /*buffers*/,
+                       uint32 /*startSlot*/) {}
 
   /**
   * @brief
@@ -232,7 +231,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   * The first index for the buffers indices.
   */
   virtual void
-  unsetPSConstantBuffers(uint32 buffersCount, uint32 startSlot) {}
+  unsetPSConstantBuffers(uint32 /*buffersCount*/, uint32 /*startSlot*/) {}
 
   /**
   * @brief
@@ -249,9 +248,9 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   * The first index for the buffers indices.
   */
   virtual void
-  setVertexBuffers(Vector<SPtr<VertexBuffer>> buffers,
-                   Vector<uint32> offsets,
-                   uint32 startSlot) {}
+  setVertexBuffers(Vector<SPtr<VertexBuffer>> /*buffers*/,
+                   Vector<uint32> /*offsets*/,
+                   uint32 /*startSlot*/) {}
 
   /**
   * @brief
@@ -266,7 +265,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   * The first index for the vertex buffers indices.
   */
   virtual void
-  unsetVertexBuffers(uint32 buffersCount, uint32 startSlot) {}
+  unsetVertexBuffers(uint32 /*buffersCount*/, uint32 /*startSlot*/) {}
 
   /**
   * @brief
@@ -281,8 +280,8 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   * The offset for the starting point on the buffer.
   */
   virtual void
-  setIndexBuffer(SPtr<IndexBuffer> buffers,
-                 uint32 offsets) {}
+  setIndexBuffer(SPtr<IndexBuffer> /*buffers*/,
+                 uint32 /*offsets*/) {}
 
   /**
   * @brief
@@ -306,7 +305,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   * viewports to set.
   */
   virtual void
-  setViewports(Vector<ViewportDesc> descs) {}
+  setViewports(Vector<ViewportDesc> /*descs*/) {}
 
   /**
   * @brief
@@ -319,7 +318,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   * The topology to set.
   */
   virtual void
-  setPrimitiveTopology(ePRIMITIVE_TOPOLOGY topology) {}
+  setPrimitiveTopology(ePRIMITIVE_TOPOLOGY /*topology*/) {}
 
   /**
   * @brief
@@ -345,7 +344,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   * The actor to draw.
   */
   virtual void
-  drawObject(Actor* act);
+  drawObject(SPtr<Actor> act);
 
   /**
   * @brief
@@ -542,22 +541,72 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   getBasics() const { return nullptr; }
 
 
+  /**
+  * @brief
+  * Add an actor to the render actors.
+  *
+  * @description
+  * Add an actor to the render actors for this frame.
+  *
+  * @param actor
+  * The actor to render.
+  */
   virtual void
   addActorToRenderFrame(SPtr<Actor> actor);
-
+  /**
+  * @brief
+  * Gets the render actors.
+  *
+  * @description
+  * Returns the list of render actors for this frame.
+  *
+  * @return
+  * The list of render actors for this frame.
+  */
   virtual Vector<SPtr<Actor>>
   getRenderFrameActors();
-
+  /**
+  * @brief
+  * Remove all render actors.
+  *
+  * @description
+  * Clears the list of render actors for this frame.
+  */
   virtual void
   clearRenderFrameActors();
 
-  
+
+  /**
+  * @brief
+  * Adds a camera to the active cameras.
+  *
+  * @description
+  * Adds a camera to the active cameras for this frame.
+  *
+  * @param camera
+  * The camera to use.
+  */
   virtual void
   addActiveCamera(SPtr<CCamera> camera);
-
+  /**
+  * @brief
+  * Gets the active cameras.
+  *
+  * @description
+  * Returns the list of active cameras for this frame.
+  *
+  * @return
+  * The list of active cameras for this frame.
+  */
   virtual Vector<SPtr<CCamera>>
   getActiveCameras();
-
+  /**
+  * @brief
+  * Remove all active cameras.
+  *
+  * @description
+  * Clears the list of active cameras for this frame.
+  */
   virtual void
   clearActiveCameras();
 
@@ -578,7 +627,13 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
 
 
 
+  /**
+  * All render actors for a frame.
+  */
   Vector<SPtr<Actor>> m_renderActors;
+  /**
+  * All active cameras for a frame.
+  */
   Vector<SPtr<CCamera>> m_activeCameras;
 };
 }

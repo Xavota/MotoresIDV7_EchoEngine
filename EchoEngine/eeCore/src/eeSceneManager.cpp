@@ -4,6 +4,13 @@
 #include <eeMemoryManager.h>
 
 namespace eeEngineSDK {
+SceneManager::~SceneManager()
+{
+  for (auto& sc : m_scenes)
+  {
+    sc.second->release();
+  }
+}
 void
 SceneManager::update()
 {
@@ -20,8 +27,8 @@ SceneManager::addScene(String name)
 {
   if (m_scenes.find(name) != m_scenes.end())
   {
-    eeOStream::print("ERROR TRYING TO ADD SCENE"); eeOStream::endl();
-    eeOStream::print("Scene already with that name!"); eeOStream::endl();
+    eeOut << "ERROR TRYING TO ADD SCENE" << eeEndl;
+    eeOut << "Scene already with that name!" << eeEndl;
     return nullptr;
   }
 
@@ -34,8 +41,8 @@ SceneManager::getScene(String name)
 {
   if (m_scenes.find(name) == m_scenes.end())
   {
-    eeOStream::print("ERROR TRYING TO GET SCENE"); eeOStream::endl();
-    eeOStream::print("Not a scene with that name!"); eeOStream::endl();
+    eeOut << "ERROR TRYING TO GET SCENE" << eeEndl;
+    eeOut << "Not a scene with that name!" << eeEndl;
     return nullptr;
   }
   return m_scenes[name];
@@ -43,6 +50,9 @@ SceneManager::getScene(String name)
 Vector<SPtr<Actor>>
 SceneManager::getAllRenderableActorsInside(SPtr<CCamera> camera)
 {
+  if (!camera)
+    return Vector<SPtr<Actor>>();
+
   Vector<SPtr<Actor>> renderActors;
   for (auto& sc : m_scenes)
   {
