@@ -106,7 +106,7 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
   * Weather it succeed or failed to initialize.
   */
   bool
-  initializeScreen() override;
+  initializeScreen(void* callback) override;
 
   /**
   * @brief
@@ -534,6 +534,19 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
   */
   FORCEINLINE virtual const void*
   getBasics() const override { return reinterpret_cast<const void*>(&m_basics); }
+
+  /**
+  * @brief
+  * Gets the window for the api.
+  *
+  * @description
+  * Returns the window that the api is using.
+  *
+  * @return
+  * A void pointer containing the window that the api is using.
+  */
+  FORCEINLINE virtual void*
+  getWindow() const override { return m_win; }
 
 
  protected:

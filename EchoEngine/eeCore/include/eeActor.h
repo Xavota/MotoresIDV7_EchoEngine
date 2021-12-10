@@ -131,6 +131,21 @@ class EE_CORE_EXPORT Actor : public EnableSPtrFromThis<Actor>
   */
   void
   attachTo(SPtr<Actor> parent);
+  /**
+  * @brief
+  * Gets the parent.
+  *
+  * @description
+  * Returns the actor to witch it is attached to.
+  *
+  * @retunr
+  * The actor to witch it is attached to.
+  */
+  SPtr<Actor>
+  getParent()
+  {
+    return m_parent;
+  }
 
   /**
   * @brief
@@ -144,6 +159,39 @@ class EE_CORE_EXPORT Actor : public EnableSPtrFromThis<Actor>
   */
   SPtr<CTransform>
   getTransform();
+
+
+  /**
+  * @brief
+  * Gets the children.
+  *
+  * @description
+  * Returns the children attach to the actor.
+  *
+  * @return
+  * The transform component.
+  */
+  Vector<SPtr<Actor>>
+  getChildren()
+  {
+    return m_childs;
+  }
+  
+  /**
+  * @brief
+  * Gets the actor name.
+  *
+  * @description
+  * Returns the descriptive actor name.
+  *
+  * @return
+  * The actor name.
+  */
+  String
+  getName()
+  {
+    return m_name;
+  }
 
  private:
   /**

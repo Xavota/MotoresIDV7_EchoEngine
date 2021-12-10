@@ -77,12 +77,15 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   *
   * @description
   * Initializes the screen depending on the graphics api active.
+  * 
+  * @param callback
+  * The function callback for the inputs.
   *
   * @return
   * Weather it succeed or failed to initialize.
   */
   virtual bool
-  initializeScreen(){return true;}
+  initializeScreen(void* /*callback*/){return true;}
 
   /**
   * @brief
@@ -372,6 +375,20 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   release();
 
 
+  /**
+  * @brief
+  * Set function callback for imgui impl.
+  *
+  * @description
+  * Set function callback for imgui implementation.
+  * //TODO: THIS SHOULDN'T BE HERE, IT'S TEMPORARY
+  *
+  * @param func
+  * Function callback for imgui.
+  */
+  //virtual void
+  //setImguiCallback()
+
 
 
 
@@ -539,6 +556,19 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   */
   FORCEINLINE virtual const void*
   getBasics() const { return nullptr; }
+
+  /**
+  * @brief
+  * Gets the window for the api.
+  *
+  * @description
+  * Returns the window that the api is using.
+  *
+  * @return
+  * A void pointer containing the window that the api is using.
+  */
+  FORCEINLINE virtual void*
+  getWindow() const { return nullptr; }
 
 
   /**

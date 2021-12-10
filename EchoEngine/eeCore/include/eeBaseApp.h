@@ -48,8 +48,8 @@ class EE_CORE_EXPORT BaseApp : public Module<BaseApp>
   * @return
   * The finish code, tells if there was any error.
   */
-  int32
-  run();
+  virtual int32
+  run(void* callback);
 
  protected:
   /**
@@ -118,7 +118,7 @@ class EE_CORE_EXPORT BaseApp : public Module<BaseApp>
   * The finish code, tells if there was any error.
   */
   int32
-  mainLoop();
+  mainLoop(void* callback);
 
   /**
   * @brief
@@ -131,7 +131,7 @@ class EE_CORE_EXPORT BaseApp : public Module<BaseApp>
   * Weather it succeed or failed to initialize.
   */
   bool
-  init();
+  init(void* callback);
 
   /**
   * @brief

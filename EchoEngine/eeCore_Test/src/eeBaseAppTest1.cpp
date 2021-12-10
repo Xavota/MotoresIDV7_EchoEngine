@@ -23,6 +23,15 @@
 #include <eeMemoryManager.h>
 #include <eeTime.h>
 
+#include <windows.h>
+#include <windowsx.h>
+#include "imgui.h"
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx11.h"
+
+#include <eeDX11GraphicsApi.h>
+
+
 using eeEngineSDK::eeConfigurations::screenWidth;
 using eeEngineSDK::eeConfigurations::screenHeight;
 
@@ -44,6 +53,7 @@ using eeEngineSDK::Mesh;
 using eeEngineSDK::SkeletalMesh;
 using eeEngineSDK::Animation;
 using eeEngineSDK::Vector;
+using eeEngineSDK::Map;
 using eeEngineSDK::Pair;
 using eeEngineSDK::uint8;
 using eeEngineSDK::uint16;
@@ -79,8 +89,380 @@ using eeEngineSDK::ViewportDesc;
 using eeEngineSDK::RasteraizerDesc;
 
 
+
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND _hwnd, UINT _msg, WPARAM _wParam, LPARAM _lParam);
+
+LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+  // Handle UI inputs
+  if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
+    return 1;
+
+  PAINTSTRUCT ps;
+  HDC hdc;
+
+  switch (message)
+  {
+  case WM_PAINT:
+    hdc = BeginPaint(hWnd, &ps);
+    EndPaint(hWnd, &ps);
+    break;
+
+  case WM_DESTROY:
+    PostQuitMessage(0);
+    break;
+
+  case WM_KEYDOWN:
+    if (wParam == 'Q')
+    {
+      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::Q, true);
+    }
+    else if (wParam == 'W')
+    {
+      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::W, true);
+    }
+    else if (wParam == 'E')
+    {
+      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::E, true);
+    }
+    else if (wParam == 'A')
+    {
+      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::A, true);
+    }
+    else if (wParam == 'S')
+    {
+      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::S, true);
+    }
+    else if (wParam == 'D')
+    {
+      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::D, true);
+    }
+    else if (wParam == 9) // TAB
+    {
+      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::TAB, true);
+    }
+    break;
+
+  case WM_KEYUP:
+    if (wParam == 'Q')
+    {
+      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::Q, false);
+    }
+    else if (wParam == 'W')
+    {
+      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::W, false);
+    }
+    else if (wParam == 'E')
+    {
+      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::E, false);
+    }
+    else if (wParam == 'A')
+    {
+      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::A, false);
+    }
+    else if (wParam == 'S')
+    {
+      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::S, false);
+    }
+    else if (wParam == 'D')
+    {
+      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::D, false);
+    }
+    else if (wParam == 9) // TAB
+    {
+      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::TAB, false);
+    }
+    break;
+
+  case WM_LBUTTONDOWN:
+    Input::instance().setMouseClickInputPressed(Input::eMOUSE_CLICK::LEFT_CLICK, true);
+    break;
+
+  case WM_RBUTTONDOWN:
+    Input::instance().setMouseClickInputPressed(Input::eMOUSE_CLICK::RIGHT_CLICK, true);
+    break;
+
+  case WM_LBUTTONUP:
+    Input::instance().setMouseClickInputPressed(Input::eMOUSE_CLICK::LEFT_CLICK, false);
+    break;
+
+  case WM_RBUTTONUP:
+    Input::instance().setMouseClickInputPressed(Input::eMOUSE_CLICK::RIGHT_CLICK, false);
+    break;
+
+  case WM_MOUSEMOVE:
+    Input::instance().setMousePosition({ GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) });
+    break;
+
+  default:
+    return DefWindowProc(hWnd, message, wParam, lParam);
+  }
+
+  return 0;
+}
+
+HRESULT InitImgUI()
+{
+  // Setup Dear ImGui context
+  IMGUI_CHECKVERSION();
+  ImGui::CreateContext();
+
+  // Setup Dear ImGui style
+  ImGui::StyleColorsDark();
+
+  const eeEngineSDK::DX11Basics* basics =
+  reinterpret_cast<const eeEngineSDK::DX11Basics*>(GraphicsApi::instance().getBasics());
+
+  // Setup Platform/Renderer back ends
+  ImGui_ImplDX11_Init(basics->m_device, basics->m_deviceContext);
+  ImGui_ImplWin32_Init(GraphicsApi::instance().getWindow());
+
+  return S_OK;
+}
+
+void
+AddChildActorsToUI(SPtr<Actor> act, int32& uniqueId);
+
+void
+showActorData(SPtr<Actor> act, int32& uniqueId)
+{
+  ImGui::PushID(uniqueId++);
+  if (ImGui::TreeNode(act->getName().c_str()))
+  {
+    ImGui::PushID(uniqueId++);
+    bool actActive = act->isActive();
+    if (ImGui::Checkbox("Active", &actActive))
+    {
+      act->setActive(actActive);
+    }
+    ImGui::PopID();
+
+    ImGui::PushID(uniqueId++);
+    Vector3f actPos = act->getTransform()->getPosition();
+    float pos[3] = { actPos.x, actPos.y, actPos.z };
+    if (ImGui::DragFloat3("Position", pos, 0.01f, -1000.0f, 1000.0f))
+    {
+      act->getTransform()->setPosition(Vector3f(pos[0], pos[1], pos[2]));
+    }
+    ImGui::PopID();
+    ImGui::PushID(uniqueId++);
+    Vector3f actRot = act->getTransform()->getRotation().getEuclidean();
+    float rot[3] = { actRot.x, actRot.y, actRot.z };
+    if (ImGui::DragFloat3("Rotation", rot, 0.01f, -1000.0f, 1000.0f))
+    {
+      act->getTransform()->setRotation(Quaternion(Vector3f(rot[0], rot[1], rot[2])));
+    }
+    ImGui::PopID();
+    ImGui::PushID(uniqueId++);
+    Vector3f actScale = act->getTransform()->getScale();
+    float scale[3] = { actScale.x, actScale.y, actScale.z };
+    if (ImGui::DragFloat3("Scale", scale, 0.01f, -1000.0f, 1000.0f))
+    {
+      act->getTransform()->setScale(Vector3f(scale[0], scale[1], scale[2]));
+    }
+    ImGui::PopID();
+
+
+    ImGui::PushID(uniqueId++);
+    if (ImGui::TreeNode("Children"))
+    {
+      AddChildActorsToUI(act, uniqueId);
+      ImGui::TreePop();
+    }
+    ImGui::PopID();
+    ImGui::TreePop();
+  }
+  ImGui::PopID();
+}
+
+void
+AddChildActorsToUI(SPtr<Actor> act, int32& uniqueId)
+{
+  for (auto& child : act->getChildren())
+  {
+    showActorData(child, uniqueId);
+  }
+}
+
+bool
+NewSceneWindow(bool& added, char* name)
+{
+  if (ImGui::Begin("New Scene"))
+  {
+    ImGui::InputText("Name", name, 255);
+
+    if (ImGui::Button("Create"))
+    {
+      added = true;
+      ImGui::End();
+      return true;
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Cancel"))
+    {
+      added = false;
+      ImGui::End();
+      return true;
+    }
+  }
+  ImGui::End();
+  return false;
+}
+
+bool
+NewActorWindow(bool& added, char* name)
+{
+  if (ImGui::Begin("New Scene"))
+  {
+    ImGui::InputText("Name", name, 255);
+
+    if (ImGui::Button("Create"))
+    {
+      added = true;
+      ImGui::End();
+      return true;
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Cancel"))
+    {
+      added = false;
+      ImGui::End();
+      return true;
+    }
+  }
+  ImGui::End();
+  return false;
+}
+
+void
+UIRender()
+{
+  ImGui_ImplDX11_NewFrame();
+  ImGui_ImplWin32_NewFrame();
+
+  ImGui::NewFrame();
+
+  static bool AddingScene = false;
+  static bool AddingActor = false;
+  static String AddingActorScene = "";
+
+  if (AddingScene)
+  {
+    bool added = false;
+    static char name[255];
+    if (NewSceneWindow(added, name))
+    {
+      if (added)
+      {
+        SceneManager::instance().addScene(name);
+      }
+      AddingScene = false;
+    }
+  }
+  if (AddingActor)
+  {
+    bool added = false;
+    static char name[255];
+    if (NewSceneWindow(added, name))
+    {
+      if (added)
+      {
+        SceneManager::instance().getScene(AddingActorScene)->addActor(name);
+      }
+      AddingScene = false;
+    }
+  }
+
+  int32 uniqueId = 0;
+
+  if (ImGui::Begin("Scene graph", nullptr, ImGuiWindowFlags_MenuBar))
+  {
+    if (ImGui::BeginMenuBar())
+    {
+      if (ImGui::BeginMenu("File"))
+      {
+        if (ImGui::MenuItem("Add Scene", NULL, nullptr))
+        {
+          AddingScene = true;
+        }
+        ImGui::EndMenu();
+      }
+    }
+    ImGui::EndMenuBar();
+
+
+    const Map<String, SPtr<Scene>>& scenes = 
+    SceneManager::instance().getAllScenes();
+
+    for (auto& sc : scenes)
+    {
+      ImGui::PushID(uniqueId++);
+      if (ImGui::TreeNode(sc.first.c_str()))
+      {
+        ImGui::PushID(uniqueId++);
+        if (ImGui::Button("Add Actor"))
+        {
+          AddingActor = true;
+          AddingActorScene = sc.first;
+        }
+        ImGui::PopID();
+        ImGui::PushID(uniqueId++);
+        bool active = sc.second->isActive();
+        if (ImGui::Checkbox("Active", &active))
+        {
+          sc.second->setActive(active);
+        }
+        ImGui::PopID();
+        ImGui::PushID(uniqueId++);
+        bool offActive = sc.second->isOffActive();
+        if (ImGui::Checkbox("Off Active", &offActive))
+        {
+          sc.second->setOffActive(offActive);
+        }
+        ImGui::PopID();
+
+
+        const Map<String, SPtr<Actor>>& actors =
+          sc.second->getAllActors();
+
+        for (auto& act : actors)
+        {
+          if (!act.second->getParent())
+            showActorData(act.second, uniqueId);
+        }
+        ImGui::TreePop();
+      }
+      ImGui::PopID();
+    }
+
+
+  }
+  ImGui::End();
+
+  ImGui::ShowDemoWindow();
+  
+  ImGui::Render();
+
+  ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+}
+
+
+
+int32 BaseAppTest1::run(void* callback)
+{
+  return BaseApp::run(WndProc);
+}
+
 bool BaseAppTest1::initResources()
 {
+  if (FAILED(InitImgUI()))
+  {
+    ImGui_ImplDX11_Shutdown();
+    ImGui_ImplWin32_Shutdown();
+    ImGui::DestroyContext();
+    return false;
+  }
+
   SamplerStateDesc samDesc;
   memset(&samDesc, 0, sizeof(samDesc));
   samDesc.filter = eFILTER::MIN_MAG_MIP_LINEAR;
@@ -679,6 +1061,9 @@ void BaseAppTest1::render()
     }
   }
   GraphicsApi::instance().drawObject(m_SAQ);
+
+
+  UIRender();
 
 
   GraphicsApi::instance().present(0u, 0u);

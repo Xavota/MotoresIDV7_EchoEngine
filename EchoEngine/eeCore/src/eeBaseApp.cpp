@@ -10,7 +10,7 @@
 
 namespace eeEngineSDK {
 int32
-BaseApp::run()
+BaseApp::run(void* callback)
 {
   DLLDynamics api;
   api.initialize(eeConfigurations::graphicsApi +
@@ -28,12 +28,12 @@ BaseApp::run()
     return 1;
   }
 
-  return mainLoop();
+  return mainLoop(callback);
 }
 int32
-BaseApp::mainLoop()
+BaseApp::mainLoop(void* callback)
 {
-  if (!init())
+  if (!init(callback))
   {
     destroy();
     return 1;
@@ -64,10 +64,10 @@ BaseApp::mainLoop()
   return 0;
 }
 bool
-BaseApp::init()
+BaseApp::init(void* callback)
 {
 
-  if (!GraphicsApi::instance().initializeScreen())
+  if (!GraphicsApi::instance().initializeScreen(callback))
     return false;
   if (!GraphicsApi::instance().initialize())
     return false;

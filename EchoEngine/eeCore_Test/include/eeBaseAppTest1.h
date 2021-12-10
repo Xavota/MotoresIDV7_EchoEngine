@@ -43,6 +43,19 @@ class BaseAppTest1 : public BaseApp
 
   /**
   * @brief
+  * Runs the application.
+  *
+  * @description
+  * Tells everything to initialize and starts the main loop.
+  *
+  * @return
+  * The finish code, tells if there was any error.
+  */
+  int32
+  run(void* callback) override;
+
+  /**
+  * @brief
   * Initializes the resources needed.
   *
   * @description

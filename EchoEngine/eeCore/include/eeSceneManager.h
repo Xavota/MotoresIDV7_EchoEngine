@@ -91,6 +91,22 @@ class EE_CORE_EXPORT SceneManager : public Module<SceneManager>
   Vector<SPtr<Actor>>
   getAllRenderableActorsInside(SPtr<CCamera> camera);
 
+  /**
+  * @brief
+  * Gets all scenes.
+  *
+  * @description
+  * Returns the maps of scenes.
+  *
+  * @return
+  * All scenes.
+  */
+  const Map<String, SPtr<Scene>>&
+  getAllScenes()
+  {
+    return m_scenes;
+  }
+
 
  private:
   /**

@@ -191,13 +191,13 @@ DX11GraphicsApi::appIsRunning()
   return WM_QUIT != msg.message;
 }
 bool
-DX11GraphicsApi::initializeScreen()
+DX11GraphicsApi::initializeScreen(void* callback)
 {
   // Register class
   WNDCLASSEX wcex;
   wcex.cbSize = sizeof(WNDCLASSEX);
   wcex.style = CS_HREDRAW | CS_VREDRAW;
-  wcex.lpfnWndProc = WndProc;
+  wcex.lpfnWndProc = reinterpret_cast<WNDPROC>(callback);//WndProc; // TODO: MEJORAR ESTO PARA MEJOR ABSTRACCIÓN
   wcex.cbClsExtra = 0;
   wcex.cbWndExtra = 0;
   wcex.hInstance = nullptr;

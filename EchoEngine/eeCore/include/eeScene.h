@@ -160,6 +160,22 @@ class EE_CORE_EXPORT Scene
   */
   void
   setOffActive(bool active);
+  
+  /**
+  * @brief
+  * Gets all the actors.
+  *
+  * @description
+  * Returns the maps of actors.
+  *
+  * @return
+  * All actors.
+  */
+  const Map<String, SPtr<Actor>>&
+  getAllActors()
+  {
+    return m_actors;
+  }
 
  private:
   /**
