@@ -3,10 +3,10 @@
 #include <eeVector4.h>
 
 namespace eeEngineSDK {
-CTransform::CTransform() :
-m_position(0.0f, 0.0f, 0.0f),
-m_rotation(Vector3f( 0.0f,0.0f,0.0f )),
-m_scale(1.0f, 1.0f, 1.0f)
+CTransform::CTransform()
+ : m_position(0.0f, 0.0f, 0.0f),
+   m_rotation(Vector3f( 0.0f,0.0f,0.0f )),
+   m_scale(1.0f, 1.0f, 1.0f)
 {
   m_modelMatrixBuff = GraphicsApi::instance().createConstantBufferPtr();
   Matrix4f modelMat = getModelMatrix();
@@ -19,8 +19,7 @@ CTransform::update()
 {
   EE_NO_EXIST_RETURN(m_actor);
 
-  if (m_dirtyModelMatrix)
-  {
+  if (m_dirtyModelMatrix) {
     m_dirtyModelMatrix = false;
 
     Matrix4f modelMat = getModelMatrix();
@@ -30,15 +29,14 @@ CTransform::update()
 Matrix4f
 CTransform::getModelMatrix()
 {
-  Matrix4f transform = Matrix4f::IDENTITY;
-  if (m_parent)
-  {
+  Matrix4f transform = Matrix4f::kIDENTITY;
+  if (m_parent) {
     transform = m_parent->getModelMatrix();
   }
-  return transform *
-         Matrix4f::translationMatrix(m_position) *
-         Matrix4f::rotationMatrix(m_rotation.getEuclidean()) *
-         Matrix4f::scaleMatrix(m_scale);
+  return transform
+       * Matrix4f::translationMatrix(m_position)
+       * Matrix4f::rotationMatrix(m_rotation.getEuclidean())
+       * Matrix4f::scaleMatrix(m_scale);
 }
 Vector3f
 CTransform::getPosition()
@@ -48,21 +46,19 @@ CTransform::getPosition()
 Vector3f
 CTransform::getGlobalPosition()
 {
-  Matrix4f transform = Matrix4f::IDENTITY;
-  if (m_parent)
-  {
+  Matrix4f transform = Matrix4f::kIDENTITY;
+  if (m_parent) {
     transform = m_parent->getModelMatrix();
   }
-  Vector4f worldPos = transform *
-                      Vector4f(m_position.x, m_position.y, m_position.z, 1.0f);
+  Vector4f worldPos = transform
+                    * Vector4f(m_position.x, m_position.y, m_position.z, 1.0f);
   return Vector3f(worldPos.x, worldPos.y, worldPos.z);
 }
 void
 CTransform::setPosition(const Vector3f& pos)
 {
   m_dirtyModelMatrix = true;
-  for (auto& child : m_childs)
-  {
+  for (auto& child : m_childs) {
     child->m_dirtyModelMatrix = true;
   }
 
@@ -77,8 +73,7 @@ Quaternion
 CTransform::getGlobalRotation()
 {
   Quaternion globalRot;
-  if (m_parent)
-  {
+  if (m_parent) {
     globalRot = m_parent->getRotation();
   }
   return Quaternion(m_rotation.getEuclidean() + globalRot.getEuclidean());
@@ -87,8 +82,7 @@ void
 CTransform::setRotation(const Quaternion& rot)
 {
   m_dirtyModelMatrix = true;
-  for (auto& child : m_childs)
-  {
+  for (auto& child : m_childs) {
     child->m_dirtyModelMatrix = true;
   }
 
@@ -103,8 +97,7 @@ Vector3f
 CTransform::getGlobalScale()
 {
   Vector3f globalScale;
-  if (m_parent)
-  {
+  if (m_parent) {
     globalScale = m_parent->getScale();
   }
   return m_scale * globalScale;
@@ -113,8 +106,7 @@ void
 CTransform::setScale(const Vector3f& scale)
 {
   m_dirtyModelMatrix = true;
-  for (auto& child : m_childs)
-  {
+  for (auto& child : m_childs) {
     child->m_dirtyModelMatrix = true;
   }
 
@@ -123,8 +115,7 @@ CTransform::setScale(const Vector3f& scale)
 void
 CTransform::attatchTo(SPtr<CTransform> transformParent)
 {
-  if (m_parent)
-  {
+  if (m_parent) {
     m_parent->m_childs.erase(m_parent->m_childs.begin() + m_childIndex);
   }
 

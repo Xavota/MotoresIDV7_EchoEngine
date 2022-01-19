@@ -8,7 +8,7 @@
  *
  * @bug Not bug Known.
  */
- /************************************************************************/
+/************************************************************************/
 
 #pragma once
 #define DX11
@@ -18,17 +18,17 @@
 namespace eeEngineSDK {
 namespace eeConfigurations {
 /**
-* The width of the screen.
-*/
+ * The width of the screen.
+ */
 int32 screenWidth = 1280;
 /**
-* The height of the screen.
-*/
+ * The height of the screen.
+ */
 int32 screenHeight = 720;
 
 /**
-* The active platform target.
-*/
+ * The active platform target.
+ */
 #ifdef _M_IX86
 String platformTarget = "x86";
 #elif defined(_M_X64)
@@ -36,8 +36,8 @@ String platformTarget = "x64";
 #endif
 
 /**
-* The name of the active configuration and prefix.
-*/
+ * The name of the active configuration and prefix.
+ */
 #ifdef _DEBUG
 String platformConfig = "Debug";
 String platformConfigPrefix = "d";
@@ -47,19 +47,19 @@ String platformConfigPrefix = "";
 #endif
 
 /**
-* The current graphics api for use.
-*/
+ * The current graphics api for use.
+ */
 #ifdef DX11
 String graphicsApi = "DX11GraphicsApi";
 #endif
 
 /**
-* The suffix for dynamic libraries.
-*/
+ * The suffix for dynamic libraries.
+ */
 String dynamicLibSuffix = ".dll";
 /**
-* The suffix for static libraries.
-*/
+ * The suffix for static libraries.
+ */
 String staticLibSuffix = ".lib";
 }
 }

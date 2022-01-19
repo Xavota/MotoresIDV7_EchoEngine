@@ -2,13 +2,13 @@
 #include "eeDX11GraphicsApi.h"
 
 namespace eeEngineSDK {
-bool DX11VertexBuffer::initData(uint32 dataSize, uint32 batchSize, const Byte* data)
+bool
+DX11VertexBuffer::initData(uint32 dataSize, uint32 batchSize, const Byte* data)
 {
-  const DX11Basics* basics =
+  const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
-  if (!VertexBuffer::initData(dataSize, batchSize, data))
-  {
+  if (!VertexBuffer::initData(dataSize, batchSize, data)) {
     return false;
   }
 
@@ -22,8 +22,7 @@ bool DX11VertexBuffer::initData(uint32 dataSize, uint32 batchSize, const Byte* d
   D3D11_SUBRESOURCE_DATA sd = {};
   sd.pSysMem = m_data.data();
   HRESULT hr = basics->m_device->CreateBuffer(&bd, &sd, &m_buffer);
-  if (FAILED(hr))
-  {
+  if (FAILED(hr)) {
     return false;
   }
 
@@ -31,17 +30,17 @@ bool DX11VertexBuffer::initData(uint32 dataSize, uint32 batchSize, const Byte* d
 }
 void DX11VertexBuffer::updateData(const Byte* data)
 {
-  const DX11Basics* basics =
+  const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   VertexBuffer::updateData(data);
 
   basics->m_deviceContext->UpdateSubresource(m_buffer,
-    0u,
-    NULL,
-    data,
-    0u,
-    0u);
+                                             0u,
+                                             nullptr,
+                                             data,
+                                             0u,
+                                             0u);
 }
 void DX11VertexBuffer::release()
 {
@@ -49,12 +48,13 @@ void DX11VertexBuffer::release()
 }
 void DX11VertexBuffer::set()
 {
-  const DX11Basics* basics =
+  const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   const uint32 stride = m_batchSize;
   const uint32 offset = 0u;
 
-  basics->m_deviceContext->IASetVertexBuffers(0u, 1u, &m_buffer, &stride, &offset);
+  basics->m_deviceContext->IASetVertexBuffers(0u, 1u,
+                                              &m_buffer, &stride, &offset);
 }
 }

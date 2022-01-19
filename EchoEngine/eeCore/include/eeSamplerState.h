@@ -8,7 +8,7 @@
  *
  * @bug Not bug Known.
  */
- /************************************************************************/
+/************************************************************************/
 
 #pragma once
 #include "eePrerequisitesCore.h"
@@ -22,51 +22,51 @@ class EE_CORE_EXPORT SamplerState
 {
  public:
   /**
-  * @brief
-  * Default constructor.
-  */
+   * @brief
+   * Default constructor.
+   */
   SamplerState() = default;
   /**
-  * @brief
-  * Default destructor.
-  */
+   * @brief
+   * Default destructor.
+   */
   virtual
   ~SamplerState() = default;
 
   /**
-  * @brief
-  * Creates a sampler stencil state.
-  *
-  * @description
-  * Creates the sampler stencil state with a descriptor.
-  *
-  * @param desc
-  * The descriptor for the sampler state.
-  *
-  * @return
-  * Whether it succeeded to create or not.
-  */
+   * @brief
+   * Creates a sampler stencil state.
+   *
+   * @description
+   * Creates the sampler stencil state with a descriptor.
+   *
+   * @param desc
+   * The descriptor for the sampler state.
+   *
+   * @return
+   * Whether it succeeded to create or not.
+   */
   virtual bool
   create(SamplerStateDesc /*desc*/) { return true; }
 
   /**
-  * @brief
-  * Set to graphics api.
-  *
-  * @description
-  * Sets the sampler state for the graphic memory to use, only for override in
-  * graphics api specializations.
-  */
+   * @brief
+   * Set to graphics api.
+   *
+   * @description
+   * Sets the sampler state for the graphic memory to use, only for override in
+   * graphics api specializations.
+   */
   virtual void
   use() {}
 
   /**
-  * @brief
-  * Releases the data.
-  *
-  * @description
-  * Deletes the memory of all data allocated.
-  */
+   * @brief
+   * Releases the data.
+   *
+   * @description
+   * Deletes the memory of all data allocated.
+   */
   virtual void
   release() {}
 

@@ -6,11 +6,10 @@ bool DX11IndexBuffer::initData(uint32 dataSize,
                                             uint32 batchSize,
                                             const Byte* data)
 {
-  const DX11Basics* basics =
+  const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
-  if (!IndexBuffer::initData(dataSize, batchSize, data))
-  {
+  if (!IndexBuffer::initData(dataSize, batchSize, data)) {
     return false;
   }
 
@@ -24,8 +23,7 @@ bool DX11IndexBuffer::initData(uint32 dataSize,
   D3D11_SUBRESOURCE_DATA sd = {};
   sd.pSysMem = m_data.data();
   HRESULT hr = basics->m_device->CreateBuffer(&bd, &sd, &m_buffer);
-  if (FAILED(hr))
-  {
+  if (FAILED(hr)) {
     DX11SAFE_RELEASE(m_buffer);
     return false;
   }
@@ -34,17 +32,17 @@ bool DX11IndexBuffer::initData(uint32 dataSize,
 }
 void DX11IndexBuffer::updateData(const Byte* data)
 {
-  const DX11Basics* basics =
+  const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   IndexBuffer::updateData(data);
 
   basics->m_deviceContext->UpdateSubresource(m_buffer,
-    0u,
-    NULL,
-    data,
-    0u,
-    0u);
+                                             0u,
+                                             nullptr,
+                                             data,
+                                             0u,
+                                             0u);
 }
 
 void DX11IndexBuffer::release()
@@ -54,17 +52,15 @@ void DX11IndexBuffer::release()
 
 void DX11IndexBuffer::set()
 {
-  const DX11Basics* basics =
+  const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   const uint32 offset = 0u;
 
-  if (m_batchSize == 2)
-  {
+  if (m_batchSize == 2) {
     basics->m_deviceContext->IASetIndexBuffer(m_buffer, DXGI_FORMAT_R16_UINT, offset);
   }
-  else if (m_batchSize == 4)
-  {
+  else if (m_batchSize == 4) {
     basics->m_deviceContext->IASetIndexBuffer(m_buffer, DXGI_FORMAT_R32_UINT, offset);
   }
 }

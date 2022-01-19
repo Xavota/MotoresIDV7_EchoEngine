@@ -8,7 +8,7 @@
  *
  * @bug Not bug Known.
  */
- /************************************************************************/
+/************************************************************************/
 
 #pragma once
 #include "eePrerequisitesUtilities.h"
@@ -16,33 +16,33 @@
 
 namespace eeEngineSDK {
 /**
-* @brief
-* The Time module for all time managing.
-*/
+ * @brief
+ * The Time module for all time managing.
+ */
 class EE_UTILITY_EXPORT Time : public Module<Time>
 {
  public:
   /**
-  * @brief
-  * Default constructor.
-  */
+   * @brief
+   * Default constructor.
+   */
   Time();
   /**
-  * @brief
-  * Default destructor.
-  */
+   * @brief
+   * Default destructor.
+   */
   ~Time() = default;
 
   /**
-  * @brief
-  * Returns deltaTime.
-  *
-  * @description
-  * Returns the time elapsed since last update.
-  *
-  * @return
-  * The time elapsed since last update.
-  */
+   * @brief
+   * Returns deltaTime.
+   *
+   * @description
+   * Returns the time elapsed since last update.
+   *
+   * @return
+   * The time elapsed since last update.
+   */
   float
   getDeltaTime();
 
@@ -50,22 +50,22 @@ class EE_UTILITY_EXPORT Time : public Module<Time>
   friend class BaseApp;
 
   /**
-  * @brief
-  * Updates to change deltaTime.
-  *
-  * @description
-  * Updates every frame to calculate time elapsed.
-  */
+   * @brief
+   * Updates to change deltaTime.
+   *
+   * @description
+   * Updates every frame to calculate time elapsed.
+   */
   void
   update();
 
   /**
-  * Times at the start of each frame.
-  */
+   * Times at the start of each frame.
+   */
   std::chrono::steady_clock::time_point m_start;
   /**
-  * Time elpased since last frame.
-  */
+   * Time elapsed since last frame.
+   */
   float m_deltaTime = 0.0f;
 };
 }

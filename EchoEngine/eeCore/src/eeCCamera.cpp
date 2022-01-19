@@ -11,7 +11,7 @@
 namespace eeEngineSDK {
 CCamera::CCamera()
 {
-  m_upVector = Vector3f::UP;
+  m_upVector = Vector3f::kUP;
 }
 void
 CCamera::init(CameraDesc desc)
@@ -24,7 +24,6 @@ CCamera::init(CameraDesc desc)
 
   m_dirtyView = true;
   m_dirtyProj = true;
-
 
 
   m_renderTarget = GraphicsApi::instance().createRenderTragetPtr();
@@ -45,9 +44,10 @@ CCamera::update()
   m_dirtyView = true;
   m_dirtyFrustum = true;
 
-  if (m_active)
+  if (m_active) {
     GraphicsApi::instance().addActiveCamera(
          MemoryManager::instance().reinterpretPtr<CCamera>(shared_from_this()));
+  }
 }
 Vector3f
 CCamera::getEyePosition()
@@ -144,8 +144,7 @@ CCamera::getUp()
 Matrix4f
 CCamera::getViewMatrix()
 {
-  if (m_dirtyView)
-  {
+  if (m_dirtyView) {
     m_dirtyView = false;
 
     m_viewMat = Matrix4f::viewMatrix(m_eyePos, m_lookAt, m_upVector);
@@ -155,14 +154,12 @@ CCamera::getViewMatrix()
 Matrix4f
 CCamera::getProjectionMatrix()
 {
-  if (m_dirtyProj)
-  {
+  if (m_dirtyProj) {
     m_dirtyProj = false;
     
-    switch (m_projectionType)
-    {
+    switch (m_projectionType) {
     case eeEngineSDK::eCAMERA_PROJECTION_TYPE::NONE:
-      m_projectionMat = Matrix4f::IDENTITY;
+      m_projectionMat = Matrix4f::kIDENTITY;
       break;
     case eeEngineSDK::eCAMERA_PROJECTION_TYPE::ORTHOGRAPHIC:
       m_projectionMat = Matrix4f::orthograficMatrixMatrix(m_viewSize.x,
@@ -179,16 +176,6 @@ CCamera::getProjectionMatrix()
     }
   }
   return m_projectionMat;
-}
-bool
-CCamera::isActive()
-{
-  return m_active;
-}
-void
-CCamera::setActive(bool active)
-{
-  m_active = active;
 }
 bool
 CCamera::isMain()
@@ -213,19 +200,18 @@ CCamera::getDepthStencil()
 bool
 CCamera::isModelOnCamera(SPtr<CModel> ActorModel)
 {
-  if (!ActorModel)
+  if (!ActorModel) {
     return false;
+  }
 
-  if (m_dirtyFrustum)
-  {
+  if (m_dirtyFrustum) {
     m_dirtyFrustum = false;
-
 
     // Recalculate Frustum
     Vector3f nearFront = getFront() * m_nearZ;
     Vector3f nearUp = getUp() * Math::tan(m_fovAngleY) * m_nearZ;
-    Vector3f nearLeft = getRight() *
-      (Math::tan(m_fovAngleY) * m_nearZ * (m_viewSize.x / m_viewSize.y));
+    Vector3f nearLeft = getRight()
+           * (Math::tan(m_fovAngleY) * m_nearZ * (m_viewSize.x / m_viewSize.y));
 
 
     Vector3f nw = (nearFront + nearUp - nearLeft) * 500.0f;
@@ -249,68 +235,55 @@ CCamera::isModelOnCamera(SPtr<CModel> ActorModel)
 
   const Sphere& boundSphere = ActorModel->getBoundingSphere();
   // See if in
-  if (Math::intersectionSpherePlane(boundSphere, m_nearPlane))
-  {
+  if (Math::intersectionSpherePlane(boundSphere, m_nearPlane)) {
     return true;
   }
-  if (Math::intersectionSpherePlane(boundSphere, m_farPlane))
-  {
+  if (Math::intersectionSpherePlane(boundSphere, m_farPlane)) {
     return true;
   }
-  if (Math::intersectionSpherePlane(boundSphere, m_leftPlane))
-  {
+  if (Math::intersectionSpherePlane(boundSphere, m_leftPlane)) {
     return true;
   }
-  if (Math::intersectionSpherePlane(boundSphere, m_rightPlane))
-  {
+  if (Math::intersectionSpherePlane(boundSphere, m_rightPlane)) {
     return true;
   }
-  if (Math::intersectionSpherePlane(boundSphere, m_topPlane))
-  {
+  if (Math::intersectionSpherePlane(boundSphere, m_topPlane)) {
     return true;
   }
-  if (Math::intersectionSpherePlane(boundSphere, m_downPlane))
-  {
+  if (Math::intersectionSpherePlane(boundSphere, m_downPlane)) {
     return true;
   }
 
   Vector3f relativePoint = boundSphere.getCenter()
                          - m_nearPlane.getNormal() * m_nearPlane.d;
-  if (relativePoint.dot(m_nearPlane.getNormal()) < 0.0f)
-  {
+  if (relativePoint.dot(m_nearPlane.getNormal()) < 0.0f) {
     return false;
   }
   relativePoint = boundSphere.getCenter()
                 - m_farPlane.getNormal() * m_farPlane.d;
-  if (relativePoint.dot(m_farPlane.getNormal()) < 0.0f)
-  {
+  if (relativePoint.dot(m_farPlane.getNormal()) < 0.0f) {
     return false;
   }
   relativePoint = boundSphere.getCenter()
                 - m_leftPlane.getNormal() * m_leftPlane.d;
-  if (relativePoint.dot(m_leftPlane.getNormal()) < 0.0f)
-  {
+  if (relativePoint.dot(m_leftPlane.getNormal()) < 0.0f) {
     return false;
   }
   relativePoint = boundSphere.getCenter()
                 - m_rightPlane.getNormal() * m_rightPlane.d;
-  if (relativePoint.dot(m_rightPlane.getNormal()) < 0.0f)
-  {
+  if (relativePoint.dot(m_rightPlane.getNormal()) < 0.0f) {
     return false;
   }
   relativePoint = boundSphere.getCenter()
                 - m_topPlane.getNormal() * m_topPlane.d;
-  if (relativePoint.dot(m_topPlane.getNormal()) < 0.0f)
-  {
+  if (relativePoint.dot(m_topPlane.getNormal()) < 0.0f) {
     return false;
   }
   relativePoint = boundSphere.getCenter()
                 - m_downPlane.getNormal() * m_downPlane.d;
-  if (relativePoint.dot(m_downPlane.getNormal()) < 0.0f)
-  {
+  if (relativePoint.dot(m_downPlane.getNormal()) < 0.0f) {
     return false;
   }
-
 
   return true;
 }

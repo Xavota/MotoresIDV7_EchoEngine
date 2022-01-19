@@ -7,9 +7,10 @@ DX11SamplerState::~DX11SamplerState()
   release();
 }
 
-bool DX11SamplerState::create(SamplerStateDesc desc)
+bool
+DX11SamplerState::create(SamplerStateDesc desc)
 {
-  const DX11Basics* basics =
+  const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   D3D11_SAMPLER_DESC sampDesc;
@@ -28,14 +29,15 @@ bool DX11SamplerState::create(SamplerStateDesc desc)
   sampDesc.MinLOD = desc.minLOD;
   sampDesc.MaxLOD = desc.maxLOD;
   HRESULT hr = basics->m_device->CreateSamplerState(&sampDesc, &m_sampler);
-  if (FAILED(hr))
+  if (FAILED(hr)) {
     return false;
+  }
   return true;
 }
 
 void DX11SamplerState::use()
 {
-  const DX11Basics* basics =
+  const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   basics->m_deviceContext->PSSetSamplers(0, 1, &m_sampler);

@@ -8,10 +8,11 @@ Quaternion::Quaternion()
 {
 }
 
-Quaternion::Quaternion(float _w, float _x, float _y, float _z) : w(_w), 
-                                                                 x(_x),
-                                                                 y(_y),
-                                                                 z(_z)
+Quaternion::Quaternion(float _w, float _x, float _y, float _z)
+ : w(_w), 
+   x(_x),
+   y(_y),
+   z(_z)
 {
 }
 
@@ -65,10 +66,12 @@ Quaternion::getEuclidean()
 
   // pitch (y-axis rotation)
   float sinp = 2 * (w * y - z * x);
-  if (Math::abs(sinp) >= 1)
+  if (Math::abs(sinp) >= 1) {
     angles.y = Math::copysign(Math::kPI / 2, sinp); // use 90 degrees if out of range
-  else
+  }
+  else {
     angles.y = Math::asin(sinp);
+  }
 
   // yaw (z-axis rotation)
   float siny_cosp = 2 * (w * z + x * y);
@@ -128,7 +131,7 @@ Quaternion::rotateVector(const Vector3f& vec)
   return result.getNormalize();
 }
 Quaternion
-Quaternion::createFromAxisAngle(const Vector3f axis,
+Quaternion::createFromAxisAngle(const Vector3f& axis,
                                 const float& angle)
 {
   float factor = sinf(angle / 2.0f);
@@ -143,17 +146,17 @@ Quaternion::createFromAxisAngle(const Vector3f axis,
 }
 Vector3f Quaternion::getFrontVector()
 {
-  return rotateVector(Vector3f::FORWARD);
+  return rotateVector(Vector3f::kFORWARD);
 }
 
 Vector3f Quaternion::getRightVector()
 {
-  return rotateVector(Vector3f::RIGHT);
+  return rotateVector(Vector3f::kRIGHT);
 }
 
 Vector3f Quaternion::getUpVector()
 {
-  return rotateVector(Vector3f::UP);
+  return rotateVector(Vector3f::kUP);
 }
 
 String Quaternion::toString() const
@@ -175,11 +178,21 @@ Quaternion::operator*(const Quaternion& other)
   );
   return r;
 }
-bool Quaternion::operator==(const Quaternion& other) const
+Quaternion
+Quaternion::operator+(const Quaternion& other)
 {
-  return (Math::abs(this->w - other.w) < Math::kFLOAT_EQUAL_SMALL_DIFFERENCE)
-      && (Math::abs(this->x - other.x) < Math::kFLOAT_EQUAL_SMALL_DIFFERENCE)
-      && (Math::abs(this->y - other.y) < Math::kFLOAT_EQUAL_SMALL_DIFFERENCE)
-      && (Math::abs(this->z - other.z) < Math::kFLOAT_EQUAL_SMALL_DIFFERENCE);
+  Quaternion r(this->x + other.x,
+               this->y + other.y,
+               this->z + other.z,
+               this->w + other.w);
+  return r;
+}
+bool
+Quaternion::operator==(const Quaternion& other) const
+{
+  return Math::checkFloatsEqual(this->w, other.w)
+      && Math::checkFloatsEqual(this->x, other.x)
+      && Math::checkFloatsEqual(this->y, other.y)
+      && Math::checkFloatsEqual(this->z, other.z);
 }
 }

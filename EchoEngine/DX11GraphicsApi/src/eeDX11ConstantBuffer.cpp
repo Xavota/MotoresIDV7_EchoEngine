@@ -9,11 +9,10 @@ DX11ConstantBuffer::initData(uint32 dataSize,
                              uint32 batchSize,
                              const Byte* data)
 {
-  const DX11Basics* basics =
+  const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
-  if (!ConstantBuffer::initData(dataSize, batchSize, data))
-  {
+  if (!ConstantBuffer::initData(dataSize, batchSize, data)) {
     return false;
   }
 
@@ -23,9 +22,8 @@ DX11ConstantBuffer::initData(uint32 dataSize,
   bd.ByteWidth = dataSize;
   bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
   bd.CPUAccessFlags = 0;
-  HRESULT hr = basics->m_device->CreateBuffer(&bd, NULL, &m_buffer);
-  if (FAILED(hr))
-  {
+  HRESULT hr = basics->m_device->CreateBuffer(&bd, nullptr, &m_buffer);
+  if (FAILED(hr)) {
     DX11SAFE_RELEASE(m_buffer);
     return false;
   }
@@ -35,14 +33,14 @@ DX11ConstantBuffer::initData(uint32 dataSize,
 void
 DX11ConstantBuffer::updateData(const Byte* data)
 {
-  const DX11Basics* basics =
+  const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   ConstantBuffer::updateData(data);
 
   basics->m_deviceContext->UpdateSubresource(m_buffer,
                                              0u,
-                                             NULL,
+                                             nullptr,
                                              data,
                                              0u,
                                              0u);
@@ -55,12 +53,12 @@ DX11ConstantBuffer::release()
 void
 DX11ConstantBuffer::setInVertex(uint32 index)
 {
-  const DX11Basics* basics =
+  const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   basics->m_deviceContext->UpdateSubresource(m_buffer,
                                              0u,
-                                             NULL,
+                                             nullptr,
                                              m_data.data(),
                                              0u,
                                              0u);
@@ -71,7 +69,7 @@ DX11ConstantBuffer::setInVertex(uint32 index)
 void
 DX11ConstantBuffer::setInPixel(uint32 index)
 {
-  const DX11Basics* basics =
+  const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   basics->m_deviceContext->PSSetConstantBuffers(index,

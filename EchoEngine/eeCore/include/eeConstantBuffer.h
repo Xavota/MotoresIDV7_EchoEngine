@@ -8,7 +8,7 @@
  *
  * @bug Not bug Known.
  */
- /************************************************************************/
+/************************************************************************/
 
 #pragma once
 #include "eeBuffer.h"
@@ -20,37 +20,37 @@ namespace eeEngineSDK {
  */
 class ConstantBuffer : public Buffer
 {
-public:
+ public:
   /**
-  * @brief
-  * Default constructor
-  */
+   * @brief
+   * Default constructor
+   */
   ConstantBuffer() = default;
   /**
-  * @brief
-  * Default destructor
-  */
+   * @brief
+   * Default destructor
+   */
   virtual
   ~ConstantBuffer() = default;
 
 
   /**
-  * @brief
-  * Initializes its data.
-  *
-  * @description
-  * Takes the data given and copies the number of bytes given.
-  *
-  * @param dataSize
-  * The number of bytes the buffer will copy.
-  * @param batchSize
-  * The number of size of the data type stored.
-  * @param data
-  * The pointer to the bytes that will be copied.
-  *
-  * @return
-  * Weather it succeed or failed to initialize.
-  */
+   * @brief
+   * Initializes its data.
+   *
+   * @description
+   * Takes the data given and copies the number of bytes given.
+   *
+   * @param dataSize
+   * The number of bytes the buffer will copy.
+   * @param batchSize
+   * The number of size of the data type stored.
+   * @param data
+   * The pointer to the bytes that will be copied.
+   *
+   * @return
+   * Weather it succeed or failed to initialize.
+   */
   virtual bool
   initData(uint32 dataSize, uint32 batchSize, const Byte* data) override
   {
@@ -58,15 +58,15 @@ public:
   }
 
   /**
-  * @brief
-  * Updates the data.
-  *
-  * @description
-  * Overrides the data with the new data given.
-  *
-  * @param data
-  * The pointer to the bytes that will be copied.
-  */
+   * @brief
+   * Updates the data.
+   *
+   * @description
+   * Overrides the data with the new data given.
+   *
+   * @param data
+   * The pointer to the bytes that will be copied.
+   */
   virtual void
   updateData(const Byte* data) override
   {
@@ -74,40 +74,40 @@ public:
   }
 
   /**
-  * @brief
-  * Releases the data.
-  *
-  * @description
-  * Deletes the memory of all data allocated.
-  */
+   * @brief
+   * Releases the data.
+   *
+   * @description
+   * Deletes the memory of all data allocated.
+   */
   virtual void
   release() override {};
 
   /**
-  * @brief
-  * Sets the buffer to the vertex shader.
-  *
-  * @description
-  * Sets the buffer data to be used by the active vertex shader. Only for
-  * graphics api overrides.
-  *
-  * @param index
-  * The index in witch the buffer will be put.
-  */
+   * @brief
+   * Sets the buffer to the vertex shader.
+   *
+   * @description
+   * Sets the buffer data to be used by the active vertex shader. Only for
+   * graphics api overrides.
+   *
+   * @param index
+   * The index in witch the buffer will be put.
+   */
   virtual void
   setInVertex(uint32 /*index*/){}
 
   /**
-  * @brief
-  * Sets the buffer to the pixel shader.
-  *
-  * @description
-  * Sets the buffer data to be used by the active pixel shader. Only for
-  * graphics api overrides.
-  *
-  * @param index
-  * The index in witch the buffer will be put.
-  */
+   * @brief
+   * Sets the buffer to the pixel shader.
+   *
+   * @description
+   * Sets the buffer data to be used by the active pixel shader. Only for
+   * graphics api overrides.
+   *
+   * @param index
+   * The index in witch the buffer will be put.
+   */
   virtual void
   setInPixel(uint32 /*index*/){}
 };

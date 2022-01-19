@@ -21,29 +21,30 @@ GraphicsApi::initialize()
 void
 GraphicsApi::drawObject(SPtr<Object> obj)
 {
-  //m_basics.m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+  auto& graphicsApi = GraphicsApi::instance();
 
+  //m_basics.m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
   const Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>& meshes = obj->getModel()->getMeshes();
 
   obj->getModelBuffer()->setInVertex(0u);
 
-  for (const auto& m : meshes)
-  {
+  for (const auto& m : meshes) {
     m.first->set();
 
-    GraphicsApi::instance().setTextures({m.second}, 0u);
+    graphicsApi.setTextures({m.second}, 0u);
 
     drawIndexed(m.first->getIndexCount());
 
-
-    GraphicsApi::instance().unsetVertexBuffers(1u, 0u);
+    graphicsApi.unsetVertexBuffers(1u, 0u);
   }  
 }
 void
 GraphicsApi::drawObject(SPtr<Actor> act)
 {
   EE_NO_EXIST_RETURN(act);
+
+  auto& graphicsApi = GraphicsApi::instance();
 
   SPtr<CTransform> transform = act->getTransform();
 
@@ -58,21 +59,21 @@ GraphicsApi::drawObject(SPtr<Actor> act)
 
   transform->getModelBuffer()->setInVertex(0u);
 
-  for (int32 i = 0; i < meshesCount; ++i)
-  {
-    if (!meshes[i].first) break;
+  for (int32 i = 0; i < meshesCount; ++i) {
+    if (!meshes[i].first) { break; }
 
     meshes[i].first->set();
 
-    GraphicsApi::instance().setTextures({ meshes[i].second }, 0u);
+    graphicsApi.setTextures({ meshes[i].second }, 0u);
 
-    if (skeletal && skeletal->getSkeletal())
+    if (skeletal && skeletal->getSkeletal()) {
       skeletal->getSkeletal()->use(i);
+    }
 
     drawIndexed(meshes[i].first->getIndexCount());
 
-    GraphicsApi::instance().unsetVertexBuffers(1u, 0u);
-    GraphicsApi::instance().unsetTextures(1u, 0u);
+    graphicsApi.unsetVertexBuffers(1u, 0u);
+    graphicsApi.unsetTextures(1u, 0u);
   }
 }
 void

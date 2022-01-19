@@ -13,18 +13,16 @@ int32
 BaseApp::run(void* callback)
 {
   DLLDynamics api;
-  api.initialize(eeConfigurations::graphicsApi +
-                 eeConfigurations::platformConfigPrefix +
-                 eeConfigurations::dynamicLibSuffix);
+  api.initialize(eeConfigurations::graphicsApi
+               + eeConfigurations::platformConfigPrefix
+               + eeConfigurations::dynamicLibSuffix);
 
   auto apiInit = api.getFunction("initPlugin");
-  if (apiInit)
-  {
+  if (apiInit) {
     apiInit();
   }
 
-  if (!GraphicsApi::isStarted())
-  {
+  if (!GraphicsApi::isStarted()) {
     return 1;
   }
 
@@ -33,26 +31,24 @@ BaseApp::run(void* callback)
 int32
 BaseApp::mainLoop(void* callback)
 {
-  if (!init(callback))
-  {
+  if (!init(callback)) {
     destroy();
     return 1;
   }
-  if (!initSystems())
-  {
+  if (!initSystems()) {
     destroy();
     return 1;
   }
-  if (!initResources())
-  {
+  if (!initResources()) {
     destroy();
     return 1;
   }
 
-  while (GraphicsApi::instance().appIsRunning())
-  {
+  auto& graphicsApi = GraphicsApi::instance();
+  auto& time = Time::instance();
+  while (graphicsApi.appIsRunning()) {
     processEvents();
-    Time::instance().update();
+    time.update();
     update();
     render();
 
@@ -66,16 +62,20 @@ BaseApp::mainLoop(void* callback)
 bool
 BaseApp::init(void* callback)
 {
+  auto& graphicsApi = GraphicsApi::instance();
 
-  if (!GraphicsApi::instance().initializeScreen(callback))
+  if (!graphicsApi.initializeScreen(callback)) {
     return false;
-  if (!GraphicsApi::instance().initialize())
+  }
+  if (!graphicsApi.initialize()) {
     return false;
+  }
 
 
   return true;
 }
-bool BaseApp::initSystems()
+bool
+BaseApp::initSystems()
 {
   ResourceManager::startUp();
   Input::startUp();
@@ -97,10 +97,12 @@ void
 BaseApp::render()
 {
 }
-void BaseApp::endFrame()
+void
+BaseApp::endFrame()
 {
-  GraphicsApi::instance().clearRenderFrameActors();
-  GraphicsApi::instance().clearActiveCameras();
+  auto& graphicsApi = GraphicsApi::instance();
+  graphicsApi.clearRenderFrameActors();
+  graphicsApi.clearActiveCameras();
   Input::instance().update();
 }
 void

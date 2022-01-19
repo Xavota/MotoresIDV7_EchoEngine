@@ -9,14 +9,11 @@ Vector<SPtr<Actor>>
 Scene::getAllRenderableActorsInside(SPtr<CCamera> camera)
 {
   Vector<SPtr<Actor>> renderActors;
-  for (auto& act : m_actors)
-  {
-    if (act.second->isActive())
-    {
+  for (auto& act : m_actors) {
+    if (act.second->isActive()) {
       SPtr<CRender> render = act.second->getComponent<CRender>();
       SPtr<CModel> model = act.second->getComponent<CModel>();
-      if (render && model && camera->isModelOnCamera(model))
-      {
+      if (render && model && camera->isModelOnCamera(model)) {
         renderActors.push_back(act.second);
       }
     }
@@ -26,8 +23,7 @@ Scene::getAllRenderableActorsInside(SPtr<CCamera> camera)
 SPtr<Actor>
 Scene::addActor(String name)
 {
-  if (m_actors.find(name) != m_actors.end())
-  {
+  if (m_actors.find(name) != m_actors.end()) {
     eeOut << "ERROR TRYING TO ADD ACTOR TO SCENE" << eeEndl;
     eeOut << "Actor already with that name!" << eeEndl;
     return nullptr;
@@ -40,8 +36,7 @@ Scene::addActor(String name)
 SPtr<Actor>
 Scene::getActor(String name)
 {
-  if (m_actors.find(name) == m_actors.end())
-  {
+  if (m_actors.find(name) == m_actors.end()) {
     eeOut << "ERROR TRYING TO GET ACTOR" << eeEndl;
     eeOut << "Not an actor with that name!" << eeEndl;
     return nullptr;
@@ -56,16 +51,16 @@ Scene::init()
 void
 Scene::update()
 {
-  for (auto& act : m_actors)
-  {
-    if (act.second->isActive())
+  for (auto& act : m_actors) {
+    if (act.second->isActive()) {
       act.second->update();
+    }
   }
 }
-void Scene::release()
+void
+Scene::release()
 {
-  for (auto& a : m_actors)
-  {
+  for (auto& a : m_actors) {
     a.second->destroy();
   }
 }

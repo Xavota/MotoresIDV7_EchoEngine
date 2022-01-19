@@ -2,9 +2,6 @@
 #include "eeGraficsApi.h"
 
 namespace eeEngineSDK {
-CRender::CRender()
-{
-}
 void
 CRender::update()
 {

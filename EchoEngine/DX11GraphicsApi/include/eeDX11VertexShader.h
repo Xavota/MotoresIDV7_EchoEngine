@@ -8,7 +8,7 @@
  *
  * @bug Not bug Known.
  */
- /************************************************************************/
+/************************************************************************/
 
 #pragma once
 #include "eePrerequisitesDX11.h"
@@ -24,87 +24,84 @@ namespace eeEngineSDK {
  */
 class DX11VertexShader : public VertexShader
 {
-public:
+ public:
   /**
-  * @brief
-  * Default constructor
-  */
+   * @brief
+   * Default constructor
+   */
   DX11VertexShader() = default;
   /**
-  * @brief
-  * Default destructor
-  */
+   * @brief
+   * Default destructor
+   */
   ~DX11VertexShader();
 
   /**
-  * @brief
-  * Initializes the shader.
-  *
-  * @description
-  * Initializes the shader from a file.
-  *
-  * @param fileName
-  * The name of the file containing the shader.
-  *
-  * @return
-  * Weather it succeed or failed to initialize.
-  */
+   * @brief
+   * Initializes the shader.
+   *
+   * @description
+   * Initializes the shader from a file.
+   *
+   * @param fileName
+   * The name of the file containing the shader.
+   *
+   * @return
+   * Weather it succeed or failed to initialize.
+   */
   bool
   compileFromFile(const String& fileName) override;
   /**
-  * @brief
-  * Initializes the shader.
-  *
-  * @description
-  * Initializes the shader from a string.
-  *
-  * @param fileName
-  * The string for the shader to compile.
-  *
-  * @return
-  * Weather it succeed or failed to initialize.
-  */
+   * @brief
+   * Initializes the shader.
+   *
+   * @description
+   * Initializes the shader from a string.
+   *
+   * @param fileName
+   * The string for the shader to compile.
+   *
+   * @return
+   * Weather it succeed or failed to initialize.
+   */
   bool
   compileFromString(const String& shaderString) override;
 
   /**
-  * @brief
-  * Set to graphics api.
-  *
-  * @description
-  * Sets the shader for the graphic memory to use, only for override in graphics
-  * api specializations.
-  */
+   * @brief
+   * Set to graphics api.
+   *
+   * @description
+   * Sets the shader for the graphic memory to use, only for override in graphics
+   * api specializations.
+   */
   void
   use() override;
 
  private:
   /**
-  * @brief
-  * Creates the input layout.
-  *
-  * @description
-  * Automatically creates the input layout using reflexion.
-  *
-  * @param pShaderBlob
-  * The blob with the vertex shader information for the reflexion.
-  *
-  * @return
-  * If it succeeds or fails.
-  */
+   * @brief
+   * Creates the input layout.
+   *
+   * @description
+   * Automatically creates the input layout using reflexion.
+   *
+   * @param pShaderBlob
+   * The blob with the vertex shader information for the reflexion.
+   *
+   * @return
+   * If it succeeds or fails.
+   */
   HRESULT 
   createInputLayout(ID3DBlob* pShaderBlob);
 
-
-
-
   /**
-  * The DX11 pixel shader.
-  */
+   * The DX11 pixel shader.
+   */
   ID3D11VertexShader* m_shader = nullptr;
   /**
-  * The DX11 input layout. **TODO: HARCODED**
-  */
+   * The DX11 input layout. **TODO: HARCODED**
+   */
   ID3D11InputLayout* m_inputLayout = nullptr;
 };
 }

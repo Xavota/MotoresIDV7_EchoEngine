@@ -1,16 +1,17 @@
 #include "eeInput.h"
+#if EE_PLATFORM == EE_PLATFORM_WIN32
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#endif
 
 namespace eeEngineSDK {
 void
 Input::update()
 {
-  for (auto& i : m_keyboardInputMap)
-  {
+  for (auto& i : m_keyboardInputMap) {
     i.second.wasPressed = i.second.isPressed;
   }
-  for (auto& i : m_mouseClicksInputMap)
-  {
+  for (auto& i : m_mouseClicksInputMap) {
     i.second.wasPressed = i.second.isPressed;
   }
 
@@ -19,8 +20,7 @@ Input::update()
 void
 Input::setKeyboardInputPressed(eKEYBOARD key, bool pressed)
 {
-  if (m_keyboardInputMap.find(key) != m_keyboardInputMap.end())
-  {
+  if (m_keyboardInputMap.find(key) != m_keyboardInputMap.end()) {
     m_keyboardInputMap[key].isPressed = pressed;
     return;
   }
@@ -29,8 +29,7 @@ Input::setKeyboardInputPressed(eKEYBOARD key, bool pressed)
 void
 Input::setMouseClickInputPressed(eMOUSE_CLICK key, bool pressed)
 {
-  if (m_mouseClicksInputMap.find(key) != m_mouseClicksInputMap.end())
-  {
+  if (m_mouseClicksInputMap.find(key) != m_mouseClicksInputMap.end()) {
     m_mouseClicksInputMap[key].isPressed = pressed;
     return;
   }
@@ -39,8 +38,7 @@ Input::setMouseClickInputPressed(eMOUSE_CLICK key, bool pressed)
 bool
 Input::getKeyboardInputPressed(eKEYBOARD key)
 {
-  if (m_keyboardInputMap.find(key) != m_keyboardInputMap.end())
-  {
+  if (m_keyboardInputMap.find(key) != m_keyboardInputMap.end()) {
     return m_keyboardInputMap[key].isPressed
        && !m_keyboardInputMap[key].wasPressed;
   }
@@ -49,8 +47,7 @@ Input::getKeyboardInputPressed(eKEYBOARD key)
 bool
 Input::getKeyboardInputIsPressed(eKEYBOARD key)
 {
-  if (m_keyboardInputMap.find(key) != m_keyboardInputMap.end())
-  {
+  if (m_keyboardInputMap.find(key) != m_keyboardInputMap.end()) {
     return m_keyboardInputMap[key].isPressed;
   }
   return false;
@@ -58,8 +55,7 @@ Input::getKeyboardInputIsPressed(eKEYBOARD key)
 bool
 Input::getKeyboardInputReleased(eKEYBOARD key)
 {
-  if (m_keyboardInputMap.find(key) != m_keyboardInputMap.end())
-  {
+  if (m_keyboardInputMap.find(key) != m_keyboardInputMap.end()) {
     return !m_keyboardInputMap[key].isPressed
          && m_keyboardInputMap[key].wasPressed;
   }
@@ -68,8 +64,7 @@ Input::getKeyboardInputReleased(eKEYBOARD key)
 bool
 Input::getMouseClickInputPressed(eMOUSE_CLICK key)
 {
-  if (m_mouseClicksInputMap.find(key) != m_mouseClicksInputMap.end())
-  {
+  if (m_mouseClicksInputMap.find(key) != m_mouseClicksInputMap.end()) {
     return m_mouseClicksInputMap[key].isPressed
        && !m_mouseClicksInputMap[key].wasPressed;
   }
@@ -78,8 +73,7 @@ Input::getMouseClickInputPressed(eMOUSE_CLICK key)
 bool
 Input::getMouseClickInputIsPressed(eMOUSE_CLICK key)
 {
-  if (m_mouseClicksInputMap.find(key) != m_mouseClicksInputMap.end())
-  {
+  if (m_mouseClicksInputMap.find(key) != m_mouseClicksInputMap.end()) {
     return m_mouseClicksInputMap[key].isPressed;
   }
   return false;
@@ -87,8 +81,7 @@ Input::getMouseClickInputIsPressed(eMOUSE_CLICK key)
 bool
 Input::getMouseClickInputReleased(eMOUSE_CLICK key)
 {
-  if (m_mouseClicksInputMap.find(key) != m_mouseClicksInputMap.end())
-  {
+  if (m_mouseClicksInputMap.find(key) != m_mouseClicksInputMap.end()) {
     return !m_mouseClicksInputMap[key].isPressed
          && m_mouseClicksInputMap[key].wasPressed;
   }

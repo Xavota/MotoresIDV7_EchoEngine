@@ -4,7 +4,8 @@
 using eeEngineSDK::BaseApp;
 using eeEngineSDK::int32;
 
-int main()
+int
+main()
 {
   BaseApp::startUp<BaseAppTest1>();
   int32 r = BaseApp::instance().run(nullptr);

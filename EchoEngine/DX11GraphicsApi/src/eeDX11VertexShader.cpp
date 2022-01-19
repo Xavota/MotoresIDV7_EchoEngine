@@ -16,11 +16,10 @@ DX11VertexShader::~DX11VertexShader()
 bool 
 DX11VertexShader::compileFromFile(const String& fileName)
 {
-  const DX11Basics* basics =
+  const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   HRESULT hr = S_OK;
-
 
   DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #if defined( DEBUG ) || defined( _DEBUG )
@@ -46,40 +45,38 @@ DX11VertexShader::compileFromFile(const String& fileName)
                               &pVSBlob,
                               &pErrorBlob,
                               nullptr);
-  if (FAILED(hr))
-  {
-    if (pVSBlob)
+  if (FAILED(hr)) {
+    if (pVSBlob) {
       DX11SAFE_RELEASE(pVSBlob);
-    if (pErrorBlob != nullptr)
+    }
+    if (pErrorBlob != nullptr) {
       OutputDebugStringA((char*)pErrorBlob->GetBufferPointer());
+    }
     DX11SAFE_RELEASE(pErrorBlob);
 
-    String msg = "The FX file cannot be compiled. Please run this ";
-    msg.append("executable from the directory that contains the FX file.");
-
-    MessageBox(nullptr, msg.c_str(), "Error", MB_OK);
+    MessageBox(nullptr,
+               "The FX file cannot be compiled. Please run this "
+                 "executable from the directory that contains the FX file.",
+               "Error",
+               MB_OK);
 
     return false;
   }
   DX11SAFE_RELEASE(pErrorBlob);
-
 
   // Create the vertex shader
   hr = basics->m_device->CreateVertexShader(pVSBlob->GetBufferPointer(),
                                             pVSBlob->GetBufferSize(),
                                             nullptr,
                                             &m_shader);
-  if (FAILED(hr))
-  {
+  if (FAILED(hr)) {
     DX11SAFE_RELEASE(pVSBlob);
     return false;
   }
 
-
   hr = createInputLayout(pVSBlob);
   DX11SAFE_RELEASE(pVSBlob);
-  if (FAILED(hr))
-  {
+  if (FAILED(hr)) {
     return false;
   }
 
@@ -94,7 +91,7 @@ DX11VertexShader::compileFromString(const String& /*shaderString*/)
 
 void DX11VertexShader::use()
 {
-  const DX11Basics* basics =
+  const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   basics->m_deviceContext->IASetInputLayout(m_inputLayout);
@@ -104,7 +101,7 @@ void DX11VertexShader::use()
 HRESULT 
 DX11VertexShader::createInputLayout(ID3DBlob* pShaderBlob)
 {
-  const DX11Basics* basics =
+  const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   // Reflect shader info
@@ -112,8 +109,7 @@ DX11VertexShader::createInputLayout(ID3DBlob* pShaderBlob)
   if (FAILED(D3DReflect(pShaderBlob->GetBufferPointer(), 
                         pShaderBlob->GetBufferSize(), 
                         IID_ID3D11ShaderReflection, 
-                        reinterpret_cast<void**>(&pVertexShaderReflection))))
-  {
+                        reinterpret_cast<void**>(&pVertexShaderReflection)))) {
     return S_FALSE;
   }
 
@@ -123,8 +119,7 @@ DX11VertexShader::createInputLayout(ID3DBlob* pShaderBlob)
 
   // Read input layout description from shader info
   Vector<D3D11_INPUT_ELEMENT_DESC> inputLayoutDesc;
-  for (uint32 i = 0; i < shaderDesc.InputParameters; i++)
-  {
+  for (uint32 i = 0; i < shaderDesc.InputParameters; i++) {
     D3D11_SIGNATURE_PARAMETER_DESC paramDesc;
     pVertexShaderReflection->GetInputParameterDesc(i, &paramDesc);
 
@@ -138,41 +133,49 @@ DX11VertexShader::createInputLayout(ID3DBlob* pShaderBlob)
     elementDesc.InstanceDataStepRate = 0;
 
     // determine DXGI format
-    if (paramDesc.Mask == 1)
-    {
-      if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_UINT32)
+    if (paramDesc.Mask == 1) {
+      if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_UINT32) {
         elementDesc.Format = DXGI_FORMAT_R32_UINT;
-      else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_SINT32)
+      }
+      else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_SINT32) {
         elementDesc.Format = DXGI_FORMAT_R32_SINT;
-      else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32)
+      }
+      else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32) {
         elementDesc.Format = DXGI_FORMAT_R32_FLOAT;
+      }
     }
-    else if (paramDesc.Mask <= 3)
-    {
-      if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_UINT32)
+    else if (paramDesc.Mask <= 3) {
+      if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_UINT32) {
         elementDesc.Format = DXGI_FORMAT_R32G32_UINT;
-      else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_SINT32)
+      }
+      else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_SINT32) {
        elementDesc.Format = DXGI_FORMAT_R32G32_SINT;
-      else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32)
+      }
+      else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32) {
         elementDesc.Format = DXGI_FORMAT_R32G32_FLOAT;
+      }
     }
-    else if (paramDesc.Mask <= 7)
-    {
-      if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_UINT32)
+    else if (paramDesc.Mask <= 7) {
+      if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_UINT32) {
         elementDesc.Format = DXGI_FORMAT_R32G32B32_UINT;
-      else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_SINT32)
+      }
+      else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_SINT32) {
         elementDesc.Format = DXGI_FORMAT_R32G32B32_SINT;
-      else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32)
+      }
+      else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32) {
         elementDesc.Format = DXGI_FORMAT_R32G32B32_FLOAT;
+      }
     }
-    else if (paramDesc.Mask <= 15)
-    {
-      if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_UINT32)
+    else if (paramDesc.Mask <= 15) {
+      if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_UINT32) {
         elementDesc.Format = DXGI_FORMAT_R32G32B32A32_UINT;
-      else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_SINT32)
+      }
+      else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_SINT32) {
         elementDesc.Format = DXGI_FORMAT_R32G32B32A32_SINT;
-      else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32)
+      }
+      else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32) {
         elementDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+      }
     }
 
     //save element desc
@@ -181,7 +184,8 @@ DX11VertexShader::createInputLayout(ID3DBlob* pShaderBlob)
 
   // Try to create Input Layout
   HRESULT hr = basics->m_device->CreateInputLayout(&inputLayoutDesc[0],
-                                                   static_cast<uint32>(inputLayoutDesc.size()),
+                                                   static_cast<uint32>(
+                                                        inputLayoutDesc.size()),
                                                    pShaderBlob->GetBufferPointer(),
                                                    pShaderBlob->GetBufferSize(),
                                                    &m_inputLayout);

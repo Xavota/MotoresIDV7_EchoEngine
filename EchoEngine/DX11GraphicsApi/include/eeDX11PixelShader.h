@@ -8,7 +8,7 @@
  *
  * @bug Not bug Known.
  */
- /************************************************************************/
+/************************************************************************/
 
 #pragma once
 #include "eePrerequisitesDX11.h"
@@ -24,64 +24,64 @@ namespace eeEngineSDK {
  */
 class DX11PixelShader : public PixelShader
 {
-public:
+ public:
   /**
-  * @brief
-  * Default constructor
-  */
+   * @brief
+   * Default constructor
+   */
   DX11PixelShader() = default;
   /**
-  * @brief
-  * Default destructor
-  */
+   * @brief
+   * Default destructor
+   */
   ~DX11PixelShader();
 
   /**
-  * @brief
-  * Initializes the shader.
-  *
-  * @description
-  * Initializes the shader from a file.
-  *
-  * @param fileName
-  * The name of the file containing the shader.
-  *
-  * @return
-  * Weather it succeed or failed to initialize.
-  */
+   * @brief
+   * Initializes the shader.
+   *
+   * @description
+   * Initializes the shader from a file.
+   *
+   * @param fileName
+   * The name of the file containing the shader.
+   *
+   * @return
+   * Weather it succeed or failed to initialize.
+   */
   bool
   compileFromFile(const String& fileName) override;
   /**
-  * @brief
-  * Initializes the shader.
-  *
-  * @description
-  * Initializes the shader from a string.
-  *
-  * @param fileName
-  * The string for the shader to compile.
-  *
-  * @return
-  * Weather it succeed or failed to initialize.
-  */
+   * @brief
+   * Initializes the shader.
+   *
+   * @description
+   * Initializes the shader from a string.
+   *
+   * @param fileName
+   * The string for the shader to compile.
+   *
+   * @return
+   * Weather it succeed or failed to initialize.
+   */
   bool
   compileFromString(const String& shaderString) override;
 
   /**
-  * @brief
-  * Set to graphics api.
-  *
-  * @description
-  * Sets the shader for the graphic memory to use, only for override in graphics
-  * api specializations.
-  */
+   * @brief
+   * Set to graphics api.
+   *
+   * @description
+   * Sets the shader for the graphic memory to use, only for override in graphics
+   * api specializations.
+   */
   void
   use() override;
 
 private:
   /**
-  * The DX11 pixel shader.
-  */
+   * The DX11 pixel shader.
+   */
   ID3D11PixelShader* m_shader = nullptr;
 };
 }

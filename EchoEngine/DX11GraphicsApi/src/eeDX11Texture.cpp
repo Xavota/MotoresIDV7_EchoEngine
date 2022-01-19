@@ -16,22 +16,21 @@ DX11Texture::~DX11Texture()
 
 bool DX11Texture::loadFromFile(const String fileName, SamplerStateDesc desc)
 {
-  const DX11Basics* basics =
+  const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   HRESULT hr = D3DX11CreateShaderResourceViewFromFile(basics->m_device,
                                                       fileName.c_str(),
-                                                      NULL,
-                                                      NULL,
+                                                      nullptr,
+                                                      nullptr,
                                                       &m_tex,
-                                                      NULL);
-  if (FAILED(hr))
+                                                      nullptr);
+  if (FAILED(hr)) {
     return false;
-
+  }
 
   m_sampler = MemoryManager::instance().newPtr<DX11SamplerState>();
   m_sampler->create(desc);
-
 
   name = fileName;
 
@@ -40,11 +39,10 @@ bool DX11Texture::loadFromFile(const String fileName, SamplerStateDesc desc)
 
 bool DX11Texture::loadFromBuffer(void* buffer, SamplerStateDesc desc)
 {
-  const DX11Basics* basics =
+  const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
-
-  ID3D11Texture2D* texBuff = reinterpret_cast<ID3D11Texture2D*>(buffer);
+  auto* texBuff = reinterpret_cast<ID3D11Texture2D*>(buffer);
 
   D3D11_TEXTURE2D_DESC tempDesc;
   texBuff->GetDesc(&tempDesc);
@@ -56,8 +54,9 @@ bool DX11Texture::loadFromBuffer(void* buffer, SamplerStateDesc desc)
   srvDesc.Texture2D.MostDetailedMip = 0;
   srvDesc.Texture2D.MipLevels = static_cast<uint32>(-1); // same as orig texture
   HRESULT hr = basics->m_device->CreateShaderResourceView(texBuff, &srvDesc, &m_tex);
-  if (FAILED(hr))
+  if (FAILED(hr)) {
     return false;
+  }
 
   m_sampler = MemoryManager::instance().newPtr<DX11SamplerState>();
   m_sampler->create(desc);
@@ -67,7 +66,7 @@ bool DX11Texture::loadFromBuffer(void* buffer, SamplerStateDesc desc)
 
 void DX11Texture::use()
 {
-  const DX11Basics* basics =
+  const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   basics->m_deviceContext->PSSetShaderResources(0, 1, &m_tex);

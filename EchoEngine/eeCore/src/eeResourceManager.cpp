@@ -8,7 +8,6 @@
 #include "eeSkeletalMesh.h"
 #include "eeAnimation.h"
 
-
 #pragma warning(push, 0)   
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -24,21 +23,18 @@ ResourceManager::loadTextureFromFile(const String& fileName,
                                      const String resourceName,
                                      SamplerStateDesc desc)
 {
-  if (m_meshes.find(resourceName) != m_meshes.end())
-  {
+  if (m_meshes.find(resourceName) != m_meshes.end()) {
     eeOut << "Resource already with this name" << eeEndl;
     return nullptr;
   }
 
-  if (fileName == "")
-  {
+  if (fileName.empty()) {
     eeOut << "Empty info loading texture" << eeEndl;
     return nullptr;
   }
 
   SPtr<Texture> tex = GraphicsApi::instance().createTexturePtr();
-  if (!tex->loadFromFile(fileName, desc))
-  {
+  if (!tex->loadFromFile(fileName, desc)) {
     return nullptr;
   }
 
@@ -49,14 +45,12 @@ SPtr<Model>
 ResourceManager::loadModelFromFile(const String& fileName, 
                                    const String resourceName)
 {
-  if (m_meshes.find(resourceName) != m_meshes.end())
-  {
+  if (m_meshes.find(resourceName) != m_meshes.end()) {
     eeOut << "Resource already with this name" << eeEndl;
     return nullptr;
   }
 
-  if (fileName == "")
-  {
+  if (fileName.empty()) {
     eeOut << "Empty info loading model" << eeEndl;
     return nullptr;
   }
@@ -71,42 +65,32 @@ ResourceManager::loadModelFromFile(const String& fileName,
     aiProcessPreset_TargetRealtime_MaxQuality
     | aiProcess_ConvertToLeftHanded
   );
-  if (!scene)
-  {
+  if (!scene) {
     eeOut << importer->GetErrorString() << eeEndl;
     return nullptr;
   }
 
-
   SPtr<Model> model = MemoryManager::instance().newPtr<Model>();
-  if (scene->HasAnimations())
-  {
+  if (scene->HasAnimations()) {
     SPtr<SkeletalMesh> skMesh =
     loadSkeletalMeshFromFile(fileName, resourceName + "_sk");
 
-    if (skMesh)
-    {
-      if (!model->loadFromFile(fileName, skMesh))
-      {
+    if (skMesh) {
+      if (!model->loadFromFile(fileName, skMesh)) {
         return nullptr;
       }
     }
-    else
-    {
-      if (!model->loadFromFile(fileName))
-      {
+    else {
+      if (!model->loadFromFile(fileName)) {
         return nullptr;
       }
     }
   }
-  else
-  {
-    if (!model->loadFromFile(fileName))
-    {
+  else {
+    if (!model->loadFromFile(fileName)) {
       return nullptr;
     }
   }
-
 
   m_models.insert(make_pair(resourceName, model));
   return m_models[resourceName];
@@ -115,21 +99,18 @@ SPtr<Model>
 ResourceManager::loadModelFromMeshesArray(const Vector<SPtr<Mesh>>& meshes,
                                           const String resourceName)
 {
-  if (m_meshes.find(resourceName) != m_meshes.end())
-  {
+  if (m_meshes.find(resourceName) != m_meshes.end()) {
     eeOut << "Resource already with this name" << eeEndl;
     return nullptr;
   }
 
-  if (meshes.empty())
-  {
+  if (meshes.empty()) {
     eeOut << "Empty info loading model" << eeEndl;
     return nullptr;
   }
 
   SPtr<Model> model = MemoryManager::instance().newPtr<Model>();
-  if (!model->loadFromMeshes(meshes))
-  {
+  if (!model->loadFromMeshes(meshes)) {
     return nullptr;
   }
 
@@ -141,21 +122,18 @@ ResourceManager::loadModelFromMeshesArray(
   const Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>& meshes,
   const String resourceName)
 {
-  if (m_meshes.find(resourceName) != m_meshes.end())
-  {
+  if (m_meshes.find(resourceName) != m_meshes.end()) {
     eeOut << "Resource already with this name" << eeEndl;
     return nullptr;
   }
 
-  if (meshes.empty())
-  {
+  if (meshes.empty()) {
     eeOut << "Empty info loading model" << eeEndl;
     return nullptr;
   }
 
   SPtr<Model> model = MemoryManager::instance().newPtr<Model>();
-  if (!model->loadFromMeshes(meshes))
-  {
+  if (!model->loadFromMeshes(meshes)) {
     return nullptr;
   }
 
@@ -163,27 +141,22 @@ ResourceManager::loadModelFromMeshesArray(
   return m_models[resourceName];
 }
 
-
-
 SPtr<SkeletalMesh>
 ResourceManager::loadSkeletalMeshFromFile(const String& fileName,
                                           const String& resourceName)
 {
-  if (m_skeletalMeshes.find(resourceName) != m_skeletalMeshes.end())
-  {
+  if (m_skeletalMeshes.find(resourceName) != m_skeletalMeshes.end()) {
     eeOut << "Resource already with this name" << eeEndl;
     return nullptr;
   }
 
-  if (fileName == "")
-  {
+  if (fileName.empty()) {
     eeOut << "Empty info loading skeletal mesh" << eeEndl;
     return nullptr;
   }
 
   SPtr<SkeletalMesh> skeletal = MemoryManager::instance().newPtr<SkeletalMesh>();
-  if (!skeletal->loadFromFile(fileName))
-  {
+  if (!skeletal->loadFromFile(fileName)) {
     return nullptr;
   }
 
@@ -194,21 +167,18 @@ ResourceManager::loadSkeletalMeshFromFile(const String& fileName,
 SPtr<Animation>
 ResourceManager::loadAnimationFromFile(const String& fileName, const String& resourceName)
 {
-  if (m_animations.find(resourceName) != m_animations.end())
-  {
+  if (m_animations.find(resourceName) != m_animations.end()) {
     eeOut << "Resource already with this name" << eeEndl;
     return nullptr;
   }
 
-  if (fileName == "")
-  {
+  if (fileName.empty()) {
     eeOut << "Empty info loading animation" << eeEndl;
     return nullptr;
   }
 
   SPtr<Animation> anim = MemoryManager::instance().newPtr<Animation>();
-  if (!anim->loadFromFile(fileName))
-  {
+  if (!anim->loadFromFile(fileName)) {
     return nullptr;
   }
 
@@ -220,15 +190,13 @@ SPtr<VertexShader>
 ResourceManager::loadVertexShaderFromFile(const String& fileName, 
                                           const String& resourceName)
 {
-  if (m_vertexShaders.find(resourceName) != m_vertexShaders.end())
-  {
+  if (m_vertexShaders.find(resourceName) != m_vertexShaders.end()) {
     eeOut << "Resource already with this name" << eeEndl;
     return nullptr;
   }
 
   SPtr<VertexShader> shader = GraphicsApi::instance().createVertexShaderPtr();
-  if (!shader->compileFromFile(fileName))
-  {
+  if (!shader->compileFromFile(fileName)) {
     return nullptr;
   }
 
@@ -240,15 +208,13 @@ SPtr<VertexShader>
 ResourceManager::loadVertexShaderFromString(const String& shaderString,
                                             const String& resourceName)
 {
-  if (m_vertexShaders.find(resourceName) != m_vertexShaders.end())
-  {
+  if (m_vertexShaders.find(resourceName) != m_vertexShaders.end()) {
     eeOut << "Resource already with this name" << eeEndl;
     return nullptr;
   }
 
   SPtr<VertexShader> shader = GraphicsApi::instance().createVertexShaderPtr();
-  if (!shader->compileFromString(shaderString))
-  {
+  if (!shader->compileFromString(shaderString)) {
     return nullptr;
   }
 
@@ -260,15 +226,13 @@ SPtr<PixelShader>
 ResourceManager::loadPixelShaderFromFile(const String& fileName,
                                          const String& resourceName)
 {
-  if (m_pixelShaders.find(resourceName) != m_pixelShaders.end())
-  {
+  if (m_pixelShaders.find(resourceName) != m_pixelShaders.end()) {
     eeOut << "Resource already with this name" << eeEndl;
     return nullptr;
   }
 
   SPtr<PixelShader> shader = GraphicsApi::instance().createPixelShaderPtr();
-  if (!shader->compileFromFile(fileName))
-  {
+  if (!shader->compileFromFile(fileName)) {
     return nullptr;
   }
 
@@ -280,15 +244,13 @@ SPtr<PixelShader>
 ResourceManager::loadPixelShaderFromString(const String& shaderString,
                                            const String& resourceName)
 {
-  if (m_pixelShaders.find(resourceName) != m_pixelShaders.end())
-  {
+  if (m_pixelShaders.find(resourceName) != m_pixelShaders.end()) {
     eeOut << "Resource already with this name" << eeEndl;
     return nullptr;
   }
 
   SPtr<PixelShader> shader = GraphicsApi::instance().createPixelShaderPtr();
-  if (!shader->compileFromString(shaderString))
-  {
+  if (!shader->compileFromString(shaderString)) {
     return nullptr;
   }
 
@@ -296,59 +258,51 @@ ResourceManager::loadPixelShaderFromString(const String& shaderString,
   return m_pixelShaders[resourceName];
 }
 
-
 SPtr<Texture> ResourceManager::getResourceTexture(const String& resourceName)
 {
-  if (m_textures.find(resourceName) != m_textures.end())
-  {
+  if (m_textures.find(resourceName) != m_textures.end()) {
     return m_textures[resourceName];
   }
   return nullptr;
 }
 SPtr<Model> ResourceManager::getResourceModel(const String& resourceName)
 {
-  if (m_models.find(resourceName) != m_models.end())
-  {
+  if (m_models.find(resourceName) != m_models.end()) {
     return m_models[resourceName];
   }
   return nullptr;
 }
 SPtr<Mesh> ResourceManager::getResourceMesh(const String& resourceName)
 {
-  if (m_meshes.find(resourceName) != m_meshes.end())
-  {
+  if (m_meshes.find(resourceName) != m_meshes.end()) {
     return m_meshes[resourceName];
   }
   return nullptr;
 }
 SPtr<SkeletalMesh> ResourceManager::getResourceSkeletalMesh(const String& resourceName)
 {
-  if (m_skeletalMeshes.find(resourceName) != m_skeletalMeshes.end())
-  {
+  if (m_skeletalMeshes.find(resourceName) != m_skeletalMeshes.end()) {
     return m_skeletalMeshes[resourceName];
   }
   return nullptr;
 }
 SPtr<Animation> ResourceManager::getResourceAnimation(const String& resourceName)
 {
-  if (m_animations.find(resourceName) != m_animations.end())
-  {
+  if (m_animations.find(resourceName) != m_animations.end()) {
     return m_animations[resourceName];
   }
   return nullptr;
 }
 SPtr<VertexShader> ResourceManager::getResourceVertexShader(const String& resourceName)
 {
-  if (m_vertexShaders.find(resourceName) != m_vertexShaders.end())
-  {
+  if (m_vertexShaders.find(resourceName) != m_vertexShaders.end()) {
     return m_vertexShaders[resourceName];
   }
   return nullptr;
 }
 SPtr<PixelShader> ResourceManager::getResourcePixelShader(const String& resourceName)
 {
-  if (m_pixelShaders.find(resourceName) != m_pixelShaders.end())
-  {
+  if (m_pixelShaders.find(resourceName) != m_pixelShaders.end()) {
     return m_pixelShaders[resourceName];
   }
   return nullptr;

@@ -8,7 +8,7 @@
  *
  * @bug Not bug Known.
  */
- /************************************************************************/
+/************************************************************************/
 
 #pragma once
 #include "eePrerequisitesCore.h"
@@ -22,14 +22,14 @@ class EE_CORE_EXPORT InputLayout
 {
  public: 
   /**
-  * @brief
-  * Default constructor
-  */
+   * @brief
+   * Default constructor
+   */
   InputLayout() = default;
   /**
-  * @brief
-  * Default destructor
-  */
+   * @brief
+   * Default destructor
+   */
   virtual 
   ~InputLayout() = default;
 };

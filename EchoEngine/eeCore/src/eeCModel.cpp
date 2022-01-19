@@ -4,9 +4,6 @@
 #include "eeCTransform.h"
 
 namespace eeEngineSDK {
-CModel::CModel()
-{
-}
 void
 CModel::update()
 {

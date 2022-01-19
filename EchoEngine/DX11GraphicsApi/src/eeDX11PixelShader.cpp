@@ -10,9 +10,10 @@ eeEngineSDK::DX11PixelShader::~DX11PixelShader()
   DX11SAFE_RELEASE(m_shader);
 }
 
-bool eeEngineSDK::DX11PixelShader::compileFromFile(const String& fileName)
+bool
+eeEngineSDK::DX11PixelShader::compileFromFile(const String& fileName)
 {
-  const DX11Basics* basics =
+  const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   HRESULT hr = S_OK;
@@ -28,19 +29,31 @@ bool eeEngineSDK::DX11PixelShader::compileFromFile(const String& fileName)
 #endif
 
   // Compile the pixel shader
-  ID3DBlob* pPSBlob = NULL;
-  ID3DBlob* pErrorBlob;
+  ID3DBlob* pPSBlob = nullptr;
+  ID3DBlob* pErrorBlob = nullptr;
 
-  hr = D3DX11CompileFromFileA(fileName.c_str(), NULL, NULL, "main", "ps_4_0",
-    dwShaderFlags, 0, NULL, &pPSBlob, &pErrorBlob, NULL);
-  if (FAILED(hr))
-  {
-    if (pErrorBlob != NULL)
+  hr = D3DX11CompileFromFileA(fileName.c_str(),
+                              nullptr,
+                              nullptr,
+                              "main",
+                              "ps_4_0",
+                              dwShaderFlags,
+                              0,
+                              nullptr,
+                              &pPSBlob,
+                              &pErrorBlob,
+                              nullptr);
+  if (FAILED(hr)) {
+    if (pErrorBlob != nullptr) {
       OutputDebugStringA((char*)pErrorBlob->GetBufferPointer());
+    }
     DX11SAFE_RELEASE(pErrorBlob);
 
-    MessageBox(NULL,
-      "The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", "Error", MB_OK);
+    MessageBox(nullptr,
+               "The FX file cannot be compiled.  Please run this executable"
+                 " from the directory that contains the FX file.",
+               "Error",
+               MB_OK);
 
     return false;
   }
@@ -48,23 +61,29 @@ bool eeEngineSDK::DX11PixelShader::compileFromFile(const String& fileName)
 
 
   // Create the pixel shader
-  hr = basics->m_device->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), NULL, &m_shader);
+  hr = basics->m_device->CreatePixelShader(pPSBlob->GetBufferPointer(),
+                                           pPSBlob->GetBufferSize(),
+                                           nullptr,
+                                           &m_shader);
   DX11SAFE_RELEASE(pPSBlob);
-  if (FAILED(hr))
+  if (FAILED(hr)) {
     return false;
+  }
 
   return true;
 }
 
-bool eeEngineSDK::DX11PixelShader::compileFromString(const String& /*shaderString*/)
+bool
+eeEngineSDK::DX11PixelShader::compileFromString(const String& /*shaderString*/)
 {
   return false;
 }
 
-void eeEngineSDK::DX11PixelShader::use()
+void
+eeEngineSDK::DX11PixelShader::use()
 {
-  const DX11Basics* basics =
+  const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
-  basics->m_deviceContext->PSSetShader(m_shader, NULL, 0);
+  basics->m_deviceContext->PSSetShader(m_shader, nullptr, 0);
 }

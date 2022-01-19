@@ -49,8 +49,9 @@ eeToString(const uint64 i)
 const OStream&
 operator<<(const OStream& os, const OStream& other)
 {
-  if (other.m_end)
+  if (other.m_end) {
     std::cout << std::endl;
+  }
   return os;
 }
 const OStream&

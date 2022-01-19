@@ -4,14 +4,14 @@
 #include "eeVector4.h"
 
 namespace eeEngineSDK {
-  const Plane Plane::XY = Plane(Vector3f(0.0f, 0.0f, 0.0f),
-                                Vector3f(0.0f, 0.0f, 1.0f));
-                                
-  const Plane Plane::XZ = Plane(Vector3f(0.0f, 0.0f, 0.0f),
-                                Vector3f(0.0f, 1.0f, 0.0f));
+const Plane Plane::kXY = Plane(Vector3f(0.0f, 0.0f, 0.0f),
+                               Vector3f(0.0f, 0.0f, 1.0f));
+                              
+const Plane Plane::kXZ = Plane(Vector3f(0.0f, 0.0f, 0.0f),
+                               Vector3f(0.0f, 1.0f, 0.0f));
 
-  const Plane Plane::YZ = Plane(Vector3f(0.0f, 0.0f, 0.0f),
-                                Vector3f(1.0f, 0.0f, 1.0f));
+const Plane Plane::kYZ = Plane(Vector3f(0.0f, 0.0f, 0.0f),
+                               Vector3f(1.0f, 0.0f, 1.0f));
 
 Plane::Plane() : d(0.0f)
 {
@@ -70,16 +70,13 @@ Plane::rotate(const Vector3f& rotation)
 Vector3f
 Plane::getPoint() const
 {
-  if (z != 0.0f)
-  {
+  if (z != 0.0f) {
     return Vector3f(0.0f, 0.0f, d/z);
   }
-  else if (y != 0.0f)
-  {
+  else if (y != 0.0f) {
     return Vector3f(0.0f, d/y, 0.0f);
   }
-  else
-  {
+  else {
     return Vector3f(d/x, 0.0f, 0.0f);
   }
 }
@@ -107,7 +104,8 @@ Plane::intersects(const Vector3f& point)
 {
   return Math::intersectionPlanePoint(*this, point);
 }
-bool Plane::intersects(const Plane& plane)
+bool
+Plane::intersects(const Plane& plane)
 {
   return Math::intersectionPlanePlane(*this, plane);
 }
@@ -116,11 +114,13 @@ Plane::intersects(const Sphere& sphere)
 {
   return Math::intersectionSpherePlane(sphere, *this);
 }
-bool Plane::intersects(const BoxAAB& box)
+bool
+Plane::intersects(const BoxAAB& box)
 {
   return Math::intersectionBoxPlane(box, *this);
 }
-bool Plane::intersects(const Capsule& capsule)
+bool
+Plane::intersects(const Capsule& capsule)
 {
   return Math::intersectionCapsulePlane(capsule, *this);
 }

@@ -8,7 +8,7 @@
  *
  * @bug Not bug Known.
  */
- /************************************************************************/
+/************************************************************************/
 
 #pragma once
 #include "eePrerequisitesCore.h"
@@ -35,7 +35,7 @@ struct Bone
 {
   Bone() = default;
   Bone(String name, Vector<VertexWeight> vertexWeights, Matrix4f offsetMatrix);
-  ~Bone();
+  ~Bone() = default;
 
   void addBoneData(VertexWeight vw);
 
@@ -54,173 +54,173 @@ class EE_CORE_EXPORT SkeletalMesh
 {
  public:
   /**
-  * @brief
-  * Default constructor.
-  */
+   * @brief
+   * Default constructor.
+   */
   SkeletalMesh() = default;
   /**
-  * @brief
-  * Default destructor.
-  */
+   * @brief
+   * Default destructor.
+   */
   ~SkeletalMesh() = default;
 
   /**
-  * @brief
-  * Loads an skeletal mesh.
-  *
-  * @description
-  * Loads the skeletal mesh from a file.
-  *
-  * @param fileName
-  * The file path for the skeletal.
-  *
-  * @return
-  * Whether it succeeded to load or not.
-  */
+   * @brief
+   * Loads an skeletal mesh.
+   *
+   * @description
+   * Loads the skeletal mesh from a file.
+   *
+   * @param fileName
+   * The file path for the skeletal.
+   *
+   * @return
+   * Whether it succeeded to load or not.
+   */
   bool
   loadFromFile(String fileName);
 
   /**
-  * @brief
-  * Gets the bone data.
-  *
-  * @description
-  * Returns the bones data of the skeleton.
-  *
-  * @return
-  * Bone data.
-  */
+   * @brief
+   * Gets the bone data.
+   *
+   * @description
+   * Returns the bones data of the skeleton.
+   *
+   * @return
+   * Bone data.
+   */
   Vector<Vector<Bone>>&
   getBonesData();
   /**
-  * @brief
-  * Gets the bone data of a mesh.
-  *
-  * @description
-  * Returns the bones data from a specific mesh of the skeleton.
-  * 
-  * @param index
-  * The index of the mesh.
-  * 
-  * @return
-  * Bone data.
-  */
+   * @brief
+   * Gets the bone data of a mesh.
+   *
+   * @description
+   * Returns the bones data from a specific mesh of the skeleton.
+   *
+   * @param index
+   * The index of the mesh.
+   *
+   * @return
+   * Bone data.
+   */
   const Vector<Bone>&
   getBonesDataForMesh(int32 index) const;
 
   /**
-  * @brief
-  * Returns the bone mapping data.
-  *
-  * @description
-  * Returns the bone mapping data of the skeleton.
-  *
-  * @return
-  * Bone mapping.
-  */
+   * @brief
+   * Returns the bone mapping data.
+   *
+   * @description
+   * Returns the bone mapping data of the skeleton.
+   *
+   * @return
+   * Bone mapping.
+   */
   Vector<Map<String, int32>>&
   getBoneMapping();
   /**
-  * @brief
-  * Gets the global inverse transforms of the skeleton.
-  *
-  * @description
-  * Returns the global inverse transforms of the skeletons meshes.
-  *
-  * @return
-  * Global inverse transforms.
-  */
+   * @brief
+   * Gets the global inverse transforms of the skeleton.
+   *
+   * @description
+   * Returns the global inverse transforms of the skeletons meshes.
+   *
+   * @return
+   * Global inverse transforms.
+   */
   Vector<Matrix4f>&
   getGlobalInverseTransforms();
 
   /**
-  * @brief
-  * Updates the bones data.
-  *
-  * @description
-  * Updates the bones matrices to the original pose of the skeleton.
-  *
-  * @param root
-  * The root node of the skeleton.
-  * @param meshIndex
-  * The mesh index that is being modified.
-  */
+   * @brief
+   * Updates the bones data.
+   *
+   * @description
+   * Updates the bones matrices to the original pose of the skeleton.
+   *
+   * @param root
+   * The root node of the skeleton.
+   * @param meshIndex
+   * The mesh index that is being modified.
+   */
   void
   boneTransform(const aiNode* root, int32 meshIndex);
   /**
-  * @brief
-  * Updates the bones data.
-  *
-  * @description
-  * Updates the bones matrices to the original pose of the skeleton.
-  *
-  * @param pNode
-  * The parent node on the skeleton graph.
-  * @param parentTransform
-  * The transform of the parent node.
-  * @param meshIndex
-  * The mesh index that is being modified.
-  * 
-  * @param meshIndex
-  * 
-  */
+   * @brief
+   * Updates the bones data.
+   *
+   * @description
+   * Updates the bones matrices to the original pose of the skeleton.
+   *
+   * @param pNode
+   * The parent node on the skeleton graph.
+   * @param parentTransform
+   * The transform of the parent node.
+   * @param meshIndex
+   * The mesh index that is being modified.
+   * 
+   * @param meshIndex
+   * 
+   */
   void
   readNodeHeirarchy(const aiNode* pNode,
                     const Matrix4f& parentTransform,
                     int32 meshIndex);
 
   /**
-  * @brief
-  * Gets the matrices of the bones.
-  *
-  * @description
-  * Returns the matrices of each bone with is transformations.
-  *
-  * @param meshNum
-  * The mesh of the skeleton to take the matrices.
-  *
-  * @return
-  * The matrices of each bone with is transformations.
-  */
+   * @brief
+   * Gets the matrices of the bones.
+   *
+   * @description
+   * Returns the matrices of each bone with is transformations.
+   *
+   * @param meshNum
+   * The mesh of the skeleton to take the matrices.
+   *
+   * @return
+   * The matrices of each bone with is transformations.
+   */
   Vector<Matrix4f>
   getBonesMatrices(int32 meshNum);
 
 
   /**
-  * @brief
-  * Sets the skeletal mesh to use.
-  *
-  * @description
-  * Sets the skeletal mesh bones data to the graphic memory.
-  *
-  * @param meshNum
-  * The mesh index to set.
-  */
+   * @brief
+   * Sets the skeletal mesh to use.
+   *
+   * @description
+   * Sets the skeletal mesh bones data to the graphic memory.
+   *
+   * @param meshNum
+   * The mesh index to set.
+   */
   void
   use(int32 meshNum);
 
  private:
   /**
-  * The buffer for the bone matrices.
-  */
+   * The buffer for the bone matrices.
+   */
   SPtr<ConstantBuffer> m_matricesBuffer;
 
   /**
-  * Bone data for every mesh.
-  */
+   * Bone data for every mesh.
+   */
   Vector<Vector<Bone>> m_bonesPerMesh;
 
   /**
-  * Global inverse transforms for every mesh.
-  */
+   * Global inverse transforms for every mesh.
+   */
   Vector<Matrix4f> m_globalInverseTransforms;
   /**
-  * Bone mapping of every mesh.
-  */
+   * Bone mapping of every mesh.
+   */
   Vector<Map<String, int32>> m_boneMappings;
   /**
-  * Bones count for every mesh.
-  */
+   * Bones count for every mesh.
+   */
   Vector<int32> m_numsBones;
 };
 }

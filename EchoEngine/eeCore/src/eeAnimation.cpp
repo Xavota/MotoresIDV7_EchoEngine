@@ -21,14 +21,12 @@ Animation::loadFromFile(String fileName)
     aiProcessPreset_TargetRealtime_MaxQuality
     | aiProcess_ConvertToLeftHanded
   );
-  if (!scene)
-  {
+  if (!scene) {
     eeOut << importer->GetErrorString() << eeEndl;
     return false;
   }
 
-  if (!scene->HasAnimations())
-  {
+  if (!scene->HasAnimations()) {
     return false;
   }
 
@@ -55,8 +53,7 @@ Animation::storeNodes(aiNode* current, Node* storage)
 
   storage->m_childrenCount = current->mNumChildren;
 
-  for (uint32 i = 0; i < storage->m_childrenCount; i++)
-  {
+  for (uint32 i = 0; i < storage->m_childrenCount; i++) {
     storage->m_children.push_back(new Node());
     storeNodes(current->mChildren[i], storage->m_children[i]);
     storage->m_children[i]->m_parent = storage;
@@ -73,7 +70,7 @@ Animation::boneTransform(int32 meshIndex,
 
   readNodeHeirarchy(AnimationTime,
                     m_root,
-                    Matrix4f::IDENTITY,
+                    Matrix4f::kIDENTITY,
                     meshIndex,
                     skMesh);
 }
@@ -94,8 +91,7 @@ Animation::readNodeHeirarchy(float animationTime,
 
   const aiNodeAnim* pNodeAnim = findNodeAnim(m_anim, NodeName);
 
-  if (pNodeAnim)
-  {
+  if (pNodeAnim) {
     // Interpolate scaling and generate scaling transformation matrix
     aiVector3D Scaling;
     calcInterpolatedScaling(animationTime, pNodeAnim, Scaling);
@@ -131,17 +127,15 @@ Animation::readNodeHeirarchy(float animationTime,
   const Vector<Matrix4f>& globalInverseTransforms =
                                            skMesh->getGlobalInverseTransforms();
 
-  if (boneMappings[meshIndex].find(NodeName) != boneMappings[meshIndex].end())
-  {
+  if (boneMappings[meshIndex].find(NodeName) != boneMappings[meshIndex].end()) {
     uint32 BoneIndex = boneMappings[meshIndex][NodeName];
     bonesPerMesh[meshIndex][BoneIndex].m_finalTransformation =
-                          globalInverseTransforms[meshIndex] *
-                          GlobalTransformation               *
-                          bonesPerMesh[meshIndex][BoneIndex].m_offsetMatrix;
+                          globalInverseTransforms[meshIndex]
+                        * GlobalTransformation
+                        * bonesPerMesh[meshIndex][BoneIndex].m_offsetMatrix;
   }
 
-  for (uint32 i = 0; i < pNode->mNumChildren; ++i)
-  {
+  for (uint32 i = 0; i < pNode->mNumChildren; ++i) {
     readNodeHeirarchy(animationTime,
                       pNode->mChildren[i],
                       GlobalTransformation,
@@ -152,10 +146,8 @@ Animation::readNodeHeirarchy(float animationTime,
 aiNodeAnim*
 Animation::findNodeAnim(aiAnimation* anim, String name)
 {
-  for (uint32 i = 0; i < anim->mNumChannels; i++)
-  {
-    if (anim->mChannels[i]->mNodeName.C_Str() == name)
-    {
+  for (uint32 i = 0; i < anim->mNumChannels; i++) {
+    if (anim->mChannels[i]->mNodeName.C_Str() == name) {
       return anim->mChannels[i];
     }
   }
@@ -167,8 +159,7 @@ Animation::calcInterpolatedScaling(float animationTime,
                                    aiVector3D& out)
 {
   // we need at least two values to interpolate...
-  if (pNodeAnim->mNumScalingKeys == 1)
-  {
+  if (pNodeAnim->mNumScalingKeys == 1) {
     out = pNodeAnim->mScalingKeys[0].mValue;
     return;
   }
@@ -177,12 +168,11 @@ Animation::calcInterpolatedScaling(float animationTime,
   uint32 NextScalingIndex = (ScalingIndex + 1);
   //assert(NextScalingIndex < pNodeAnim->mNumScalingKeys);
   float DeltaTime =
-  static_cast<float>(pNodeAnim->mScalingKeys[NextScalingIndex].mTime -
-  pNodeAnim->mScalingKeys[ScalingIndex].mTime);
-  float Factor =
-  (animationTime -
-  static_cast<float>(pNodeAnim->mScalingKeys[ScalingIndex].mTime)) /
-  DeltaTime;
+  static_cast<float>(pNodeAnim->mScalingKeys[NextScalingIndex].mTime
+                   - pNodeAnim->mScalingKeys[ScalingIndex].mTime);
+  float Factor = (animationTime
+              - static_cast<float>(pNodeAnim->mScalingKeys[ScalingIndex].mTime))
+              / DeltaTime;
   //assert(Factor >= 0.0f && Factor <= 1.0f);
   const aiVector3D& StartScaling =
   pNodeAnim->mScalingKeys[ScalingIndex].mValue;
@@ -197,8 +187,7 @@ Animation::calcInterpolatedRotation(float animationTime,
                                     aiQuaternion& out)
 {
   // we need at least two values to interpolate...
-  if (pNodeAnim->mNumRotationKeys == 1)
-  {
+  if (pNodeAnim->mNumRotationKeys == 1) {
     out = pNodeAnim->mRotationKeys[0].mValue;
     return;
   }
@@ -207,12 +196,11 @@ Animation::calcInterpolatedRotation(float animationTime,
   uint32 NextRotationIndex = (RotationIndex + 1);
   //assert(NextRotationIndex < pNodeAnim->mNumRotationKeys);
   float DeltaTime =
-  static_cast<float>(pNodeAnim->mRotationKeys[NextRotationIndex].mTime -
-                     pNodeAnim->mRotationKeys[RotationIndex].mTime);
-  float Factor =
-  (animationTime -
-  static_cast<float>(pNodeAnim->mRotationKeys[RotationIndex].mTime)) /
-  DeltaTime;
+  static_cast<float>(pNodeAnim->mRotationKeys[NextRotationIndex].mTime
+                   - pNodeAnim->mRotationKeys[RotationIndex].mTime);
+  float Factor = (animationTime
+            - static_cast<float>(pNodeAnim->mRotationKeys[RotationIndex].mTime))
+            / DeltaTime;
   //assert(Factor >= 0.0f && Factor <= 1.0f);
   const aiQuaternion& StartRotationQ =
   pNodeAnim->mRotationKeys[RotationIndex].mValue;
@@ -227,8 +215,7 @@ Animation::calcInterpolatedPosition(float animationTime,
                                     aiVector3D& out)
 {
   // we need at least two values to interpolate...
-  if (pNodeAnim->mNumPositionKeys == 1)
-  {
+  if (pNodeAnim->mNumPositionKeys == 1) {
     out = pNodeAnim->mPositionKeys[0].mValue;
     return;
   }
@@ -237,12 +224,11 @@ Animation::calcInterpolatedPosition(float animationTime,
   uint32 NextPositionIndex = (PositionIndex + 1);
   //assert(NextPositionIndex < pNodeAnim->mNumPositionKeys);
   float DeltaTime =
-  static_cast<float>(pNodeAnim->mPositionKeys[NextPositionIndex].mTime -
-                     pNodeAnim->mPositionKeys[PositionIndex].mTime);
-  float Factor =
-  (animationTime -
-  static_cast<float>(pNodeAnim->mPositionKeys[PositionIndex].mTime)) /
-  DeltaTime;
+  static_cast<float>(pNodeAnim->mPositionKeys[NextPositionIndex].mTime
+                   - pNodeAnim->mPositionKeys[PositionIndex].mTime);
+  float Factor = (animationTime
+            - static_cast<float>(pNodeAnim->mPositionKeys[PositionIndex].mTime))
+            / DeltaTime;
   //assert(Factor >= 0.0f && Factor <= 1.0f);
   const aiVector3D& StartPosition =
   pNodeAnim->mPositionKeys[PositionIndex].mValue;
@@ -256,10 +242,8 @@ Animation::findScaling(float animationTime, const aiNodeAnim* pNodeAnim)
 {
   //assert(pNodeAnim->mNumScalingKeys > 0);
 
-  for (uint32 i = 0; i < pNodeAnim->mNumScalingKeys - 1; ++i)
-  {
-    if (animationTime < static_cast<float>(pNodeAnim->mScalingKeys[i + 1].mTime))
-    {
+  for (uint32 i = 0; i < pNodeAnim->mNumScalingKeys - 1; ++i) {
+    if (animationTime < static_cast<float>(pNodeAnim->mScalingKeys[i + 1].mTime)) {
       return i;
     }
   }
@@ -272,10 +256,8 @@ Animation::findRotation(float animationTime, const aiNodeAnim* pNodeAnim)
 {
   //assert(pNodeAnim->mNumRotationKeys > 0);
 
-  for (uint32 i = 0; i < pNodeAnim->mNumRotationKeys - 1; ++i) 
-  {
-    if (animationTime < static_cast<float>(pNodeAnim->mRotationKeys[i + 1].mTime))
-    {
+  for (uint32 i = 0; i < pNodeAnim->mNumRotationKeys - 1; ++i) {
+    if (animationTime < static_cast<float>(pNodeAnim->mRotationKeys[i + 1].mTime)) {
       return i;
     }
   }
@@ -288,10 +270,8 @@ Animation::findPosition(float animationTime, const aiNodeAnim* pNodeAnim)
 {
   //assert(pNodeAnim->mNumPositionKeys > 0);
 
-  for (uint32 i = 0; i < pNodeAnim->mNumPositionKeys - 1; ++i)
-  {
-    if (animationTime < static_cast<float>(pNodeAnim->mPositionKeys[i + 1].mTime))
-    {
+  for (uint32 i = 0; i < pNodeAnim->mNumPositionKeys - 1; ++i) {
+    if (animationTime < static_cast<float>(pNodeAnim->mPositionKeys[i + 1].mTime)) {
       return i;
     }
   }

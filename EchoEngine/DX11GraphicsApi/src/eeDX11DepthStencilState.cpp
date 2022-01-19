@@ -5,38 +5,37 @@ namespace eeEngineSDK{
 bool
 DX11DepthStencilState::create(DepthStencilDesc desc)
 {
-  const DX11Basics* basics =
+  const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   D3D11_DEPTH_STENCIL_DESC depthDesc;
-  depthDesc.BackFace.StencilDepthFailOp  =
-  static_cast<D3D11_STENCIL_OP>(           desc.backFace.stencilDepthFailOp);
-  depthDesc.BackFace.StencilFailOp       =
-  static_cast<D3D11_STENCIL_OP>(           desc.backFace.stencilFailOp);
-  depthDesc.BackFace.StencilFunc         =
-  static_cast<D3D11_COMPARISON_FUNC>(      desc.backFace.stencilFunc);
-  depthDesc.BackFace.StencilPassOp       =
-  static_cast<D3D11_STENCIL_OP>(           desc.backFace.stencilPassOp);
+  depthDesc.BackFace.StencilDepthFailOp =
+  static_cast<D3D11_STENCIL_OP>( desc.backFace.stencilDepthFailOp);
+  depthDesc.BackFace.StencilFailOp =
+  static_cast<D3D11_STENCIL_OP>(desc.backFace.stencilFailOp);
+  depthDesc.BackFace.StencilFunc =
+  static_cast<D3D11_COMPARISON_FUNC>(desc.backFace.stencilFunc);
+  depthDesc.BackFace.StencilPassOp =
+  static_cast<D3D11_STENCIL_OP>(desc.backFace.stencilPassOp);
   depthDesc.FrontFace.StencilDepthFailOp =
-  static_cast<D3D11_STENCIL_OP>(           desc.frontFace.stencilDepthFailOp);
-  depthDesc.FrontFace.StencilFailOp      =
-  static_cast<D3D11_STENCIL_OP>(           desc.frontFace.stencilFailOp);
-  depthDesc.FrontFace.StencilFunc        =
-  static_cast<D3D11_COMPARISON_FUNC>(      desc.frontFace.stencilFunc);
-  depthDesc.FrontFace.StencilPassOp      =
-  static_cast<D3D11_STENCIL_OP>(           desc.frontFace.stencilPassOp);
-  depthDesc.DepthFunc                    =
-  static_cast<D3D11_COMPARISON_FUNC>(      desc.depthFunc);
-  depthDesc.DepthWriteMask               =
-  static_cast<D3D11_DEPTH_WRITE_MASK>(     desc.depthWriteMask);
-  depthDesc.DepthEnable                  = desc.depthEnable;
-  depthDesc.StencilEnable                = desc.stencilEnable;
-  depthDesc.StencilReadMask              = desc.stencilReadMask;
-  depthDesc.StencilWriteMask             = desc.stencilWriteMask;
+  static_cast<D3D11_STENCIL_OP>(desc.frontFace.stencilDepthFailOp);
+  depthDesc.FrontFace.StencilFailOp =
+  static_cast<D3D11_STENCIL_OP>(desc.frontFace.stencilFailOp);
+  depthDesc.FrontFace.StencilFunc =
+  static_cast<D3D11_COMPARISON_FUNC>(desc.frontFace.stencilFunc);
+  depthDesc.FrontFace.StencilPassOp =
+  static_cast<D3D11_STENCIL_OP>(desc.frontFace.stencilPassOp);
+  depthDesc.DepthFunc =
+  static_cast<D3D11_COMPARISON_FUNC>(desc.depthFunc);
+  depthDesc.DepthWriteMask =
+  static_cast<D3D11_DEPTH_WRITE_MASK>(desc.depthWriteMask);
+  depthDesc.DepthEnable = desc.depthEnable;
+  depthDesc.StencilEnable = desc.stencilEnable;
+  depthDesc.StencilReadMask = desc.stencilReadMask;
+  depthDesc.StencilWriteMask = desc.stencilWriteMask;
 
   HRESULT hr = basics->m_device->CreateDepthStencilState(&depthDesc, &m_depthStencil);
-  if (FAILED(hr))
-  {
+  if (FAILED(hr)) {
     return false;
   }
 
@@ -46,7 +45,7 @@ DX11DepthStencilState::create(DepthStencilDesc desc)
 void
 DX11DepthStencilState::use(uint32 stencilRef)
 {
-  const DX11Basics* basics =
+  const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   basics->m_deviceContext->OMSetDepthStencilState(m_depthStencil, stencilRef);

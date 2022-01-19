@@ -25,31 +25,26 @@ Model::loadFromFile(const String& fileName)
     aiProcessPreset_TargetRealtime_MaxQuality
     | aiProcess_ConvertToLeftHanded
   );
-  if (!scene)
-  {
+  if (!scene) {
     eeOut << importer->GetErrorString() << eeEndl;
     return false;
   }
 
   /*  GET NAME  */
-  String name = "";
+  String name;
   bool point = false;
-  int32 fileSize = static_cast<int32>(fileName.size());
-  for (int32 i = fileSize - 1; i >= 0; --i)
-  {
-    if (!point)
-    {
-      if (fileName[i] == '.')
-      {
+  auto fileSize = static_cast<int32>(fileName.size());
+  for (int32 i = fileSize - 1; i >= 0; --i) {
+    if (!point) {
+      if (fileName[i] == '.') {
         point = true;
       }
     }
-    else
-    {
-      if (fileName[i] != '/' && fileName[i] != '\\')
+    else {
+      if (fileName[i] != '/' && fileName[i] != '\\') {
         name = fileName[i] + name;
-      else
-        break;
+      }
+      else { break; }
     }
   }
 
@@ -270,23 +265,22 @@ Model::loadFromFile(const String& fileName)
   Vector3f minBound( 99999.99f,  99999.99f,  99999.99f);
   float maxDistance = 0.0f;
       //----Vertices----
-  for (uint32 i = 0; i < scene->mNumMeshes; ++i)
-  {
+  for (uint32 i = 0; i < scene->mNumMeshes; ++i) {
     Vector<SimpleVertex> vertices;
+    aiMesh* AssimpMesh = scene->mMeshes[i];
 
-    for (uint32 j = 0; j < scene->mMeshes[i]->mNumVertices; ++j)
-    {
+    for (uint32 j = 0; j < AssimpMesh->mNumVertices; ++j) {
       SimpleVertex v;
       //---Pos
-      if (scene->mMeshes[i]->HasPositions())
-      {
-        v.position.x = scene->mMeshes[i]->mVertices[j].x;
+      if (AssimpMesh->HasPositions()) {
+        const aiVector3D& vertex = AssimpMesh->mVertices[j];
+        v.position.x = vertex.x;
         maxBound.x = v.position.x > maxBound.x ? v.position.x : maxBound.x;
         minBound.x = v.position.x < minBound.x ? v.position.x : minBound.x;
-        v.position.y = scene->mMeshes[i]->mVertices[j].y;
+        v.position.y = vertex.y;
         maxBound.y = v.position.y > maxBound.y ? v.position.y : maxBound.y;
         minBound.y = v.position.y < minBound.y ? v.position.y : minBound.y;
-        v.position.z = scene->mMeshes[i]->mVertices[j].z;
+        v.position.z = vertex.z;
         maxBound.z = v.position.z > maxBound.z ? v.position.z : maxBound.z;
         minBound.z = v.position.z < minBound.z ? v.position.z : minBound.z;
         v.position.w = 1.0f;
@@ -297,33 +291,31 @@ Model::loadFromFile(const String& fileName)
 
         maxDistance = distance > maxDistance ? distance : maxDistance;
       }
-      else
-      {
+      else {
         v.position = Vector4f{};
       }
 
       //---UVs
       //for (int32 k = 0; k < scene->mMeshes[i]->mMaterialIndex; ++k)
     //	{
-      if (scene->mMeshes[i]->HasTextureCoords(0))
-      {
-        v.uvCoord.x = scene->mMeshes[i]->mTextureCoords[0][j].x;
-        v.uvCoord.y = scene->mMeshes[i]->mTextureCoords[0][j].y;
+      if (AssimpMesh->HasTextureCoords(0)) {
+        const aiVector3D& uv = AssimpMesh->mTextureCoords[0][j];
+        v.uvCoord.x = uv.x;
+        v.uvCoord.y = uv.y;
         v.uvCoord.z = 0.0f;
         v.uvCoord.w = 0.0f;
       }
       //}
 
       //---Norms
-      if (scene->mMeshes[i]->HasNormals())
-      {
-        v.normal.x = scene->mMeshes[i]->mNormals[j].x;
-        v.normal.y = scene->mMeshes[i]->mNormals[j].y;
-        v.normal.z = scene->mMeshes[i]->mNormals[j].z;
+      if (AssimpMesh->HasNormals()) {
+        const aiVector3D& norm = AssimpMesh->mNormals[j];
+        v.normal.x = norm.x;
+        v.normal.y = norm.y;
+        v.normal.z = norm.z;
         v.normal.w = 0.0f;
       }
-      else
-      {
+      else {
         v.normal = Vector4f{};
       }
 
@@ -371,11 +363,9 @@ Model::loadFromFile(const String& fileName)
 
     Vector<uint32> indices;
 
-    for (uint32 j = 0; j < scene->mMeshes[i]->mNumFaces; ++j)
-    {
-      for (uint32 k = 0; k < scene->mMeshes[i]->mFaces[j].mNumIndices; ++k)
-      {
-        indices.push_back(scene->mMeshes[i]->mFaces[j].mIndices[k]);
+    for (uint32 j = 0; j < AssimpMesh->mNumFaces; ++j) {
+      for (uint32 k = 0; k < AssimpMesh->mFaces[j].mNumIndices; ++k) {
+        indices.push_back(AssimpMesh->mFaces[j].mIndices[k]);
       }
     }/**/
     /*for (int32 j = 0; j < vertices.size(); ++j)
@@ -383,19 +373,19 @@ Model::loadFromFile(const String& fileName)
       indices.push_back(j);
     }/**/
 
+    auto& resourseManager = ResourceManager::instance();
 
-
-    m_meshes.push_back
+    m_meshes.emplace_back
     (
       make_pair
       (
-        ResourceManager::instance().loadMeshFromVertexArray
+        resourseManager.loadMeshFromVertexArray
         (
           vertices,
           indices,
           "Mesh_" + name + eeToString(m_meshes.size())
         ),
-        ResourceManager::instance().getResourceTexture("Default")
+        resourseManager.getResourceTexture("Default")
       )
     );
 
@@ -423,31 +413,26 @@ bool Model::loadFromFile(const String& fileName, SPtr<const SkeletalMesh> skMesh
     aiProcessPreset_TargetRealtime_MaxQuality
     | aiProcess_ConvertToLeftHanded
   );
-  if (!scene)
-  {
+  if (!scene) {
     eeOut << importer->GetErrorString() << eeEndl;
     return false;
   }
 
   /*  GET NAME  */
-  String name = "";
+  String name;
   bool point = false;
-  int32 fileSize = static_cast<int32>(fileName.size());
-  for (int32 i = fileSize - 1; i >= 0; --i)
-  {
-    if (!point)
-    {
-      if (fileName[i] == '.')
-      {
+  auto fileSize = static_cast<int32>(fileName.size());
+  for (int32 i = fileSize - 1; i >= 0; --i) {
+    if (!point) {
+      if (fileName[i] == '.') {
         point = true;
       }
     }
-    else
-    {
-      if (fileName[i] != '/' && fileName[i] != '\\')
+    else {
+      if (fileName[i] != '/' && fileName[i] != '\\') {
         name = fileName[i] + name;
-      else
-        break;
+      }
+      else { break; }
     }
   }
 
@@ -668,24 +653,23 @@ bool Model::loadFromFile(const String& fileName, SPtr<const SkeletalMesh> skMesh
   Vector3f minBound(99999.99f, 99999.99f, 99999.99f);
   float maxDistance = 0.0f;
   //----Vertices----
-  for (uint32 i = 0; i < scene->mNumMeshes; ++i)
-  {
+  for (uint32 i = 0; i < scene->mNumMeshes; ++i) {
     Vector<SimpleBigAnimVertex<6>> vertices;
+    aiMesh* AssimpMesh = scene->mMeshes[i];
 
-    for (uint32 j = 0; j < scene->mMeshes[i]->mNumVertices; ++j)
-    {
+    for (uint32 j = 0; j < AssimpMesh->mNumVertices; ++j) {
       SimpleBigAnimVertex<6> v;
       memset(&v, 0, sizeof(SimpleBigAnimVertex<6>));
       //---Pos
-      if (scene->mMeshes[i]->HasPositions())
-      {
-        v.position.x = scene->mMeshes[i]->mVertices[j].x;
+      if (AssimpMesh->HasPositions()) {
+        const aiVector3D& vertex = AssimpMesh->mVertices[j];
+        v.position.x = vertex.x;
         maxBound.x = v.position.x > maxBound.x ? v.position.x : maxBound.x;
         minBound.x = v.position.x < minBound.x ? v.position.x : minBound.x;
-        v.position.y = scene->mMeshes[i]->mVertices[j].y;
+        v.position.y = vertex.y;
         maxBound.y = v.position.y > maxBound.y ? v.position.y : maxBound.y;
         minBound.y = v.position.y < minBound.y ? v.position.y : minBound.y;
-        v.position.z = scene->mMeshes[i]->mVertices[j].z;
+        v.position.z = vertex.z;
         maxBound.z = v.position.z > maxBound.z ? v.position.z : maxBound.z;
         minBound.z = v.position.z < minBound.z ? v.position.z : minBound.z;
         v.position.w = 1.0f;
@@ -696,33 +680,31 @@ bool Model::loadFromFile(const String& fileName, SPtr<const SkeletalMesh> skMesh
 
         maxDistance = distance > maxDistance ? distance : maxDistance;
       }
-      else
-      {
+      else {
         v.position = Vector4f{};
       }
 
       //---UVs
       //for (int32 k = 0; k < scene->mMeshes[i]->mMaterialIndex; ++k)
     //	{
-      if (scene->mMeshes[i]->HasTextureCoords(0))
-      {
-        v.uvCoord.x = scene->mMeshes[i]->mTextureCoords[0][j].x;
-        v.uvCoord.y = scene->mMeshes[i]->mTextureCoords[0][j].y;
+      if (AssimpMesh->HasTextureCoords(0)) {
+        const aiVector3D& uv = AssimpMesh->mTextureCoords[0][j];
+        v.uvCoord.x = uv.x;
+        v.uvCoord.y = uv.y;
         v.uvCoord.z = 0.0f;
         v.uvCoord.w = 0.0f;
       }
       //}
 
       //---Norms
-      if (scene->mMeshes[i]->HasNormals())
-      {
-        v.normal.x = scene->mMeshes[i]->mNormals[j].x;
-        v.normal.y = scene->mMeshes[i]->mNormals[j].y;
-        v.normal.z = scene->mMeshes[i]->mNormals[j].z;
+      if (AssimpMesh->HasNormals()) {
+        const aiVector3D& norm = AssimpMesh->mNormals[j];
+        v.normal.x = norm.x;
+        v.normal.y = norm.y;
+        v.normal.z = norm.z;
         v.normal.w = 0.0f;
       }
-      else
-      {
+      else {
         v.normal = Vector4f{};
       }
 
@@ -770,11 +752,9 @@ bool Model::loadFromFile(const String& fileName, SPtr<const SkeletalMesh> skMesh
 
     Vector<uint32> indices;
 
-    for (uint32 j = 0; j < scene->mMeshes[i]->mNumFaces; ++j)
-    {
-      for (uint32 k = 0; k < scene->mMeshes[i]->mFaces[j].mNumIndices; ++k)
-      {
-        indices.push_back(scene->mMeshes[i]->mFaces[j].mIndices[k]);
+    for (uint32 j = 0; j < AssimpMesh->mNumFaces; ++j) {
+      for (uint32 k = 0; k < AssimpMesh->mFaces[j].mNumIndices; ++k) {
+        indices.push_back(AssimpMesh->mFaces[j].mIndices[k]);
       }
     }/**/
     /*for (int32 j = 0; j < vertices.size(); ++j)
@@ -782,54 +762,48 @@ bool Model::loadFromFile(const String& fileName, SPtr<const SkeletalMesh> skMesh
       indices.push_back(j);
     }/**/
 
-
     const Vector<Bone>& bones = skMesh->getBonesDataForMesh(i);
 
-
-    if (!bones.empty())
-    {
-      for (uint32 j = 0; j < bones.size(); j++)
-      {
-        for (uint32 k = 0; k < bones[j].m_vertexWeights.size(); k++)
-        {
-          bool yes = false;
-          for (uint32 l = 0; l < 16; l++)
-          {
-            if (vertices[bones[j].m_vertexWeights[k].m_vertexID].boneWeights[l] == 0.0f)
-            {
-              vertices[bones[j].m_vertexWeights[k].m_vertexID].boneIndices[l] = j;
-              vertices[bones[j].m_vertexWeights[k].m_vertexID].boneWeights[l] = bones[j].m_vertexWeights[k].m_weight;
+    if (!bones.empty()) {
+      for (uint32 j = 0; j < bones.size(); j++) {
+        Bone bone = bones[j];
+        bool yes = false;
+        for (auto vw : bone.m_vertexWeights) {
+          yes = false;
+          for (uint32 l = 0; l < 16; l++) {
+            if (vertices[vw.m_vertexID].boneWeights[l] == 0.0f) {
+              vertices[vw.m_vertexID].boneIndices[l] = j;
+              vertices[vw.m_vertexID].boneWeights[l] = vw.m_weight;
               yes = true;
               break;
             }
           }
 
-          if (!yes)
-          {
+          if (!yes) {
             eeOut << "No more bone space" << eeEndl;
           }
         }
       }
     }
-    else
-    {
-      for (uint32 j = 0; j < vertices.size(); j++)
-      {
-        vertices[j].boneIndices[0] = -1;
+    else {
+      for (auto& v : vertices) {
+        v.boneIndices[0] = -1;
       }
     }
 
-    m_meshes.push_back
+    auto& resourseManager = ResourceManager::instance();
+
+    m_meshes.emplace_back
     (
       make_pair
       (
-        ResourceManager::instance().loadMeshFromVertexArray
+        resourseManager.loadMeshFromVertexArray
         (
           vertices,
           indices,
           "Mesh_" + name + eeToString(m_meshes.size())
         ),
-        ResourceManager::instance().getResourceTexture("Default")
+        resourseManager.getResourceTexture("Default")
       )
     );
 
@@ -848,20 +822,21 @@ bool Model::loadFromFile(const String& fileName, SPtr<const SkeletalMesh> skMesh
 bool
 Model::loadFromMeshes(Vector<SPtr<Mesh>> meshes)
 {
-  if (meshes.empty())
-  {
+  if (meshes.empty()) {
     eeOut << "Empty info loading model" << eeEndl;
     return false;
   }
 
-  for (SPtr<Mesh> m : meshes)
-  {
+  auto& resourseManager = ResourceManager::instance();
+
+  for (const auto& m : meshes) {
     //m_meshes.push_back(MakePair<Mesh&, uint8>(m, 0u));
-    m_meshes.push_back(
+    m_meshes.emplace_back
+    (
       Pair<SPtr<Mesh>, SPtr<Texture>>
       (
         m,
-        ResourceManager::instance().getResourceTexture("Default")
+        resourseManager.getResourceTexture("Default")
         )
     );
   }
@@ -870,8 +845,7 @@ Model::loadFromMeshes(Vector<SPtr<Mesh>> meshes)
 bool
 Model::loadFromMeshes(const Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>& meshes)
 {
-  if (meshes.empty())
-  {
+  if (meshes.empty()) {
     eeOut << "Empty info loading model" << eeEndl;
     return false;
   }
@@ -885,29 +859,28 @@ Vector<Pair<SPtr<Mesh>, SPtr<Texture>>> Model::getMeshes()
 }
 void Model::setMeshes(Vector<SPtr<Mesh>> meshes)
 {
-  if (meshes.empty())
-  {
+  if (meshes.empty()) {
     eeOut << "Empty info loading model" << eeEndl;
     return;
   }
 
-  for (SPtr<Mesh> m : meshes)
-  {
+  auto& resourseManager = ResourceManager::instance();
+
+  for (const auto& m : meshes) {
     //m_meshes.push_back(MakePair<Mesh&, uint8>(m, 0u));
-    m_meshes.push_back
+    m_meshes.emplace_back
     (
       Pair<SPtr<Mesh>, SPtr<Texture>>
       (
         m,
-        ResourceManager::instance().getResourceTexture("Default")
+        resourseManager.getResourceTexture("Default")
       )
     );
   }
 }
 void Model::setMeshes(Vector<Pair<SPtr<Mesh>, SPtr<Texture>>> meshes)
 {
-  if (meshes.empty())
-  {
+  if (meshes.empty()) {
     eeOut << "Empty info loading model" << eeEndl;
     return;
   }
@@ -917,16 +890,14 @@ void Model::setMeshes(Vector<Pair<SPtr<Mesh>, SPtr<Texture>>> meshes)
 Vector<SPtr<Texture>> Model::getTextures()
 {
   Vector<SPtr<Texture>> textures;
-  for (auto& m : m_meshes)
-  {
+  for (auto& m : m_meshes)  {
     textures.push_back(m.second);
   }
   return textures;
 }
 void Model::setTexture(SPtr<Texture> texture, int32 index)
 {
-  if (static_cast<int32>(m_meshes.size()) > index)
-  {
+  if (static_cast<int32>(m_meshes.size()) > index) {
     m_meshes[index].second = texture;
   }
 }
@@ -1135,15 +1106,16 @@ void Model::initPrimitives()
     20u, 23u, 22u
   };
 
+  auto& memoryManager = MemoryManager::instance();
 
-  SPtr<Mesh> cubeMesh = MemoryManager::instance().newPtr<Mesh>();
+  SPtr<Mesh> cubeMesh = memoryManager.newPtr<Mesh>();
   cubeMesh->loadFromArray
   (
     vertices,
     indices
   );
 
-  cube = MemoryManager::instance().newPtr<Model>();
+  cube = memoryManager.newPtr<Model>();
   cube->loadFromMeshes
   (
     Vector<SPtr<Mesh>>

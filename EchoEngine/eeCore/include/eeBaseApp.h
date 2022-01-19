@@ -9,7 +9,7 @@
  *
  * @bug Not bug Known.
  */
- /************************************************************************/
+/************************************************************************/
 
 #pragma once
 #include "eePrerequisitesCore.h"
@@ -27,134 +27,134 @@ class EE_CORE_EXPORT BaseApp : public Module<BaseApp>
 {
  public:
   /**
-  * @brief
-  * Default constructor
-  */
+   * @brief
+   * Default constructor
+   */
   BaseApp() = default;
   /**
-  * @brief
-  * Default destructor
-  */
+   * @brief
+   * Default destructor
+   */
   virtual
   ~BaseApp() = default;
 
   /**
-  * @brief
-  * Runs the application.
-  *
-  * @description
-  * Tells everything to initialize and starts the main loop.
-  *
-  * @return
-  * The finish code, tells if there was any error.
-  */
+   * @brief
+   * Runs the application.
+   *
+   * @description
+   * Tells everything to initialize and starts the main loop.
+   *
+   * @return
+   * The finish code, tells if there was any error.
+   */
   virtual int32
   run(void* callback);
 
  protected:
   /**
-  * @brief
-  * Initializes the resources needed.
-  *
-  * @description
-  * Initializes the resources that the app needs, only used for hardcoding
-  * resources for testing.
-  *
-  * @return
-  * Weather it succeed or failed to initialize.
-  */
+   * @brief
+   * Initializes the resources needed.
+   *
+   * @description
+   * Initializes the resources that the app needs, only used for hardcoding
+   * resources for testing.
+   *
+   * @return
+   * Weather it succeed or failed to initialize.
+   */
   virtual bool
   initResources(){return true;}
 
   /**
-  * @brief
-  * The update method.
-  *
-  * @description
-  * Updates everything in the app every frame.
-  */
+   * @brief
+   * The update method.
+   *
+   * @description
+   * Updates everything in the app every frame.
+   */
   virtual void
   update();
 
   /**
-  * @brief
-  * The render method.
-  *
-  * @description
-  * Renders everything in the app every frame.
-  */
+   * @brief
+   * The render method.
+   *
+   * @description
+   * Renders everything in the app every frame.
+   */
   virtual void
   render();
   /**
-  * @brief
-  * Ends the frame.
-  *
-  * @description
-  * The last function to be called every frame. Ends every thing thing that
-  * needs to.
-  */
+   * @brief
+   * Ends the frame.
+   *
+   * @description
+   * The last function to be called every frame. Ends every thing thing that
+   * needs to.
+   */
   void
   endFrame();
 
   /**
-  * @brief
-  * The destroy method.
-  *
-  * @description
-  * Cleans all the memory allocated during the application run.
-  */
+   * @brief
+   * The destroy method.
+   *
+   * @description
+   * Cleans all the memory allocated during the application run.
+   */
   virtual void
   destroy();
 
  private:
   /**
-  * @brief
-  * Where the application stays till the end.
-  *
-  * @description
-  * Keeps the application running, make the input/update/render loop.
-  *
-  * @return
-  * The finish code, tells if there was any error.
-  */
+   * @brief
+   * Where the application stays till the end.
+   *
+   * @description
+   * Keeps the application running, make the input/update/render loop.
+   *
+   * @return
+   * The finish code, tells if there was any error.
+   */
   int32
   mainLoop(void* callback);
 
   /**
-  * @brief
-  * Initializes everything.
-  *
-  * @description
-  * Initializes everything that will be needed for the application to run.
-  *
-  * @return
-  * Weather it succeed or failed to initialize.
-  */
+   * @brief
+   * Initializes everything.
+   *
+   * @description
+   * Initializes everything that will be needed for the application to run.
+   *
+   * @return
+   * Weather it succeed or failed to initialize.
+   */
   bool
   init(void* callback);
 
   /**
-  * @brief
-  * Initializes the systems needed.
-  *
-  * @description
-  * Initializes the systems that the app needs, like the graphics, mesh loading,
-  * inputs, etc.
-  *
-  * @return
-  * Weather it succeed or failed to initialize.
-  */
+   * @brief
+   * Initializes the systems needed.
+   *
+   * @description
+   * Initializes the systems that the app needs, like the graphics, mesh loading,
+   * inputs, etc.
+   *
+   * @return
+   * Weather it succeed or failed to initialize.
+   */
   bool
   initSystems();
 
   /**
-  * @brief
-  * Processes the events given by the system.
-  *
-  * @description
-  * Gets all the events given by the systems and interprets them to something
-  * useful.
-  */
+   * @brief
+   * Processes the events given by the system.
+   *
+   * @description
+   * Gets all the events given by the systems and interprets them to something
+   * useful.
+   */
   void
   processEvents();
 

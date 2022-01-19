@@ -6,9 +6,8 @@ void
 Actor::init(String name)
 {
   m_name = name;
-  if (!getTransform())
-  {
-    int32 cmpIndex = static_cast<int32>(m_components.size());
+  if (!getTransform()) {
+    auto cmpIndex = static_cast<int32>(m_components.size());
     m_components.push_back(MemoryManager::instance().newPtr<CTransform>());
     m_components[cmpIndex]->init(shared_from_this());
   }
@@ -16,8 +15,7 @@ Actor::init(String name)
 void
 Actor::update()
 {
-  for (SPtr<Component> cmp : m_components)
-  {
+  for (auto& cmp : m_components) {
     if (cmp->getActive())
       cmp->update();
   }
@@ -41,13 +39,10 @@ Actor::setActive(bool active)
 void
 Actor::attachTo(SPtr<Actor> parent)
 {
-  if (m_parent)
-  {
-    uint32 childsSize = static_cast<uint32>(m_parent->m_childs.size());
-    for (uint32 i = 0; i < childsSize; ++i)
-    {
-      if (m_parent->m_childs[i]->m_name == m_name)
-      {
+  if (m_parent) {
+    auto childsSize = static_cast<uint32>(m_parent->m_childs.size());
+    for (uint32 i = 0; i < childsSize; ++i) {
+      if (m_parent->m_childs[i]->m_name == m_name) {
         m_parent->m_childs.erase(m_parent->m_childs.begin() + i);
         break;
       }
@@ -59,8 +54,7 @@ Actor::attachTo(SPtr<Actor> parent)
 
   m_parent->m_childs.push_back(shared_from_this());
 
-  if (m_parent->getTransform() && getTransform())
-  {
+  if (m_parent->getTransform() && getTransform()) {
     getTransform()->attatchTo(m_parent->getTransform());
   }
 }

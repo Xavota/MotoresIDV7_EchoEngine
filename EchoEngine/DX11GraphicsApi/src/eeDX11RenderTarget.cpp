@@ -12,18 +12,26 @@ DX11RenderTarget::~DX11RenderTarget()
 bool
 DX11RenderTarget::createAsBackBuffer()
 {
-  const DX11Basics* basics =
+  const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
-  ID3D11Resource* pBackBuffer = nullptr;
-  basics->m_swapChain->GetBuffer(0, __uuidof(ID3D11Resource),
-                                reinterpret_cast<void**>(&pBackBuffer));
+  HRESULT hr;
 
-  basics->m_device->CreateRenderTargetView(pBackBuffer,
-                                          nullptr,
-                                          &m_renderTarget);
+  ID3D11Texture2D* pBackBuffer = nullptr;
+  hr = basics->m_swapChain->GetBuffer(0,
+                                      __uuidof(ID3D11Texture2D),
+                                      reinterpret_cast<LPVOID*>(&pBackBuffer));
+  if (FAILED(hr)) {
+    return false;
+  }
+
+  hr = basics->m_device->CreateRenderTargetView(pBackBuffer,
+                                                nullptr,
+                                                &m_renderTarget);
   DX11SAFE_RELEASE(pBackBuffer);
-
+  if (FAILED(hr)) {
+    return false;
+  }
 
   return true;
 }
@@ -31,7 +39,7 @@ DX11RenderTarget::createAsBackBuffer()
 bool
 DX11RenderTarget::createAsIOTexture()
 {
-  const DX11Basics* basics =
+  const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   //TODO: Areglar
@@ -49,14 +57,14 @@ DX11RenderTarget::createAsIOTexture()
   descTextRT.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
   descTextRT.CPUAccessFlags = 0;
   descTextRT.MiscFlags = 0;
-  if (FAILED(basics->m_device->CreateTexture2D(&descTextRT, nullptr, &Tex)))
-  {
+  if (FAILED(basics->m_device->CreateTexture2D(&descTextRT, nullptr, &Tex))) {
     DX11SAFE_RELEASE(Tex);
     return false;
   }
 
-  if (FAILED(basics->m_device->CreateRenderTargetView(Tex, nullptr, &m_renderTarget)))
-  {
+  if (FAILED(basics->m_device->CreateRenderTargetView(Tex,
+                                                      nullptr,
+                                                      &m_renderTarget)))  {
     DX11SAFE_RELEASE(Tex);
     return false;
   }
@@ -73,8 +81,7 @@ DX11RenderTarget::createAsIOTexture()
   samDesc.maxLOD = D3D11_FLOAT32_MAX;
 
   m_inTexture = MemoryManager::instance().newPtr<DX11Texture>();
-  if (m_inTexture->loadFromBuffer(reinterpret_cast<void*>(Tex), samDesc))
-  {
+  if (m_inTexture->loadFromBuffer(reinterpret_cast<void*>(Tex), samDesc)) {
     DX11SAFE_RELEASE(Tex);
     return false;
   }
@@ -92,29 +99,26 @@ DX11RenderTarget::getAsTexture() const
 void
 DX11RenderTarget::set(SPtr<DepthStencil> stencil)
 {
-  const DX11Basics* basics =
+  EE_NO_EXIST_RETURN(stencil);
+
+  const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
-  ID3D11DepthStencilView* depthStencilView = nullptr;
-  if (stencil)
-  {
-    SPtr<DX11DepthStencil> ds =
-      MemoryManager::instance().reinterpretPtr<DX11DepthStencil>(stencil);
-    depthStencilView = ds->getResource();
-  }
+  SPtr<DX11DepthStencil> ds =
+           MemoryManager::instance().reinterpretPtr<DX11DepthStencil>(stencil);
+  ID3D11DepthStencilView* depthStencilView = ds->getResource();
 
-  if (depthStencilView)
-  {
-    basics->m_deviceContext->OMSetRenderTargets(1,
-                                                &m_renderTarget,
-                                                depthStencilView);
-  }
+  EE_NO_EXIST_RETURN(depthStencilView);
+
+  basics->m_deviceContext->OMSetRenderTargets(1,
+                                              &m_renderTarget,
+                                              depthStencilView);
 }
 
 void
 DX11RenderTarget::clean(float r, float g, float b, float a)
 {
-  const DX11Basics* basics =
+  const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   float clearColor[4] = { r,g,b,a };

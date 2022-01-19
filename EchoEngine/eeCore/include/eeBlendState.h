@@ -8,7 +8,7 @@
  *
  * @bug Not bug Known.
  */
- /************************************************************************/
+/************************************************************************/
 
 #pragma once
 #include "eePrerequisitesCore.h"
@@ -20,58 +20,58 @@ namespace eeEngineSDK {
  */
 class EE_CORE_EXPORT BlendState
 {
-public:
+ public:
   /**
-  * @brief
-  * Default constructor
-  */
+   * @brief
+   * Default constructor
+   */
   BlendState() = default;
   /**
-  * @brief
-  * Default destructor
-  */
+   * @brief
+   * Default destructor
+   */
   virtual
   ~BlendState() = default;
 
   /**
-  * @brief
-  * Creates a blend state.
-  *
-  * @description
-  * Creates a blend state using a descriptor.
-  *
-  * @param desc
-  * The descriptor of the blend state.
-  *
-  * @return
-  * True if it succeeded to create the state.
-  */
+   * @brief
+   * Creates a blend state.
+   *
+   * @description
+   * Creates a blend state using a descriptor.
+   *
+   * @param desc
+   * The descriptor of the blend state.
+   *
+   * @return
+   * True if it succeeded to create the state.
+   */
   virtual bool
   create(BlendDesc /*desc*/) { return true; }
 
   /**
-  * @brief
-  * Set to graphics api.
-  *
-  * @description
-  * Sets the depth stencil state for the graphic memory to use, only for
-  * override in graphics api specializations.
-  * 
-  * @param blendFactor
-  * Blend factor.
-  * @param sampleMask
-  * Sample Mask.
-  */
+   * @brief
+   * Set to graphics api.
+   *
+   * @description
+   * Sets the depth stencil state for the graphic memory to use, only for
+   * override in graphics api specializations.
+   * 
+   * @param blendFactor
+   * Blend factor.
+   * @param sampleMask
+   * Sample Mask.
+   */
   virtual void
   use(float /*blendFactor*/[4], uint32 /*sampleMask*/) {}
 
   /**
-  * @brief
-  * Releases the data.
-  *
-  * @description
-  * Deletes the memory of all data allocated.
-  */
+   * @brief
+   * Releases the data.
+   *
+   * @description
+   * Deletes the memory of all data allocated.
+   */
   virtual void
   release() {}
 };

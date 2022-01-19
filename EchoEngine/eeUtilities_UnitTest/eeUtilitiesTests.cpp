@@ -87,8 +87,8 @@ TEST(eeUtilities, Vector2)
   EXPECT_EQ(sizeof(Vector2f), 8);
 
   // Default constructor
-  Vector2f vf = Vector2f::ZERO;
-  EXPECT_EQ(vf, Vector2f::ZERO);
+  Vector2f vf = Vector2f::kZERO;
+  EXPECT_EQ(vf, Vector2f::kZERO);
 
   // operator=
   vf = Vector2f(-3.0f, 1.0f);
@@ -167,8 +167,8 @@ TEST(eeUtilities, Vector2)
   EXPECT_EQ(sizeof(Vector2i), 8);
 
   // Default constructor
-  Vector2i vi = Vector2i::ZERO;
-  EXPECT_EQ(vi, Vector2i::ZERO);
+  Vector2i vi = Vector2i::kZERO;
+  EXPECT_EQ(vi, Vector2i::kZERO);
 
   // operator=
   vi = Vector2i(-3, 1);
@@ -236,8 +236,8 @@ TEST(eeUtilities, Vector2)
   EXPECT_EQ(sizeof(Vector2u), 8);
 
   // Default constructor
-  Vector2u vu = Vector2u::ZERO;
-  EXPECT_EQ(vu, Vector2u::ZERO);
+  Vector2u vu = Vector2u::kZERO;
+  EXPECT_EQ(vu, Vector2u::kZERO);
 
   // operator=
   vu = Vector2u(3, 1);
@@ -306,8 +306,8 @@ TEST(eeUtilities, Vector3)
   EXPECT_EQ(sizeof(Vector3f), 12);
 
   // Default constructor
-  Vector3f vf = Vector3f::ZERO;
-  EXPECT_EQ(vf, Vector3f::ZERO);
+  Vector3f vf = Vector3f::kZERO;
+  EXPECT_EQ(vf, Vector3f::kZERO);
   
   // operator=
   vf = Vector3f(2.0f, 2.0f, -6.0f);
@@ -394,8 +394,8 @@ TEST(eeUtilities, Vector3)
   EXPECT_EQ(sizeof(Vector3i), 12);
 
   // Default constructor
-  Vector3i vi = Vector3i::ZERO;
-  EXPECT_EQ(vi, Vector3i::ZERO);
+  Vector3i vi = Vector3i::kZERO;
+  EXPECT_EQ(vi, Vector3i::kZERO);
 
   // operator=
   vi = Vector3i(2, 2, -6);
@@ -464,8 +464,8 @@ TEST(eeUtilities, Vector3)
   EXPECT_EQ(sizeof(Vector3u), 12);
 
   // Default constructor
-  Vector3u vu = Vector3u::ZERO;
-  EXPECT_EQ(vu, Vector3u::ZERO);
+  Vector3u vu = Vector3u::kZERO;
+  EXPECT_EQ(vu, Vector3u::kZERO);
 
   // operator=
   vu = Vector3u(4, 2, 6);
@@ -535,8 +535,8 @@ TEST(eeUtilities, Vector4)
   EXPECT_EQ(sizeof(Vector4f), 16);
 
   // Default constructor
-  Vector4f vf = Vector4f::ZERO;
-  EXPECT_EQ(vf, Vector4f::ZERO);
+  Vector4f vf = Vector4f::kZERO;
+  EXPECT_EQ(vf, Vector4f::kZERO);
 
   // operator=
   vf = Vector4f(-7.0f, 4.0f, 6.0f, -4.0f);
@@ -636,8 +636,8 @@ TEST(eeUtilities, Vector4)
   EXPECT_EQ(sizeof(Vector4i), 16);
 
   // Default constructor
-  Vector4i vi = Vector4i::ZERO;
-  EXPECT_EQ(vi, Vector4i::ZERO);
+  Vector4i vi = Vector4i::kZERO;
+  EXPECT_EQ(vi, Vector4i::kZERO);
 
   // operator=
   vi = Vector4i(-7,  4,  6, -4);
@@ -705,8 +705,8 @@ TEST(eeUtilities, Vector4)
   EXPECT_EQ(sizeof(Vector4u), 16);
 
   // Default constructor
-  Vector4u vu = Vector4u::ZERO;
-  EXPECT_EQ(vu, Vector4u::ZERO);
+  Vector4u vu = Vector4u::kZERO;
+  EXPECT_EQ(vu, Vector4u::kZERO);
 
   // operator=
   vu = Vector4u(6, 6, 6, 8);
@@ -775,20 +775,20 @@ TEST(eeUtilities, Matrix2)
   EXPECT_EQ(sizeof(Matrix2f), 16);
 
   // Default constructor and matrix ZERO
-  Matrix2f deff = Matrix2f::ZERO;
-  EXPECT_TRUE(deff == Matrix2f::ZERO);
+  Matrix2f deff = Matrix2f::kZERO;
+  EXPECT_TRUE(deff == Matrix2f::kZERO);
 
   // Custom constructor 1 and matrix ONES
   float mf[4] = {1.0f,1.0f,1.0f,1.0f};
   Matrix2f cst1f(mf);
-  EXPECT_TRUE(cst1f == Matrix2f::ONES);
+  EXPECT_TRUE(cst1f == Matrix2f::kONES);
 
   // Custom constructor 2 and matrix IDENTITY
   //Matrix2f cst2f(Vector2f(1.0f, 0.0f), 
   //               Vector2f(0.0f, 1.0f));
   Matrix2f cst2f(1.0f, 0.0f, 
                  0.0f, 1.0f);
-  EXPECT_TRUE(cst2f == Matrix2f::IDENTITY);
+  EXPECT_TRUE(cst2f == Matrix2f::kIDENTITY);
 
   // Custom constructor 3
   Matrix2f cst3f(1.0f, 2.0f, 3.0f, 4.0f);
@@ -837,20 +837,20 @@ TEST(eeUtilities, Matrix2)
   EXPECT_EQ(sizeof(Matrix2i), 16);
 
   // Default constructor and matrix ZERO
-  Matrix2i defi = Matrix2i::ZERO;
-  EXPECT_TRUE(defi == Matrix2i::ZERO);
+  Matrix2i defi = Matrix2i::kZERO;
+  EXPECT_TRUE(defi == Matrix2i::kZERO);
 
   // Custom constructor 1 and matrix ONES
   eeEngineSDK::int32 mi[4] = { 1,1,1,1 };
   Matrix2i cst1i(mi);
-  EXPECT_TRUE(cst1i == Matrix2i::ONES);
+  EXPECT_TRUE(cst1i == Matrix2i::kONES);
 
   // Custom constructor 2 and matrix IDENTITY
   //Matrix2i cst2i(Vector2i(1, 0),
   //               Vector2i(0, 1));
   Matrix2i cst2i(1, 0,
                  0, 1);
-  EXPECT_TRUE(cst2i == Matrix2i::IDENTITY);
+  EXPECT_TRUE(cst2i == Matrix2i::kIDENTITY);
 
   // Custom constructor 3
   Matrix2i cst3i(1, 2, 3, 4);
@@ -891,20 +891,20 @@ TEST(eeUtilities, Matrix2)
   EXPECT_EQ(sizeof(Matrix2u), 16);
 
   // Default constructor and matrix ZERO
-  Matrix2u defu = Matrix2u::ZERO;
-  EXPECT_TRUE(defu == Matrix2u::ZERO);
+  Matrix2u defu = Matrix2u::kZERO;
+  EXPECT_TRUE(defu == Matrix2u::kZERO);
 
   // Custom constructor 1 and matrix ONES
   eeEngineSDK::uint32 mu[4] = { 1u,1u,1u,1u };
   Matrix2u cst1u(mu);
-  EXPECT_TRUE(cst1u == Matrix2u::ONES);
+  EXPECT_TRUE(cst1u == Matrix2u::kONES);
 
   // Custom constructor 2 and matrix IDENTITY
   //Matrix2u cst2u(Vector2u(1u, 0u),
   //               Vector2u(0u, 1u));
   Matrix2u cst2u(1u, 0u,
                  0u, 1u);
-  EXPECT_TRUE(cst2u == Matrix2u::IDENTITY);
+  EXPECT_TRUE(cst2u == Matrix2u::kIDENTITY);
 
   // Custom constructor 3
   Matrix2u cst3u(1u, 2u, 3u, 4u);
@@ -946,15 +946,15 @@ TEST(eeUtilities, Matrix3)
   EXPECT_EQ(sizeof(Matrix3f), 36);
 
   // Default constructor and matrix ZERO
-  Matrix3f deff = Matrix3f::ZERO;
-  EXPECT_TRUE(deff == Matrix3f::ZERO);
+  Matrix3f deff = Matrix3f::kZERO;
+  EXPECT_TRUE(deff == Matrix3f::kZERO);
 
-  // Custom constructor 1 and matrix ONES
+  // Custom constructor 1 and matrix kONES
   float mf[9] = { 1.0f, 1.0f, 1.0f,
                   1.0f, 1.0f, 1.0f,
                   1.0f, 1.0f, 1.0f };
   Matrix3f cst1f(mf);
-  EXPECT_TRUE(cst1f == Matrix3f::ONES);
+  EXPECT_TRUE(cst1f == Matrix3f::kONES);
 
   // Custom constructor 2 and matrix IDENTITY
   //Matrix3f cst2f(Vector3f(1.0f, 0.0f, 0.0f),
@@ -963,7 +963,7 @@ TEST(eeUtilities, Matrix3)
   Matrix3f cst2f(1.0f, 0.0f, 0.0f,
                  0.0f, 1.0f, 0.0f,
                  0.0f, 0.0f, 1.0f);
-  EXPECT_TRUE(cst2f == Matrix3f::IDENTITY);
+  EXPECT_TRUE(cst2f == Matrix3f::kIDENTITY);
 
   // Custom constructor 3
   Matrix3f cst3f(1.0f, 2.0f, 7.0f, 
@@ -1012,7 +1012,7 @@ TEST(eeUtilities, Matrix3)
                                     0.0f, 3.0f, 0.0f,
                                     0.0f, 0.0f, 5.0f));
 
-  transform = Matrix3f::IDENTITY;
+  transform = Matrix3f::kIDENTITY;
   transform.translate(Vector3f(2.0f, 4.0f, 1.0f));
   EXPECT_TRUE(transform == Matrix3f(1.0f, 0.0f, 2.0f,
                                     0.0f, 1.0f, 4.0f,
@@ -1068,15 +1068,15 @@ TEST(eeUtilities, Matrix3)
   EXPECT_EQ(sizeof(Matrix3i), 36);
 
   // Default constructor and matrix ZERO
-  Matrix3i defi = Matrix3i::ZERO;
-  EXPECT_TRUE(defi == Matrix3i::ZERO);
+  Matrix3i defi = Matrix3i::kZERO;
+  EXPECT_TRUE(defi == Matrix3i::kZERO);
 
   // Custom constructor 1 and matrix ONES
   int32 mi[9] = { 1, 1, 1,
                   1, 1, 1,
                   1, 1, 1 };
   Matrix3i cst1i(mi);
-  EXPECT_TRUE(cst1i == Matrix3i::ONES);
+  EXPECT_TRUE(cst1i == Matrix3i::kONES);
 
   // Custom constructor 2 and matrix IDENTITY
   //Matrix3i cst2i(Vector3i(1, 0, 0),
@@ -1085,7 +1085,7 @@ TEST(eeUtilities, Matrix3)
   Matrix3i cst2i(1, 0, 0,
                  0, 1, 0,
                  0, 0, 1);
-  EXPECT_TRUE(cst2i == Matrix3i::IDENTITY);
+  EXPECT_TRUE(cst2i == Matrix3i::kIDENTITY);
 
   // Custom constructor 3
   Matrix3i cst3i(1, 2, 7,
@@ -1150,15 +1150,15 @@ TEST(eeUtilities, Matrix3)
   EXPECT_EQ(sizeof(Matrix3u), 36);
 
   // Default constructor and matrix ZERO
-  Matrix3u defu = Matrix3u::ZERO;
-  EXPECT_TRUE(defu == Matrix3u::ZERO);
+  Matrix3u defu = Matrix3u::kZERO;
+  EXPECT_TRUE(defu == Matrix3u::kZERO);
 
   // Custom constructor 1 and matrix ONES
   uint32 mu[9] = { 1u, 1u, 1u,
                    1u, 1u, 1u,
                    1u, 1u, 1u };
   Matrix3u cst1u(mu);
-  EXPECT_TRUE(cst1u == Matrix3u::ONES);
+  EXPECT_TRUE(cst1u == Matrix3u::kONES);
 
   // Custom constructor 2 and matrix IDENTITY
   //Matrix3u cst2u(Vector3u(1u, 0u, 0u),
@@ -1167,7 +1167,7 @@ TEST(eeUtilities, Matrix3)
   Matrix3u cst2u(1u, 0u, 0u,
                  0u, 1u, 0u,
                  0u, 0u, 1u);
-  EXPECT_TRUE(cst2u == Matrix3u::IDENTITY);
+  EXPECT_TRUE(cst2u == Matrix3u::kIDENTITY);
 
   // Custom constructor 3
   Matrix3u cst3u(1u, 2u, 7u,
@@ -1233,8 +1233,8 @@ TEST(eeUtilities, Matrix4)
   EXPECT_EQ(sizeof(Matrix4f), 64);
 
   // Default constructor and matrix ZERO
-  Matrix4f deff = Matrix4f::ZERO;
-  EXPECT_TRUE(deff == Matrix4f::ZERO);
+  Matrix4f deff = Matrix4f::kZERO;
+  EXPECT_TRUE(deff == Matrix4f::kZERO);
 
   // Custom constructor 1 and matrix ONES
   float mf[16] = { 1.0f, 1.0f, 1.0f, 1.0f,
@@ -1242,7 +1242,7 @@ TEST(eeUtilities, Matrix4)
                    1.0f, 1.0f, 1.0f, 1.0f,
                    1.0f, 1.0f, 1.0f, 1.0f };
   Matrix4f cst1f(mf);
-  EXPECT_TRUE(cst1f == Matrix4f::ONES);
+  EXPECT_TRUE(cst1f == Matrix4f::kONES);
 
   // Custom constructor 2 and matrix IDENTITY
   //Matrix4f cst2f(Vector4f(1.0f, 0.0f, 0.0f, 0.0f),
@@ -1253,7 +1253,7 @@ TEST(eeUtilities, Matrix4)
                  0.0f, 1.0f, 0.0f, 0.0f,
                  0.0f, 0.0f, 1.0f, 0.0f,
                  0.0f, 0.0f, 0.0f, 1.0f);
-  EXPECT_TRUE(cst2f == Matrix4f::IDENTITY);
+  EXPECT_TRUE(cst2f == Matrix4f::kIDENTITY);
 
   // Custom constructor 3
   Matrix4f cst3f(1.0f, 2.0f, 3.0f, 5.0f,
@@ -1312,7 +1312,7 @@ TEST(eeUtilities, Matrix4)
                                     0.0f, 0.0f, 5.0f, 0.0f,
                                     0.0f, 0.0f, 0.0f, 1.0f));
 
-  transform = Matrix4f::IDENTITY;
+  transform = Matrix4f::kIDENTITY;
   transform.translate(Vector3f(2.0f, 4.0f, 1.0f));
   EXPECT_TRUE(transform == Matrix4f(1.0f, 0.0f, 0.0f, 2.0f,
                                     0.0f, 1.0f, 0.0f, 4.0f,
@@ -1378,8 +1378,8 @@ TEST(eeUtilities, Matrix4)
   EXPECT_EQ(sizeof(Matrix4i), 64);
 
   // Default constructor and matrix ZERO
-  Matrix4i defi = Matrix4i::ZERO;
-  EXPECT_TRUE(defi == Matrix4i::ZERO);
+  Matrix4i defi = Matrix4i::kZERO;
+  EXPECT_TRUE(defi == Matrix4i::kZERO);
 
   // Custom constructor 1 and matrix ONES
   int32 mi[16] = { 1, 1, 1, 1,
@@ -1387,7 +1387,7 @@ TEST(eeUtilities, Matrix4)
                    1, 1, 1, 1,
                    1, 1, 1, 1 };
   Matrix4i cst1i(mi);
-  EXPECT_TRUE(cst1i == Matrix4i::ONES);
+  EXPECT_TRUE(cst1i == Matrix4i::kONES);
 
   // Custom constructor 2 and matrix IDENTITY
   //Matrix4i cst2i(Vector4i(1, 0, 0, 0),
@@ -1398,7 +1398,7 @@ TEST(eeUtilities, Matrix4)
                  0, 1, 0, 0,
                  0, 0, 1, 0,
                  0, 0, 0, 1);
-  EXPECT_TRUE(cst2i == Matrix4i::IDENTITY);
+  EXPECT_TRUE(cst2i == Matrix4i::kIDENTITY);
 
   // Custom constructor 3
   Matrix4i cst3i(1, 2, 3, 5,
@@ -1477,8 +1477,8 @@ TEST(eeUtilities, Matrix4)
   EXPECT_EQ(sizeof(Matrix4u), 64);
 
   // Default constructor and matrix ZERO
-  Matrix4u defu = Matrix4u::ZERO;
-  EXPECT_TRUE(defu == Matrix4u::ZERO);
+  Matrix4u defu = Matrix4u::kZERO;
+  EXPECT_TRUE(defu == Matrix4u::kZERO);
 
   // Custom constructor 1 and matrix ONES
   uint32 mu[16] = { 1u, 1u, 1u, 1u,
@@ -1486,7 +1486,7 @@ TEST(eeUtilities, Matrix4)
                     1u, 1u, 1u, 1u,
                     1u, 1u, 1u, 1u };
   Matrix4u cst1u(mu);
-  EXPECT_TRUE(cst1u == Matrix4u::ONES);
+  EXPECT_TRUE(cst1u == Matrix4u::kONES);
 
   // Custom constructor 2 and matrix IDENTITY
   //Matrix4u cst2u(Vector4u(1u, 0u, 0u, 0u),
@@ -1497,7 +1497,7 @@ TEST(eeUtilities, Matrix4)
                  0u, 1u, 0u, 0u,
                  0u, 0u, 1u, 0u,
                  0u, 0u, 0u, 1u);
-  EXPECT_TRUE(cst2u == Matrix4u::IDENTITY);
+  EXPECT_TRUE(cst2u == Matrix4u::kIDENTITY);
 
   // Custom constructor 3
   Matrix4u cst3u(1u, 2u, 3u, 5u,
@@ -1613,19 +1613,19 @@ TEST(eeUtilities, Shapes)
   BoxAAB b(Vector3f(2.0f, 2.0f, 2.0f), Vector3f(1.0f, 2.0f, 3.0f));
 
   EXPECT_TRUE(b.getA() == Vector3f(2.0f, 2.0f, 2.0f));
-  EXPECT_TRUE(b.getB() == Vector3f(3.0f, 0.0f, -1.0f));
+  EXPECT_TRUE(b.getB() == Vector3f(3.0f, 4.0f, 5.0f));
   EXPECT_TRUE(b.getSize() == Vector3f(1.0f, 2.0f, 3.0f));
 
   b.move(Vector3f(-1.0f, -2.0f, -3.0f));
   EXPECT_TRUE(b.getA() == Vector3f(1.0f, 0.0f, -1.0f));
-  EXPECT_TRUE(b.getB() == Vector3f(2.0f, -2.0f, -4.0f));
+  EXPECT_TRUE(b.getB() == Vector3f(2.0f, 2.0f, 2.0f));
 
   b.setA(Vector3f(3.0f, 2.0f, 1.0f));
   EXPECT_TRUE(b.getA() == Vector3f(3.0f, 2.0f, 1.0f));
-  EXPECT_TRUE(b.getB() == Vector3f(4.0f, 0.0f, -2.0f));
+  EXPECT_TRUE(b.getB() == Vector3f(4.0f, 4.0f, 4.0f));
 
   b.setSize(Vector3f(3.0f, 1.0f, 3.0f));
-  EXPECT_TRUE(b.getB() == Vector3f(6.0f, 1.0f, -2.0f));
+  EXPECT_TRUE(b.getB() == Vector3f(6.0f, 3.0f, 4.0f));
   EXPECT_TRUE(b.getSize() == Vector3f(3.0f, 1.0f, 3.0f));
 
 
@@ -1653,24 +1653,24 @@ TEST(eeUtilities, Shapes)
   Rectangle r(Vector2f(2.0f,3.0f), Vector2f(3.0f, 4.0f));
 
   EXPECT_TRUE(r.getA() == Vector2f(2.0f, 3.0f));
-  EXPECT_TRUE(r.getB() == Vector2f(5.0f, -1.0f));
+  EXPECT_TRUE(r.getB() == Vector2f(5.0f, 7.0f));
   EXPECT_TRUE(r.getSize() == Vector2f(3.0f, 4.0f));
 
   r.move(Vector2f(1.0f, -2.0f));
   EXPECT_TRUE(r.getA() == Vector2f(3.0f, 1.0f));
-  EXPECT_TRUE(r.getB() == Vector2f(6.0f, -3.0f));
+  EXPECT_TRUE(r.getB() == Vector2f(6.0f, 5.0f));
 
   r.setA(Vector2f(0.0f, -1.0f));
   EXPECT_TRUE(r.getA() == Vector2f(0.0f, -1.0f));
-  EXPECT_TRUE(r.getB() == Vector2f(3.0f, -5.0f));
+  EXPECT_TRUE(r.getB() == Vector2f(3.0f, 3.0f));
 
   r.setSize(Vector2f(1.0f, 1.0f));
-  EXPECT_TRUE(r.getB() == Vector2f(1.0f, -2.0f));
+  EXPECT_TRUE(r.getB() == Vector2f(1.0f, 0.0f));
   EXPECT_TRUE(r.getSize() == Vector2f(1.0f, 1.0f));
 
 
-  EXPECT_TRUE(r.intersects(Vector2f(0.5f, -1.5f)));
-  EXPECT_TRUE(r.intersects(Rectangle(Vector2f(-1.0f, 0.0f), 
+  EXPECT_TRUE(r.intersects(Vector2f(0.5f, -0.5f)));
+  EXPECT_TRUE(r.intersects(Rectangle(Vector2f(-1.0f, -0.5f), 
                                      Vector2f(4.0f, 4.0f))));
 
 

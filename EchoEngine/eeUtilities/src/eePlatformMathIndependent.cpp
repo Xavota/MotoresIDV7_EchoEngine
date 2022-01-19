@@ -24,7 +24,6 @@ const int32 PlatformMath::kBIG_INT = 2147483647;
 const uint32 PlatformMath::kBIG_UINT = 4294967295u;
 
 
-
 float 
 PlatformMath::planeDistance(const Plane& p, const Vector3f& point)
 {
@@ -44,12 +43,12 @@ PlatformMath::sphereIntersectsPlane(const Sphere& s, const Plane& p)
 bool 
 PlatformMath::sphereInsideBox(const Sphere& s, const BoxAAB& b) 
 {
-  Plane front(b.getA(), Vector3f::FORWARD);
-  Plane back(b.getB(), -Vector3f::FORWARD);
-  Plane top(b.getA(), Vector3f::UP);
-  Plane bottom(b.getB(), -Vector3f::UP);
-  Plane left(b.getA(), -Vector3f::RIGHT);
-  Plane right(b.getB(), Vector3f::RIGHT);
+  Plane front(b.getA(), Vector3f::kFORWARD);
+  Plane back(b.getB(), -Vector3f::kFORWARD);
+  Plane top(b.getA(), Vector3f::kUP);
+  Plane bottom(b.getB(), -Vector3f::kUP);
+  Plane left(b.getA(), -Vector3f::kRIGHT);
+  Plane right(b.getB(), Vector3f::kRIGHT);
   if (!sphereInsidePlane(s, front)) { return false; }
   if (!sphereInsidePlane(s, back)) { return false; }
   if (!sphereInsidePlane(s, top)) { return false; }
@@ -74,88 +73,73 @@ PlatformMath::sphereIntersectsPlanePoint(const Sphere& s,
 bool 
 PlatformMath::sphereIntersectsBox(const Sphere& s, const BoxAAB& b) {
 
-  Plane front(b.getA(), Vector3f::FORWARD);
-  Plane back(b.getB(), -Vector3f::FORWARD);
-  Plane top(b.getA(), Vector3f::UP);
-  Plane bottom(b.getB(), -Vector3f::UP);
-  Plane left(b.getA(), -Vector3f::RIGHT);
-  Plane right(b.getB(), Vector3f::RIGHT);
+  Plane front(b.getA(), Vector3f::kFORWARD);
+  Plane back(b.getB(), -Vector3f::kFORWARD);
+  Plane top(b.getA(), Vector3f::kUP);
+  Plane bottom(b.getB(), -Vector3f::kUP);
+  Plane left(b.getA(), -Vector3f::kRIGHT);
+  Plane right(b.getB(), Vector3f::kRIGHT);
 
 
   Vector3f point;
   float radius;
 
   if (sphereIntersectsPlanePoint(s, top, &point, &radius)) {
-
     if (planeDistance(left, point) <= radius &&
         planeDistance(right, point) <= radius &&
         planeDistance(front, point) <= radius &&
         planeDistance(back, point) <= radius) {
       return true;
     }
-
   }
 
   if (sphereIntersectsPlanePoint(s, bottom, &point, &radius)) {
-
     if (planeDistance(left, point) <= radius &&
         planeDistance(right, point) <= radius &&
         planeDistance(front, point) <= radius &&
         planeDistance(back, point) <= radius) {
       return true;
     }
-
   }
 
   if (sphereIntersectsPlanePoint(s, left, &point, &radius)) {
-
     if (planeDistance(top, point) <= radius &&
         planeDistance(bottom, point) <= radius &&
         planeDistance(front, point) <= radius &&
         planeDistance(back, point) <= radius) {
       return true;
     }
-
   }
 
   if (sphereIntersectsPlanePoint(s, right, &point, &radius)) {
-
     if (planeDistance(top, point) <= radius &&
         planeDistance(bottom, point) <= radius &&
         planeDistance(front, point) <= radius &&
         planeDistance(back, point) <= radius) {
       return true;
     }
-
   }
 
   if (sphereIntersectsPlanePoint(s, front, &point, &radius)) {
-
     if (planeDistance(top, point) <= radius &&
         planeDistance(bottom, point) <= radius &&
         planeDistance(left, point) <= radius &&
         planeDistance(right, point) <= radius) {
       return true;
     }
-
   }
 
   if (sphereIntersectsPlanePoint(s, back, &point, &radius)) {
-
     if (planeDistance(top, point) <= radius &&
         planeDistance(bottom, point) <= radius &&
         planeDistance(left, point) <= radius &&
         planeDistance(right, point) <= radius) {
       return true;
     }
-
   }
 
   return false;
-
 }
-
-
 
 bool
 PlatformMath::intersectionPlanePoint(const Plane& _plane,
@@ -171,7 +155,7 @@ PlatformMath::intersectionPlanePlane(const Plane& _plane1,
   const Vector3f& n1 = _plane1.getNormal();
   const Vector3f& n2 = _plane2.getNormal();
 
-  return n1.cross(n2) != Vector3f::ZERO;
+  return n1.cross(n2) != Vector3f::kZERO;
 }
 bool 
 PlatformMath::intersectionSpherePoint(const Sphere& _sphere, 
@@ -211,44 +195,37 @@ PlatformMath::intersectionBoxPlane(const BoxAAB& _box, const Plane& _plane)
   float dotAn = A.dot(n);
 
   const Vector3f& B = _box.getB() - _plane.getPoint();
-  if (dotAn * B.dot(n) < 0.0f)
-  {
+  if (dotAn * B.dot(n) < 0.0f) {
     return true;
   }
 
   const Vector3f& C = Vector3f(A.x, A.y, B.z);
-  if (dotAn * C.dot(n) < 0.0f)
-  {
+  if (dotAn * C.dot(n) < 0.0f) {
     return true;
   }
 
   const Vector3f& D = Vector3f(A.x, B.y, A.z);
-  if (dotAn * D.dot(n) < 0.0f)
-  {
+  if (dotAn * D.dot(n) < 0.0f) {
     return true;
   }
 
   const Vector3f& E = Vector3f(A.x, B.y, B.z);
-  if (dotAn * E.dot(n) < 0.0f)
-  {
+  if (dotAn * E.dot(n) < 0.0f) {
     return true;
   }
 
   const Vector3f& F = Vector3f(B.x, A.y, A.z);
-  if (dotAn * F.dot(n) < 0.0f)
-  {
+  if (dotAn * F.dot(n) < 0.0f) {
     return true;
   }
 
   const Vector3f& G = Vector3f(B.x, A.y, B.z);
-  if (dotAn * G.dot(n) < 0.0f)
-  {
+  if (dotAn * G.dot(n) < 0.0f) {
     return true;
   }
 
   const Vector3f& H = Vector3f(B.x, B.y, A.z);
-  if (dotAn * H.dot(n) < 0.0f)
-  {
+  if (dotAn * H.dot(n) < 0.0f) {
     return true;
   }
 
@@ -263,90 +240,74 @@ bool
 PlatformMath::intersectionBoxBox(const BoxAAB& _box1, const BoxAAB& _box2)
 {
   const Vector3f& A1 = _box1.getA();
-  if (intersectionBoxPoint(_box2, A1))
-  {
+  if (intersectionBoxPoint(_box2, A1)) {
     return true;
   }
   const Vector3f& A2 = _box2.getA();
-  if (intersectionBoxPoint(_box1, A2))
-  {
+  if (intersectionBoxPoint(_box1, A2)) {
     return true;
   }
 
   const Vector3f& B1 = _box1.getB();
-  if (intersectionBoxPoint(_box2, B1))
-  {
+  if (intersectionBoxPoint(_box2, B1)) {
     return true;
   }
   const Vector3f& B2 = _box2.getB();
-  if (intersectionBoxPoint(_box1, B2))
-  {
+  if (intersectionBoxPoint(_box1, B2)) {
     return true;
   }
 
   const Vector3f& C1 = Vector3f(A1.x, A1.y, B1.z);
-  if (intersectionBoxPoint(_box2, C1))
-  {
+  if (intersectionBoxPoint(_box2, C1)) {
     return true;
   }
   const Vector3f& C2 = Vector3f(A2.x, A2.y, B2.z);
-  if (intersectionBoxPoint(_box1, C2))
-  {
+  if (intersectionBoxPoint(_box1, C2)) {
     return true;
   }
 
   const Vector3f& D1 = Vector3f(A1.x, B1.y, A1.z);
-  if (intersectionBoxPoint(_box2, D1))
-  {
+  if (intersectionBoxPoint(_box2, D1)) {
     return true;
   }
   const Vector3f& D2 = Vector3f(A2.x, B2.y, A2.z);
-  if (intersectionBoxPoint(_box1, D2))
-  {
+  if (intersectionBoxPoint(_box1, D2)) {
     return true;
   }
 
   const Vector3f& E1 = Vector3f(A1.x, B1.y, B1.z);
-  if (intersectionBoxPoint(_box2, E1))
-  {
+  if (intersectionBoxPoint(_box2, E1)) {
     return true;
   }
   const Vector3f& E2 = Vector3f(A2.x, B2.y, B2.z);
-  if (intersectionBoxPoint(_box1, E2))
-  {
+  if (intersectionBoxPoint(_box1, E2)) {
     return true;
   }
 
   const Vector3f& F1 = Vector3f(B1.x, A1.y, A1.z);
-  if (intersectionBoxPoint(_box2, F1))
-  {
+  if (intersectionBoxPoint(_box2, F1)) {
     return true;
   }
   const Vector3f& F2 = Vector3f(B2.x, A2.y, A2.z);
-  if (intersectionBoxPoint(_box1, F2))
-  {
+  if (intersectionBoxPoint(_box1, F2)) {
     return true;
   }
 
   const Vector3f& G1 = Vector3f(B1.x, A1.y, B1.z);
-  if (intersectionBoxPoint(_box2, G1))
-  {
+  if (intersectionBoxPoint(_box2, G1)) {
     return true;
   }
   const Vector3f& G2 = Vector3f(B2.x, A2.y, B2.z);
-  if (intersectionBoxPoint(_box1, G2))
-  {
+  if (intersectionBoxPoint(_box1, G2)) {
     return true;
   }
 
   const Vector3f& H1 = Vector3f(B1.x, B1.y, A1.z);
-  if (intersectionBoxPoint(_box2, H1))
-  {
+  if (intersectionBoxPoint(_box2, H1)) {
     return true;
   }
   const Vector3f& H2 = Vector3f(B2.x, B2.y, A2.z);
-  if (intersectionBoxPoint(_box1, H2))
-  {
+  if (intersectionBoxPoint(_box1, H2)) {
     return true;
   }
   
@@ -359,29 +320,26 @@ PlatformMath::intersectionCapsulePoint(const Capsule& _capsule,
   Vector3f center = _capsule.getCenter();
   float r = _capsule.getRadious();
 
-  Vector3f cA = center + (Vector3f::UP * ((_capsule.getHeight() / 2) - r));
+  Vector3f cA = center + (Vector3f::kUP * ((_capsule.getHeight() / 2) - r));
 
   Sphere A(cA, r);
-  if (intersectionSpherePoint(A, _point))
-  {
+  if (intersectionSpherePoint(A, _point)) {
     return true;
   }
 
-  Vector3f cB = center - (Vector3f::UP * ((_capsule.getHeight() / 2) - r));
+  Vector3f cB = center - (Vector3f::kUP * ((_capsule.getHeight() / 2) - r));
 
   Sphere B(cB, r);
-  if (intersectionSpherePoint(B, _point))
-  {
+  if (intersectionSpherePoint(B, _point)) {
     return true;
   }
 
   Vector3f d = _point - center;
   float h = d.getMagnitud();
-  float a = d.dot(Vector3f::UP);
+  float a = d.dot(Vector3f::kUP);
   float distance = sqrt(h*h - a*a);
 
-  if (distance <= r && _point.y <= cA.y && _point.y >= cB.y)
-  {
+  if (distance <= r && _point.y <= cA.y && _point.y >= cB.y) {
     return true;
   }
 
@@ -394,27 +352,24 @@ PlatformMath::intersectionCapsulePlane(const Capsule& _capsule,
   Vector3f center = _capsule.getCenter();
   float r = _capsule.getRadious();
 
-  Vector3f cA = center + (Vector3f::UP * ((_capsule.getHeight() / 2) - r));
+  Vector3f cA = center + (Vector3f::kUP * ((_capsule.getHeight() / 2) - r));
 
   Sphere A(cA, r);
-  if (intersectionSpherePlane(A, _plane))
-  {
+  if (intersectionSpherePlane(A, _plane)) {
     return true;
   }
 
-  Vector3f cB = center - (Vector3f::UP * ((_capsule.getHeight() / 2) - r));
+  Vector3f cB = center - (Vector3f::kUP * ((_capsule.getHeight() / 2) - r));
 
   Sphere B(cB, r);
-  if (intersectionSpherePlane(B, _plane))
-  {
+  if (intersectionSpherePlane(B, _plane)) {
     return true;
   }
 
   float d1 = planeDistance(_plane, cA);
   float d2 = planeDistance(_plane, cB);
 
-  if (d1 * d2 < 0)
-  {
+  if (d1 * d2 < 0) {
     return true;
   }
 
@@ -427,19 +382,17 @@ PlatformMath::intersectionCapsuleSphere(const Capsule& _capsule,
   Vector3f center = _capsule.getCenter();
   float r = _capsule.getRadious();
 
-  Vector3f cA = center + (Vector3f::UP * ((_capsule.getHeight() / 2) - r));
+  Vector3f cA = center + (Vector3f::kUP * ((_capsule.getHeight() / 2) - r));
 
   Sphere A(cA, r);
-  if (intersectionSphereSphere(A, _sphere))
-  {
+  if (intersectionSphereSphere(A, _sphere)) {
     return true;
   }
 
-  Vector3f cB = center - (Vector3f::UP * ((_capsule.getHeight() / 2) - r));
+  Vector3f cB = center - (Vector3f::kUP * ((_capsule.getHeight() / 2) - r));
 
   Sphere B(cB, r);
-  if (intersectionSphereSphere(B, _sphere))
-  {
+  if (intersectionSphereSphere(B, _sphere)) {
     return true;
   }
 
@@ -447,13 +400,12 @@ PlatformMath::intersectionCapsuleSphere(const Capsule& _capsule,
   
   Vector3f d = _sphere.getCenter() - center;
   float h = d.getMagnitud();
-  float a = d.dot(Vector3f::UP);
+  float a = d.dot(Vector3f::kUP);
   float distance = sqrt(h * h - a * a);
 
   if (distance <= r + _sphere.getRadious() 
    && sCenter.y <= cA.y 
-   && sCenter.y >= cB.y)
-  {
+   && sCenter.y >= cB.y) {
     return true;
   }
 
@@ -478,24 +430,22 @@ PlatformMath::intersectionCapsuleCapsule(const Capsule& _capsule1,
   float h2 = _capsule2.getHeight();
 
 
-  Vector3f cA1 = center1 + (Vector3f::UP * ((h1 / 2) - r1));
-  Vector3f cA2 = center2 + (Vector3f::UP * ((h2 / 2) - r2));
+  Vector3f cA1 = center1 + (Vector3f::kUP * ((h1 / 2) - r1));
+  Vector3f cA2 = center2 + (Vector3f::kUP * ((h2 / 2) - r2));
 
   Sphere A1(cA1, r1);
   Sphere A2(cA2, r2);
 
-  Vector3f cB1 = center1 - (Vector3f::UP * ((h1 / 2) - r1));
-  Vector3f cB2 = center2 - (Vector3f::UP * ((h2 / 2) - r2));
+  Vector3f cB1 = center1 - (Vector3f::kUP * ((h1 / 2) - r1));
+  Vector3f cB2 = center2 - (Vector3f::kUP * ((h2 / 2) - r2));
 
   Sphere B1(cB1, r1);
   Sphere B2(cB2, r2);
 
-  if (intersectionSphereSphere(A1, B2))
-  {
+  if (intersectionSphereSphere(A1, B2)) {
     return true;
   }
-  if (intersectionSphereSphere(A2, B1))
-  {
+  if (intersectionSphereSphere(A2, B1)) {
     return true;
   }
 
@@ -503,11 +453,10 @@ PlatformMath::intersectionCapsuleCapsule(const Capsule& _capsule1,
 
   Vector3f d = center2 - center1;
   float h = d.getMagnitud();
-  float a = d.dot(Vector3f::UP);
+  float a = d.dot(Vector3f::kUP);
   float distance = sqrt(h * h - a * a);
 
-  if (distance <= r1 + r2 && cA2.y >= cB1.y && cB2.y <= cA1.y)
-  {
+  if (distance <= r1 + r2 && cA2.y >= cB1.y && cB2.y <= cA1.y) {
     return true;
   }
 
@@ -527,53 +476,45 @@ PlatformMath::intersectionRectanglePoint2D(const Rectangle& _rectangle,
   Vector2f A = _rectangle.getA();
   Vector2f B = _rectangle.getB();
   return _point2D.x >= A.x && _point2D.x <= B.x
-      && _point2D.y >= B.y && _point2D.y <= A.y;
+      && _point2D.y >= A.y && _point2D.y <= B.y;
 }
 bool 
 PlatformMath::intersectionRectangleRectangle(const Rectangle& _rectangle1,
                                              const Rectangle& _rectangle2)
 {
   const Vector2f& A1 = _rectangle1.getA();
-  if (intersectionRectanglePoint2D(_rectangle2, A1))
-  {
+  if (intersectionRectanglePoint2D(_rectangle2, A1)) {
     return true;
   }
   const Vector2f& A2 = _rectangle2.getA();
-  if (intersectionRectanglePoint2D(_rectangle1, A2))
-  {
+  if (intersectionRectanglePoint2D(_rectangle1, A2)) {
     return true;
   }
 
   const Vector2f& B1 = _rectangle1.getB();
-  if (intersectionRectanglePoint2D(_rectangle2, B1))
-  {
+  if (intersectionRectanglePoint2D(_rectangle2, B1)) {
     return true;
   }
   const Vector2f& B2 = _rectangle2.getB();
-  if (intersectionRectanglePoint2D(_rectangle1, B2))
-  {
+  if (intersectionRectanglePoint2D(_rectangle1, B2)) {
     return true;
   }
 
   const Vector2f& C1 = Vector2f(A1.x, B1.y);
-  if (intersectionRectanglePoint2D(_rectangle2, C1))
-  {
+  if (intersectionRectanglePoint2D(_rectangle2, C1)) {
     return true;
   }
   const Vector2f& C2 = Vector2f(A2.x, B2.y);
-  if (intersectionRectanglePoint2D(_rectangle1, C2))
-  {
+  if (intersectionRectanglePoint2D(_rectangle1, C2)) {
     return true;
   }
 
   const Vector2f& D1 = Vector2f(B1.x, A1.y);
-  if (intersectionRectanglePoint2D(_rectangle2, D1))
-  {
+  if (intersectionRectanglePoint2D(_rectangle2, D1)) {
     return true;
   }
   const Vector2f& D2 = Vector2f(B2.x, A2.y);
-  if (intersectionRectanglePoint2D(_rectangle1, D2))
-  {
+  if (intersectionRectanglePoint2D(_rectangle1, D2)) {
     return true;
   }
 

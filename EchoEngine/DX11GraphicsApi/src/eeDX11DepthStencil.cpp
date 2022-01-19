@@ -10,11 +10,14 @@ DX11DepthStencil::~DX11DepthStencil()
 bool
 DX11DepthStencil::create(int32 width, int32 height)
 {
-  const DX11Basics* basics =
+  const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
+  HRESULT hr;
+
+  // Create depth stencil texture
   D3D11_TEXTURE2D_DESC descDepth;
-  ZeroMemory(&descDepth, sizeof(descDepth));
+  memset(&descDepth, 0, sizeof(descDepth));
   descDepth.Width = width;
   descDepth.Height = height;
   descDepth.MipLevels = 1;
@@ -26,23 +29,21 @@ DX11DepthStencil::create(int32 width, int32 height)
   descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
   descDepth.CPUAccessFlags = 0;
   descDepth.MiscFlags = 0;
-  HRESULT hr = basics->m_device->CreateTexture2D(&descDepth,
-                                                 nullptr, 
-                                                 &m_depthStencilResource);
-  if (FAILED(hr))
-    return false;
-
+  hr = basics->m_device->CreateTexture2D(&descDepth,
+                                         nullptr,
+                                         &m_depthStencilResource);
+  if (FAILED(hr)) { return false; }
+  
   // Create the depth stencil view
   D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
-  ZeroMemory(&descDSV, sizeof(descDSV));
+  memset(&descDSV, 0, sizeof(descDSV));
   descDSV.Format = descDepth.Format;
   descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
   descDSV.Texture2D.MipSlice = 0;
   hr = basics->m_device->CreateDepthStencilView(m_depthStencilResource,
-                                                nullptr,
+                                                &descDSV,
                                                 &m_depthStencilView);
-  if (FAILED(hr))
-    return false;
+  if (FAILED(hr)) { return false; }
 
   return true;
 }
@@ -50,7 +51,7 @@ DX11DepthStencil::create(int32 width, int32 height)
 void
 DX11DepthStencil::clean()
 {
-  const DX11Basics* basics =
+  const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   basics->m_deviceContext->ClearDepthStencilView(m_depthStencilView,

@@ -19,8 +19,7 @@ CAnimation::update()
   int32 bonesPerMesh =
   static_cast<int32>(skMesh->getSkeletal()->getBonesData().size());
   m_anim->addTotalTime(Time::instance().getDeltaTime());
-  for (int32 i = 0; i < bonesPerMesh; ++i)
-  {
+  for (int32 i = 0; i < bonesPerMesh; ++i) {
     m_anim->boneTransform(i, skMesh->getSkeletal());
   }
 }

@@ -6,7 +6,8 @@ Mesh::~Mesh()
   MemoryManager::instance().safeRelease(m_vertexData);
   MemoryManager::instance().safeRelease(m_indexData);
 }
-void Mesh::set()
+void
+Mesh::set()
 {
   m_vertexData->set();
   m_indexData->set();

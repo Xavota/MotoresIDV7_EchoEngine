@@ -13,8 +13,7 @@ Object::loadFromFile(const String& fileName,
   // Load from resource manager
 
   m_model = MemoryManager::instance().newPtr<Model>();
-  if (!m_model->loadFromFile(fileName))
-  {
+  if (!m_model->loadFromFile(fileName)) {
     return false; 
   }
 
@@ -36,8 +35,7 @@ Object::loadFromModel(SPtr<Model> model,
                       Quaternion rot,
                       Vector3f scale)
 {
-  if (!model)
-  {
+  if (!model) {
     eeOut << "There is no model here..." << eeEndl;
     return false;
   }
@@ -51,8 +49,8 @@ Object::loadFromModel(SPtr<Model> model,
   m_modelMatrixBuff = GraphicsApi::instance().createConstantBufferPtr();
   Matrix4f modelMat = getModelMatrix();
   m_modelMatrixBuff->initData(sizeof(Matrix4f),
-    sizeof(Matrix4f),
-    reinterpret_cast<Byte*>(&modelMat));
+                              sizeof(Matrix4f),
+                              reinterpret_cast<Byte*>(&modelMat));
 
   return true;
 }
@@ -97,14 +95,16 @@ Object::setModel(const SPtr<Model>& model)
 {
   m_model = model;
 }
-SPtr<Model> Object::getModel()
+SPtr<Model>
+Object::getModel()
 {
   return m_model;
 }
-Matrix4f Object::getModelMatrix()
+Matrix4f
+Object::getModelMatrix()
 {
-  return Matrix4f::translationMatrix(m_position) *
-         Matrix4f::rotationMatrix(m_rotation.getEuclidean()) *
-         Matrix4f::scaleMatrix(m_scale);
+  return Matrix4f::translationMatrix(m_position)
+       * Matrix4f::rotationMatrix(m_rotation.getEuclidean())
+       * Matrix4f::scaleMatrix(m_scale);
 }
 }

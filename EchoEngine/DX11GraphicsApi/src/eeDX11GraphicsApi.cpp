@@ -1,121 +1,18 @@
 #include "eeDX11GraphicsApi.h"
 #include "eeResourceManager.h"
 #pragma warning(push, 0)   
+#if EE_PLATFORM == EE_PLATFORM_WIN32
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <windowsx.h>
-#pragma warning(pop)   
+#pragma warning(pop)
+#endif
 #include <eeCoreConfiguration.h>
 
 //#include <eeMath.h>
 #include <eeInput.h>
 
 namespace eeEngineSDK {
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-  PAINTSTRUCT ps;
-  HDC hdc;
-
-  switch (message)
-  {
-  case WM_PAINT:
-    hdc = BeginPaint(hWnd, &ps);
-    EndPaint(hWnd, &ps);
-    break;
-
-  case WM_DESTROY:
-    PostQuitMessage(0);
-    break;
-
-  case WM_KEYDOWN:
-    if (wParam == 'Q')
-    {
-      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::Q, true);
-    }
-    else if (wParam == 'W')
-    {
-      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::W, true);
-    }
-    else if (wParam == 'E')
-    {
-      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::E, true);
-    }
-    else if (wParam == 'A')
-    {
-      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::A, true);
-    }
-    else if (wParam == 'S')
-    {
-      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::S, true);
-    }
-    else if (wParam == 'D')
-    {
-      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::D, true);
-    }
-    else if(wParam == 9) // TAB
-    {
-      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::TAB, true);
-    }
-    break;
-
-  case WM_KEYUP:
-    if (wParam == 'Q')
-    {
-      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::Q, false);
-    }
-    else if (wParam == 'W')
-    {
-      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::W, false);
-    }
-    else if (wParam == 'E')
-    {
-      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::E, false);
-    }
-    else if (wParam == 'A')
-    {
-      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::A, false);
-    }
-    else if (wParam == 'S')
-    {
-      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::S, false);
-    }
-    else if (wParam == 'D')
-    {
-      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::D, false);
-    }
-    else if (wParam == 9) // TAB
-    {
-      Input::instance().setKeyboardInputPressed(Input::eKEYBOARD::TAB, false);
-    }
-    break;
-
-  case WM_LBUTTONDOWN:
-    Input::instance().setMouseClickInputPressed(Input::eMOUSE_CLICK::LEFT_CLICK, true);
-    break;
-
-  case WM_RBUTTONDOWN:
-    Input::instance().setMouseClickInputPressed(Input::eMOUSE_CLICK::RIGHT_CLICK, true);
-    break;
-
-  case WM_LBUTTONUP:
-    Input::instance().setMouseClickInputPressed(Input::eMOUSE_CLICK::LEFT_CLICK, false);
-    break;
-
-  case WM_RBUTTONUP:
-    Input::instance().setMouseClickInputPressed(Input::eMOUSE_CLICK::RIGHT_CLICK, false);
-    break;
-
-  case WM_MOUSEMOVE:
-    Input::instance().setMousePosition({ GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) });
-  break;
-
-  default:
-    return DefWindowProc(hWnd, message, wParam, lParam);
-  }
-
-  return 0;
-}
-
-
 DX11GraphicsApi::~DX11GraphicsApi()
 {
   release();
@@ -124,19 +21,14 @@ DX11GraphicsApi::~DX11GraphicsApi()
 bool
 DX11GraphicsApi::initialize()
 {
-  if (!GraphicsApi::initialize())
-  {
+  if (!GraphicsApi::initialize()) {
     return false;
   }
-
-
 
   RECT rc = {};
   GetClientRect(reinterpret_cast<HWND>(m_win), &rc);
   int32 width = rc.right - rc.left;
   int32 height = rc.bottom - rc.top;
-
-
 
   DXGI_SWAP_CHAIN_DESC sd = {};
   sd.BufferDesc.Width = width;
@@ -171,20 +63,17 @@ DX11GraphicsApi::initialize()
     &m_basics.m_deviceContext
   );
 
-  if (FAILED(hr))
-  {
+  if (FAILED(hr)) {
     return false;
   }
-
 
   return true;
 }
 bool
 DX11GraphicsApi::appIsRunning()
 {
-  MSG msg = { 0 };
-  if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-  {
+  MSG msg = { nullptr };
+  if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
     TranslateMessage(&msg);
     DispatchMessage(&msg);
   }
@@ -202,13 +91,12 @@ DX11GraphicsApi::initializeScreen(void* callback)
   wcex.cbWndExtra = 0;
   wcex.hInstance = nullptr;
   wcex.hIcon = nullptr;
-  wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
+  wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
   wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-  wcex.lpszMenuName = NULL;
+  wcex.lpszMenuName = nullptr;
   wcex.lpszClassName = "TutorialWindowClass";
   wcex.hIconSm = nullptr;
-  if (!RegisterClassEx(&wcex))
-  {
+  if (!RegisterClassEx(&wcex)) {
     return false;
   }
 
@@ -225,12 +113,11 @@ DX11GraphicsApi::initializeScreen(void* callback)
                                                CW_USEDEFAULT, 
                                                rc.right,
                                                rc.bottom, 
-                                               NULL, 
-                                               NULL, 
-                                               NULL, 
-                                               NULL));
-  if (!m_win)
-  {
+                                               nullptr, 
+                                               nullptr, 
+                                               nullptr, 
+                                               nullptr));
+  if (!m_win) {
     return false;
   }
   ShowWindow(reinterpret_cast<HWND>(m_win), SW_SHOWNORMAL);
@@ -241,16 +128,14 @@ void
 DX11GraphicsApi::clearRenderTargets(Vector<SPtr<RenderTarget>> rtvs,
                                     float rgba[4])
 {
-  for (SPtr<RenderTarget> r : rtvs)
-  {
+  for (auto& r : rtvs) {
     r->clean(rgba[0],rgba[1],rgba[2],rgba[3]);
   }
 }
 void
 DX11GraphicsApi::cleanDepthStencils(Vector<SPtr<DepthStencil>> dsvs)
 {
-  for (SPtr<DepthStencil> d : dsvs)
-  {
+  for (auto& d : dsvs) {
     d->clean();
   }
 }
@@ -258,27 +143,25 @@ void
 DX11GraphicsApi::setRenderTargets(Vector<SPtr<RenderTarget>> rtvs,
                                   SPtr<DepthStencil> dsv)
 {
+  auto& memoryManager = MemoryManager::instance();
+
   Vector<ID3D11RenderTargetView*> dx11rts;
 
   SPtr<DX11DepthStencil> ds = nullptr;
-  if (dsv)
-  {
-    ds = MemoryManager::instance().reinterpretPtr<DX11DepthStencil>(dsv);
+  if (dsv) {
+    ds = memoryManager.reinterpretPtr<DX11DepthStencil>(dsv);
   }
 
-  for (SPtr<RenderTarget> r : rtvs)
-  {
-    SPtr<DX11RenderTarget> rt = 
-      MemoryManager::instance().reinterpretPtr<DX11RenderTarget>(r);
+  for (const auto& r : rtvs) {
+    SPtr<DX11RenderTarget> rt =
+    memoryManager.reinterpretPtr<DX11RenderTarget>(r);
 
-    if (rt)
-    {
+    if (rt) {
       dx11rts.push_back(rt->getResource());
     }
   }
 
-  if (!dx11rts.empty())
-  {
+  if (!dx11rts.empty()) {
     m_basics.m_deviceContext->OMSetRenderTargets(static_cast<UINT>(dx11rts.size()),
                                                  dx11rts.data(),
                                                  ds ? ds->getResource() : nullptr);
@@ -291,21 +174,19 @@ void DX11GraphicsApi::unsetRenderTargets()
 void DX11GraphicsApi::setTextures(Vector<SPtr<Texture>> textures,
                                   uint32 startSlot)
 {
+  auto& memoryManager = MemoryManager::instance();
+
   Vector<ID3D11ShaderResourceView*> dx11texs;
 
-  for (SPtr<Texture> tex : textures)
-  {
-    SPtr<DX11Texture> t =
-    MemoryManager::instance().reinterpretPtr<DX11Texture>(tex);
+  for (const auto& tex : textures) {
+    SPtr<DX11Texture> t = memoryManager.reinterpretPtr<DX11Texture>(tex);
 
-    if (t)
-    {
+    if (t) {
       dx11texs.push_back(t->getResource());
     }
   }
 
-  if (!dx11texs.empty())
-  {
+  if (!dx11texs.empty()) {
     m_basics.m_deviceContext->PSSetShaderResources
     (
       startSlot,
@@ -329,21 +210,20 @@ void DX11GraphicsApi::unsetTextures(uint32 textureCount, uint32 startSlot)
 void DX11GraphicsApi::setVSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
                                            uint32 startSlot)
 {
+  auto& memoryManager = MemoryManager::instance();
+
   Vector<ID3D11Buffer*> dx11buffers;
 
-  for (SPtr<ConstantBuffer> buff : buffers)
-  {
+  for (const auto& buff : buffers) {
     SPtr<DX11ConstantBuffer> b =
-      MemoryManager::instance().reinterpretPtr<DX11ConstantBuffer>(buff);
+    memoryManager.reinterpretPtr<DX11ConstantBuffer>(buff);
 
-    if (b)
-    {
+    if (b) {
       dx11buffers.push_back(b->getResource());
     }
   }
 
-  if (!dx11buffers.empty())
-  {
+  if (!dx11buffers.empty()) {
     m_basics.m_deviceContext->VSSetConstantBuffers
     (
       startSlot,
@@ -367,21 +247,20 @@ void DX11GraphicsApi::unsetVSConstantBuffers(uint32 buffersCount, uint32 startSl
 void DX11GraphicsApi::setPSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
                                            uint32 startSlot)
 {
+  auto& memoryManager = MemoryManager::instance();
+
   Vector<ID3D11Buffer*> dx11buffers;
 
-  for (SPtr<ConstantBuffer> buff : buffers)
-  {
+  for (const auto& buff : buffers) {
     SPtr<DX11ConstantBuffer> b =
-      MemoryManager::instance().reinterpretPtr<DX11ConstantBuffer>(buff);
+    memoryManager.reinterpretPtr<DX11ConstantBuffer>(buff);
 
-    if (b)
-    {
+    if (b) {
       dx11buffers.push_back(b->getResource());
     }
   }
 
-  if (!dx11buffers.empty())
-  {
+  if (!dx11buffers.empty()) {
     m_basics.m_deviceContext->PSSetConstantBuffers
     (
       startSlot,
@@ -406,23 +285,22 @@ void DX11GraphicsApi::setVertexBuffers(Vector<SPtr<VertexBuffer>> buffers,
                                        Vector<uint32> offsets,
                                        uint32 startSlot)
 {
+  auto& memoryManager = MemoryManager::instance();
+
   Vector<ID3D11Buffer*> dx11Vbuffers;
   Vector<uint32> strides;
 
-  for (SPtr<VertexBuffer> buff : buffers)
-  {
+  for (const auto& buff : buffers) {
     SPtr<DX11VertexBuffer> b =
-      MemoryManager::instance().reinterpretPtr<DX11VertexBuffer>(buff);
+    memoryManager.reinterpretPtr<DX11VertexBuffer>(buff);
 
-    if (b)
-    {
+    if (b) {
       dx11Vbuffers.push_back(b->getResource());
       strides.push_back(b->getBatchSize());
     }
   }
 
-  if (!dx11Vbuffers.empty())
-  {
+  if (!dx11Vbuffers.empty()) {
     m_basics.m_deviceContext->IASetVertexBuffers
     (
       startSlot,
@@ -442,8 +320,7 @@ void DX11GraphicsApi::unsetVertexBuffers(uint32 buffersCount, uint32 startSlot)
   Vector<uint32> offsets;
   offsets.resize(buffersCount, 0u);
 
-  if (!dx11Vbuffers.empty())
-  {
+  if (!dx11Vbuffers.empty()) {
     m_basics.m_deviceContext->IASetVertexBuffers
     (
       startSlot,
@@ -456,24 +333,22 @@ void DX11GraphicsApi::unsetVertexBuffers(uint32 buffersCount, uint32 startSlot)
 }
 void DX11GraphicsApi::setIndexBuffer(SPtr<IndexBuffer> buffer, uint32 offset)
 {
-  const DX11Basics* basics =
+  const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   SPtr<DX11IndexBuffer> buf =
     MemoryManager::instance().reinterpretPtr<DX11IndexBuffer>(buffer);
 
-  if (buffer->getBatchSize() == 2)
-  {
+  if (buffer->getBatchSize() == 2) {
     basics->m_deviceContext->IASetIndexBuffer(buf->getResource(), DXGI_FORMAT_R16_UINT, offset);
   }
-  else if (buffer->getBatchSize() == 4)
-  {
+  else if (buffer->getBatchSize() == 4) {
     basics->m_deviceContext->IASetIndexBuffer(buf->getResource(), DXGI_FORMAT_R32_UINT, offset);
   }
 }
 void DX11GraphicsApi::unsetIndexBuffer()
 {
-  const DX11Basics* basics =
+  const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   basics->m_deviceContext->IASetIndexBuffer(nullptr, DXGI_FORMAT_R16_UINT, 0);
@@ -483,10 +358,9 @@ DX11GraphicsApi::setViewports(Vector<ViewportDesc> descs)
 {
   Vector<D3D11_VIEWPORT> vps;
 
-  for (ViewportDesc& d : descs)
-  {
-    int32 vSize = static_cast<int32>(vps.size());
-    vps.push_back(D3D11_VIEWPORT());
+  for (ViewportDesc& d : descs) {
+    auto vSize = static_cast<int32>(vps.size());
+    vps.emplace_back(D3D11_VIEWPORT());
 
     vps[vSize].Width = d.width;
     vps[vSize].Height = d.height;
@@ -522,7 +396,6 @@ void DX11GraphicsApi::release()
   DX11SAFE_RELEASE(m_basics.m_deviceContext);
   DX11SAFE_RELEASE(m_basics.m_swapChain);
 }
-
 
 EE_EXTERN EE_PLUGIN_EXPORT void
 initPlugin()

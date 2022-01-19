@@ -8,7 +8,7 @@
  *
  * @bug Not bug Known.
  */
- /************************************************************************/
+/************************************************************************/
 
 #pragma once
 #include "eePrerequisitesCore.h"
@@ -22,51 +22,51 @@ class EE_CORE_EXPORT DepthStencilState
 {
  public:
   /**
-  * @brief
-  * Default constructor.
-  */
+   * @brief
+   * Default constructor.
+   */
   DepthStencilState() = default;
   /**
-  * @brief
-  * Default destructor.
-  */
+   * @brief
+   * Default destructor.
+   */
   virtual
   ~DepthStencilState() = default;
 
   /**
-  * @brief
-  * Creates a depth stencil state.
-  *
-  * @description
-  * Creates the depth stencil state with a descriptor.
-  *
-  * @param desc
-  * The descriptor for the stencil state.
-  *
-  * @return
-  * Whether it succeeded to create or not.
-  */
+   * @brief
+   * Creates a depth stencil state.
+   *
+   * @description
+   * Creates the depth stencil state with a descriptor.
+   *
+   * @param desc
+   * The descriptor for the stencil state.
+   *
+   * @return
+   * Whether it succeeded to create or not.
+   */
   virtual bool
   create(DepthStencilDesc /*desc*/) { return true; }
 
   /**
-  * @brief
-  * Set to graphics api.
-  *
-  * @description
-  * Sets the depth stencil state for the graphic memory to use, only for
-  * override in graphics api specializations.
-  */
+   * @brief
+   * Set to graphics api.
+   *
+   * @description
+   * Sets the depth stencil state for the graphic memory to use, only for
+   * override in graphics api specializations.
+   */
   virtual void
   use(uint32 /*stencilRef*/) {}
 
   /**
-  * @brief
-  * Releases the data.
-  *
-  * @description
-  * Deletes the memory of all data allocated.
-  */
+   * @brief
+   * Releases the data.
+   *
+   * @description
+   * Deletes the memory of all data allocated.
+   */
   virtual void
   release() {}
 };
