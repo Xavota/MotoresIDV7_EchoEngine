@@ -4,10 +4,6 @@
 #include "eeMath.h"
 
 namespace eeEngineSDK{
-Quaternion::Quaternion()
-{
-}
-
 Quaternion::Quaternion(float _w, float _x, float _y, float _z)
  : w(_w), 
    x(_x),
@@ -15,36 +11,35 @@ Quaternion::Quaternion(float _w, float _x, float _y, float _z)
    z(_z)
 {
 }
-
 Quaternion::Quaternion(const Vector3f& euclidean)
 {
   setEuclidean(euclidean);
 }
 
-Quaternion::~Quaternion()
-{
-}
-
 Quaternion
 Quaternion::getConjugate()
 {
-  return Quaternion(w, -x, -y, -z);
+  Quaternion r(w, -x, -y, -z);
+  return r;
 }
 
-void
+Quaternion&
 Quaternion::conjugate()
 {
   x = -x;
   y = -y;
   z = -z;
+
+  return *this;
 }
 Quaternion
 Quaternion::getNormalize() const
 {
   float rad = Math::sqrt(x * x + y * y + z * z + w * w);
-  return Quaternion(x / rad, y / rad, z / rad, w / rad);
+  Quaternion r(w / rad, x / rad, y / rad, z / rad);
+  return r;
 }
-Quaternion
+Quaternion&
 Quaternion::normalize()
 {
   float rad = Math::sqrt(x * x + y * y + z * z + w * w);
@@ -112,6 +107,8 @@ Quaternion::getRotationMatrix()
 Vector3f 
 Quaternion::rotateVector(const Vector3f& vec)
 {
+  //Quaternion q(vec);
+  //return (*this * q).getEuclidean();
   float num = x * 2.0f;
   float num2 = y * 2.0f;
   float num3 = z * 2.0f;
@@ -134,14 +131,14 @@ Quaternion
 Quaternion::createFromAxisAngle(const Vector3f& axis,
                                 const float& angle)
 {
-  float factor = sinf(angle / 2.0f);
+  float factor = sinf(angle * 0.5f);
 
   Quaternion quat;
   quat.x = axis.x * factor;
   quat.y = axis.y * factor;
   quat.z = axis.z * factor;
 
-  quat.w = cosf(angle / 2.0f);
+  quat.w = cosf(angle * 0.5f);
   return quat.getNormalize();
 }
 Vector3f Quaternion::getFrontVector()
@@ -167,15 +164,29 @@ String Quaternion::toString() const
               + eeToString(w) + " }";
 }
 
+float Quaternion::dot(const Quaternion& other) const
+{
+  return this->w * other.w
+       + this->x * other.x
+       + this->y * other.y
+       + this->z * other.z;
+}
+
 Quaternion
 Quaternion::operator*(const Quaternion& other)
 {
   Quaternion r(
-    this->w * other.w - this->x * other.x - this->y * other.y - this->z * other.z,
-    this->w * other.x + this->x * other.w + this->y * other.z - this->z * other.y,
-    this->w * other.y - this->x * other.z + this->y * other.w + this->z * other.x,
-    this->w * other.z + this->x * other.y - this->y * other.x + this->z * other.w
+  this->w * other.w - this->x * other.x - this->y * other.y - this->z * other.z,
+  this->w * other.x + this->x * other.w + this->y * other.z - this->z * other.y,
+  this->w * other.y - this->x * other.z + this->y * other.w + this->z * other.x,
+  this->w * other.z + this->x * other.y - this->y * other.x + this->z * other.w
   );
+  return r;
+}
+Quaternion
+Quaternion::operator*(const float other)
+{
+  Quaternion r(w * other, x * other, y * other, z * other);
   return r;
 }
 Quaternion
@@ -194,5 +205,57 @@ Quaternion::operator==(const Quaternion& other) const
       && Math::checkFloatsEqual(this->x, other.x)
       && Math::checkFloatsEqual(this->y, other.y)
       && Math::checkFloatsEqual(this->z, other.z);
+}
+Quaternion Quaternion::interpolate(const Quaternion& a, const Quaternion& b, float t)
+{
+  //Quaternion a1 = a.getNormalize();
+  //Quaternion b1 = b.getNormalize();
+  //float theta = Math::acos(a1.dot(b1));
+  //
+  //float f1 = (Math::sin(1 - t) * theta) / sin(theta);
+  //float f2 = (Math::sin(t * theta)) / sin(theta);
+  //
+  //return a1 * f1 + b1 * f2;
+
+
+    // calc cosine theta
+  float cosom = a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
+
+  // adjust signs (if necessary)
+  Quaternion end = b;
+  if (cosom < 0.0)
+  {
+    cosom = -cosom;
+    end.x = -end.x;   // Reverse all signs
+    end.y = -end.y;
+    end.z = -end.z;
+    end.w = -end.w;
+  }
+
+  // Calculate coefficients
+  float sclp, sclq;
+  if ((1.0 - cosom) > 0.0001) // 0.0001 -> some epsillon
+  {
+    // Standard case (slerp)
+    float omega, sinom;
+    omega = std::acos(cosom); // extract theta from dot product's cos theta
+    sinom = std::sin(omega);
+    sclp = std::sin((1.0 - t) * omega) / sinom;
+    sclq = std::sin(t * omega) / sinom;
+  }
+  else
+  {
+    // Very close, do linear interp (because it's faster)
+    sclp = 1.0 - t;
+    sclq = t;
+  }
+
+  Quaternion out;
+  out.x = sclp * a.x + sclq * end.x;
+  out.y = sclp * a.y + sclq * end.y;
+  out.z = sclp * a.z + sclq * end.z;
+  out.w = sclp * a.w + sclq * end.w;
+
+  return out;
 }
 }

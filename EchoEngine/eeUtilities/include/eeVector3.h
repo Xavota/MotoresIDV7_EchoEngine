@@ -29,7 +29,7 @@ class EE_UTILITY_EXPORT Vector3f
    * @brief
    * The default constructor.
    */
-  Vector3f();
+  Vector3f() = default;
   /**
    * @brief
    * Initializes the vector with the values given.
@@ -54,7 +54,7 @@ class EE_UTILITY_EXPORT Vector3f
    * Releases and deletes all the possible memory
    * allocated in the vector.
    */
-  ~Vector3f();
+  ~Vector3f() = default;
   
   /**
    * @brief

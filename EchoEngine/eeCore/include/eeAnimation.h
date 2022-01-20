@@ -14,17 +14,10 @@
 #include "eePrerequisitesCore.h"
 #include <eeMatrix4.h>
 #include <eeVector3.h>
-#pragma warning(push, 0)
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-#pragma warning(pop)
+#include <eeQuaternion.h>
 
-//class aiNode;
-//class aiNodeAnim;
-//class aiAnimation;
-//class aiQuaternion;
-//class aiVector3D;
+class aiNode;
+class aiAnimation;
 
 namespace eeEngineSDK {
 class SkeletalMesh;
@@ -37,9 +30,9 @@ struct Node
 {
   String m_name;
   Matrix4f m_transformation;
-  Node* m_parent = nullptr;
+  SPtr<Node> m_parent = nullptr;
   uint32 m_childrenCount = 0;
-  Vector<Node*> m_children;
+  Vector<SPtr<Node>> m_children;
 };
 
 /**
@@ -48,7 +41,7 @@ struct Node
  */
 struct VectorKeyFrame
 {
-  double m_time;
+  float m_time = 0.0f;
   Vector3f m_value;
 };
 
@@ -58,8 +51,8 @@ struct VectorKeyFrame
  */
 struct QuatKeyFrame
 {
-  double m_time;
-  aiQuaternion* m_value;  // TODO CAMBIAR A MI CUATERNION
+  float m_time = 0.0f;
+  Quaternion m_value;
 };
 
 /**
@@ -124,21 +117,7 @@ class Animation
    * If it succeeded to load.
    */
   bool
-  loadFromFile(String fileName);
-  /**
-   * @brief
-   * Stores the animation graph.
-   *
-   * @description
-   * Stores the Assimp animation graph to my own nodes.
-   *
-   * @param current
-   * Current node to store.
-   * @param storage
-   * Current storage node to save.
-   */
-  void
-  storeNodes(aiNode* current, Node* storage);
+  loadFromFile(const String& fileName);
 
   /**
    * @brief
@@ -176,7 +155,7 @@ class Animation
    */
   void
   readNodeHeirarchy(float animationTime,
-                    const aiNode* pNode,
+                    const SPtr<Node> pNode,
                     const Matrix4f& parentTransform,
                     int32 meshIndex,
                     SPtr<SkeletalMesh> skMesh);
@@ -192,12 +171,14 @@ class Animation
    * The animation that the node is in.
    * @param name
    * The name of the node.
+   * @param outAnimNode
+   * The found animation node, if it is one.
    *
    * @return
-   * The node that is been looking, nullptr if not found.
+   * True if it found the anim node.
    */
-  aiNodeAnim*
-  findNodeAnim(aiAnimation* anim, String name);
+  bool
+  findNodeAnim(const String& name, AnimNode& outAnimNode);
 
   /**
    * @brief
@@ -216,8 +197,8 @@ class Animation
    */
   void
   calcInterpolatedScaling(float animationTime,
-                          const aiNodeAnim* pNodeAnim,
-                          aiVector3D& out);
+                          const AnimNode& pNodeAnim,
+                          Vector3f& out);
   /**
    * @brief
    * Calculates the interpolated rotation.
@@ -235,8 +216,8 @@ class Animation
    */
   void
   calcInterpolatedRotation(float animationTime,
-                           const aiNodeAnim* pNodeAnim,
-                           aiQuaternion& out);
+                           const AnimNode& pNodeAnim,
+                           Quaternion& out);
   /**
    * @brief
    * Calculates the interpolated position.
@@ -254,8 +235,8 @@ class Animation
    */
   void
   calcInterpolatedPosition(float animationTime,
-                           const aiNodeAnim* pNodeAnim,
-                           aiVector3D& out);
+                           const AnimNode& pNodeAnim,
+                           Vector3f& out);
   /**
    * @brief
    * Find scaling key frame index.
@@ -273,7 +254,7 @@ class Animation
    * The key frame index for the scale.
    */
   uint32
-  findScaling(float animationTime, const aiNodeAnim* pNodeAnim);
+  findScaling(float animationTime, const AnimNode& pNodeAnim);
   /**
    * @brief
    * Find rotation key frame index.
@@ -291,7 +272,7 @@ class Animation
    * The key frame index for the rotation.
    */
   uint32
-  findRotation(float animationTime, const aiNodeAnim* pNodeAnim);
+  findRotation(float animationTime, const AnimNode& pNodeAnim);
   /**
    * @brief
    * Find position key frame index.
@@ -309,7 +290,7 @@ class Animation
    * The key frame position for the scale.
    */
   uint32
-  findPosition(float animationTime, const aiNodeAnim* pNodeAnim);
+  findPosition(float animationTime, const AnimNode& pNodeAnim);
 
   /**
    * @brief
@@ -324,11 +305,38 @@ class Animation
   String
   getName();
 
-private:
+ private:
+  /**
+   * @brief
+   * Stores the animation graph.
+   *
+   * @description
+   * Stores the Assimp animation graph to my own nodes.
+   *
+   * @param current
+   * Current node to store.
+   * @param storage
+   * Current storage node to save.
+   */
+  void
+  storeNodes(aiNode* current, SPtr<Node> storage);
+  /**
+   * @brief
+   * Stores the animation info.
+   *
+   * @description
+   * Stores the Assimp animation info to my own.
+   *
+   * @param anim
+   * The hole animation info.
+   */
+  void
+  storeAnim(aiAnimation* anim);
+
   /**
    * The global time of the animation.
    */
-  float m_totalTime = 0.0f;
+  float m_totalTime = 0.0f; // TODO Remove this. The mesh ask for its specific total time
   /**
    * Animation frame rate.
    */
@@ -338,20 +346,19 @@ private:
    */
   float m_duration = 0.0f;
   /**
-   * The animation name
+   * The animation name.
    */
   String m_name;
 
   /**
-   * The animation node of Assimp // TODO: CHANGE IT TO MY OWN ANIMATION TYPES.
+   * The number of animation channels.
    */
-  aiAnimation* m_anim = nullptr;
+  uint32 m_channelsCount;
   /**
-   * The root of the animation graph.
+   * The animation channels
    */
-  aiNode* m_root = nullptr;
+  Vector<AnimNode> m_channels;
 
-  //Vector<AnimNode> m_channels;
-  //Node* m_rootNode = nullptr;
+  SPtr<Node> m_rootNode = nullptr;
 };
 }

@@ -44,6 +44,7 @@ using eeEngineSDK::Scene;
 using eeEngineSDK::Vector4f;
 using eeEngineSDK::Vector3f;
 using eeEngineSDK::Vector2f;
+using eeEngineSDK::Vector2i;
 using eeEngineSDK::Matrix4f;
 using eeEngineSDK::Quaternion;
 using eeEngineSDK::SimplexVertex;
@@ -330,7 +331,7 @@ UIRender()
 
   static bool AddingScene = false;
   static bool AddingActor = false;
-  static String AddingActorScene = "";
+  static String AddingActorScene  ;
 
   if (AddingScene) {
     bool added = false;
@@ -886,19 +887,31 @@ BaseAppTest1::update()
 
     if (inputMan.getMouseClickInputIsPressed(
                               eeEngineSDK::Input::eMOUSE_CLICK::kRIGHT_CLICK)) {
-      Quaternion rot2 = trans->getRotation();
-      rot2 = Quaternion(rot2.getEuclidean() +
-                        Vector3f
-                        (
-                          inputMan.getMouseMovement().y *
-                          timeManager.getDeltaTime() *
-                          1.0f,
-                          inputMan.getMouseMovement().x *
-                          timeManager.getDeltaTime() *
-                          1.0f,
-                          0.0f
-                        ));
-      trans->setRotation(rot2);
+      //auto rot2 = Quaternion(rot.getEuclidean() +
+      //                       Vector3f
+      //                       (
+      //                         inputMan.getMouseMovement().y *
+      //                         timeManager.getDeltaTime() *
+      //                         1.0f,
+      //                         inputMan.getMouseMovement().x *
+      //                         timeManager.getDeltaTime() *
+      //                         1.0f,
+      //                         0.0f
+      //                       ));
+      //trans->setRotation(rot2);
+      Vector2i mouseMove = inputMan.getMouseMovement();
+      Quaternion rot2 =
+      Quaternion::createFromAxisAngle(rot.getUpVector(),
+                                      mouseMove.x
+                                    * timeManager.getDeltaTime()
+                                    * 1.0f);
+      rot2 =
+      Quaternion::createFromAxisAngle(rot.getRightVector(),
+                                      mouseMove.y
+                                    * timeManager.getDeltaTime()
+                                    * 1.0f)
+                                    * rot2;
+      trans->setRotation(rot2 * rot);
     }
   }
 

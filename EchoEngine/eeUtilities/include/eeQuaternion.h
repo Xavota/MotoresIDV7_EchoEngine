@@ -27,7 +27,7 @@ class EE_UTILITY_EXPORT Quaternion
    * @brief
    * The default constructor.
    */
-  Quaternion();
+  Quaternion() = default;
   /**
    * @brief
    * Initializes the vector with the values given.
@@ -67,7 +67,7 @@ class EE_UTILITY_EXPORT Quaternion
    * Releases and deletes all the possible memory
    * allocated in the quaternion.
    */
-  ~Quaternion();
+  ~Quaternion() = default;
 
   /**
    * @brief
@@ -87,8 +87,11 @@ class EE_UTILITY_EXPORT Quaternion
    *
    * @description
    * Transform the imaginary part of the quaternion to be negative.
+   *
+   * @return
+   * The new quaternion.
    */
-  void
+  Quaternion&
   conjugate();
   /**
    * @brief
@@ -114,7 +117,7 @@ class EE_UTILITY_EXPORT Quaternion
    * @return
    * The quaternion normalized.
    */
-  Quaternion
+  Quaternion&
   normalize();
   
 
@@ -255,6 +258,19 @@ class EE_UTILITY_EXPORT Quaternion
 
   /**
    * @brief
+   * Returns a string of the quaternion.
+   *
+   * @description
+   * Return a string with the format "{ 0i, 0j, 0k, 0 }.
+   *
+   * @return
+   * The string quaternion.
+   */
+  float
+  dot(const Quaternion& other) const;
+
+  /**
+   * @brief
    * The multiplication of two quaternions.
    *
    * @description
@@ -269,6 +285,22 @@ class EE_UTILITY_EXPORT Quaternion
    */
   Quaternion
   operator*(const Quaternion& other);
+  /**
+   * @brief
+   * The multiplication of a quaternion with a number.
+   *
+   * @description
+   * Returns the result of multiplying all the imaginary and real component
+   * with the number.
+   *
+   * @param other
+   * The number for multiplication.
+   *
+   * @return
+   * The multiplication of the quaternion with the number.
+   */
+  Quaternion
+  operator*(const float other);
   /**
    * @brief
    * The sum of two quaternions.
@@ -303,6 +335,25 @@ class EE_UTILITY_EXPORT Quaternion
   bool
   operator==(const Quaternion& other) const;
 
+  /**
+   * @brief
+   * Returns the interpolation between a and b, with a factor t.
+   *
+   * @description
+   * Returns a quaternion between the 2 quaternions a, b, within the factor t.
+   *
+   * @param a
+   * The first quaternion.
+   * @param b
+   * The last quaternion.
+   * @param t
+   * The factor of the interpolation, between 0 and 1.
+   *
+   * @return
+   * The quaternion interpolated.
+   */
+  static Quaternion
+  interpolate(const Quaternion& a, const Quaternion& b, float t);
 
   union
   {
@@ -328,7 +379,7 @@ class EE_UTILITY_EXPORT Quaternion
     /*
      * All the components of the quaternion in an array
      */
-    float wxyz[4] = { 0.0f,0.0f,0.0f,0.0f};
+    float wxyz[4] = { 1.0f,0.0f,0.0f,0.0f};
   };
 };
 }

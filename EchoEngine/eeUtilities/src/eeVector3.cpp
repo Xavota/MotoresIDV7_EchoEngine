@@ -20,16 +20,10 @@ const Vector3u Vector3u::kRIGHT = Vector3u(1u, 0u, 0u);
 const Vector3u Vector3u::kUP = Vector3u(0u, 1u, 0u);
 
 
-Vector3f::Vector3f()
-{
-}
 Vector3f::Vector3f(float _x, float _y, float _z)
  : x(_x),
    y(_y),
    z(_z)
-{
-}
-Vector3f::~Vector3f()
 {
 }
 
@@ -41,9 +35,10 @@ Vector3f::dot(const Vector3f& other) const
 Vector3f
 Vector3f::cross(const Vector3f& other) const
 {
-  return Vector3f(this->y * other.z - this->z * other.y,
-                  this->z * other.x - this->x * other.z,
-                  this->x * other.y - this->y * other.x);
+  Vector3f r(this->y * other.z - this->z * other.y,
+             this->z * other.x - this->x * other.z,
+             this->x * other.y - this->y * other.x);
+  return r;
 }
 float
 Vector3f::getDistance(const Vector3f& other) const

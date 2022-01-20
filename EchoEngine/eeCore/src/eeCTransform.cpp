@@ -35,7 +35,7 @@ CTransform::getModelMatrix()
   }
   return transform
        * Matrix4f::translationMatrix(m_position)
-       * Matrix4f::rotationMatrix(m_rotation.getEuclidean())
+       * m_rotation.getRotationMatrix()
        * Matrix4f::scaleMatrix(m_scale);
 }
 Vector3f
@@ -52,7 +52,8 @@ CTransform::getGlobalPosition()
   }
   Vector4f worldPos = transform
                     * Vector4f(m_position.x, m_position.y, m_position.z, 1.0f);
-  return Vector3f(worldPos.x, worldPos.y, worldPos.z);
+  Vector3f r(worldPos.x, worldPos.y, worldPos.z);
+  return r;
 }
 void
 CTransform::setPosition(const Vector3f& pos)
