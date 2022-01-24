@@ -16,12 +16,10 @@
 #include <eeVector3.h>
 #include <eeQuaternion.h>
 
-class aiNode;
-class aiAnimation;
+struct aiNode;
+struct aiAnimation;
 
 namespace eeEngineSDK {
-class SkeletalMesh;
-
 /**
  * @brief
  * A node for the animation graph.
@@ -92,19 +90,6 @@ class Animation
 
   /**
    * @brief
-   * Adds delta time.
-   *
-   * @description
-   * Adds delta time to its global animation time.
-   *
-   * @param dt
-   * Global delta time.
-   */
-  void
-  addTotalTime(float dt);
-
-  /**
-   * @brief
    * Loads an animation.
    *
    * @description
@@ -112,12 +97,14 @@ class Animation
    *
    * @param fileName
    * The file path.
+   * @param animIndex
+   * The index of the loading animation.
    *
    * @return
    * If it succeeded to load.
    */
   bool
-  loadFromFile(const String& fileName);
+  loadFromFile(const String& fileName, int32 animIndex);
 
   /**
    * @brief
@@ -134,7 +121,8 @@ class Animation
    */
   void
   boneTransform(int32 meshIndex,
-                SPtr<SkeletalMesh> skMesh);
+                SPtr<Skeletal> skMesh,
+                float time);
   /**
    * @brief
    * Reads the animation graph.
@@ -158,7 +146,7 @@ class Animation
                     const SPtr<Node> pNode,
                     const Matrix4f& parentTransform,
                     int32 meshIndex,
-                    SPtr<SkeletalMesh> skMesh);
+                    SPtr<Skeletal> skMesh);
 
   /**
    * @brief
@@ -333,10 +321,6 @@ class Animation
   void
   storeAnim(aiAnimation* anim);
 
-  /**
-   * The global time of the animation.
-   */
-  float m_totalTime = 0.0f; // TODO Remove this. The mesh ask for its specific total time
   /**
    * Animation frame rate.
    */

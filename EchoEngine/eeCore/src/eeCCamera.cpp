@@ -1,12 +1,17 @@
 #include "eeCCamera.h"
+
+#include <eeMemoryManager.h>
+
+#include <eeMath.h>
+
 #include "eeMatrix3.h"
 
 #include "eeActor.h"
 #include "eeCTransform.h"
 #include "eeCModel.h"
+#include "eeCSkeletalMesh.h"
 
 #include "eeGraficsApi.h"
-#include <eeMath.h>
 
 namespace eeEngineSDK {
 CCamera::CCamera()
@@ -198,7 +203,7 @@ CCamera::getDepthStencil()
   return m_depthStencil;
 }
 bool
-CCamera::isModelOnCamera(SPtr<CModel> ActorModel)
+CCamera::isModelOnCamera(SPtr<Component> ActorModel)
 {
   if (!ActorModel) {
     return false;
@@ -233,7 +238,21 @@ CCamera::isModelOnCamera(SPtr<CModel> ActorModel)
     m_downPlane.setPoint(m_eyePos);
   }
 
-  const Sphere& boundSphere = ActorModel->getBoundingSphere();
+  auto& memoryMan = MemoryManager::instance();
+  
+  Sphere boundSphere;
+  if (memoryMan.reinterpretPtr<CModel>(ActorModel)) {
+    boundSphere = memoryMan.reinterpretPtr<CModel>(ActorModel)->getBoundingSphere();
+  }
+  else if (memoryMan.reinterpretPtr<CSkeletalMesh>(ActorModel)) {
+    boundSphere = memoryMan.reinterpretPtr<CSkeletalMesh>(ActorModel)->getBoundingSphere();
+  }
+
+  if (MemoryManager::instance().reinterpretPtr<CModel>(ActorModel)
+   || MemoryManager::instance().reinterpretPtr<CModel>(ActorModel))
+  {
+
+  }
   // See if in
   if (Math::intersectionSpherePlane(boundSphere, m_nearPlane)) {
     return true;

@@ -2,6 +2,7 @@
 #include "eeActor.h"
 #include "eeCSkeletalMesh.h"
 #include "eeSkeletalMesh.h"
+#include "eeSkeletal.h"
 #include "eeAnimation.h"
 #include <eeTime.h>
 
@@ -14,13 +15,15 @@ CAnimation::update()
 
   SPtr<CSkeletalMesh> skMesh = m_actor->getComponent<CSkeletalMesh>();
   EE_NO_EXIST_RETURN(skMesh);
-  EE_NO_EXIST_RETURN(skMesh->getSkeletal());
+  EE_NO_EXIST_RETURN(skMesh->getModel());
+  SPtr<Skeletal> skeleton = skMesh->getModel()->getSkeletal();
+  EE_NO_EXIST_RETURN(skeleton);
 
-  int32 bonesPerMesh =
-  static_cast<int32>(skMesh->getSkeletal()->getBonesData().size());
-  m_anim->addTotalTime(Time::instance().getDeltaTime());
+  auto bonesPerMesh =
+  static_cast<int32>(skeleton->getBonesData().size());
+  m_animTime += Time::instance().getDeltaTime();
   for (int32 i = 0; i < bonesPerMesh; ++i) {
-    m_anim->boneTransform(i, skMesh->getSkeletal());
+    m_anim->boneTransform(i, skeleton, m_animTime);
   }
 }
 SPtr<Animation>

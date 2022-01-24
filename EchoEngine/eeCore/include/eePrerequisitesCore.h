@@ -85,6 +85,7 @@ class Mesh;
 class Model;
 class Object;
 class Texture;
+class Skeletal;
 class SkeletalMesh;
 class Animation;
 

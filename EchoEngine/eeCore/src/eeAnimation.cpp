@@ -1,6 +1,7 @@
 #include "eeAnimation.h"
 
 #include "eeSkeletalMesh.h"
+#include "eeSkeletal.h"
 
 #include <eeMemoryManager.h>
 #include <eeMath.h>
@@ -12,13 +13,8 @@
 #pragma warning(pop)
 
 namespace eeEngineSDK {
-void
-Animation::addTotalTime(float dt)
-{
-  m_totalTime += dt;
-}
 bool
-Animation::loadFromFile(const String& fileName)
+Animation::loadFromFile(const String& fileName, int32 animIndex)
 {
   Assimp::Importer* importer = nullptr;
   const aiScene* scene = nullptr;
@@ -32,6 +28,7 @@ Animation::loadFromFile(const String& fileName)
   );
   if (!scene) {
     eeOut << importer->GetErrorString() << eeEndl;
+    delete importer;
     return false;
   }
 
@@ -42,8 +39,9 @@ Animation::loadFromFile(const String& fileName)
   m_rootNode = MemoryManager::instance().newPtr<Node>();
   storeNodes(scene->mRootNode, m_rootNode);
 
-  storeAnim(scene->mAnimations[0]);
+  storeAnim(scene->mAnimations[animIndex]);
 
+  delete importer;
   return true;
 }
 void
@@ -124,11 +122,12 @@ void Animation::storeAnim(aiAnimation* anim)
 }
 void
 Animation::boneTransform(int32 meshIndex,
-                         SPtr<SkeletalMesh> skMesh)
+                         SPtr<Skeletal> skMesh,
+                         float time)
 {
   Matrix4f Identity;
 
-  float TimeInTicks = m_totalTime * m_ticksPerSecond;
+  float TimeInTicks = time * m_ticksPerSecond;
   float AnimationTime = Math::fmod(TimeInTicks, m_duration);
 
   readNodeHeirarchy(AnimationTime,
@@ -142,7 +141,7 @@ Animation::readNodeHeirarchy(float animationTime,
                              const SPtr<Node> pNode,
                              const Matrix4f& parentTransform,
                              int32 meshIndex,
-                             SPtr<SkeletalMesh> skMesh)
+                             SPtr<Skeletal> skMesh)
 {
 
   String NodeName(pNode->m_name);

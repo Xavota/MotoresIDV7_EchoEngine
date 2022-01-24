@@ -12,9 +12,9 @@
 
 #pragma once
 #include "eePrerequisitesCore.h"
-#include "eeComponent.h"
 #include <eeSphere.h>
 #include <eeBox.h>
+#include "eeComponent.h"
 
 namespace eeEngineSDK{
 /**

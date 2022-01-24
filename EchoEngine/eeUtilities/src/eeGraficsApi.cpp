@@ -9,6 +9,7 @@
 #include "eeCTransform.h"
 #include "eeCSkeletalMesh.h"
 #include "eeSkeletalMesh.h"
+#include "eeSkeletal.h"
 #include "eeCModel.h"
 #include "eeActor.h"
 
@@ -42,38 +43,99 @@ GraphicsApi::drawObject(SPtr<Object> obj)
 void
 GraphicsApi::drawObject(SPtr<Actor> act)
 {
+  //EE_NO_EXIST_RETURN(act);
+  //
+  //auto& graphicsApi = GraphicsApi::instance();
+  //
+  //SPtr<CTransform> transform = act->getTransform();
+  //
+  //SPtr<CModel> model = act->getComponent<CModel>();
+  //
+  //EE_NO_EXIST_RETURN(model);
+  //EE_NO_EXIST_RETURN(model->getModel());
+  //
+  //const Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>& meshes = model->getModel()->getMeshes();
+  //int32 meshesCount = static_cast<uint32>(meshes.size());
+  //
+  //const SPtr<CSkeletalMesh> skeletal = act->getComponent<CSkeletalMesh>();
+  //
+  //transform->getModelBuffer()->setInVertex(0u);
+  //
+  //for (int32 i = 0; i < meshesCount; ++i) {
+  //  if (!meshes[i].first) { break; }
+  //
+  //  meshes[i].first->set();
+  //
+  //  graphicsApi.setTextures({ meshes[i].second }, 0u);
+  //
+  //  if (skeletal && skeletal->getSkeletal()) {
+  //    skeletal->getSkeletal()->use(i);
+  //  }
+  //
+  //  drawIndexed(meshes[i].first->getIndexCount());
+  //
+  //  graphicsApi.unsetVertexBuffers(1u, 0u);
+  //  graphicsApi.unsetTextures(1u, 0u);
+  //}
+
+
   EE_NO_EXIST_RETURN(act);
 
   auto& graphicsApi = GraphicsApi::instance();
 
+  Vector<Pair<SPtr<Mesh>, SPtr<Texture>>> meshes;
+  int32 meshesCount = 0;
+
   SPtr<CTransform> transform = act->getTransform();
 
-  SPtr<CModel> model = act->getComponent<CModel>();
-  EE_NO_EXIST_RETURN(model);
-  EE_NO_EXIST_RETURN(model->getModel());
+  const SPtr<CModel> model = act->getComponent<CModel>();
+  if (model && model->getModel())
+  {
+    meshes = model->getModel()->getMeshes();
+    meshesCount = static_cast<uint32>(meshes.size());
 
-  const Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>& meshes = model->getModel()->getMeshes();
-  int32 meshesCount = static_cast<uint32>(meshes.size());
+    transform->getModelBuffer()->setInVertex(0u);
+
+    for (int32 i = 0; i < meshesCount; ++i) {
+      if (!meshes[i].first) { break; }
+
+      meshes[i].first->set();
+
+      graphicsApi.setTextures({ meshes[i].second }, 0u);
+
+      drawIndexed(meshes[i].first->getIndexCount());
+
+      graphicsApi.unsetVertexBuffers(1u, 0u);
+      graphicsApi.unsetTextures(1u, 0u);
+    }
+  }
 
   const SPtr<CSkeletalMesh> skeletal = act->getComponent<CSkeletalMesh>();
+  if (skeletal && skeletal->getModel())
+  {
+    const SPtr<SkeletalMesh> model = skeletal->getModel();
+    meshes = model->getMeshes();
+    meshesCount = static_cast<uint32>(meshes.size());
 
-  transform->getModelBuffer()->setInVertex(0u);
+    transform->getModelBuffer()->setInVertex(0u);
 
-  for (int32 i = 0; i < meshesCount; ++i) {
-    if (!meshes[i].first) { break; }
+    const SPtr<Skeletal> skeleton = model->getSkeletal();
+    for (int32 i = 0; i < meshesCount; ++i) {
+      if (!meshes[i].first) { break; }
 
-    meshes[i].first->set();
+      meshes[i].first->set();
 
-    graphicsApi.setTextures({ meshes[i].second }, 0u);
+      graphicsApi.setTextures({ meshes[i].second }, 0u);
 
-    if (skeletal && skeletal->getSkeletal()) {
-      skeletal->getSkeletal()->use(i);
+      if (skeleton) {
+        skeleton->use(i);
+      }
+
+      drawIndexed(meshes[i].first->getIndexCount());
+
+      graphicsApi.unsetVertexBuffers(1u, 0u);
+      graphicsApi.unsetTextures(1u, 0u);
     }
-
-    drawIndexed(meshes[i].first->getIndexCount());
-
-    graphicsApi.unsetVertexBuffers(1u, 0u);
-    graphicsApi.unsetTextures(1u, 0u);
   }
 }
 void

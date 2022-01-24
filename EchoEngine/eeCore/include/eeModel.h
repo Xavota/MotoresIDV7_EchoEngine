@@ -50,24 +50,8 @@ class EE_CORE_EXPORT Model
    * Weather it succeed or failed to initialize.
    */
   virtual bool
-  loadFromFile(const String& fileName);
-  /**
-   * @brief
-   * Initializes the model.
-   *
-   * @description
-   * Initializes the model from a file and a skeletal mesh.
-   *
-   * @param fileName
-   * The name of the file containing the model.
-   * @param skMesh
-   * The skeletal mesh from where it's gonna get the bone data.
-   *
-   * @return
-   * Weather it succeed or failed to initialize.
-   */
-  virtual bool
-  loadFromFile(const String& fileName, SPtr<const SkeletalMesh> skMesh);
+  loadFromFile(const String& fileName,
+               const Vector<SPtr<Texture>>& textures = {});
   /**
    * @brief
    * Initializes the model.
@@ -115,30 +99,6 @@ class EE_CORE_EXPORT Model
    */
   virtual Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>
   getMeshes();
-  /**
-   * @brief
-   * Setter for the meshes data.
-   *
-   * @description
-   * Sets a new array of meshes.
-   *
-   * @param meshes
-   * The new array of meshes.
-   */
-  virtual void
-  setMeshes(Vector<SPtr<Mesh>> meshes);
-  /**
-   * @brief
-   * Setter for the meshes data.
-   *
-   * @description
-   * Sets a new array of meshes.
-   *
-   * @param meshes
-   * The new array of meshes with its texture indices.
-   */
-  virtual void
-  setMeshes(Vector<Pair<SPtr<Mesh>, SPtr<Texture>>> meshes);
   /**
    * @brief
    * Getter for the texture data.

@@ -94,6 +94,10 @@ class EE_CORE_EXPORT CAnimation : public Component
    * The animation resource.
    */
   SPtr<Animation> m_anim;
+  /**
+   * The animation time.
+   */
+  float m_animTime;
 };
 }
 

@@ -35,13 +35,13 @@ CModel::getModel()
 {
   return m_model;
 }
-const
-Sphere& CModel::getBoundingSphere()
+const Sphere&
+CModel::getBoundingSphere()
 {
   return m_boundSphere;
 }
-const
-BoxAAB& CModel::getBoundingBox()
+const BoxAAB&
+CModel::getBoundingBox()
 {
   return m_boundBox;
 }

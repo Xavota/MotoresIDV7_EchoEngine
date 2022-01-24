@@ -4,7 +4,7 @@
  * @author Diego Castellanos
  * @date 27/11/21
  * @brief
- * The skeletal mesh resource, contains bone data.
+ * The skeletal mesh resource, contains meshes with bones data and a skeletal.
  *
  * @bug Not bug Known.
  */
@@ -12,43 +12,13 @@
 
 #pragma once
 #include "eePrerequisitesCore.h"
-#include <eeMatrix4.h>
-
-struct aiNode;
+#include <eeSphere.h>
+#include <eeBox.h>
 
 namespace eeEngineSDK {
 /**
  * @brief
- * Data for the vertices info.
- */
-struct VertexWeight
-{
-  uint32 m_vertexID = 0;
-  float m_weight = 0;
-};
-
-/**
- * @brief
- * The Bone data.
- */
-struct Bone
-{
-  Bone() = default;
-  Bone(String name, Vector<VertexWeight> vertexWeights, Matrix4f offsetMatrix);
-  ~Bone() = default;
-
-  void addBoneData(VertexWeight vw);
-
-  String m_name;
-  Vector<VertexWeight> m_vertexWeights;
-  Matrix4f m_offsetMatrix;
-
-  Matrix4f m_finalTransformation;
-};
-
-/**
- * @brief
- * The skeletal mesh resource, contains bone data.
+ * The skeletal mesh resource, contains meshes with bones data and a skeletal.
  */
 class EE_CORE_EXPORT SkeletalMesh
 {
@@ -66,161 +36,156 @@ class EE_CORE_EXPORT SkeletalMesh
 
   /**
    * @brief
-   * Loads an skeletal mesh.
+   * Initializes the model.
    *
    * @description
-   * Loads the skeletal mesh from a file.
+   * Initializes the model from a file and a skeletal mesh.
    *
    * @param fileName
-   * The file path for the skeletal.
+   * The name of the file containing the model.
+   * @param skMesh
+   * The skeletal mesh from where it's gonna get the bone data.
+   * @param textures
+   * The textures for the meshes.
    *
    * @return
-   * Whether it succeeded to load or not.
+   * Weather it succeed or failed to initialize.
    */
-  bool
-  loadFromFile(String fileName);
+  virtual bool
+  loadFromFile(const String& fileName,
+               SPtr<Skeletal> skMesh,
+               const Vector<SPtr<Texture>>& textures = {});
+  /**
+   * @brief
+   * Initializes the model.
+   *
+   * @description
+   * Initializes the model from an array of meshes.
+   *
+   * @param meshes
+   * The array of meshes.
+   * @param boundSphere
+   * A resulting bounding sphere with the max distance to the center.
+   * @param fileName
+   * A resulting bounding box with the max points to the center.
+   *
+   * @return
+   * Weather it succeed or failed to initialize.
+   */
+  virtual bool
+  loadFromMeshes(const Vector<SPtr<Mesh>>& meshes);
+  /**
+   * @brief
+   * Initializes the model.
+   *
+   * @description
+   * Initializes the model from an array of pairs of meshes and textures.
+   *
+   * @param meshes
+   * The array of pair of meshes and textures.
+   *
+   * @return
+   * Weather it succeed or failed to initialize.
+   */
+  virtual bool
+  loadFromMeshes(const Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>& meshes);
 
   /**
    * @brief
-   * Gets the bone data.
+   * Getter for the meshes data.
    *
    * @description
-   * Returns the bones data of the skeleton.
+   * Returns the vector of pairs of meshes and texture indices.
    *
    * @return
-   * Bone data.
+   * The vector of pairs of meshes and texture.
    */
-  Vector<Vector<Bone>>&
-  getBonesData();
+  virtual Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>
+  getMeshes();
   /**
    * @brief
-   * Gets the bone data of a mesh.
+   * Getter for the texture data.
    *
    * @description
-   * Returns the bones data from a specific mesh of the skeleton.
+   * Returns the vector of textures.
    *
+   * @return
+   * The vector of textures.
+   */
+  virtual Vector<SPtr<Texture>>
+  getTextures();
+  /**
+   * @brief
+   * Setter for a texture.
+   *
+   * @description
+   * Sets a new texture in the given index.
+   *
+   * @param texture
+   * The new texture.
    * @param index
-   * The index of the mesh.
+   * The index of the texture.
+   */
+  virtual void
+  setTexture(SPtr<Texture> texture, int32 index);
+
+  /**
+   * @brief
+   * Getter of the skeletal resource.
    *
    * @return
-   * Bone data.
+   * The skeletal mesh resource to store the bone data.
    */
-  const Vector<Bone>&
-  getBonesDataForMesh(int32 index) const;
+  FORCEINLINE SPtr<Skeletal>
+  getSkeletal()
+  {
+    return m_skeleton;
+  }
 
   /**
    * @brief
-   * Returns the bone mapping data.
+   * Gets the bounding sphere for the model.
    *
    * @description
-   * Returns the bone mapping data of the skeleton.
+   * Returns a bounding sphere, with a radius of the furthest vertex to the
+   * origin.
    *
    * @return
-   * Bone mapping.
+   * A bounding sphere, with a radius of the furthest vertex to the origin.
    */
-  Vector<Map<String, int32>>&
-  getBoneMapping();
+  const Sphere&
+  getBoundingSphere();
   /**
    * @brief
-   * Gets the global inverse transforms of the skeleton.
+   * Gets the bounding box for the model.
    *
    * @description
-   * Returns the global inverse transforms of the skeletons meshes.
+   * Returns a bounding box, with corners on the furthest x, y, z coordinates.
    *
    * @return
-   * Global inverse transforms.
+   * A bounding box, with corners on the furthest x, y, z coordinates.
    */
-  Vector<Matrix4f>&
-  getGlobalInverseTransforms();
-
-  /**
-   * @brief
-   * Updates the bones data.
-   *
-   * @description
-   * Updates the bones matrices to the original pose of the skeleton.
-   *
-   * @param root
-   * The root node of the skeleton.
-   * @param meshIndex
-   * The mesh index that is being modified.
-   */
-  void
-  boneTransform(const aiNode* root, int32 meshIndex);
-  /**
-   * @brief
-   * Updates the bones data.
-   *
-   * @description
-   * Updates the bones matrices to the original pose of the skeleton.
-   *
-   * @param pNode
-   * The parent node on the skeleton graph.
-   * @param parentTransform
-   * The transform of the parent node.
-   * @param meshIndex
-   * The mesh index that is being modified.
-   * 
-   * @param meshIndex
-   * 
-   */
-  void
-  readNodeHeirarchy(const aiNode* pNode,
-                    const Matrix4f& parentTransform,
-                    int32 meshIndex);
-
-  /**
-   * @brief
-   * Gets the matrices of the bones.
-   *
-   * @description
-   * Returns the matrices of each bone with is transformations.
-   *
-   * @param meshNum
-   * The mesh of the skeleton to take the matrices.
-   *
-   * @return
-   * The matrices of each bone with is transformations.
-   */
-  Vector<Matrix4f>
-  getBonesMatrices(int32 meshNum);
-
-
-  /**
-   * @brief
-   * Sets the skeletal mesh to use.
-   *
-   * @description
-   * Sets the skeletal mesh bones data to the graphic memory.
-   *
-   * @param meshNum
-   * The mesh index to set.
-   */
-  void
-  use(int32 meshNum);
+  const BoxAAB&
+  getBoundingBox();
 
  private:
   /**
-   * The buffer for the bone matrices.
+   * The vector of pairs of meshes and texture indices.
    */
-  SPtr<ConstantBuffer> m_matricesBuffer;
+  Vector<Pair<SPtr<Mesh>, SPtr<Texture>>> m_meshes;
 
   /**
-   * Bone data for every mesh.
+   * The skeletal with the bone data.
    */
-  Vector<Vector<Bone>> m_bonesPerMesh;
+  SPtr<Skeletal> m_skeleton;
 
   /**
-   * Global inverse transforms for every mesh.
+   * A sphere bounding all the model.
    */
-  Vector<Matrix4f> m_globalInverseTransforms;
+  Sphere m_boundSphere;
   /**
-   * Bone mapping of every mesh.
+   * A cube bounding all the model.
    */
-  Vector<Map<String, int32>> m_boneMappings;
-  /**
-   * Bones count for every mesh.
-   */
-  Vector<int32> m_numsBones;
+  BoxAAB m_boundCube;
 };
 }

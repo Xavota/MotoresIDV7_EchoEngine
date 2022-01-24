@@ -1,12 +1,4 @@
 #include "eeResourceManager.h"
-#include "eeModel.h"
-#include "eeMesh.h"
-#include "eeTexture.h"
-#include "eeVertexShader.h"
-#include "eePixelShader.h"
-#include "eeGraficsApi.h"
-#include "eeSkeletalMesh.h"
-#include "eeAnimation.h"
 
 #pragma warning(push, 0)   
 #include <assimp/Importer.hpp>
@@ -15,10 +7,130 @@
 #pragma warning(pop)
 
 #include <eeMemoryManager.h>
+#include <eeMath.h>
+
+#include "eeModel.h"
+#include "eeMesh.h"
+#include "eeTexture.h"
+#include "eeVertexShader.h"
+#include "eePixelShader.h"
+#include "eeGraficsApi.h"
+#include "eeSkeletalMesh.h"
+#include "eeSkeletal.h"
+#include "eeAnimation.h"
 
 namespace eeEngineSDK
 {
-SPtr<Texture> 
+bool
+ResourceManager::importResourceFromFile(const String& fileName)
+{
+  /*  GET NAME AND FILE EXTENSION */
+  String name;
+  String fileExtension;
+  auto fileSize = static_cast<int32>(fileName.size());
+  bool point = false;
+  for (int32 i = fileSize - 1; i >= 0; --i) {
+    if (!point) {
+      if (fileName[i] != '.') {
+        fileExtension = fileName[i] + fileExtension;
+      }
+      else {
+        point = true;
+      }
+    }
+    else {
+      if (fileName[i] != '/' && fileName[i] != '\\') {
+        name = fileName[i] + name;
+      }
+      else { break; }
+    }
+  }
+
+  for (char& c : fileExtension) {
+    c = (c >= 'A' && c <= 'Z' ? c + 32 : c);
+  }
+
+  if (fileExtension == "png" || fileExtension == "jpg"
+   || fileExtension == "tga" || fileExtension == "bmp"
+   || fileExtension == "tiff") {
+    SamplerStateDesc samDesc;
+    memset(&samDesc, 0, sizeof(samDesc));
+    samDesc.filter = eFILTER::MIN_MAG_MIP_LINEAR;
+    samDesc.addressU = eTEXTURE_ADDRESS_MODE::WRAP;
+    samDesc.addressV = eTEXTURE_ADDRESS_MODE::WRAP;
+    samDesc.addressW = eTEXTURE_ADDRESS_MODE::WRAP;
+    samDesc.comparisonFunc = eCOMPARISON_FUNC::NEVER;
+    samDesc.minLOD = 0.0f;
+    samDesc.maxLOD = Math::kMAX_FLOAT;
+
+    loadTextureFromFile(fileName, name + "_tex", samDesc);
+  }
+  else if (fileExtension == "obj" || fileExtension == "fbx"
+        || fileExtension == "md5mesh") {
+    auto* importer = new Assimp::Importer();
+    const aiScene* scene = importer->ReadFile
+    (
+      fileName,
+      aiProcessPreset_TargetRealtime_MaxQuality
+      | aiProcess_ConvertToLeftHanded
+    );
+
+    if (!scene) {
+      eeOut << importer->GetErrorString() << eeEndl;
+      delete importer;
+      return false;
+    }
+    
+    Vector<SPtr<Texture>> textures;
+    if (scene->HasTextures()) {
+      // Load textures from assimp
+    }
+    if (scene->mRootNode) {
+      SPtr<Skeletal> skMesh = loadSkeletalFromFile(fileName, name + "_sk");
+
+      if (scene->HasMeshes()) {
+        loadSkeletalMeshFromFile(fileName, name + "_skm", skMesh, textures);
+      }
+    }
+    else {
+      if (scene->HasMeshes()) {
+        loadModelFromFile(fileName, name + "_sm", textures);
+      }
+    }
+    if (scene->HasAnimations()) {
+      for (int32 i = 0; i < scene->mNumAnimations; ++i) {
+        loadAnimationFromFile(fileName,
+                         name + "_anim_" + scene->mAnimations[i]->mName.C_Str(),
+                         i);
+      }
+    }
+  }
+  else if (fileExtension == "md5anim") {
+    auto* importer = new Assimp::Importer();
+    const aiScene* scene = importer->ReadFile
+    (
+      fileName,
+      aiProcessPreset_TargetRealtime_MaxQuality
+      | aiProcess_ConvertToLeftHanded
+    );
+
+    if (!scene) {
+      eeOut << importer->GetErrorString() << eeEndl;
+      delete importer;
+      return false;
+    }
+
+    if (scene->HasAnimations()) {
+      for (int32 i = 0; i < scene->mNumAnimations; ++i) {
+        loadAnimationFromFile(fileName,
+          name + "_anim_" + scene->mAnimations[i]->mName.C_Str(),
+          i);
+      }
+    }
+  }
+  return false;
+}
+SPtr<Texture>
 ResourceManager::loadTextureFromFile(const String& fileName,
                                      const String resourceName,
                                      SamplerStateDesc desc)
@@ -43,7 +155,8 @@ ResourceManager::loadTextureFromFile(const String& fileName,
 }
 SPtr<Model>
 ResourceManager::loadModelFromFile(const String& fileName, 
-                                   const String resourceName)
+                                   const String resourceName,
+                                   const Vector<SPtr<Texture>>& textures)
 {
   if (m_meshes.find(resourceName) != m_meshes.end()) {
     eeOut << "Resource already with this name" << eeEndl;
@@ -55,42 +168,41 @@ ResourceManager::loadModelFromFile(const String& fileName,
     return nullptr;
   }
 
-  Assimp::Importer* importer = nullptr;
-  const aiScene* scene = nullptr;
-
-  importer = new Assimp::Importer();
-  scene = importer->ReadFile
+  auto* importer = new Assimp::Importer();
+  const aiScene* scene = importer->ReadFile
   (
     fileName,
     aiProcessPreset_TargetRealtime_MaxQuality
     | aiProcess_ConvertToLeftHanded
   );
+
   if (!scene) {
     eeOut << importer->GetErrorString() << eeEndl;
+    delete importer;
     return nullptr;
   }
 
   SPtr<Model> model = MemoryManager::instance().newPtr<Model>();
-  if (scene->HasAnimations()) {
-    SPtr<SkeletalMesh> skMesh =
-    loadSkeletalMeshFromFile(fileName, resourceName + "_sk");
-
-    if (skMesh) {
-      if (!model->loadFromFile(fileName, skMesh)) {
-        return nullptr;
-      }
-    }
-    else {
-      if (!model->loadFromFile(fileName)) {
-        return nullptr;
-      }
-    }
-  }
-  else {
-    if (!model->loadFromFile(fileName)) {
+  //if (scene->HasAnimations()) {
+  //  SPtr<SkeletalMesh> skMesh =
+  //  loadSkeletalMeshFromFile(fileName, resourceName + "_sk");
+  //
+  //  if (skMesh) {
+  //    if (!model->loadFromFile(fileName, skMesh)) {
+  //      return nullptr;
+  //    }
+  //  }
+  //  else {
+  //    if (!model->loadFromFile(fileName)) {
+  //      return nullptr;
+  //    }
+  //  }
+  //}
+  //else {
+    if (!model->loadFromFile(fileName, textures)) {
       return nullptr;
     }
-  }
+  //}
 
   m_models.insert(make_pair(resourceName, model));
   return m_models[resourceName];
@@ -141,9 +253,34 @@ ResourceManager::loadModelFromMeshesArray(
   return m_models[resourceName];
 }
 
+SPtr<Skeletal>
+ResourceManager::loadSkeletalFromFile(const String& fileName,
+                                      const String& resourceName)
+{
+  if (m_skeletals.find(resourceName) != m_skeletals.end()) {
+    eeOut << "Resource already with this name" << eeEndl;
+    return nullptr;
+  }
+
+  if (fileName.empty()) {
+    eeOut << "Empty info loading skeletal" << eeEndl;
+    return nullptr;
+  }
+
+  SPtr<Skeletal> skeleton = MemoryManager::instance().newPtr<Skeletal>();
+  if (!skeleton->loadFromFile(fileName)) {
+    return nullptr;
+  }
+
+  m_skeletals.insert(make_pair(resourceName, skeleton));
+  return m_skeletals[resourceName];
+}
+
 SPtr<SkeletalMesh>
 ResourceManager::loadSkeletalMeshFromFile(const String& fileName,
-                                          const String& resourceName)
+                                          const String& resourceName,
+                                          const SPtr<Skeletal> skMesh,
+                                          const Vector<SPtr<Texture>>& textures)
 {
   if (m_skeletalMeshes.find(resourceName) != m_skeletalMeshes.end()) {
     eeOut << "Resource already with this name" << eeEndl;
@@ -155,17 +292,31 @@ ResourceManager::loadSkeletalMeshFromFile(const String& fileName,
     return nullptr;
   }
 
-  SPtr<SkeletalMesh> skeletal = MemoryManager::instance().newPtr<SkeletalMesh>();
-  if (!skeletal->loadFromFile(fileName)) {
+  SPtr<Skeletal> skeleton = nullptr;
+  if (!skMesh) {
+    skeleton = loadSkeletalFromFile(fileName, resourceName + "_sk");
+  }
+  else {
+    skeleton = skMesh;
+  }
+
+  if (!skeleton) {
     return nullptr;
   }
 
+  SPtr<SkeletalMesh> skeletal = MemoryManager::instance().newPtr<SkeletalMesh>();
+  if (!skeletal->loadFromFile(fileName, skeleton, textures)) {
+    return nullptr;
+  }
   m_skeletalMeshes.insert(make_pair(resourceName, skeletal));
+  
   return m_skeletalMeshes[resourceName];
 }
 
 SPtr<Animation>
-ResourceManager::loadAnimationFromFile(const String& fileName, const String& resourceName)
+ResourceManager::loadAnimationFromFile(const String& fileName,
+                                       const String& resourceName,
+                                       const int32 animIndex)
 {
   if (m_animations.find(resourceName) != m_animations.end()) {
     eeOut << "Resource already with this name" << eeEndl;
@@ -178,7 +329,7 @@ ResourceManager::loadAnimationFromFile(const String& fileName, const String& res
   }
 
   SPtr<Animation> anim = MemoryManager::instance().newPtr<Animation>();
-  if (!anim->loadFromFile(fileName)) {
+  if (!anim->loadFromFile(fileName, animIndex)) {
     return nullptr;
   }
 
@@ -258,49 +409,64 @@ ResourceManager::loadPixelShaderFromString(const String& shaderString,
   return m_pixelShaders[resourceName];
 }
 
-SPtr<Texture> ResourceManager::getResourceTexture(const String& resourceName)
+SPtr<Texture>
+ResourceManager::getResourceTexture(const String& resourceName)
 {
   if (m_textures.find(resourceName) != m_textures.end()) {
     return m_textures[resourceName];
   }
   return nullptr;
 }
-SPtr<Model> ResourceManager::getResourceModel(const String& resourceName)
+SPtr<Model>
+ResourceManager::getResourceModel(const String& resourceName)
 {
   if (m_models.find(resourceName) != m_models.end()) {
     return m_models[resourceName];
   }
   return nullptr;
 }
-SPtr<Mesh> ResourceManager::getResourceMesh(const String& resourceName)
+SPtr<Mesh>
+ResourceManager::getResourceMesh(const String& resourceName)
 {
   if (m_meshes.find(resourceName) != m_meshes.end()) {
     return m_meshes[resourceName];
   }
   return nullptr;
 }
-SPtr<SkeletalMesh> ResourceManager::getResourceSkeletalMesh(const String& resourceName)
+SPtr<Skeletal>
+ResourceManager::getResourceSkeletal(const String& resourceName)
+{
+  if (m_skeletals.find(resourceName) != m_skeletals.end()) {
+    return m_skeletals[resourceName];
+  }
+  return nullptr;
+}
+SPtr<SkeletalMesh>
+ResourceManager::getResourceSkeletalMesh(const String& resourceName)
 {
   if (m_skeletalMeshes.find(resourceName) != m_skeletalMeshes.end()) {
     return m_skeletalMeshes[resourceName];
   }
   return nullptr;
 }
-SPtr<Animation> ResourceManager::getResourceAnimation(const String& resourceName)
+SPtr<Animation>
+ResourceManager::getResourceAnimation(const String& resourceName)
 {
   if (m_animations.find(resourceName) != m_animations.end()) {
     return m_animations[resourceName];
   }
   return nullptr;
 }
-SPtr<VertexShader> ResourceManager::getResourceVertexShader(const String& resourceName)
+SPtr<VertexShader>
+ResourceManager::getResourceVertexShader(const String& resourceName)
 {
   if (m_vertexShaders.find(resourceName) != m_vertexShaders.end()) {
     return m_vertexShaders[resourceName];
   }
   return nullptr;
 }
-SPtr<PixelShader> ResourceManager::getResourcePixelShader(const String& resourceName)
+SPtr<PixelShader>
+ResourceManager::getResourcePixelShader(const String& resourceName)
 {
   if (m_pixelShaders.find(resourceName) != m_pixelShaders.end()) {
     return m_pixelShaders[resourceName];

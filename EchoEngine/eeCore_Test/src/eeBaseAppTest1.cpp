@@ -16,6 +16,7 @@
 #include <eeCRender.h>
 #include <eeCCamera.h>
 #include <eeCSkeletalMesh.h>
+#include <eeSkeletalMesh.h>
 #include <eeCAnimation.h>
 
 #include <eeMath.h>
@@ -682,126 +683,83 @@ BaseAppTest1::initResources()
   actor->addComponent<CRender>();
 
 
+  resourceManager.importResourceFromFile("Models/boblampclean.md5mesh");
+  resourceManager.importResourceFromFile("Models/boblampclean.md5anim");
+
+  resourceManager.importResourceFromFile("Textures/guard1_body.jpg");
+  resourceManager.importResourceFromFile("Textures/guard1_face.jpg");
+  resourceManager.importResourceFromFile("Textures/guard1_helmet.jpg");
+  resourceManager.importResourceFromFile("Textures/iron_grill.jpg");
+  resourceManager.importResourceFromFile("Textures/round_grill.jpg");
+
+
 
   actor = scene->addActor("AnimTest");
   actor->getTransform()->setScale({ 0.03f, 0.03f, 0.03f });
   actor->getTransform()->setRotation(Quaternion({ Math::kPI * 0.5f,
                                                               0.0f,
                                                               0.0f }));
-  actor->addComponent<CModel>();
-  actor->getComponent<CModel>()->setModel
+  actor->addComponent<CSkeletalMesh>();
+  actor->getComponent<CSkeletalMesh>()->setModel
   (
-    resourceManager.loadModelFromFile
-    (
-      "Models/boblampclean.md5mesh",
-      "ActorTest2"
-    )
+    resourceManager.getResourceSkeletalMesh("boblampclean_skm")
   );
-  actor->getComponent<CModel>()->getModel()->setTexture
+  actor->getComponent<CSkeletalMesh>()->getModel()->setTexture
   (
-    resourceManager.loadTextureFromFile
-    (
-      "Textures/guard1_body.jpg",
-      "ActorTest2_T1",
-      samDesc
-    ),
+    resourceManager.getResourceTexture("guard1_body_tex"),
     0
   );
-  actor->getComponent<CModel>()->getModel()->setTexture
+  actor->getComponent<CSkeletalMesh>()->getModel()->setTexture
   (
-    resourceManager.loadTextureFromFile
-    (
-      "Textures/guard1_face.jpg",
-      "ActorTest2_T2",
-      samDesc
-    ),
+    resourceManager.getResourceTexture("guard1_face_tex"),
     1
   );
-  actor->getComponent<CModel>()->getModel()->setTexture
+  actor->getComponent<CSkeletalMesh>()->getModel()->setTexture
   (
-    resourceManager.loadTextureFromFile
-    (
-      "Textures/guard1_helmet.jpg",
-      "ActorTest2_T3",
-      samDesc
-    ),
+    resourceManager.getResourceTexture("guard1_helmet_tex"),
     2
   );
-  actor->getComponent<CModel>()->getModel()->setTexture
+  actor->getComponent<CSkeletalMesh>()->getModel()->setTexture
   (
-    resourceManager.loadTextureFromFile
-    (
-      "Textures/iron_grill.jpg",
-      "ActorTest2_T4",
-      samDesc
-    ),
+    resourceManager.getResourceTexture("iron_grill_tex"),
     3
   );
-  actor->getComponent<CModel>()->getModel()->setTexture
+  actor->getComponent<CSkeletalMesh>()->getModel()->setTexture
   (
-    resourceManager.loadTextureFromFile
-    (
-      "Textures/round_grill.jpg",
-      "ActorTest2_T5",
-      samDesc
-    ),
+    resourceManager.getResourceTexture("round_grill_tex"),
     4
   );
-  actor->getComponent<CModel>()->getModel()->setTexture
+  actor->getComponent<CSkeletalMesh>()->getModel()->setTexture
   (
-    resourceManager.loadTextureFromFile
-    (
-      "Textures/guard1_body.jpg",
-      "ActorTest2_T6",
-      samDesc
-    ),
+    resourceManager.getResourceTexture("guard1_body_tex"),
     5
-  );
-  actor->addComponent<CSkeletalMesh>();
-  actor->getComponent<CSkeletalMesh>()->setSkeletal
-  (
-    resourceManager.getResourceSkeletalMesh("ActorTest2_sk")
   );
   actor->addComponent<CAnimation>();
   actor->getComponent<CAnimation>()->setAnimation
   (
-    resourceManager.loadAnimationFromFile
-    (
-      "Models/boblampclean.md5anim",
-      "AnimationTest1"
-    )
+    resourceManager.getResourceAnimation("boblampclean_anim_")
   );
   actor->addComponent<CRender>();
 
 
+  resourceManager.importResourceFromFile("Models/Scary_Clown_Walk.fbx");
 
   actor = scene->addActor("AnimTest2");
   actor->getTransform()->setScale({ 0.01f, 0.01f, 0.01f });
   actor->getTransform()->setPosition({ -3.0f, 0.0f, 0.0f });
-  actor->addComponent<CModel>();
-  actor->getComponent<CModel>()->setModel
-  (
-    resourceManager.loadModelFromFile
-    (
-      "Models/Scary_Clown_Walk.fbx",
-      "ActorTest3"
-    )
-  );
   actor->addComponent<CSkeletalMesh>();
-  actor->getComponent<CSkeletalMesh>()->setSkeletal
+  actor->getComponent<CSkeletalMesh>()->setModel
   (
-    resourceManager.getResourceSkeletalMesh("ActorTest3_sk")
+    resourceManager.getResourceSkeletalMesh("Scary_Clown_Walk_skm")
   );
   actor->addComponent<CAnimation>();
   actor->getComponent<CAnimation>()->setAnimation
   (
-    resourceManager.loadAnimationFromFile
-    (
-      "Models/Scary_Clown_Walk.fbx",
-      "AnimationTest2"
-    )
+    resourceManager.getResourceAnimation("Scary_Clown_Walk_anim_mixamo.com")
   );
   actor->addComponent<CRender>();
+
+
 
   return true;
 }

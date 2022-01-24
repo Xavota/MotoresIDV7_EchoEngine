@@ -44,6 +44,22 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
 
   /**
    * @brief
+   * Imports a resource from a file.
+   *
+   * @description
+   * Identifies the resource type and loads the correct resources.
+   *
+   * @param fileName
+   * The name of the file containing the resources.
+   *
+   * @return
+   * Weather it succeed or failed to import.
+   */
+  bool
+  importResourceFromFile(const String& fileName);
+
+  /**
+   * @brief
    * Initializes a texture.
    *
    * @description
@@ -55,7 +71,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * The name that the resource will be stored with.
    *
    * @return
-   * Weather it succeed or failed to initialize.
+   * The resource initialized.
    */
   SPtr<Texture>
   loadTextureFromFile(const String& fileName,
@@ -75,11 +91,12 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * The name that the resource will be stored with.
    *
    * @return
-   * Weather it succeed or failed to initialize.
+   * The resource initialized.
    */
   SPtr<Model> 
   loadModelFromFile(const String& fileName,
-                    const String resourceName);
+                    const String resourceName,
+                    const Vector<SPtr<Texture>>& textures = {});
   /**
    * @brief
    * Initializes the model.
@@ -94,7 +111,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * The name that the resource will be stored with.
    *
    * @return
-   * Weather it succeed or failed to initialize.
+   * The resource initialized.
    */
   SPtr<Model>
   loadModelFromMeshesArray(const Vector<SPtr<Mesh>>& meshes,
@@ -116,7 +133,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * The name that the resource will be stored with.
    *
    * @return
-   * Weather it succeed or failed to initialize.
+   * The resource initialized.
    */
   SPtr<Model>
   loadModelFromMeshesArray(const Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>& meshes,
@@ -138,7 +155,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * The name that the resource will be stored with.
    *
    * @return
-   * Weather it succeed or failed to initialize.
+   * The resource initialized.
    */
   template<class V, class I>
   SPtr<Mesh>
@@ -148,22 +165,22 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
 
   /**
    * @brief
-   * Initializes a skeletal mesh.
+   * Initializes a skeletal.
    *
    * @description
-   * Initializes a skeletal mesh from a file and stores it with the given name.
+   * Initializes a skeletal from a file and stores it with the given name.
    *
    * @param fileName
-   * The name of the file containing the skeletal mesh.
+   * The name of the file containing the skeletal.
    * @param resourceName
    * The name that the resource will be stored with.
    *
    * @return
-   * Weather it succeed or failed to initialize.
+   * The resource initialized.
    */
-  SPtr<SkeletalMesh> 
-  loadSkeletalMeshFromFile(const String& fileName,
-                           const String& resourceName);
+  SPtr<Skeletal> 
+  loadSkeletalFromFile(const String& fileName,
+                       const String& resourceName);
   /**
    * @brief
    * Initializes a skeletal mesh.
@@ -177,11 +194,32 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * The name that the resource will be stored with.
    *
    * @return
-   * Weather it succeed or failed to initialize.
+   * The resource initialized.
+   */
+  SPtr<SkeletalMesh> 
+  loadSkeletalMeshFromFile(const String& fileName,
+                           const String& resourceName,
+                           const SPtr<Skeletal> skMesh,
+                           const Vector<SPtr<Texture>>& textures = {});
+  /**
+   * @brief
+   * Initializes a skeletal mesh.
+   *
+   * @description
+   * Initializes a skeletal mesh from a file and stores it with the given name.
+   *
+   * @param fileName
+   * The name of the file containing the skeletal mesh.
+   * @param resourceName
+   * The name that the resource will be stored with.
+   *
+   * @return
+   * The resource initialized.
    */
   SPtr<Animation> 
   loadAnimationFromFile(const String& fileName,
-                        const String& resourceName);
+                        const String& resourceName,
+                        const int32 animIndex = 0);
 
   /**
    * @brief
@@ -196,7 +234,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * The name that the resource will be stored with.
    *
    * @return
-   * Weather it succeed or failed to initialize.
+   * The resource initialized.
    */
   SPtr<VertexShader>
   loadVertexShaderFromFile(const String& fileName,
@@ -214,7 +252,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * The name that the resource will be stored with.
    *
    * @return
-   * Weather it succeed or failed to initialize.
+   * The resource initialized.
    */
   SPtr<VertexShader>
   loadVertexShaderFromString(const String& shaderString,
@@ -233,7 +271,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * The name that the resource will be stored with.
    *
    * @return
-   * Weather it succeed or failed to initialize.
+   * The resource initialized.
    */
   SPtr<PixelShader>
   loadPixelShaderFromFile(const String& fileName,
@@ -251,7 +289,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * The name that the resource will be stored with.
    *
    * @return
-   * Weather it succeed or failed to initialize.
+   * The resource initialized.
    */
   SPtr<PixelShader>
   loadPixelShaderFromString(const String& shaderString,
@@ -268,7 +306,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * The name of the resource.
    *
    * @return
-   * The texture with that name
+   * The texture with that name.
    */
   SPtr<Texture>
   getResourceTexture(const String& resourceName);
@@ -283,7 +321,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * The name of the resource.
    *
    * @return
-   * The model with that name
+   * The model with that name.
    */
   SPtr<Model>
   getResourceModel(const String& resourceName);
@@ -298,10 +336,25 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * The name of the resource.
    *
    * @return
-   * The mesh with that name
+   * The mesh with that name.
    */
   SPtr<Mesh>
   getResourceMesh(const String& resourceName);
+  /**
+   * @brief
+   * Gets a skeletal.
+   *
+   * @description
+   * Gets a skeletal by a resource name.
+   *
+   * @param resourceName
+   * The name of the resource.
+   *
+   * @return
+   * The skeletal with that name.
+   */
+  SPtr<Skeletal>
+  getResourceSkeletal(const String& resourceName);
   /**
    * @brief
    * Gets a skeletal mesh.
@@ -313,7 +366,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * The name of the resource.
    *
    * @return
-   * The skeletal mesh with that name
+   * The skeletal mesh with that name.
    */
   SPtr<SkeletalMesh>
   getResourceSkeletalMesh(const String& resourceName);
@@ -328,7 +381,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * The name of the resource.
    *
    * @return
-   * The animation with that name
+   * The animation with that name.
    */
   SPtr<Animation>
   getResourceAnimation(const String& resourceName);
@@ -343,7 +396,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * The name of the resource.
    *
    * @return
-   * The vertex shader with that name
+   * The vertex shader with that name.
    */
   SPtr<VertexShader>
   getResourceVertexShader(const String& resourceName);
@@ -358,7 +411,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * The name of the resource.
    *
    * @return
-   * The pixel shader with that name
+   * The pixel shader with that name.
    */
   SPtr<PixelShader>
   getResourcePixelShader(const String& resourceName);
@@ -378,6 +431,10 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * The models stored.
    */
   Map<String, SPtr<Model>> m_models;
+  /**
+   * The skeletal meshes stored.
+   */
+  Map<String, SPtr<Skeletal>> m_skeletals;
   /**
    * The skeletal meshes stored.
    */
