@@ -131,6 +131,19 @@ class EE_CORE_EXPORT SkeletalMesh
 
   /**
    * @brief
+   * Getter for the resource name.
+   *
+   * @description
+   * Returns the resource name.
+   *
+   * @return
+   * The resource name.
+   */
+  virtual String
+  getName();
+
+  /**
+   * @brief
    * Getter of the skeletal resource.
    *
    * @return
@@ -173,6 +186,10 @@ class EE_CORE_EXPORT SkeletalMesh
    * The vector of pairs of meshes and texture indices.
    */
   Vector<Pair<SPtr<Mesh>, SPtr<Texture>>> m_meshes;
+  /**
+   * The resource name.
+   */
+  String m_name;
 
   /**
    * The skeletal with the bone data.

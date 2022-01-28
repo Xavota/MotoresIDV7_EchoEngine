@@ -199,7 +199,7 @@ ResourceManager::loadModelFromFile(const String& fileName,
   //  }
   //}
   //else {
-    if (!model->loadFromFile(fileName, textures)) {
+    if (!model->loadFromFile(fileName, resourceName, textures)) {
       return nullptr;
     }
   //}
@@ -222,7 +222,7 @@ ResourceManager::loadModelFromMeshesArray(const Vector<SPtr<Mesh>>& meshes,
   }
 
   SPtr<Model> model = MemoryManager::instance().newPtr<Model>();
-  if (!model->loadFromMeshes(meshes)) {
+  if (!model->loadFromMeshes(meshes, resourceName)) {
     return nullptr;
   }
 
@@ -245,7 +245,7 @@ ResourceManager::loadModelFromMeshesArray(
   }
 
   SPtr<Model> model = MemoryManager::instance().newPtr<Model>();
-  if (!model->loadFromMeshes(meshes)) {
+  if (!model->loadFromMeshes(meshes, resourceName)) {
     return nullptr;
   }
 
@@ -329,7 +329,7 @@ ResourceManager::loadAnimationFromFile(const String& fileName,
   }
 
   SPtr<Animation> anim = MemoryManager::instance().newPtr<Animation>();
-  if (!anim->loadFromFile(fileName, animIndex)) {
+  if (!anim->loadFromFile(fileName, animIndex, resourceName)) {
     return nullptr;
   }
 
@@ -472,5 +472,40 @@ ResourceManager::getResourcePixelShader(const String& resourceName)
     return m_pixelShaders[resourceName];
   }
   return nullptr;
+}
+Map<String, SPtr<Texture>>
+ResourceManager::getAllTextureResources()
+{
+  return m_textures;
+}
+Map<String, SPtr<Model>>
+ResourceManager::getAllModelResources()
+{
+  return m_models;
+}
+Map<String, SPtr<Skeletal>>
+ResourceManager::getAllSkeletalResources()
+{
+  return m_skeletals;
+}
+Map<String, SPtr<SkeletalMesh>>
+ResourceManager::getAllSkeletalMeshResources()
+{
+  return m_skeletalMeshes;
+}
+Map<String, SPtr<Animation>>
+ResourceManager::getAllAnimationResources()
+{
+  return m_animations;
+}
+Map<String, SPtr<VertexShader>>
+ResourceManager::getAllVertexShaderResources()
+{
+  return m_vertexShaders;
+}
+Map<String, SPtr<PixelShader>>
+ResourceManager::getAllPixelShaderResources()
+{
+  return m_pixelShaders;
 }
 }

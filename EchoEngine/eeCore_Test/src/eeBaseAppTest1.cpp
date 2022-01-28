@@ -1,4 +1,13 @@
 #include "eeBaseAppTest1.h"
+
+#pragma comment(lib, "ComDlg32.lib")
+
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
+#include <windows.h>
+#include <windowsx.h>
+#include <commdlg.h>
+
 #include <eeVertexShader.h>
 #include <eePixelShader.h>
 #include <eeGraficsApi.h>
@@ -13,26 +22,26 @@
 #include <eeActor.h>
 #include <eeCTransform.h>
 #include <eeCModel.h>
+#include <eeModel.h>
 #include <eeCRender.h>
 #include <eeCCamera.h>
 #include <eeCSkeletalMesh.h>
 #include <eeSkeletalMesh.h>
 #include <eeCAnimation.h>
+#include <eeAnimation.h>
 
 #include <eeMath.h>
 #include <eeInput.h>
 #include <eeMemoryManager.h>
 #include <eeTime.h>
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <windowsx.h>
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 
 #include <eeDX11GraphicsApi.h>
 
+using namespace std;
 
 using eeEngineSDK::eeConfigurations::screenWidth;
 using eeEngineSDK::eeConfigurations::screenHeight;
@@ -54,6 +63,7 @@ using eeEngineSDK::Object;
 using eeEngineSDK::Model;
 using eeEngineSDK::Mesh;
 using eeEngineSDK::SkeletalMesh;
+using eeEngineSDK::Skeletal;
 using eeEngineSDK::Animation;
 using eeEngineSDK::Vector;
 using eeEngineSDK::Map;
@@ -220,8 +230,142 @@ InitImgUI()
 }
 
 void
+DrawTransformCmp(SPtr<CTransform> trans, int32& uniqueId)
+{
+  ImGui::PushID(uniqueId++);
+  Vector3f actPos = trans->getPosition();
+  float pos[3] = { actPos.x, actPos.y, actPos.z };
+  if (ImGui::DragFloat3("Position", pos, 0.01f, -1000.0f, 1000.0f)) {
+    trans->setPosition(Vector3f(pos[0], pos[1], pos[2]));
+  }
+  ImGui::PopID();
+  ImGui::PushID(uniqueId++);
+  Vector3f actRot = trans->getRotation().getEuclidean();
+  float rot[3] = { actRot.x, actRot.y, actRot.z };
+  if (ImGui::DragFloat3("Rotation", rot, 0.01f, -1000.0f, 1000.0f)) {
+    trans->setRotation(Quaternion(Vector3f(rot[0], rot[1], rot[2])));
+  }
+  ImGui::PopID();
+  ImGui::PushID(uniqueId++);
+  Vector3f actScale = trans->getScale();
+  float scale[3] = { actScale.x, actScale.y, actScale.z };
+  if (ImGui::DragFloat3("Scale", scale, 0.01f, -1000.0f, 1000.0f)) {
+    trans->setScale(Vector3f(scale[0], scale[1], scale[2]));
+  }
+  ImGui::PopID();
+}
+
+void
+DrawAnimationCmp(SPtr<CAnimation> anim, int32& uniqueId)
+{
+  ImGui::PushID(uniqueId++);
+  String animName = anim->getAnimation()->getName();
+  Map<String, SPtr<Animation>> anims =
+  ResourceManager::instance().getAllAnimationResources();
+  int animIndex = 0;
+  int tempIndex = 0;
+  Vector<const char*> names;
+  for (auto& a : anims) {
+    names.push_back(a.first.c_str());
+    if (a.first == animName) {
+      animIndex = tempIndex;
+    }
+    tempIndex++;
+  }
+  if (ImGui::Combo("Animation Resource", &animIndex, names.data(), names.size())) {
+    anim->setAnimation(ResourceManager::instance().getResourceAnimation(names[animIndex]));
+  }
+  ImGui::PopID();
+}
+
+void
+DrawCameraCmp(SPtr<CCamera> cam, int32& uniqueId)
+{
+  ImGui::PushID(uniqueId++);
+  eCAMERA_PROJECTION_TYPE pt = cam->getProjectionType();
+  auto projIndex = static_cast<int>(pt);
+  const char* projTypes[] = { "Orthographic", "Perspective" };
+  if (ImGui::Combo("Projection Types", &projIndex, projTypes, 2)) {
+    cam->setProjectionType(static_cast<eCAMERA_PROJECTION_TYPE>(projIndex));
+  }
+  ImGui::PopID();
+  ImGui::PushID(uniqueId++);
+  float fov = cam->getFovAngle() * Math::k180_OVER_PI;
+  if (ImGui::DragFloat("FOV", &fov, 0.1f, 10.0f, 89.0f)) {
+    cam->setFovAngle(fov * Math::kPI_OVER_180);
+  }
+  ImGui::PopID();
+  ImGui::PushID(uniqueId++);
+  float nearDist = cam->getNearPlane();
+  if (ImGui::DragFloat("Near", &nearDist, 0.01f, .01f, 200.0f)) {
+    cam->setNearPlane(nearDist);
+  }
+  ImGui::PopID();
+  ImGui::PushID(uniqueId++);
+  float farDist = cam->getFarPlane();
+  if (ImGui::DragFloat("Far", &farDist, 0.01f, .01f, 200.0f)) {
+    cam->setFarPlane(farDist);
+  }
+  ImGui::PopID();
+  ImGui::PushID(uniqueId++);
+  bool isMain = cam->isMain();
+  if (ImGui::Checkbox("Main Camera", &isMain)) {
+    cam->setMain(isMain);
+  }
+  ImGui::PopID();
+}
+
+void
+DrawModelCmp(SPtr<CModel> model, int32& uniqueId)
+{
+  ImGui::PushID(uniqueId++);
+  String modelName = model->getModel()->getName();
+  Map<String, SPtr<Model>> models =
+  ResourceManager::instance().getAllModelResources();
+  int modelIndex = 0;
+  int tempIndex = 0;
+  Vector<const char*> names;
+  for (auto& m : models) {
+    names.push_back(m.first.c_str());
+    if (m.first == modelName) {
+      modelIndex = tempIndex;
+    }
+    tempIndex++;
+  }
+  if (ImGui::Combo("Model Resource", &modelIndex, names.data(), names.size())) {
+    model->setModel(ResourceManager::instance().getResourceModel(names[modelIndex]));
+  }
+  ImGui::PopID();
+}
+
+void
+DrawSkeletalMeshCmp(SPtr<CSkeletalMesh> skMesh, int32& uniqueId)
+{
+  ImGui::PushID(uniqueId++);
+  String modelName = skMesh->getModel()->getName();
+  Map<String, SPtr<SkeletalMesh>> skMeshes =
+  ResourceManager::instance().getAllSkeletalMeshResources();
+  int modelIndex = 0;
+  int tempIndex = 0;
+  Vector<const char*> names;
+  for (auto& skm : skMeshes) {
+    names.push_back(skm.first.c_str());
+    if (skm.first == modelName) {
+      modelIndex = tempIndex;
+    }
+    tempIndex++;
+  }
+  if (ImGui::Combo("Skeletal Mesh Resource", &modelIndex, names.data(), names.size())) {
+    skMesh->setModel(ResourceManager::instance().getResourceSkeletalMesh(names[modelIndex]));
+  }
+  ImGui::PopID();
+}
+
+void
 AddChildActorsToUI(SPtr<Actor> act, int32& uniqueId);
 
+SPtr<Actor> actorAddingCmp;
+bool addingCmp = false;
 void
 showActorData(SPtr<Actor> act, int32& uniqueId)
 {
@@ -234,28 +378,46 @@ showActorData(SPtr<Actor> act, int32& uniqueId)
     }
     ImGui::PopID();
 
-    ImGui::PushID(uniqueId++);
-    Vector3f actPos = act->getTransform()->getPosition();
-    float pos[3] = { actPos.x, actPos.y, actPos.z };
-    if (ImGui::DragFloat3("Position", pos, 0.01f, -1000.0f, 1000.0f)) {
-      act->getTransform()->setPosition(Vector3f(pos[0], pos[1], pos[2]));
+    ImGui::Separator();
+    ImGui::Text("Transform");
+    DrawTransformCmp(act->getTransform(), uniqueId);
+    ImGui::Separator();
+    SPtr<CAnimation> animC = act->getComponent<CAnimation>();
+    if (animC) {
+      ImGui::Text("Animation");
+      DrawAnimationCmp(animC, uniqueId);
+      ImGui::Separator();
     }
-    ImGui::PopID();
-    ImGui::PushID(uniqueId++);
-    Vector3f actRot = act->getTransform()->getRotation().getEuclidean();
-    float rot[3] = { actRot.x, actRot.y, actRot.z };
-    if (ImGui::DragFloat3("Rotation", rot, 0.01f, -1000.0f, 1000.0f)) {
-      act->getTransform()->setRotation(Quaternion(Vector3f(rot[0], rot[1], rot[2])));
+    SPtr<CCamera> camC = act->getComponent<CCamera>();
+    if (camC) {
+      ImGui::Text("Camera");
+      DrawCameraCmp(camC, uniqueId);
+      ImGui::Separator();
     }
-    ImGui::PopID();
-    ImGui::PushID(uniqueId++);
-    Vector3f actScale = act->getTransform()->getScale();
-    float scale[3] = { actScale.x, actScale.y, actScale.z };
-    if (ImGui::DragFloat3("Scale", scale, 0.01f, -1000.0f, 1000.0f)) {
-      act->getTransform()->setScale(Vector3f(scale[0], scale[1], scale[2]));
+    SPtr<CModel> modelC = act->getComponent<CModel>();
+    if (modelC) {
+      ImGui::Text("Model");
+      DrawModelCmp(modelC, uniqueId);
+      ImGui::Separator();
     }
-    ImGui::PopID();
+    SPtr<CRender> renderC = act->getComponent<CRender>();
+    if (renderC) {
+      ImGui::Text("Render");
+      ImGui::Separator();
+    }
+    SPtr<CSkeletalMesh> skMeshC = act->getComponent<CSkeletalMesh>();
+    if (skMeshC) {
+      ImGui::Text("Skeletal Mesh");
+      DrawSkeletalMeshCmp(skMeshC, uniqueId);
+      ImGui::Separator();
+    }
 
+    ImGui::PushID(uniqueId++);
+    if (ImGui::Button("AddComponent")) {
+      addingCmp = true;
+      actorAddingCmp = act;
+    }
+    ImGui::PopID();
 
     ImGui::PushID(uniqueId++);
     if (ImGui::TreeNode("Children")) {
@@ -320,10 +482,37 @@ NewActorWindow(bool& added, char* name)
   return false;
 }
 
+String
+loadFileDialog()
+{
+  // common dialog box structure, setting all fields to 0 is important
+  OPENFILENAME ofn = { 0 };
+  TCHAR szFile[260] = { 0 };
+
+  // Initialize remaining fields of OPENFILENAME structure
+  ofn.lStructSize = sizeof(ofn);
+  ofn.hwndOwner = nullptr;
+  ofn.lpstrFile = szFile;
+  ofn.nMaxFile = sizeof(szFile);
+  ofn.lpstrFilter = ("All\0*.*");
+  ofn.nFilterIndex = 1;
+  ofn.lpstrFileTitle = nullptr;
+  ofn.nMaxFileTitle = 0;
+  ofn.lpstrInitialDir = nullptr;
+  ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+  if (GetOpenFileName(&ofn) == TRUE) {
+    return szFile;
+  }
+
+  return "";
+}
+
 void
 UIRender()
 {
   auto& sceneManager = SceneManager::instance();
+  auto& resourceMan = ResourceManager::instance();
 
   ImGui_ImplDX11_NewFrame();
   ImGui_ImplWin32_NewFrame();
@@ -411,6 +600,61 @@ UIRender()
 
   }
   ImGui::End();
+
+  if (ImGui::Begin("Resources")) {
+    if (ImGui::Button("Import Resource")) {
+      String fileName = loadFileDialog();
+
+      if (!fileName.empty()) {
+        resourceMan.importResourceFromFile(fileName);
+      }
+    }
+
+
+    ImGui::Text("Animations");
+    Map<String, SPtr<Animation>> anims = resourceMan.getAllAnimationResources();
+    for (auto& a : anims) {
+      ImGui::Text(("  " + a.first).c_str());
+    }
+
+    ImGui::Text("Models");
+    Map<String, SPtr<Model>> models = resourceMan.getAllModelResources();
+    for (auto& m : models) {
+      ImGui::Text(("  " + m.first).c_str());
+    }
+
+    ImGui::Text("Skeletal Meshes");
+    Map<String, SPtr<SkeletalMesh>> skMeshes =
+    resourceMan.getAllSkeletalMeshResources();
+    for (auto& skm : skMeshes) {
+      ImGui::Text(("  " + skm.first).c_str());
+    }
+
+    ImGui::Text("Skeletons");
+    Map<String, SPtr<Skeletal>> skeletons =
+    resourceMan.getAllSkeletalResources();
+    for (auto& sk : skeletons) {
+      ImGui::Text(("  " + sk.first).c_str());
+    }
+
+    ImGui::Text("Textures");
+    Map<String, SPtr<Texture>> texs = resourceMan.getAllTextureResources();
+    for (auto& t : texs) {
+      ImGui::Text(("  " + t.first).c_str());
+    }
+  }
+  ImGui::End();
+
+  if (addingCmp && actorAddingCmp) {
+    if (ImGui::Begin("Add Component")) {
+      static int cmpIndex = 0;
+      const char* componentNames[] = { "Animation", "Camera", "Model", "Render", "Skeletal Mesh" };
+      if (ImGui::Combo("", &cmpIndex, componentNames, 1)) {
+
+      }
+    }
+    ImGui::End();
+  }
 
   ImGui::ShowDemoWindow();
   
@@ -743,7 +987,7 @@ BaseAppTest1::initResources()
 
 
   resourceManager.importResourceFromFile("Models/Scary_Clown_Walk.fbx");
-
+  
   actor = scene->addActor("AnimTest2");
   actor->getTransform()->setScale({ 0.01f, 0.01f, 0.01f });
   actor->getTransform()->setPosition({ -3.0f, 0.0f, 0.0f });

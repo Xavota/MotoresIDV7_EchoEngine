@@ -14,7 +14,7 @@
 
 namespace eeEngineSDK {
 bool
-Animation::loadFromFile(const String& fileName, int32 animIndex)
+Animation::loadFromFile(const String& fileName, int32 animIndex, const String& name)
 {
   Assimp::Importer* importer = nullptr;
   const aiScene* scene = nullptr;
@@ -35,6 +35,8 @@ Animation::loadFromFile(const String& fileName, int32 animIndex)
   if (!scene->HasAnimations()) {
     return false;
   }
+
+  m_name = name;
 
   m_rootNode = MemoryManager::instance().newPtr<Node>();
   storeNodes(scene->mRootNode, m_rootNode);
@@ -64,7 +66,7 @@ Animation::storeNodes(aiNode* current, SPtr<Node> storage)
 }
 void Animation::storeAnim(aiAnimation* anim)
 {
-  m_name = anim->mName.C_Str();
+  //m_name = anim->mName.C_Str();
   m_duration = static_cast<float>(anim->mDuration);
   m_ticksPerSecond = anim->mTicksPerSecond != 0.0
                    ? static_cast<float>(anim->mTicksPerSecond)

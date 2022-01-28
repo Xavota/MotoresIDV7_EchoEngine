@@ -13,7 +13,7 @@ Object::loadFromFile(const String& fileName,
   // Load from resource manager
 
   m_model = MemoryManager::instance().newPtr<Model>();
-  if (!m_model->loadFromFile(fileName)) {
+  if (!m_model->loadFromFile(fileName, "object")) {
     return false; 
   }
 

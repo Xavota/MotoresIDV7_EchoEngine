@@ -416,6 +416,91 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
   SPtr<PixelShader>
   getResourcePixelShader(const String& resourceName);
 
+  /**
+   * @brief
+   * Gets all textures.
+   *
+   * @description
+   * Gets all stored textures.
+   *
+   * @return
+   * All stored textures.
+   */
+  Map<String, SPtr<Texture>>
+  getAllTextureResources();
+  /**
+   * @brief
+   * Gets all models.
+   *
+   * @description
+   * Gets all stored models.
+   *
+   * @return
+   * All stored models.
+   */
+  Map<String, SPtr<Model>>
+  getAllModelResources();
+  /**
+   * @brief
+   * Gets all skeletons.
+   *
+   * @description
+   * Gets all stored skeletons.
+   *
+   * @return
+   * All stored skeletons.
+   */
+  Map<String, SPtr<Skeletal>>
+  getAllSkeletalResources();
+  /**
+   * @brief
+   * Gets all skeletal meshes.
+   *
+   * @description
+   * Gets all stored skeletal meshes.
+   *
+   * @return
+   * All stored skeletal meshes.
+   */
+  Map<String, SPtr<SkeletalMesh>>
+  getAllSkeletalMeshResources();
+  /**
+   * @brief
+   * Gets all animations.
+   *
+   * @description
+   * Gets all stored animations.
+   *
+   * @return
+   * All stored animations.
+   */
+  Map<String, SPtr<Animation>>
+  getAllAnimationResources();
+  /**
+   * @brief
+   * Gets all vertex shaders.
+   *
+   * @description
+   * Gets all stored vertex shaders.
+   *
+   * @return
+   * All stored vertex shaders.
+   */
+  Map<String, SPtr<VertexShader>>
+  getAllVertexShaderResources();
+  /**
+   * @brief
+   * Gets all pixel shaders.
+   *
+   * @description
+   * Gets all stored pixel shaders.
+   *
+   * @return
+   * All stored pixel shaders.
+   */
+  Map<String, SPtr<PixelShader>>
+  getAllPixelShaderResources();
+
 
 
  private:

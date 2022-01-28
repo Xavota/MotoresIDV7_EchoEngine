@@ -74,7 +74,7 @@ struct AnimNode
  * @brief
  * The animation resource. Contains the bones transformations.
  */
-class Animation
+class EE_CORE_EXPORT Animation
 {
  public:
   /**
@@ -104,7 +104,7 @@ class Animation
    * If it succeeded to load.
    */
   bool
-  loadFromFile(const String& fileName, int32 animIndex);
+  loadFromFile(const String& fileName, int32 animIndex, const String& name);
 
   /**
    * @brief

@@ -262,6 +262,11 @@ SkeletalMesh::setTexture(SPtr<Texture> texture, int32 index)
     m_meshes[index].second = texture;
   }
 }
+String
+SkeletalMesh::getName()
+{
+  return m_name;
+}
 const
 Sphere& SkeletalMesh::getBoundingSphere()
 {

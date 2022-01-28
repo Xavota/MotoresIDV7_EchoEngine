@@ -51,6 +51,7 @@ class EE_CORE_EXPORT Model
    */
   virtual bool
   loadFromFile(const String& fileName,
+               const String& name,
                const Vector<SPtr<Texture>>& textures = {});
   /**
    * @brief
@@ -70,7 +71,8 @@ class EE_CORE_EXPORT Model
    * Weather it succeed or failed to initialize.
    */
   virtual bool
-  loadFromMeshes(Vector<SPtr<Mesh>> meshes);
+  loadFromMeshes(Vector<SPtr<Mesh>> meshes,
+                 const String& name);
   /**
    * @brief
    * Initializes the model.
@@ -85,7 +87,8 @@ class EE_CORE_EXPORT Model
    * Weather it succeed or failed to initialize.
    */
   virtual bool
-  loadFromMeshes(const Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>& meshes);
+  loadFromMeshes(const Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>& meshes,
+                 const String& name);
 
   /**
    * @brief
@@ -125,6 +128,19 @@ class EE_CORE_EXPORT Model
    */
   virtual void
   setTexture(SPtr<Texture> texture, int32 index);
+
+  /**
+   * @brief
+   * Getter for the resource name.
+   *
+   * @description
+   * Returns the resource name.
+   *
+   * @return
+   * The resource name.
+   */
+  virtual String
+  getName();
 
   /**
    * @brief
@@ -196,6 +212,10 @@ class EE_CORE_EXPORT Model
    * The vector of pairs of meshes and texture indices.
    */
   Vector<Pair<SPtr<Mesh>, SPtr<Texture>>> m_meshes;
+  /**
+   * The resource name.
+   */
+  String m_name;
 
   /**
    * A sphere bounding all the model.

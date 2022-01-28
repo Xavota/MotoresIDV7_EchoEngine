@@ -15,6 +15,7 @@
 namespace eeEngineSDK {
 bool
 Model::loadFromFile(const String& fileName,
+                    const String& name,
                     const Vector<SPtr<Texture>>& textures)
 {
   auto* importer = new Assimp::Importer();
@@ -30,23 +31,25 @@ Model::loadFromFile(const String& fileName,
     return false;
   }
 
+  m_name = name;
+
   /*  GET NAME  */
-  String name;
-  bool point = false;
-  auto fileSize = static_cast<int32>(fileName.size());
-  for (int32 i = fileSize - 1; i >= 0; --i) {
-    if (!point) {
-      if (fileName[i] == '.') {
-        point = true;
-      }
-    }
-    else {
-      if (fileName[i] != '/' && fileName[i] != '\\') {
-        name = fileName[i] + name;
-      }
-      else { break; }
-    }
-  }
+  //String name;
+  //bool point = false;
+  //auto fileSize = static_cast<int32>(fileName.size());
+  //for (int32 i = fileSize - 1; i >= 0; --i) {
+  //  if (!point) {
+  //    if (fileName[i] == '.') {
+  //      point = true;
+  //    }
+  //  }
+  //  else {
+  //    if (fileName[i] != '/' && fileName[i] != '\\') {
+  //      name = fileName[i] + name;
+  //    }
+  //    else { break; }
+  //  }
+  //}
 
 
   /*  GET TEXTURES  */
@@ -403,7 +406,8 @@ Model::loadFromFile(const String& fileName,
   return true;
 }
 bool
-Model::loadFromMeshes(Vector<SPtr<Mesh>> meshes)
+Model::loadFromMeshes(Vector<SPtr<Mesh>> meshes,
+                      const String& name)
 {
   if (meshes.empty()) {
     eeOut << "Empty info loading model" << eeEndl;
@@ -426,7 +430,8 @@ Model::loadFromMeshes(Vector<SPtr<Mesh>> meshes)
   return true;
 }
 bool
-Model::loadFromMeshes(const Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>& meshes)
+Model::loadFromMeshes(const Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>& meshes,
+                      const String& name)
 {
   if (meshes.empty()) {
     eeOut << "Empty info loading model" << eeEndl;
@@ -453,6 +458,12 @@ void Model::setTexture(SPtr<Texture> texture, int32 index)
   if (static_cast<int32>(m_meshes.size()) > index) {
     m_meshes[index].second = texture;
   }
+}
+
+String
+Model::getName()
+{
+  return m_name;
 }
 
 const Sphere&
@@ -674,7 +685,8 @@ void Model::initPrimitives()
     Vector<SPtr<Mesh>>
     {
       cubeMesh
-    }
+    },
+    "Cube"
   );
 }
 }
