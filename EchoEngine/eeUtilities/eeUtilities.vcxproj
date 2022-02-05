@@ -186,6 +186,7 @@
     <ClInclude Include="include\eeRectangle.h" />
     <ClInclude Include="include\eeSphere.h" />
     <ClInclude Include="include\eeSTDHeaders.h" />
+    <ClInclude Include="include\eeStringUtilities.h" />
     <ClInclude Include="include\eeTime.h" />
     <ClInclude Include="include\eeVector2.h" />
     <ClInclude Include="include\eeVector3.h" />
@@ -208,7 +209,7 @@
     <ClCompile Include="src\eeQuaternion.cpp" />
     <ClCompile Include="src\eeRectangle.cpp" />
     <ClCompile Include="src\eeSphere.cpp" />
-    <ClCompile Include="src\eeSTDHeaders.cpp" />
+    <ClCompile Include="src\eeStringUtilities.cpp" />
     <ClCompile Include="src\eeTime.cpp" />
     <ClCompile Include="src\eeVector2.cpp" />
     <ClCompile Include="src\eeVector3.cpp" />

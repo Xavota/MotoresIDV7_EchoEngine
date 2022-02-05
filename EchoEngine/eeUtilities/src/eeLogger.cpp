@@ -1,4 +1,7 @@
 #include "eeLogger.h"
+
+#include "eeStringUtilities.h"
+
 #include "eeFile.h"
 
 namespace eeEngineSDK {

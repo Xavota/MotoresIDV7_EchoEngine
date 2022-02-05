@@ -84,8 +84,15 @@
     <ClInclude Include="include\eeLogger.h">
       <Filter>include\Platform</Filter>
     </ClInclude>
-    <ClInclude Include="include\eeColor.h" />
-    <ClInclude Include="include\eeFile.h" />
+    <ClInclude Include="include\eeColor.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeFile.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeStringUtilities.h">
+      <Filter>include\Platform</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eePlatformMath.cpp">
@@ -133,9 +140,6 @@
     <ClCompile Include="src\eeDLLDynamics.cpp">
       <Filter>src\Platform</Filter>
     </ClCompile>
-    <ClCompile Include="src\eeSTDHeaders.cpp">
-      <Filter>src\Platform</Filter>
-    </ClCompile>
     <ClCompile Include="src\eeMemoryManager.cpp">
       <Filter>src\Platform</Filter>
     </ClCompile>
@@ -145,7 +149,14 @@
     <ClCompile Include="src\eeLogger.cpp">
       <Filter>src\Platform</Filter>
     </ClCompile>
-    <ClCompile Include="src\eeColor.cpp" />
-    <ClCompile Include="src\eeFile.cpp" />
+    <ClCompile Include="src\eeColor.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeFile.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeStringUtilities.cpp">
+      <Filter>src\Platform</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

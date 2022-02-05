@@ -1,4 +1,7 @@
 #include "eeVector3.h"
+
+#include "eeStringUtilities.h"
+
 #include "eeMatrix3.h"
 #include "eeMath.h"
 

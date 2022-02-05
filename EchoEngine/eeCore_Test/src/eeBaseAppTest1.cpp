@@ -736,9 +736,6 @@ BaseAppTest1::initResources()
   Model::initPrimitives();
 
 
-
-
-
   /*m_rtv = graphicsApi.createRenderTragetPtr();
   m_rtv->createAsBackBuffer();
 
@@ -746,9 +743,7 @@ BaseAppTest1::initResources()
   m_dsv->create(screenWidth, screenHeight);*/
 
 
-
   graphicsApi.setPrimitiveTopology(ePRIMITIVE_TOPOLOGY::TRIANGLELIST);
-
 
 
   m_SAQ = memoryManager.newPtr<Object>();
@@ -806,7 +801,6 @@ BaseAppTest1::initResources()
     Quaternion(Vector3f(0.0f, 0.0f, 0.0f)),
     Vector3f(1.0f, 1.0f, 1.0f)
   );
-  
   
   
   if (!resourceManager.loadVertexShaderFromFile("Shaders/TestVShader.hlsl",

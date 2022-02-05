@@ -1,4 +1,7 @@
 #include "eeQuaternion.h"
+
+#include "eeStringUtilities.h"
+
 #include "eeVector3.h"
 #include "eeMatrix4.h"
 #include "eeMath.h"

@@ -1,5 +1,6 @@
 #pragma once
 #include "eePrerequisitesUtilities.h"
+#include "eeStringUtilities.h"
 
 #define EE_FORMAT_LOG(s)\
   s + "\t File: " + __FILE__ + "\t Line: "\
