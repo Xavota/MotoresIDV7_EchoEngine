@@ -5,6 +5,8 @@
 #else
 #endif
 
+#include <eeLogger.h>
+
 namespace eeEngineSDK {
 bool
 DLLDynamics::initialize(const String& dllPath)
@@ -13,14 +15,14 @@ DLLDynamics::initialize(const String& dllPath)
   m_dllInstance = reinterpret_cast<void*>(LoadLibrary(dllPath.c_str()));
 
   if (!m_dllInstance) {
-    eeOut << "Could not load Dll" << eeEndl;
+    Logger::instance().ConsoleLog("Could not load Dll");
     return false;
   }
 
 #else
   void* hGetProcIDDLL = dlopen(dllPath.c_str(), RTLD_LAZY);
   if (!hGetProcIDDLL) {
-    eeOut << "Could not load Dll" << eeEndl;
+    Logger::instance().ConsoleLog("Could not load Dll");
     return 1;
   }
 
@@ -38,13 +40,13 @@ DLLDynamics::getFunction(const String& functName)
                                                 functName.c_str()));
 
   if (!function) {
-    eeOut << "Could not load function" << eeEndl;
+    Logger::instance().ConsoleLog("Could not load function");
     return nullptr;
   }
 #else
   foo function = (functionType)dlsym(m_dllInstance, "initPlugin");
   if (!function()) {
-    eeOut << "Could not load function" << eeEndl;
+    Logger::instance().ConsoleLog("Could not load function");
     return nullptr;
   }
 #endif

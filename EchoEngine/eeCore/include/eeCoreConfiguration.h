@@ -20,46 +20,50 @@ namespace eeConfigurations {
 /**
  * The width of the screen.
  */
-int32 screenWidth = 1280;
+const int32 screenWidth = 1280;
 /**
  * The height of the screen.
  */
-int32 screenHeight = 720;
+const int32 screenHeight = 720;
 
 /**
  * The active platform target.
  */
 #ifdef _M_IX86
-String platformTarget = "x86";
+const String platformTarget = "x86";
 #elif defined(_M_X64)
-String platformTarget = "x64";
+const String platformTarget = "x64";
 #endif
 
 /**
  * The name of the active configuration and prefix.
  */
 #ifdef _DEBUG
-String platformConfig = "Debug";
-String platformConfigPrefix = "d";
+const String platformConfig = "Debug";
+const String platformConfigPrefix = "d";
 #else
-String platformConfig = "Release";
-String platformConfigPrefix = "";
+const String platformConfig = "Release";
+const String platformConfigPrefix;
 #endif
 
 /**
  * The current graphics api for use.
  */
 #ifdef DX11
-String graphicsApi = "DX11GraphicsApi";
+const String graphicsApi = "DX11GraphicsApi";
+#elif defined(OGL)
+const String graphicsApi = "OGLGraphicsApi";
+#else
+const String graphicsApi;
 #endif
 
 /**
  * The suffix for dynamic libraries.
  */
-String dynamicLibSuffix = ".dll";
+const String dynamicLibSuffix = ".dll";
 /**
  * The suffix for static libraries.
  */
-String staticLibSuffix = ".lib";
+const String staticLibSuffix = ".lib";
 }
 }

@@ -1,4 +1,7 @@
 #include "eeScene.h"
+
+#include <eeLogger.h>
+
 #include "eeActor.h"
 #include "eeCRender.h"
 #include "eeCModel.h"
@@ -35,8 +38,8 @@ SPtr<Actor>
 Scene::addActor(String name)
 {
   if (m_actors.find(name) != m_actors.end()) {
-    eeOut << "ERROR TRYING TO ADD ACTOR TO SCENE" << eeEndl;
-    eeOut << "Actor already with that name!" << eeEndl;
+    Logger::instance().ConsoleLog("ERROR TRYING TO ADD ACTOR TO SCENE");
+    Logger::instance().ConsoleLog("Actor already with that name!");
     return nullptr;
   }
 
@@ -48,8 +51,8 @@ SPtr<Actor>
 Scene::getActor(String name)
 {
   if (m_actors.find(name) == m_actors.end()) {
-    eeOut << "ERROR TRYING TO GET ACTOR" << eeEndl;
-    eeOut << "Not an actor with that name!" << eeEndl;
+    Logger::instance().ConsoleLog("ERROR TRYING TO GET ACTOR");
+    Logger::instance().ConsoleLog("Not an actor with that name!");
     return nullptr;
   }
   return m_actors[name];

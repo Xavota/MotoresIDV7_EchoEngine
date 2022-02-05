@@ -1,4 +1,8 @@
 #include "eeObject.h"
+
+#include <eeLogger.h>
+
+
 #include "eeGraficsApi.h"
 #include "eeConstantBuffer.h"
 #include "eeMatrix4.h"
@@ -36,7 +40,7 @@ Object::loadFromModel(SPtr<Model> model,
                       Vector3f scale)
 {
   if (!model) {
-    eeOut << "There is no model here..." << eeEndl;
+    Logger::instance().ConsoleLog("There is no model here...");
     return false;
   }
 

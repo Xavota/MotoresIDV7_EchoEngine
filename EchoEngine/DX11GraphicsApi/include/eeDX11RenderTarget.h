@@ -96,17 +96,11 @@ class DX11RenderTarget : public RenderTarget
    * @description
    * Cleans the render target with a background color.
    *
-   * @parm r
-   * R component of the background color.
-   * @param g
-   * G component of the background color.
-   * @param b
-   * B component of the background color.
-   * @param a
-   * A component of the background color.
+   * @parm screenColor
+   * The background color.
    */
   void
-  clean(float r, float g, float b, float a) override;
+  clean(Color screenColor) override;
 
   /**
    * @brief

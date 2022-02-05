@@ -1,4 +1,7 @@
 #include "eeRectangle.h"
+
+#include <eeLogger.h>
+
 #include "eeMath.h"
 
 namespace eeEngineSDK {
@@ -18,7 +21,7 @@ Rectangle::Rectangle(const Vector2f& A, const Vector2f& size)
   //EE_ASSERT(size.x >= 0.0f && size.y >= 0.0f && size.z >= 0.0f
   //       && "Size can't be negative!");
   if (size.x < 0.0f || size.y < 0.0f) {
-    eeOut << "Size can't be negative!" << eeEndl;
+    Logger::instance().ConsoleLog("Size can't be negative!");
   }
 #endif
 }
@@ -34,14 +37,11 @@ Rectangle::Rectangle(const float Ax,
   //EE_ASSERT(size.x >= 0.0f && size.y >= 0.0f && size.z >= 0.0f
   //       && "Size can't be negative!");
   if (width < 0.0f || height < 0.0f) {
-    eeOut << "Size can't be negative!" << eeEndl;
+    Logger::instance().ConsoleLog("Size can't be negative!");
   }
 #endif
 }
 
-Rectangle::~Rectangle()
-{
-}
 bool
 Rectangle::intersects(const Vector2f& point) const
 {

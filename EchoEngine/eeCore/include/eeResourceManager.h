@@ -13,6 +13,9 @@
 
 #pragma once
 #include "eePrerequisitesCore.h"
+
+#include <eeLogger.h>
+
 #include "eeTexture.h"
 #include "eeModel.h"
 #include "eeMesh.h"
@@ -544,7 +547,7 @@ ResourceManager::loadMeshFromVertexArray(const Vector<V>& vertices,
                                          const String resourceName)
 {
   if (m_meshes.find(resourceName) != m_meshes.end()) {
-    eeOut << "Resource already with this name" << eeEndl;
+    Logger::instance().ConsoleLog("Resource already with this name");
     return nullptr;
   }
 

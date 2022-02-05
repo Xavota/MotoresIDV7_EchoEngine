@@ -116,13 +116,12 @@ DX11RenderTarget::set(SPtr<DepthStencil> stencil)
 }
 
 void
-DX11RenderTarget::clean(float r, float g, float b, float a)
+DX11RenderTarget::clean(Color screenColor)
 {
   const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
-  float clearColor[4] = { r,g,b,a };
-  basics->m_deviceContext->ClearRenderTargetView(m_renderTarget, clearColor);
+  basics->m_deviceContext->ClearRenderTargetView(m_renderTarget, screenColor.rgba);
 }
 
 void

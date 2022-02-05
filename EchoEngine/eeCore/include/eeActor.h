@@ -12,6 +12,9 @@
 
 #pragma once
 #include <memory>
+
+#include <eeLogger.h>
+
 #include "eePrerequisitesCore.h"
 #include "eeComponent.h"
 
@@ -225,9 +228,9 @@ Actor::addComponent()
 {
   T c; // This is to disable warning "constant logic expression"
   if (c.getType() == eCOMPONENT_TYPE::kTRANSFORM) {
-    eeOut << "Things can't be in more than one place, kido." << eeEndl;
-    eeOut << "ERROR ADDING TRANSFORM COMPONENT TO ACTOR." << eeEndl;
-    eeOut << "CANNOT ADD A TRANSFORM COMPONENT" << eeEndl;
+    Logger::instance().ConsoleLog("Things can't be in more than one place, kido.");
+    Logger::instance().ConsoleLog("ERROR ADDING TRANSFORM COMPONENT TO ACTOR.");
+    Logger::instance().ConsoleLog("CANNOT ADD A TRANSFORM COMPONENT");
     return;
   }
   auto cmpIndex = static_cast<int32>(m_components.size());

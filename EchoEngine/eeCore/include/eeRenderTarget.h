@@ -14,6 +14,8 @@
 #pragma once
 #include "eePrerequisitesCore.h"
 
+#include "eeColor.h"
+
 namespace eeEngineSDK {
 /**
  * @brief
@@ -93,17 +95,11 @@ class EE_CORE_EXPORT RenderTarget
    * @description
    * Cleans the render target with a background color.
    *
-   * @parm r
-   * R component of the background color.
-   * @param g
-   * G component of the background color.
-   * @param b
-   * B component of the background color.
-   * @param a
-   * A component of the background color.
+   * @parm screenColor
+   * The background color.
    */
   virtual void
-  clean(float /*r*/, float /*g*/, float /*b*/, float /*a*/) {}
+  clean(Color /*screenColor*/) {}
 
   /**
    * @brief

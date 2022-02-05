@@ -14,6 +14,7 @@
 #pragma once
 #include "eePrerequisitesCore.h"
 #include <eeModule.h>
+#include <eeMemoryManager.h>
 #include "eeTexture.h"
 #include "eeVertexShader.h"
 #include "eePixelShader.h"
@@ -23,6 +24,8 @@
 #include "eeRenderTarget.h"
 #include "eeDepthStencil.h"
 #include "eeRasterizerState.h"
+
+#include "eeColor.h"
 
 namespace eeEngineSDK {
 /**
@@ -73,6 +76,19 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
 
   /**
    * @brief
+   * Initializes the basics for the api.
+   *
+   * @description
+   * Initializes the basics depending on the graphics api active.
+   *
+   * @return
+   * Weather it succeed or failed to initialize.
+   */
+  virtual bool
+  initializeBasics() { return false; }
+
+  /**
+   * @brief
    * Initializes the screen for the api.
    *
    * @description
@@ -85,7 +101,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * Weather it succeed or failed to initialize.
    */
   virtual bool
-  initializeScreen(void* /*callback*/){return true;}
+  initializeScreen(void* /*callback*/);
 
   /**
    * @brief
@@ -102,7 +118,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * Blue part of the color. From 0 to 1 inclusive.
    */
   virtual void
-  clearRenderTargets(Vector<SPtr<RenderTarget>> /*rtvs*/, float /*rgba*/[4]){};
+  clearRenderTargets(Vector<SPtr<RenderTarget>> rtvs, Color /*screenColor*/) {};
 
   /**
    * @brief
@@ -563,8 +579,20 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * A void pointer containing the window that the api is using.
    */
   FORCEINLINE virtual void*
-  getWindow() const { return nullptr; }
-
+  getWindow() { return nullptr; }
+  
+  /**
+   * @brief
+   * Resize the window for the api.
+   *
+   * @description
+   * Resize the window and everything involving.
+   *
+   * @param newSize
+   * The new size for the window.
+   */
+  virtual void
+  resizeWindow(Vector2i newSize);
 
   /**
    * @brief
@@ -648,6 +676,15 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   virtual void
   drawIndexed(int32 /*indicesCount*/) const {}
 
+
+  ///*
+  //* The back buffer.
+  //*/
+  //SPtr<RenderTarget> m_rtv;
+  ///*
+  //* The depth stencil of the back buffer
+  //*/
+  //SPtr<DepthStencil> m_dsv;
 
   /**
    * All render actors for a frame.

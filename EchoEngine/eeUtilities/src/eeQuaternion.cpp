@@ -223,7 +223,7 @@ Quaternion Quaternion::interpolate(const Quaternion& a, const Quaternion& b, flo
 
   // adjust signs (if necessary)
   Quaternion end = b;
-  if (cosom < 0.0)
+  if (cosom < 0.0f)
   {
     cosom = -cosom;
     end.x = -end.x;   // Reverse all signs
@@ -234,19 +234,19 @@ Quaternion Quaternion::interpolate(const Quaternion& a, const Quaternion& b, flo
 
   // Calculate coefficients
   float sclp, sclq;
-  if ((1.0 - cosom) > 0.0001) // 0.0001 -> some epsillon
+  if ((1.0f - cosom) > 0.0001f) // 0.0001 -> some epsillon
   {
     // Standard case (slerp)
     float omega, sinom;
-    omega = std::acos(cosom); // extract theta from dot product's cos theta
-    sinom = std::sin(omega);
-    sclp = std::sin((1.0 - t) * omega) / sinom;
-    sclq = std::sin(t * omega) / sinom;
+    omega = Math::acos(cosom); // extract theta from dot product's cos theta
+    sinom = Math::sin(omega);
+    sclp = Math::sin((1.0f - t) * omega) / sinom;
+    sclq = Math::sin(t * omega) / sinom;
   }
   else
   {
     // Very close, do linear interp (because it's faster)
-    sclp = 1.0 - t;
+    sclp = 1.0f - t;
     sclq = t;
   }
 

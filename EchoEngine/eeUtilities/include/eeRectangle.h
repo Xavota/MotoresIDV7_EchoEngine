@@ -69,7 +69,7 @@ class EE_UTILITY_EXPORT Rectangle
    * @description
    * Frees any memory that could have been allocated.
    */
-  ~Rectangle();
+  ~Rectangle() = default;
 
   /**
    * @brief

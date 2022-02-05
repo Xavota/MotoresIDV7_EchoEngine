@@ -97,6 +97,19 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
 
   /**
    * @brief
+   * Initializes the basics for the api.
+   *
+   * @description
+   * Initializes the basics depending on the graphics api active.
+   *
+   * @return
+   * Weather it succeed or failed to initialize.
+   */
+  bool
+  initializeBasics() override;
+
+  /**
+   * @brief
    * Initializes the screen for the api.
    *
    * @description
@@ -121,7 +134,7 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
    * The color to clean with in RGBA. From 0 to 1 inclusive.
    */
   void
-  clearRenderTargets(Vector<SPtr<RenderTarget>> rtvs, float rgba[4]) override;
+  clearRenderTargets(Vector<SPtr<RenderTarget>> rtvs, Color screenColor) override;
 
   /**
    * @brief
@@ -541,7 +554,20 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
    * A void pointer containing the window that the api is using.
    */
   FORCEINLINE void*
-  getWindow() const override { return m_win; }
+  getWindow() override { return m_win; }
+  
+  /**
+   * @brief
+   * Resize the window for the api.
+   *
+   * @description
+   * Resize the window and everything involving.
+   *
+   * @param newSize
+   * The new size for the window.
+   */
+  void
+  resizeWindow(Vector2i newSize) override;
 
  protected:
   /**

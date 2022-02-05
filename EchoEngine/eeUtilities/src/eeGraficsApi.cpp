@@ -1,4 +1,5 @@
 #include "eeGraficsApi.h"
+#include "eeCoreConfiguration.h"
 #include "eeResourceManager.h"
 #include "eeVertexShader.h"
 #include "eePixelShader.h"
@@ -16,6 +17,28 @@
 namespace eeEngineSDK {
 bool
 GraphicsApi::initialize()
+{
+  //auto& graphicsApi = GraphicsApi::instance();
+  //
+  //m_rtv = graphicsApi.createRenderTragetPtr();
+  //m_rtv->createAsBackBuffer();
+  //
+  //m_dsv = graphicsApi.createDepthStencilPtr();
+  //m_dsv->create(eeConfigurations::screenWidth, eeConfigurations::screenHeight);
+
+  ViewportDesc desc;
+  memset(&desc, 0, sizeof(desc));
+  desc.maxDepth = 1.0f;
+  desc.minDepth = 0;
+  desc.width = static_cast<float>(eeConfigurations::screenWidth);
+  desc.height = static_cast<float>(eeConfigurations::screenHeight);
+  desc.topLeftX = 0;
+  desc.topLeftY = 0;
+  setViewports({ desc });
+
+  return true;
+}
+bool GraphicsApi::initializeScreen(void*)
 {
   return true;
 }
@@ -113,13 +136,13 @@ GraphicsApi::drawObject(SPtr<Actor> act)
   const SPtr<CSkeletalMesh> skeletal = act->getComponent<CSkeletalMesh>();
   if (skeletal && skeletal->getModel())
   {
-    const SPtr<SkeletalMesh> model = skeletal->getModel();
-    meshes = model->getMeshes();
+    const SPtr<SkeletalMesh> skModel = skeletal->getModel();
+    meshes = skModel->getMeshes();
     meshesCount = static_cast<uint32>(meshes.size());
 
     transform->getModelBuffer()->setInVertex(0u);
 
-    const SPtr<Skeletal> skeleton = model->getSkeletal();
+    const SPtr<Skeletal> skeleton = skModel->getSkeletal();
     for (int32 i = 0; i < meshesCount; ++i) {
       if (!meshes[i].first) { break; }
 
@@ -141,6 +164,18 @@ GraphicsApi::drawObject(SPtr<Actor> act)
 void
 GraphicsApi::release()
 {
+}
+void GraphicsApi::resizeWindow(Vector2i newSize)
+{
+  ViewportDesc desc;
+  memset(&desc, 0, sizeof(desc));
+  desc.maxDepth = 1.0f;
+  desc.minDepth = 0;
+  desc.width = static_cast<float>(newSize.x);
+  desc.height = static_cast<float>(newSize.y);
+  desc.topLeftX = 0;
+  desc.topLeftY = 0;
+  setViewports({ desc });
 }
 void
 GraphicsApi::addActorToRenderFrame(SPtr<Actor> actor)

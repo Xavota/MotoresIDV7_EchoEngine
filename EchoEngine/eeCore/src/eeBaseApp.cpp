@@ -1,4 +1,7 @@
 #include "eeBaseApp.h"
+
+#include <eeLogger.h>
+
 #include "eeCoreConfiguration.h"
 #include "eeDLLDynamics.h"
 #include "eeGraficsApi.h"
@@ -31,11 +34,11 @@ BaseApp::run(void* callback)
 int32
 BaseApp::mainLoop(void* callback)
 {
-  if (!init(callback)) {
+  if (!initSystems()) {
     destroy();
     return 1;
   }
-  if (!initSystems()) {
+  if (!init(callback)) {
     destroy();
     return 1;
   }
@@ -67,6 +70,9 @@ BaseApp::init(void* callback)
   if (!graphicsApi.initializeScreen(callback)) {
     return false;
   }
+  if (!graphicsApi.initializeBasics()) {
+    return false;
+  }
   if (!graphicsApi.initialize()) {
     return false;
   }
@@ -77,6 +83,7 @@ BaseApp::init(void* callback)
 bool
 BaseApp::initSystems()
 {
+  Logger::startUp();
   ResourceManager::startUp();
   Input::startUp();
   SceneManager::startUp();
@@ -115,5 +122,6 @@ BaseApp::destroy()
   SceneManager::shutDown();
   MemoryManager::shutDown();
   Time::shutDown();
+  Logger::shutDown();
 }
 }

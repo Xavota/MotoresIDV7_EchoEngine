@@ -1,16 +1,19 @@
 #include "eeAnimation.h"
 
-#include "eeSkeletalMesh.h"
-#include "eeSkeletal.h"
-
-#include <eeMemoryManager.h>
-#include <eeMath.h>
-
 #pragma warning(push, 0)
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #pragma warning(pop)
+
+#include <eeLogger.h>
+#include <eeMemoryManager.h>
+#include <eeMath.h>
+
+#include "eeSkeletalMesh.h"
+#include "eeSkeletal.h"
+
+
 
 namespace eeEngineSDK {
 bool
@@ -27,7 +30,7 @@ Animation::loadFromFile(const String& fileName, int32 animIndex, const String& n
     | aiProcess_ConvertToLeftHanded
   );
   if (!scene) {
-    eeOut << importer->GetErrorString() << eeEndl;
+    Logger::instance().ConsoleLog(importer->GetErrorString());
     delete importer;
     return false;
   }

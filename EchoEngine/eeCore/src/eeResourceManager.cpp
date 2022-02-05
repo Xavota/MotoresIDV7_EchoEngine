@@ -5,7 +5,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #pragma warning(pop)
-
+#include <eeLogger.h>
 #include <eeMemoryManager.h>
 #include <eeMath.h>
 
@@ -76,7 +76,7 @@ ResourceManager::importResourceFromFile(const String& fileName)
     );
 
     if (!scene) {
-      eeOut << importer->GetErrorString() << eeEndl;
+      Logger::instance().ConsoleLog(importer->GetErrorString());
       delete importer;
       return false;
     }
@@ -98,7 +98,7 @@ ResourceManager::importResourceFromFile(const String& fileName)
       }
     }
     if (scene->HasAnimations()) {
-      for (int32 i = 0; i < scene->mNumAnimations; ++i) {
+      for (uint32 i = 0; i < scene->mNumAnimations; ++i) {
         loadAnimationFromFile(fileName,
                          name + "_anim_" + scene->mAnimations[i]->mName.C_Str(),
                          i);
@@ -115,13 +115,13 @@ ResourceManager::importResourceFromFile(const String& fileName)
     );
 
     if (!scene) {
-      eeOut << importer->GetErrorString() << eeEndl;
+      Logger::instance().ConsoleLog(importer->GetErrorString());
       delete importer;
       return false;
     }
 
     if (scene->HasAnimations()) {
-      for (int32 i = 0; i < scene->mNumAnimations; ++i) {
+      for (uint32 i = 0; i < scene->mNumAnimations; ++i) {
         loadAnimationFromFile(fileName,
           name + "_anim_" + scene->mAnimations[i]->mName.C_Str(),
           i);
@@ -136,12 +136,12 @@ ResourceManager::loadTextureFromFile(const String& fileName,
                                      SamplerStateDesc desc)
 {
   if (m_meshes.find(resourceName) != m_meshes.end()) {
-    eeOut << "Resource already with this name" << eeEndl;
+    Logger::instance().ConsoleLog("Resource already with this name");
     return nullptr;
   }
 
   if (fileName.empty()) {
-    eeOut << "Empty info loading texture" << eeEndl;
+    Logger::instance().ConsoleLog("Empty info loading texture");
     return nullptr;
   }
 
@@ -159,12 +159,12 @@ ResourceManager::loadModelFromFile(const String& fileName,
                                    const Vector<SPtr<Texture>>& textures)
 {
   if (m_meshes.find(resourceName) != m_meshes.end()) {
-    eeOut << "Resource already with this name" << eeEndl;
+    Logger::instance().ConsoleLog("Resource already with this name");
     return nullptr;
   }
 
   if (fileName.empty()) {
-    eeOut << "Empty info loading model" << eeEndl;
+    Logger::instance().ConsoleLog("Empty info loading model");
     return nullptr;
   }
 
@@ -177,7 +177,7 @@ ResourceManager::loadModelFromFile(const String& fileName,
   );
 
   if (!scene) {
-    eeOut << importer->GetErrorString() << eeEndl;
+    Logger::instance().ConsoleLog(importer->GetErrorString());
     delete importer;
     return nullptr;
   }
@@ -212,12 +212,12 @@ ResourceManager::loadModelFromMeshesArray(const Vector<SPtr<Mesh>>& meshes,
                                           const String resourceName)
 {
   if (m_meshes.find(resourceName) != m_meshes.end()) {
-    eeOut << "Resource already with this name" << eeEndl;
+    Logger::instance().ConsoleLog("Resource already with this name");
     return nullptr;
   }
 
   if (meshes.empty()) {
-    eeOut << "Empty info loading model" << eeEndl;
+    Logger::instance().ConsoleLog("Empty info loading model");
     return nullptr;
   }
 
@@ -235,12 +235,12 @@ ResourceManager::loadModelFromMeshesArray(
   const String resourceName)
 {
   if (m_meshes.find(resourceName) != m_meshes.end()) {
-    eeOut << "Resource already with this name" << eeEndl;
+    Logger::instance().ConsoleLog("Resource already with this name");
     return nullptr;
   }
 
   if (meshes.empty()) {
-    eeOut << "Empty info loading model" << eeEndl;
+    Logger::instance().ConsoleLog("Empty info loading model");
     return nullptr;
   }
 
@@ -258,12 +258,12 @@ ResourceManager::loadSkeletalFromFile(const String& fileName,
                                       const String& resourceName)
 {
   if (m_skeletals.find(resourceName) != m_skeletals.end()) {
-    eeOut << "Resource already with this name" << eeEndl;
+    Logger::instance().ConsoleLog("Resource already with this name");
     return nullptr;
   }
 
   if (fileName.empty()) {
-    eeOut << "Empty info loading skeletal" << eeEndl;
+    Logger::instance().ConsoleLog("Empty info loading skeletal");
     return nullptr;
   }
 
@@ -283,12 +283,12 @@ ResourceManager::loadSkeletalMeshFromFile(const String& fileName,
                                           const Vector<SPtr<Texture>>& textures)
 {
   if (m_skeletalMeshes.find(resourceName) != m_skeletalMeshes.end()) {
-    eeOut << "Resource already with this name" << eeEndl;
+    Logger::instance().ConsoleLog("Resource already with this name");
     return nullptr;
   }
 
   if (fileName.empty()) {
-    eeOut << "Empty info loading skeletal mesh" << eeEndl;
+    Logger::instance().ConsoleLog("Empty info loading skeletal mesh");
     return nullptr;
   }
 
@@ -319,12 +319,12 @@ ResourceManager::loadAnimationFromFile(const String& fileName,
                                        const int32 animIndex)
 {
   if (m_animations.find(resourceName) != m_animations.end()) {
-    eeOut << "Resource already with this name" << eeEndl;
+    Logger::instance().ConsoleLog("Resource already with this name");
     return nullptr;
   }
 
   if (fileName.empty()) {
-    eeOut << "Empty info loading animation" << eeEndl;
+    Logger::instance().ConsoleLog("Empty info loading animation");
     return nullptr;
   }
 
@@ -342,12 +342,13 @@ ResourceManager::loadVertexShaderFromFile(const String& fileName,
                                           const String& resourceName)
 {
   if (m_vertexShaders.find(resourceName) != m_vertexShaders.end()) {
-    eeOut << "Resource already with this name" << eeEndl;
+    Logger::instance().ConsoleLog("Resource already with this name");
     return nullptr;
   }
 
   SPtr<VertexShader> shader = GraphicsApi::instance().createVertexShaderPtr();
   if (!shader->compileFromFile(fileName)) {
+    Logger::instance().ConsoleLog("Error compiling shader");
     return nullptr;
   }
 
@@ -360,12 +361,13 @@ ResourceManager::loadVertexShaderFromString(const String& shaderString,
                                             const String& resourceName)
 {
   if (m_vertexShaders.find(resourceName) != m_vertexShaders.end()) {
-    eeOut << "Resource already with this name" << eeEndl;
+    Logger::instance().ConsoleLog("Resource already with this name");
     return nullptr;
   }
 
   SPtr<VertexShader> shader = GraphicsApi::instance().createVertexShaderPtr();
   if (!shader->compileFromString(shaderString)) {
+    Logger::instance().ConsoleLog("Error compiling shader");
     return nullptr;
   }
 
@@ -378,12 +380,13 @@ ResourceManager::loadPixelShaderFromFile(const String& fileName,
                                          const String& resourceName)
 {
   if (m_pixelShaders.find(resourceName) != m_pixelShaders.end()) {
-    eeOut << "Resource already with this name" << eeEndl;
+    Logger::instance().ConsoleLog("Resource already with this name");
     return nullptr;
   }
 
   SPtr<PixelShader> shader = GraphicsApi::instance().createPixelShaderPtr();
   if (!shader->compileFromFile(fileName)) {
+    Logger::instance().ConsoleLog("Error compiling shader");
     return nullptr;
   }
 
@@ -396,12 +399,13 @@ ResourceManager::loadPixelShaderFromString(const String& shaderString,
                                            const String& resourceName)
 {
   if (m_pixelShaders.find(resourceName) != m_pixelShaders.end()) {
-    eeOut << "Resource already with this name" << eeEndl;
+    Logger::instance().ConsoleLog("Resource already with this name");
     return nullptr;
   }
 
   SPtr<PixelShader> shader = GraphicsApi::instance().createPixelShaderPtr();
   if (!shader->compileFromString(shaderString)) {
+    Logger::instance().ConsoleLog("Error compiling shader");
     return nullptr;
   }
 

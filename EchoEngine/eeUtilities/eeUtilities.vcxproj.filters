@@ -81,6 +81,11 @@
     <ClInclude Include="include\eeTime.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\eeLogger.h">
+      <Filter>include\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeColor.h" />
+    <ClInclude Include="include\eeFile.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eePlatformMath.cpp">
@@ -137,5 +142,10 @@
     <ClCompile Include="src\eeTime.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\eeLogger.cpp">
+      <Filter>src\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeColor.cpp" />
+    <ClCompile Include="src\eeFile.cpp" />
   </ItemGroup>
 </Project>

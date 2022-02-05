@@ -8,6 +8,7 @@
 #include <windowsx.h>
 #include <commdlg.h>
 
+#include <eeLogger.h>
 #include <eeVertexShader.h>
 #include <eePixelShader.h>
 #include <eeGraficsApi.h>
@@ -35,6 +36,8 @@
 #include <eeMemoryManager.h>
 #include <eeTime.h>
 
+#include <eeColor.h>
+
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
@@ -47,6 +50,7 @@ using eeEngineSDK::eeConfigurations::screenWidth;
 using eeEngineSDK::eeConfigurations::screenHeight;
 
 
+using eeEngineSDK::Logger;
 using eeEngineSDK::GraphicsApi;
 using eeEngineSDK::ResourceManager;
 using eeEngineSDK::SceneManager;
@@ -55,6 +59,7 @@ using eeEngineSDK::Vector4f;
 using eeEngineSDK::Vector3f;
 using eeEngineSDK::Vector2f;
 using eeEngineSDK::Vector2i;
+using eeEngineSDK::Color;
 using eeEngineSDK::Matrix4f;
 using eeEngineSDK::Quaternion;
 using eeEngineSDK::SimplexVertex;
@@ -200,6 +205,25 @@ WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     inputMan.setMousePosition({ GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) });
     break;
 
+  //case WM_SIZE:
+  //  //if (g_pd3dDevice != NULL && _wParam != SIZE_MINIMIZED)
+  //{
+  //  static bool _first = true;
+  //  if (!_first)
+  //  {
+  //    /*Update viewport*/
+  //    int width = 0, height = 0;
+  //    RECT rc;
+  //    GetClientRect(reinterpret_cast<HWND>(GraphicsApi::instance().getWindow()), &rc);
+  //    width = rc.right - rc.left;
+  //    height = rc.bottom - rc.top;
+  //    GraphicsApi::instance().resizeWindow({width, height});
+  //  }
+  //  _first = false;
+  //}
+  //return 0;
+  //break;
+
   default:
     return DefWindowProc(hWnd, message, wParam, lParam);
   }
@@ -272,7 +296,10 @@ DrawAnimationCmp(SPtr<CAnimation> anim, int32& uniqueId)
     }
     tempIndex++;
   }
-  if (ImGui::Combo("Animation Resource", &animIndex, names.data(), names.size())) {
+  if (ImGui::Combo("Animation Resource",
+                   &animIndex,
+                   names.data(),
+                   static_cast<int32>(names.size()))) {
     anim->setAnimation(ResourceManager::instance().getResourceAnimation(names[animIndex]));
   }
   ImGui::PopID();
@@ -332,7 +359,10 @@ DrawModelCmp(SPtr<CModel> model, int32& uniqueId)
     }
     tempIndex++;
   }
-  if (ImGui::Combo("Model Resource", &modelIndex, names.data(), names.size())) {
+  if (ImGui::Combo("Model Resource",
+                   &modelIndex,
+                   names.data(),
+                   static_cast<uint32>(names.size()))) {
     model->setModel(ResourceManager::instance().getResourceModel(names[modelIndex]));
   }
   ImGui::PopID();
@@ -355,7 +385,10 @@ DrawSkeletalMeshCmp(SPtr<CSkeletalMesh> skMesh, int32& uniqueId)
     }
     tempIndex++;
   }
-  if (ImGui::Combo("Skeletal Mesh Resource", &modelIndex, names.data(), names.size())) {
+  if (ImGui::Combo("Skeletal Mesh Resource",
+                   &modelIndex,
+                   names.data(),
+                   static_cast<int32>(names.size()))) {
     skMesh->setModel(ResourceManager::instance().getResourceSkeletalMesh(names[modelIndex]));
   }
   ImGui::PopID();
@@ -666,7 +699,7 @@ UIRender()
 
 
 int32
-BaseAppTest1::run(void* callback)
+BaseAppTest1::run(void* /*callback*/)
 {
   return BaseApp::run(WndProc);
 }
@@ -711,16 +744,6 @@ BaseAppTest1::initResources()
 
   m_dsv = graphicsApi.createDepthStencilPtr();
   m_dsv->create(screenWidth, screenHeight);
-
-  ViewportDesc desc;
-  memset(&desc, 0, sizeof(desc));
-  desc.width = static_cast<float>(screenWidth);
-  desc.height = static_cast<float>(screenHeight);
-  desc.maxDepth = 0;
-  desc.minDepth = 0;
-  desc.topLeftX = 0;
-  desc.topLeftY = 0;
-  graphicsApi.setViewports({ desc });
 
 
 
@@ -1015,6 +1038,11 @@ BaseAppTest1::update()
   auto& sceneManager = SceneManager::instance();
   auto& timeManager = Time::instance();
 
+  Logger::instance().FileLog(EE_FORMAT_LOG(String("Test log")),
+  "C:/Users/Mara May/Documents/GitHub/MotoresIDV7_EchoEngine/EchoEngine/bin/log"
+    "s/testLog.txt", eeEngineSDK::WarningLevel::kDebug);
+
+
   BaseApp::update();
 
 
@@ -1130,7 +1158,7 @@ BaseAppTest1::render()
 
 
   Vector<SPtr<CCamera>> activeCams = graphicsApi.getActiveCameras();
-  float color[4] = { 0.3f, 0.5f, 0.8f, 1.0f };
+  Color color{ 0.3f, 0.5f, 0.8f, 1.0f };
 
 
 

@@ -104,8 +104,8 @@ class Skeletal
    * @return
    * Bone data.
    */
-  const Vector<Bone>&
-  getBonesDataForMesh(int32 index) const;
+  bool
+  getBonesDataForMesh(int32 index, Vector<Bone>& outBoneData) const;
 
   /**
    * @brief

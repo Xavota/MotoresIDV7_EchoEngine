@@ -1,4 +1,7 @@
 #include "eeModel.h"
+
+#include <eeLogger.h>
+
 #include "eeResourceManager.h"
 #include <eeQuaternion.h>
 #include <eeMath.h>
@@ -26,7 +29,7 @@ Model::loadFromFile(const String& fileName,
     | aiProcess_ConvertToLeftHanded
   );
   if (!scene) {
-    eeOut << importer->GetErrorString() << eeEndl;
+    Logger::instance().ConsoleLog(importer->GetErrorString());
     delete importer;
     return false;
   }
@@ -410,9 +413,11 @@ Model::loadFromMeshes(Vector<SPtr<Mesh>> meshes,
                       const String& name)
 {
   if (meshes.empty()) {
-    eeOut << "Empty info loading model" << eeEndl;
+    Logger::instance().ConsoleLog("Empty info loading model");
     return false;
   }
+
+  m_name = name;
 
   auto& resourseManager = ResourceManager::instance();
 
@@ -434,9 +439,11 @@ Model::loadFromMeshes(const Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>& meshes,
                       const String& name)
 {
   if (meshes.empty()) {
-    eeOut << "Empty info loading model" << eeEndl;
+    Logger::instance().ConsoleLog("Empty info loading model");
     return false;
   }
+
+  m_name = name;
 
   m_meshes = meshes;
   return true;

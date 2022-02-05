@@ -6,6 +6,8 @@
 #include <assimp/postprocess.h>
 #pragma warning(pop)
 
+#include <eeLogger.h>
+
 #include <eeMemoryManager.h>
 
 #include <eeQuaternion.h>
@@ -31,7 +33,7 @@ SkeletalMesh::loadFromFile(const String& fileName,
   );
 
   if (!scene) {
-    eeOut << importer->GetErrorString() << eeEndl;
+    Logger::instance().ConsoleLog(importer->GetErrorString());
     delete importer;
     return false;
   }
@@ -141,34 +143,37 @@ SkeletalMesh::loadFromFile(const String& fileName,
       vertices[j * 3 + 2].Tangente.z = tangent.z;
     }/**/
 
-    const Vector<Bone>& bones = skMesh->getBonesDataForMesh(i);
-
-    if (!bones.empty()) {
-      for (uint32 j = 0; j < bones.size(); j++) {
-        Bone bone = bones[j];
-        bool yes = false;
-        for (auto vw : bone.m_vertexWeights) {
-          yes = false;
-          for (uint32 l = 0; l < 16; l++) {
-            if (vertices[vw.m_vertexID].boneWeights[l] == 0.0f) {
-              vertices[vw.m_vertexID].boneIndices[l] = j;
-              vertices[vw.m_vertexID].boneWeights[l] = vw.m_weight;
-              yes = true;
-              break;
+    Vector<Bone> bones;
+    if (skMesh->getBonesDataForMesh(i, bones))
+    {
+      if (!bones.empty()) {
+        for (uint32 j = 0; j < bones.size(); j++) {
+          Bone bone = bones[j];
+          bool yes = false;
+          for (auto vw : bone.m_vertexWeights) {
+            yes = false;
+            for (uint32 l = 0; l < 16; l++) {
+              if (vertices[vw.m_vertexID].boneWeights[l] == 0.0f) {
+                vertices[vw.m_vertexID].boneIndices[l] = j;
+                vertices[vw.m_vertexID].boneWeights[l] = vw.m_weight;
+                yes = true;
+                break;
+              }
             }
-          }
 
-          if (!yes) {
-            eeOut << "No more bone space" << eeEndl;
+            if (!yes) {
+              Logger::instance().ConsoleLog("No more bone space");
+            }
           }
         }
       }
-    }
-    else {
-      for (auto& v : vertices) {
-        v.boneIndices[0] = -1;
+      else {
+        for (auto& v : vertices) {
+          v.boneIndices[0] = -1;
+        }
       }
     }
+
 
     Vector<uint32> indices;
     for (uint32 j = 0; j < AssimpMesh->mNumFaces; ++j) {
@@ -212,7 +217,7 @@ bool
 SkeletalMesh::loadFromMeshes(const Vector<SPtr<Mesh>>& meshes)
 {
   if (meshes.empty()) {
-    eeOut << "Empty info loading model" << eeEndl;
+    Logger::instance().ConsoleLog("Empty info loading model");
     return false;
   }
 
@@ -234,7 +239,7 @@ bool
 SkeletalMesh::loadFromMeshes(const Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>& meshes)
 {
   if (meshes.empty()) {
-    eeOut << "Empty info loading model" << eeEndl;
+    Logger::instance().ConsoleLog("Empty info loading model");
     return false;
   }
 

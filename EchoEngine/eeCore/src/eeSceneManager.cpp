@@ -1,6 +1,8 @@
 #include "eeSceneManager.h"
 #include "eeScene.h"
 
+#include <eeLogger.h>
+
 #include <eeMemoryManager.h>
 
 namespace eeEngineSDK {
@@ -23,8 +25,8 @@ SPtr<Scene>
 SceneManager::addScene(String name)
 {
   if (m_scenes.find(name) != m_scenes.end()) {
-    eeOut << "ERROR TRYING TO ADD SCENE" << eeEndl;
-    eeOut << "Scene already with that name!" << eeEndl;
+    Logger::instance().ConsoleLog("ERROR TRYING TO ADD SCENE");
+    Logger::instance().ConsoleLog("Scene already with that name!");
     return nullptr;
   }
 
@@ -36,8 +38,8 @@ SPtr<Scene>
 SceneManager::getScene(String name)
 {
   if (m_scenes.find(name) == m_scenes.end()) {
-    eeOut << "ERROR TRYING TO GET SCENE" << eeEndl;
-    eeOut << "Not a scene with that name!" << eeEndl;
+    Logger::instance().ConsoleLog("ERROR TRYING TO GET SCENE");
+    Logger::instance().ConsoleLog("Not a scene with that name!");
     return nullptr;
   }
   return m_scenes[name];

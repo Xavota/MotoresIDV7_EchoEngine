@@ -1,11 +1,15 @@
 #include "eeSkeletal.h"
-#include "eeConstantBuffer.h"
-#include "eeGraficsApi.h"
+
 #pragma warning(push, 0)   
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #pragma warning(pop)
+
+#include <eeLogger.h>
+
+#include "eeConstantBuffer.h"
+#include "eeGraficsApi.h"
 
 namespace eeEngineSDK{
 Bone::Bone(String name,
@@ -33,7 +37,7 @@ Skeletal::loadFromFile(const String& fileName)
   );
 
   if (!scene) {
-    eeOut << importer->GetErrorString() << eeEndl;
+    Logger::instance().ConsoleLog(importer->GetErrorString());
     delete importer;
     return false;
   }
@@ -128,15 +132,15 @@ Skeletal::getBonesData()
 {
   return m_bonesPerMesh;
 }
-const Vector<Bone>&
-Skeletal::getBonesDataForMesh(int32 index) const
+bool
+Skeletal::getBonesDataForMesh(int32 index, Vector<Bone>& outBoneData) const
 {
   if (static_cast<int32>(m_bonesPerMesh.size()) > index) {
-    return m_bonesPerMesh[index];
+    outBoneData = m_bonesPerMesh[index];
+    return true;
   }
 
-  Vector<Bone> r;
-  return r;
+  return false;
 }
 
 Vector<Map<String, int32>>&

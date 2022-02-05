@@ -24,7 +24,21 @@ DX11GraphicsApi::initialize()
   if (!GraphicsApi::initialize()) {
     return false;
   }
-
+  return true;
+}
+bool
+DX11GraphicsApi::appIsRunning()
+{
+  MSG msg = { nullptr };
+  if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+    TranslateMessage(&msg);
+    DispatchMessage(&msg);
+  }
+  return WM_QUIT != msg.message;
+}
+bool
+DX11GraphicsApi::initializeBasics()
+{
   RECT rc = {};
   GetClientRect(reinterpret_cast<HWND>(m_win), &rc);
   int32 width = rc.right - rc.left;
@@ -70,18 +84,12 @@ DX11GraphicsApi::initialize()
   return true;
 }
 bool
-DX11GraphicsApi::appIsRunning()
-{
-  MSG msg = { nullptr };
-  if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
-    TranslateMessage(&msg);
-    DispatchMessage(&msg);
-  }
-  return WM_QUIT != msg.message;
-}
-bool
 DX11GraphicsApi::initializeScreen(void* callback)
 {
+  if (!GraphicsApi::initializeScreen(callback)) {
+    return false;
+  }
+
   // Register class
   WNDCLASSEX wcex;
   wcex.cbSize = sizeof(WNDCLASSEX);
@@ -126,10 +134,10 @@ DX11GraphicsApi::initializeScreen(void* callback)
 }
 void
 DX11GraphicsApi::clearRenderTargets(Vector<SPtr<RenderTarget>> rtvs,
-                                    float rgba[4])
+                                    Color screenColor)
 {
   for (auto& r : rtvs) {
-    r->clean(rgba[0],rgba[1],rgba[2],rgba[3]);
+    r->clean(screenColor);
   }
 }
 void
@@ -167,11 +175,13 @@ DX11GraphicsApi::setRenderTargets(Vector<SPtr<RenderTarget>> rtvs,
                                                  ds ? ds->getResource() : nullptr);
   }
 }
-void DX11GraphicsApi::unsetRenderTargets()
+void
+DX11GraphicsApi::unsetRenderTargets()
 {
   m_basics.m_deviceContext->OMSetRenderTargets(0u, nullptr, nullptr);
 }
-void DX11GraphicsApi::setTextures(Vector<SPtr<Texture>> textures,
+void
+DX11GraphicsApi::setTextures(Vector<SPtr<Texture>> textures,
                                   uint32 startSlot)
 {
   auto& memoryManager = MemoryManager::instance();
@@ -195,7 +205,8 @@ void DX11GraphicsApi::setTextures(Vector<SPtr<Texture>> textures,
     );
   }
 }
-void DX11GraphicsApi::unsetTextures(uint32 textureCount, uint32 startSlot)
+void
+DX11GraphicsApi::unsetTextures(uint32 textureCount, uint32 startSlot)
 {
   Vector<ID3D11ShaderResourceView*> dx11texs;
   dx11texs.resize(textureCount, nullptr);
@@ -207,7 +218,8 @@ void DX11GraphicsApi::unsetTextures(uint32 textureCount, uint32 startSlot)
     dx11texs.data()
   );
 }
-void DX11GraphicsApi::setVSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
+void
+DX11GraphicsApi::setVSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
                                            uint32 startSlot)
 {
   auto& memoryManager = MemoryManager::instance();
@@ -232,7 +244,8 @@ void DX11GraphicsApi::setVSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
     );
   }
 }
-void DX11GraphicsApi::unsetVSConstantBuffers(uint32 buffersCount, uint32 startSlot)
+void
+DX11GraphicsApi::unsetVSConstantBuffers(uint32 buffersCount, uint32 startSlot)
 {
   Vector<ID3D11Buffer*> dx11buffers;
   dx11buffers.resize(buffersCount, nullptr);
@@ -244,7 +257,8 @@ void DX11GraphicsApi::unsetVSConstantBuffers(uint32 buffersCount, uint32 startSl
     dx11buffers.data()
   );
 }
-void DX11GraphicsApi::setPSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
+void
+DX11GraphicsApi::setPSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
                                            uint32 startSlot)
 {
   auto& memoryManager = MemoryManager::instance();
@@ -269,7 +283,8 @@ void DX11GraphicsApi::setPSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
     );
   }
 }
-void DX11GraphicsApi::unsetPSConstantBuffers(uint32 buffersCount, uint32 startSlot)
+void
+DX11GraphicsApi::unsetPSConstantBuffers(uint32 buffersCount, uint32 startSlot)
 {
   Vector<ID3D11Buffer*> dx11buffers;
   dx11buffers.resize(buffersCount, nullptr);
@@ -281,7 +296,8 @@ void DX11GraphicsApi::unsetPSConstantBuffers(uint32 buffersCount, uint32 startSl
     dx11buffers.data()
   );
 }
-void DX11GraphicsApi::setVertexBuffers(Vector<SPtr<VertexBuffer>> buffers,
+void
+DX11GraphicsApi::setVertexBuffers(Vector<SPtr<VertexBuffer>> buffers,
                                        Vector<uint32> offsets,
                                        uint32 startSlot)
 {
@@ -311,7 +327,8 @@ void DX11GraphicsApi::setVertexBuffers(Vector<SPtr<VertexBuffer>> buffers,
     );
   }
 }
-void DX11GraphicsApi::unsetVertexBuffers(uint32 buffersCount, uint32 startSlot)
+void
+DX11GraphicsApi::unsetVertexBuffers(uint32 buffersCount, uint32 startSlot)
 {
   Vector<ID3D11Buffer*> dx11Vbuffers;
   dx11Vbuffers.resize(buffersCount, nullptr);
@@ -331,7 +348,8 @@ void DX11GraphicsApi::unsetVertexBuffers(uint32 buffersCount, uint32 startSlot)
     );
   }
 }
-void DX11GraphicsApi::setIndexBuffer(SPtr<IndexBuffer> buffer, uint32 offset)
+void
+DX11GraphicsApi::setIndexBuffer(SPtr<IndexBuffer> buffer, uint32 offset)
 {
   const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
@@ -346,7 +364,8 @@ void DX11GraphicsApi::setIndexBuffer(SPtr<IndexBuffer> buffer, uint32 offset)
     basics->m_deviceContext->IASetIndexBuffer(buf->getResource(), DXGI_FORMAT_R32_UINT, offset);
   }
 }
-void DX11GraphicsApi::unsetIndexBuffer()
+void
+DX11GraphicsApi::unsetIndexBuffer()
 {
   const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
@@ -375,11 +394,22 @@ DX11GraphicsApi::setViewports(Vector<ViewportDesc> descs)
                                            vps.data());
 }
 void
+DX11GraphicsApi::resizeWindow(Vector2i newSize)
+{
+  GraphicsApi::resizeWindow(newSize);
+
+  //DX11SAFE_RELEASE(m_basics.m_device);
+  //DX11SAFE_RELEASE(m_basics.m_deviceContext);
+  //DX11SAFE_RELEASE(m_basics.m_swapChain);
+  //initializeBasics();
+}
+void
 DX11GraphicsApi::drawIndexed(int32 indicesCount) const
 {
   m_basics.m_deviceContext->DrawIndexed(indicesCount, 0u, 0u);
 }
-void DX11GraphicsApi::setPrimitiveTopology(ePRIMITIVE_TOPOLOGY topology)
+void
+DX11GraphicsApi::setPrimitiveTopology(ePRIMITIVE_TOPOLOGY topology)
 {
   m_basics.m_deviceContext->IASetPrimitiveTopology(
   static_cast<D3D11_PRIMITIVE_TOPOLOGY>(topology));
@@ -390,7 +420,8 @@ DX11GraphicsApi::present(uint32 syncInterval, uint32 flags)
   m_basics.m_swapChain->Present(syncInterval, flags);
 }
 
-void DX11GraphicsApi::release()
+void
+DX11GraphicsApi::release()
 {
   DX11SAFE_RELEASE(m_basics.m_device);
   DX11SAFE_RELEASE(m_basics.m_deviceContext);

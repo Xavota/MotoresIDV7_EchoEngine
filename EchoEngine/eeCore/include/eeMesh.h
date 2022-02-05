@@ -12,6 +12,9 @@
 
 #pragma once
 #include "eePrerequisitesCore.h"
+
+#include <eeLogger.h>
+
 #include "eeVertex.h"
 #include "eeVertexBuffer.h"
 #include "eeIndexBuffer.h"
@@ -133,7 +136,7 @@ Mesh::loadFromArray(const Vector<V>& vertices,
   auto& graphicsApi = GraphicsApi::instance();
 
   if (vertices.empty() || indices.empty()) {
-    eeOut << "Empty info loading mesh" << eeEndl;
+    Logger::instance().ConsoleLog("Empty info loading mesh");
     return false;
   }
 
