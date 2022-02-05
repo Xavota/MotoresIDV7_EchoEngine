@@ -135,7 +135,7 @@ ResourceManager::loadTextureFromFile(const String& fileName,
                                      const String resourceName,
                                      SamplerStateDesc desc)
 {
-  if (m_meshes.find(resourceName) != m_meshes.end()) {
+  if (m_textures.find(resourceName) != m_textures.end()) {
     Logger::instance().ConsoleLog("Resource already with this name");
     return nullptr;
   }
@@ -158,7 +158,7 @@ ResourceManager::loadModelFromFile(const String& fileName,
                                    const String resourceName,
                                    const Vector<SPtr<Texture>>& textures)
 {
-  if (m_meshes.find(resourceName) != m_meshes.end()) {
+  if (m_models.find(resourceName) != m_models.end()) {
     Logger::instance().ConsoleLog("Resource already with this name");
     return nullptr;
   }
@@ -211,7 +211,7 @@ SPtr<Model>
 ResourceManager::loadModelFromMeshesArray(const Vector<SPtr<Mesh>>& meshes,
                                           const String resourceName)
 {
-  if (m_meshes.find(resourceName) != m_meshes.end()) {
+  if (m_models.find(resourceName) != m_models.end()) {
     Logger::instance().ConsoleLog("Resource already with this name");
     return nullptr;
   }
@@ -234,7 +234,7 @@ ResourceManager::loadModelFromMeshesArray(
   const Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>& meshes,
   const String resourceName)
 {
-  if (m_meshes.find(resourceName) != m_meshes.end()) {
+  if (m_models.find(resourceName) != m_models.end()) {
     Logger::instance().ConsoleLog("Resource already with this name");
     return nullptr;
   }
@@ -426,14 +426,6 @@ ResourceManager::getResourceModel(const String& resourceName)
 {
   if (m_models.find(resourceName) != m_models.end()) {
     return m_models[resourceName];
-  }
-  return nullptr;
-}
-SPtr<Mesh>
-ResourceManager::getResourceMesh(const String& resourceName)
-{
-  if (m_meshes.find(resourceName) != m_meshes.end()) {
-    return m_meshes[resourceName];
   }
   return nullptr;
 }

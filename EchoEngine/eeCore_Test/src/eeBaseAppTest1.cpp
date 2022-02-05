@@ -741,6 +741,41 @@ BaseAppTest1::initResources()
 
   graphicsApi.setPrimitiveTopology(ePRIMITIVE_TOPOLOGY::TRIANGLELIST);
 
+  SPtr<Mesh> SAQ = memoryManager.newPtr<Mesh>();
+  SAQ->loadFromArray<SimpleVertex, uint32>(
+  Vector<SimpleVertex>
+    {
+      SimpleVertex
+      {
+        Vector4f(-1.0f,  1.0f, 0.0f, 1.0f),
+        Vector4f( 0.0f,  0.0f, 0.0f, 0.0f),
+        Vector4f( 0.0f,  0.0f, 0.0f, 0.0f)
+      },
+      SimpleVertex
+      {
+        Vector4f( 1.0f,  1.0f, 0.0f, 1.0f),
+        Vector4f( 1.0f,  0.0f, 0.0f, 0.0f),
+        Vector4f( 0.0f,  0.0f, 0.0f, 0.0f)
+      },
+      SimpleVertex
+      {
+        Vector4f( 1.0f, -1.0f,  0.0f, 1.0f),
+        Vector4f( 1.0f,  1.0f,  0.0f, 0.0f),
+        Vector4f( 0.0f,  0.0f,  0.0f, 0.0f)
+      },
+      SimpleVertex
+      {
+        Vector4f(-1.0f, -1.0f,  0.0f, 1.0f),
+        Vector4f( 0.0f,  1.0f,  0.0f, 0.0f),
+        Vector4f( 0.0f,  0.0f,  0.0f, 0.0f)
+      }
+    },
+    Vector<uint32>
+    {
+      0, 1, 2, 
+      0, 2, 3
+    }
+  );
 
   m_SAQ = memoryManager.newPtr<Object>();
   m_SAQ->loadFromModel
@@ -751,43 +786,7 @@ BaseAppTest1::initResources()
       {
         make_pair
         (
-          resourceManager.loadMeshFromVertexArray
-          <SimpleVertex, uint32>
-          (
-            Vector<SimpleVertex>
-            {
-              SimpleVertex
-              {
-                Vector4f(-1.0f,  1.0f, 0.0f, 1.0f),
-                Vector4f( 0.0f,  0.0f, 0.0f, 0.0f),
-                Vector4f( 0.0f,  0.0f, 0.0f, 0.0f)
-              },
-              SimpleVertex
-              {
-                Vector4f( 1.0f,  1.0f, 0.0f, 1.0f),
-                Vector4f( 1.0f,  0.0f, 0.0f, 0.0f),
-                Vector4f( 0.0f,  0.0f, 0.0f, 0.0f)
-              },
-              SimpleVertex
-              {
-                Vector4f( 1.0f, -1.0f,  0.0f, 1.0f),
-                Vector4f( 1.0f,  1.0f,  0.0f, 0.0f),
-                Vector4f( 0.0f,  0.0f,  0.0f, 0.0f)
-              },
-              SimpleVertex
-              {
-                Vector4f(-1.0f, -1.0f,  0.0f, 1.0f),
-                Vector4f( 0.0f,  1.0f,  0.0f, 0.0f),
-                Vector4f( 0.0f,  0.0f,  0.0f, 0.0f)
-              }
-            },
-            Vector<uint32>
-            {
-              0, 1, 2, 
-              0, 2, 3
-            },
-            "MeshSAQ1"
-          ),
+          SAQ,
           nullptr
         )
       },

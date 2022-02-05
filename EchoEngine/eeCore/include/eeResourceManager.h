@@ -144,30 +144,6 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
 
   /**
    * @brief
-   * Initializes the mesh.
-   *
-   * @description
-   * Initializes the mesh from an array of vertex and index and stores it with
-   * the given name.
-   *
-   * @param vertices
-   * The vertex data.
-   * @param indices
-   * The index data.
-   * @param resourceName
-   * The name that the resource will be stored with.
-   *
-   * @return
-   * The resource initialized.
-   */
-  template<class V, class I>
-  SPtr<Mesh>
-  loadMeshFromVertexArray(const Vector<V>& vertices,
-                          const Vector<I>& indices,
-                          const String resourceName);
-
-  /**
-   * @brief
    * Initializes a skeletal.
    *
    * @description
@@ -206,13 +182,13 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
                            const Vector<SPtr<Texture>>& textures = {});
   /**
    * @brief
-   * Initializes a skeletal mesh.
+   * Initializes an animation.
    *
    * @description
-   * Initializes a skeletal mesh from a file and stores it with the given name.
+   * Initializes an animation from a file and stores it with the given name.
    *
    * @param fileName
-   * The name of the file containing the skeletal mesh.
+   * The name of the file containing the animation.
    * @param resourceName
    * The name that the resource will be stored with.
    *
@@ -328,21 +304,6 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    */
   SPtr<Model>
   getResourceModel(const String& resourceName);
-  /**
-   * @brief
-   * Gets a mesh.
-   *
-   * @description
-   * Gets a mesh by a resource name.
-   *
-   * @param resourceName
-   * The name of the resource.
-   *
-   * @return
-   * The mesh with that name.
-   */
-  SPtr<Mesh>
-  getResourceMesh(const String& resourceName);
   /**
    * @brief
    * Gets a skeletal.
@@ -512,10 +473,6 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    */
   Map<String, SPtr<Texture>> m_textures;
   /**
-   * The meshes stored.
-   */
-  Map<String, SPtr<Mesh>> m_meshes;
-  /**
    * The models stored.
    */
   Map<String, SPtr<Model>> m_models;
@@ -540,23 +497,4 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    */
   Map<String, SPtr<PixelShader>> m_pixelShaders;
 };
-template<class V, class I>
-SPtr<Mesh>
-ResourceManager::loadMeshFromVertexArray(const Vector<V>& vertices,
-                                         const Vector<I>& indices,
-                                         const String resourceName)
-{
-  if (m_meshes.find(resourceName) != m_meshes.end()) {
-    Logger::instance().ConsoleLog("Resource already with this name");
-    return nullptr;
-  }
-
-  SPtr<Mesh> mesh = MemoryManager::instance().newPtr<Mesh>();
-  if (!mesh->loadFromArray<V, I>(vertices, indices)) {
-    return nullptr;
-  }
-
-  m_meshes.insert(make_pair(resourceName, mesh));
-  return m_meshes[resourceName];
-}
 }
