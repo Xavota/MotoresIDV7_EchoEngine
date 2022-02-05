@@ -8,48 +8,47 @@
 #include <windowsx.h>
 #include <commdlg.h>
 
-#include <eeDX11GraphicsApi.h>
+#include <imgui.h>
+#include <imgui_impl_win32.h>
+#include <imgui_impl_dx11.h>
 
-#include <eeLogger.h>
-#include <eeVertexShader.h>
-#include <eePixelShader.h>
-#include <eeGraficsApi.h>
+#include <eeDX11GraphicsApi.h>
+#include <eeCoreConfiguration.h>
+
+#include <eeMemoryManager.h>
 #include <eeResourceManager.h>
 #include <eeSceneManager.h>
+
+#include <eeLogger.h>
+#include <eeMath.h>
+#include <eeInput.h>
+#include <eeTime.h>
+
 #include <eeScene.h>
-#include <eeObject.h>
-#include <eeCoreConfiguration.h>
+
+#include <eeVertexShader.h>
+#include <eePixelShader.h>
 #include <eeRenderTarget.h>
 #include <eeDepthStencil.h>
 #include <eeRasterizerState.h>
+
+#include <eeObject.h>
+#include <eeAnimation.h>
+#include <eeSkeletalMesh.h>
+#include <eeModel.h>
+#include <eeColor.h>
+
 #include <eeActor.h>
 #include <eeCTransform.h>
 #include <eeCModel.h>
-#include <eeModel.h>
 #include <eeCRender.h>
 #include <eeCCamera.h>
 #include <eeCSkeletalMesh.h>
-#include <eeSkeletalMesh.h>
 #include <eeCAnimation.h>
-#include <eeAnimation.h>
 
-#include <eeMath.h>
-#include <eeInput.h>
-#include <eeMemoryManager.h>
-#include <eeTime.h>
-
-#include <eeColor.h>
-
-#include "imgui.h"
-#include "imgui_impl_win32.h"
-#include "imgui_impl_dx11.h"
-
-
-using namespace std;
 
 using eeEngineSDK::eeConfigurations::screenWidth;
 using eeEngineSDK::eeConfigurations::screenHeight;
-
 
 using eeEngineSDK::Logger;
 using eeEngineSDK::GraphicsApi;
@@ -207,11 +206,9 @@ WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     break;
 
   case WM_SIZE:
-    //if (g_pd3dDevice != NULL && _wParam != SIZE_MINIMIZED)
   {
     static bool _first = true;
     if (!_first) {
-      /*Update viewport*/
       int width = 0, height = 0;
       RECT rc;
       GetClientRect(reinterpret_cast<HWND>(GraphicsApi::instance().getWindow()), &rc);
@@ -221,7 +218,6 @@ WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
     _first = false;
   }
-  return 0;
   break;
 
   default:
@@ -243,7 +239,7 @@ InitImgUI()
   // Setup Dear ImGui style
   ImGui::StyleColorsDark();
 
-  const eeEngineSDK::DX11Basics* basics =
+  const auto* basics =
   reinterpret_cast<const eeEngineSDK::DX11Basics*>(graphicsApi.getBasics());
 
   // Setup Platform/Renderer back ends
