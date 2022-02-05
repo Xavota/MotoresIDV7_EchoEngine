@@ -8,6 +8,8 @@
 #include <windowsx.h>
 #include <commdlg.h>
 
+#include <eeDX11GraphicsApi.h>
+
 #include <eeLogger.h>
 #include <eeVertexShader.h>
 #include <eePixelShader.h>
@@ -42,7 +44,6 @@
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 
-#include <eeDX11GraphicsApi.h>
 
 using namespace std;
 
@@ -209,8 +210,7 @@ WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     //if (g_pd3dDevice != NULL && _wParam != SIZE_MINIMIZED)
   {
     static bool _first = true;
-    if (!_first)
-    {
+    if (!_first) {
       /*Update viewport*/
       int width = 0, height = 0;
       RECT rc;
@@ -397,8 +397,8 @@ DrawSkeletalMeshCmp(SPtr<CSkeletalMesh> skMesh, int32& uniqueId)
 void
 AddChildActorsToUI(SPtr<Actor> act, int32& uniqueId);
 
-SPtr<Actor> actorAddingCmp;
-bool addingCmp = false;
+SPtr<Actor> g_actorAddingCmp;
+bool g_addingCmp = false;
 void
 showActorData(SPtr<Actor> act, int32& uniqueId)
 {
@@ -447,8 +447,8 @@ showActorData(SPtr<Actor> act, int32& uniqueId)
 
     ImGui::PushID(uniqueId++);
     if (ImGui::Button("AddComponent")) {
-      addingCmp = true;
-      actorAddingCmp = act;
+      g_addingCmp = true;
+      g_actorAddingCmp = act;
     }
     ImGui::PopID();
 
@@ -678,7 +678,7 @@ UIRender()
   }
   ImGui::End();
 
-  if (addingCmp && actorAddingCmp) {
+  if (g_addingCmp && g_actorAddingCmp) {
     if (ImGui::Begin("Add Component")) {
       static int cmpIndex = 0;
       const char* componentNames[] = { "Animation", "Camera", "Model", "Render", "Skeletal Mesh" };
@@ -721,7 +721,7 @@ BaseAppTest1::initResources()
 
   SamplerStateDesc samDesc;
   memset(&samDesc, 0, sizeof(samDesc));
-  samDesc.filter = eFILTER::MIN_MAG_MIP_LINEAR;
+  samDesc.filter = eFILTER::kMIN_MAG_MIP_LINEAR;
   samDesc.addressU = eTEXTURE_ADDRESS_MODE::WRAP;
   samDesc.addressV = eTEXTURE_ADDRESS_MODE::WRAP;
   samDesc.addressW = eTEXTURE_ADDRESS_MODE::WRAP;
@@ -877,8 +877,8 @@ BaseAppTest1::initResources()
 
 
   CameraDesc camDesc;
-  camDesc.projectionType = eCAMERA_PROJECTION_TYPE::PERSPECTIVE;
-  camDesc.fovAngleY = 0.785398163f;
+  camDesc.projectionType = eCAMERA_PROJECTION_TYPE::kPerspective;
+  camDesc.fovAngleY = Math::kPI / 4.0f;
   camDesc.viewSize = { static_cast<float>(screenWidth),
                        static_cast<float>(screenHeight) };
   camDesc.nearZ = 0.01f;

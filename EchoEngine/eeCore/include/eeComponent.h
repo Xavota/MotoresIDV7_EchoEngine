@@ -21,14 +21,14 @@ namespace eeEngineSDK{
 namespace eCOMPONENT_TYPE {
 enum E
 {
-  kNONE = -1,
-  kTRANSFORM,
-  kMODEL,
-  kRENDER,
-  kCAMERA,
-  kSKELETAL_MESH,
-  kANIMATION,
-  kCOUNT
+  kNone = -1,
+  kTransform,
+  kModel,
+  kRender,
+  kCamera,
+  kSkeletalMesh,
+  kAnimation,
+  kCount
 };
 }
 
@@ -43,7 +43,7 @@ public:
    * @brief
    * The enum for identifying the component type.
    */
-  enum { CmpType = eCOMPONENT_TYPE::kNONE };
+  enum { CmpType = eCOMPONENT_TYPE::kNone };
 
   /**
    * @brief

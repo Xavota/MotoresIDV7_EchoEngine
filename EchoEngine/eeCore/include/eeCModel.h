@@ -28,7 +28,7 @@ class EE_CORE_EXPORT CModel : public Component
    * @brief
    * The enum for identifying the component type.
    */
-  enum { CmpType = eCOMPONENT_TYPE::kMODEL };
+  enum { CmpType = eCOMPONENT_TYPE::kModel };
 
   /**
    * @brief

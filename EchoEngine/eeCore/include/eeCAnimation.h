@@ -24,7 +24,7 @@ class EE_CORE_EXPORT CAnimation : public Component
    * @brief
    * The enum for identifying the component type.
    */
-  enum { CmpType = eCOMPONENT_TYPE::kANIMATION };
+  enum { CmpType = eCOMPONENT_TYPE::kAnimation };
 
   /**
    * @brief

@@ -55,7 +55,7 @@ ResourceManager::importResourceFromFile(const String& fileName)
    || fileExtension == "tiff") {
     SamplerStateDesc samDesc;
     memset(&samDesc, 0, sizeof(samDesc));
-    samDesc.filter = eFILTER::MIN_MAG_MIP_LINEAR;
+    samDesc.filter = eFILTER::kMIN_MAG_MIP_LINEAR;
     samDesc.addressU = eTEXTURE_ADDRESS_MODE::WRAP;
     samDesc.addressV = eTEXTURE_ADDRESS_MODE::WRAP;
     samDesc.addressW = eTEXTURE_ADDRESS_MODE::WRAP;

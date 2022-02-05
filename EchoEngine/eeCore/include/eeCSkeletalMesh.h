@@ -28,7 +28,7 @@ public:
    * @brief
    * The enum for identifying the component type.
    */
-  enum { CmpType = eCOMPONENT_TYPE::kSKELETAL_MESH };
+  enum { CmpType = eCOMPONENT_TYPE::kSkeletalMesh };
 
   /**
    * @brief

@@ -8,21 +8,21 @@ Logger::ConsoleLog(const String& log)
   eeOut << log << eeEndl;
 }
 void
-Logger::FileLog(const String& log, const String& file, WarningLevel wlvl)
+Logger::FileLog(const String& log, const String& file, WarningLevel warningLvl)
 {
   String msg;
-  if (wlvl == WarningLevel::kDebug) {
+  if (warningLvl == WarningLevel::kDebug) {
     msg = "Debug:\t" + log;
   }
-  else if (wlvl == WarningLevel::kWarning)
+  else if (warningLvl == WarningLevel::kWarning)
   {
     msg = "Warning:\t" + log;
   }
-  else if (wlvl == WarningLevel::kError)
+  else if (warningLvl == WarningLevel::kError)
   {
     msg = "Error:\t" + log;
   }
-  else if (wlvl == WarningLevel::kFatal)
+  else if (warningLvl == WarningLevel::kFatal)
   {
     msg = "Fatal:\t" + log;
   }

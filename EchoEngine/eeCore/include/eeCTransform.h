@@ -29,7 +29,7 @@ class EE_CORE_EXPORT CTransform : public Component
    * @brief
    * The enum for identifying the component type.
    */
-  enum { CmpType = eCOMPONENT_TYPE::kTRANSFORM };
+  enum { CmpType = eCOMPONENT_TYPE::kTransform };
 
   /**
    * @brief

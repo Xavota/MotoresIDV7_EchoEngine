@@ -391,11 +391,8 @@ DX11GraphicsApi::setViewports(Vector<ViewportDesc> descs)
   }
 
   m_basics.m_deviceContext->RSSetViewports(static_cast<UINT>(vps.size()),
-                                           vps.data());
+    vps.data());
 }
-#define FACILITY_WIN32 0x0007
-
-#define __HRESULT_FROM_WIN32(x) ((HRESULT)(x) <= 0 ? ((HRESULT)(x)) : ((HRESULT) (((x) & 0x0000FFFF) | (FACILITY_WIN32 << 16) | 0x80000000)))
 void
 DX11GraphicsApi::resizeWindow(Vector2i newSize)
 {
@@ -406,7 +403,6 @@ DX11GraphicsApi::resizeWindow(Vector2i newSize)
                                       DXGI_FORMAT_B8G8R8A8_UNORM,
                                       0);
 
-  HRESULT hr2 = __HRESULT_FROM_WIN32(hr);
   if (FAILED(hr))
   {
     return;

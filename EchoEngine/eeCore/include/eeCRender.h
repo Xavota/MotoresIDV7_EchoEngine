@@ -26,7 +26,7 @@ class EE_CORE_EXPORT CRender : public Component
    * @brief
    * The enum for identifying the component type.
    */
-  enum { CmpType = eCOMPONENT_TYPE::kRENDER };
+  enum { CmpType = eCOMPONENT_TYPE::kRender };
 
   /**
    * @brief

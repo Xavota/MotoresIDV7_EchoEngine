@@ -163,16 +163,16 @@ CCamera::getProjectionMatrix()
     m_dirtyProj = false;
     
     switch (m_projectionType) {
-    case eeEngineSDK::eCAMERA_PROJECTION_TYPE::NONE:
+    case eeEngineSDK::eCAMERA_PROJECTION_TYPE::kNone:
       m_projectionMat = Matrix4f::kIDENTITY;
       break;
-    case eeEngineSDK::eCAMERA_PROJECTION_TYPE::ORTHOGRAPHIC:
+    case eeEngineSDK::eCAMERA_PROJECTION_TYPE::kOrthographic:
       m_projectionMat = Matrix4f::orthograficMatrixMatrix(m_viewSize.x,
                                                           m_viewSize.y,
                                                           m_nearZ,
                                                           m_farZ);
       break;
-    case eeEngineSDK::eCAMERA_PROJECTION_TYPE::PERSPECTIVE:
+    case eeEngineSDK::eCAMERA_PROJECTION_TYPE::kPerspective:
       m_projectionMat = Matrix4f::perspectiveMatrix(m_fovAngleY,
                                                     m_viewSize.x / m_viewSize.y,
                                                     m_nearZ,

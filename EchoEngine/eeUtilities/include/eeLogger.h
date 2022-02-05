@@ -20,13 +20,45 @@ enum class WarningLevel : uint8
 class EE_UTILITY_EXPORT Logger : public Module<Logger>
 {
  public:
+  /**
+   * @brief
+   * Default constructor
+   */
   Logger() = default;
+  /**
+   * @brief
+   * Default destructor
+   */
   ~Logger() = default;
 
+  /**
+   * @brief
+   * Logs on the console.
+   *
+   * @description
+   * Writes a log on the console.
+   *
+   * @param log
+   * The log info.
+   */
   void
   ConsoleLog(const String& log);
 
+  /**
+   * @brief
+   * Logs a file.
+   *
+   * @description
+   * Writes a log on a file.
+   * 
+   * @param log
+   * The log info.
+   * @param file
+   * The file to where is gonna log.
+   * @param warningLvl
+   * The warning level of the log.
+   */
   void
-  FileLog(const String& log, const String& file, WarningLevel wlvl);
+  FileLog(const String& log, const String& file, WarningLevel warningLvl);
 };
 }
