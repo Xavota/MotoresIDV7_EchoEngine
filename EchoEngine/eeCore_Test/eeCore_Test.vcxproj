@@ -171,13 +171,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\Externals\imgui\backends\imgui_impl_dx11.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\Externals\imgui\backends\imgui_impl_win32.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\Externals\imgui\imgui.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\Externals\imgui\imgui_demo.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\Externals\imgui\imgui_draw.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\Externals\imgui\imgui_tables.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\Externals\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="externals\imgui.cpp" />
+    <ClCompile Include="externals\imgui_demo.cpp" />
+    <ClCompile Include="externals\imgui_draw.cpp" />
+    <ClCompile Include="externals\imgui_impl_dx11.cpp" />
+    <ClCompile Include="externals\imgui_impl_win32.cpp" />
+    <ClCompile Include="externals\imgui_tables.cpp" />
+    <ClCompile Include="externals\imgui_widgets.cpp" />
     <ClCompile Include="src\eeBaseAppTest1.cpp" />
     <ClCompile Include="src\eeCoreTests.cpp" />
   </ItemGroup>
