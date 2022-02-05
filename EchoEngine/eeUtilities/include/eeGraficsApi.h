@@ -662,6 +662,12 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   virtual void
   clearActiveCameras();
 
+  // Temporary
+  SPtr<RenderTarget>
+  getBackBuffer() { return m_rtv; }
+  SPtr<DepthStencil>
+  getDepthStencil() { return m_dsv; }
+
  protected:
   /**
    * @brief
@@ -677,14 +683,14 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   drawIndexed(int32 /*indicesCount*/) const {}
 
 
-  ///*
-  //* The back buffer.
-  //*/
-  //SPtr<RenderTarget> m_rtv;
-  ///*
-  //* The depth stencil of the back buffer
-  //*/
-  //SPtr<DepthStencil> m_dsv;
+  /*
+  * The back buffer.
+  */
+  SPtr<RenderTarget> m_rtv;
+  /*
+  * The depth stencil of the back buffer
+  */
+  SPtr<DepthStencil> m_dsv;
 
   /**
    * All render actors for a frame.

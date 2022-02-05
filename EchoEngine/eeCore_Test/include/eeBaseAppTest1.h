@@ -118,14 +118,14 @@ class BaseAppTest1 : public BaseApp
   */
   SPtr<ConstantBuffer> m_projectionMatrixBuffer;
 
-  /*
-  * The back buffer.
-  */
-  SPtr<RenderTarget> m_rtv;
-  /*
-  * The depth stencil of the back buffer
-  */
-  SPtr<DepthStencil> m_dsv;
+  ///*
+  //* The back buffer.
+  //*/
+  //SPtr<RenderTarget> m_rtv;
+  ///*
+  //* The depth stencil of the back buffer
+  //*/
+  //SPtr<DepthStencil> m_dsv;
 
   /*
   * A rasterizer for on world objects rendering.

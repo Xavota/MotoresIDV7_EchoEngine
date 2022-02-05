@@ -36,6 +36,13 @@ GraphicsApi::initialize()
   desc.topLeftY = 0;
   setViewports({ desc });
 
+
+  m_rtv = createRenderTragetPtr();
+  m_rtv->createAsBackBuffer();
+
+  m_dsv = createDepthStencilPtr();
+  m_dsv->create(eeConfigurations::screenWidth, eeConfigurations::screenHeight);
+
   return true;
 }
 bool GraphicsApi::initializeScreen(void*)
@@ -167,6 +174,11 @@ GraphicsApi::release()
 }
 void GraphicsApi::resizeWindow(Vector2i newSize)
 {
+  MemoryManager::instance().safeRelease<RenderTarget>(m_rtv);
+  m_rtv->createAsBackBuffer();
+  MemoryManager::instance().safeRelease<DepthStencil>(m_dsv);
+  m_dsv->create(newSize.x, newSize.y);
+
   ViewportDesc desc;
   memset(&desc, 0, sizeof(desc));
   desc.maxDepth = 1.0f;

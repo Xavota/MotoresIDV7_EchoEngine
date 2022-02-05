@@ -205,24 +205,24 @@ WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     inputMan.setMousePosition({ GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) });
     break;
 
-  //case WM_SIZE:
-  //  //if (g_pd3dDevice != NULL && _wParam != SIZE_MINIMIZED)
-  //{
-  //  static bool _first = true;
-  //  if (!_first)
-  //  {
-  //    /*Update viewport*/
-  //    int width = 0, height = 0;
-  //    RECT rc;
-  //    GetClientRect(reinterpret_cast<HWND>(GraphicsApi::instance().getWindow()), &rc);
-  //    width = rc.right - rc.left;
-  //    height = rc.bottom - rc.top;
-  //    GraphicsApi::instance().resizeWindow({width, height});
-  //  }
-  //  _first = false;
-  //}
-  //return 0;
-  //break;
+  case WM_SIZE:
+    //if (g_pd3dDevice != NULL && _wParam != SIZE_MINIMIZED)
+  {
+    static bool _first = true;
+    if (!_first)
+    {
+      /*Update viewport*/
+      int width = 0, height = 0;
+      RECT rc;
+      GetClientRect(reinterpret_cast<HWND>(GraphicsApi::instance().getWindow()), &rc);
+      width = rc.right - rc.left;
+      height = rc.bottom - rc.top;
+      GraphicsApi::instance().resizeWindow({ width, height });
+    }
+    _first = false;
+  }
+  return 0;
+  break;
 
   default:
     return DefWindowProc(hWnd, message, wParam, lParam);
@@ -739,11 +739,11 @@ BaseAppTest1::initResources()
 
 
 
-  m_rtv = graphicsApi.createRenderTragetPtr();
+  /*m_rtv = graphicsApi.createRenderTragetPtr();
   m_rtv->createAsBackBuffer();
 
   m_dsv = graphicsApi.createDepthStencilPtr();
-  m_dsv->create(screenWidth, screenHeight);
+  m_dsv->create(screenWidth, screenHeight);*/
 
 
 
@@ -1235,9 +1235,9 @@ BaseAppTest1::render()
 
 
   //Set Back Buffer
-  graphicsApi.clearRenderTargets({ m_rtv }, color);
-  graphicsApi.cleanDepthStencils({ m_dsv });
-  graphicsApi.setRenderTargets({ m_rtv }, m_dsv);
+  graphicsApi.clearRenderTargets({ graphicsApi.getBackBuffer() }, color);
+  graphicsApi.cleanDepthStencils({ graphicsApi.getDepthStencil() });
+  graphicsApi.setRenderTargets({ graphicsApi.getBackBuffer() }, graphicsApi.getDepthStencil());
 
 
 

@@ -393,15 +393,26 @@ DX11GraphicsApi::setViewports(Vector<ViewportDesc> descs)
   m_basics.m_deviceContext->RSSetViewports(static_cast<UINT>(vps.size()),
                                            vps.data());
 }
+#define FACILITY_WIN32 0x0007
+
+#define __HRESULT_FROM_WIN32(x) ((HRESULT)(x) <= 0 ? ((HRESULT)(x)) : ((HRESULT) (((x) & 0x0000FFFF) | (FACILITY_WIN32 << 16) | 0x80000000)))
 void
 DX11GraphicsApi::resizeWindow(Vector2i newSize)
 {
-  GraphicsApi::resizeWindow(newSize);
+  HRESULT hr =
+  m_basics.m_swapChain->ResizeBuffers(1u,
+                                      static_cast<uint32>(newSize.x),
+                                      static_cast<uint32>(newSize.y),
+                                      DXGI_FORMAT_B8G8R8A8_UNORM,
+                                      0);
 
-  //DX11SAFE_RELEASE(m_basics.m_device);
-  //DX11SAFE_RELEASE(m_basics.m_deviceContext);
-  //DX11SAFE_RELEASE(m_basics.m_swapChain);
-  //initializeBasics();
+  HRESULT hr2 = __HRESULT_FROM_WIN32(hr);
+  if (FAILED(hr))
+  {
+    return;
+  }
+
+  GraphicsApi::resizeWindow(newSize);
 }
 void
 DX11GraphicsApi::drawIndexed(int32 indicesCount) const
