@@ -170,6 +170,7 @@
     <ClInclude Include="include\eeColor.h" />
     <ClInclude Include="include\eeDLLDynamics.h" />
     <ClInclude Include="include\eeFile.h" />
+    <ClInclude Include="include\eeFrustum.h" />
     <ClInclude Include="include\eeLogger.h" />
     <ClInclude Include="include\eeMath.h" />
     <ClInclude Include="include\eeMatrix2.h" />
@@ -198,6 +199,7 @@
     <ClCompile Include="src\eeColor.cpp" />
     <ClCompile Include="src\eeDLLDynamics.cpp" />
     <ClCompile Include="src\eeFile.cpp" />
+    <ClCompile Include="src\eeFrustum.cpp" />
     <ClCompile Include="src\eeLogger.cpp" />
     <ClCompile Include="src\eeMatrix2.cpp" />
     <ClCompile Include="src\eeMatrix3.cpp" />

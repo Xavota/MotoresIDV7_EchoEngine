@@ -150,6 +150,7 @@
     <ClInclude Include="include\eeSkeletal.h">
       <Filter>include\Resources</Filter>
     </ClInclude>
+    <ClInclude Include="include\eeCBounds.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeBaseApp.cpp">
@@ -254,5 +255,6 @@
     <ClCompile Include="src\eeSkeletal.cpp">
       <Filter>src\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="src\eeCBounds.cpp" />
   </ItemGroup>
 </Project>

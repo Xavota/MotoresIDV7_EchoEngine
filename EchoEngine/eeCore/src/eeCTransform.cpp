@@ -8,11 +8,11 @@ CTransform::CTransform()
    m_rotation(Vector3f( 0.0f,0.0f,0.0f )),
    m_scale(1.0f, 1.0f, 1.0f)
 {
-  m_modelMatrixBuff = GraphicsApi::instance().createConstantBufferPtr();
+  //m_modelMatrixBuff = GraphicsApi::instance().createConstantBufferPtr();
   Matrix4f modelMat = getModelMatrix();
-  m_modelMatrixBuff->initData(sizeof(Matrix4f),
-                              sizeof(Matrix4f),
-                              reinterpret_cast<Byte*>(&modelMat));
+  //m_modelMatrixBuff->initData(sizeof(Matrix4f),
+  //                            sizeof(Matrix4f),
+  //                            reinterpret_cast<Byte*>(&modelMat));
 }
 void
 CTransform::update()
@@ -23,7 +23,7 @@ CTransform::update()
     m_dirtyModelMatrix = false;
 
     Matrix4f modelMat = getModelMatrix();
-    m_modelMatrixBuff->updateData(reinterpret_cast<Byte*>(&modelMat));
+    //m_modelMatrixBuff->updateData(reinterpret_cast<Byte*>(&modelMat));
   }
 }
 Matrix4f

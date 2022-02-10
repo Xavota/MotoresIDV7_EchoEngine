@@ -12,6 +12,8 @@
 /************************************************************************/
 
 #pragma once
+#include <eeVector2.h>
+
 #include "eePrerequisitesCore.h"
 #include "eeBuffer.h"
 #include "eeSamplerState.h"
@@ -71,7 +73,10 @@ class EE_CORE_EXPORT Texture
    * Weather it succeed or failed to initialize.
    */
   virtual bool
-  loadFromBuffer(void* /*buffer*/, SamplerStateDesc /*desc*/){return true;}
+  loadFromBuffer(void* /*buffer*/, SamplerStateDesc /*desc*/){ return true; }
+
+  virtual bool
+  create2D() { return true; }
 
   /**
    * @brief

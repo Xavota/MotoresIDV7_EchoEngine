@@ -135,5 +135,9 @@ class BaseAppTest1 : public BaseApp
   * A rasterizer for on screen rendering.
   */
   SPtr<RasterizerState> m_rasterizer2;
-};
 
+
+  SPtr<ConstantBuffer> m_viewPosBuffer;
+
+  SPtr<ConstantBuffer> m_constantBuffers;
+};

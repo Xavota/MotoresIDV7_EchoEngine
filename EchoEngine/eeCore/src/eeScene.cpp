@@ -7,6 +7,7 @@
 #include "eeCModel.h"
 #include "eeCSkeletalMesh.h"
 #include "eeCCamera.h"
+#include "eeCBounds.h"
 
 namespace eeEngineSDK {
 Vector<SPtr<Actor>>
@@ -16,18 +17,10 @@ Scene::getAllRenderableActorsInside(SPtr<CCamera> camera)
   for (auto& act : m_actors) {
     if (act.second->isActive()) {
       SPtr<CRender> render = act.second->getComponent<CRender>();
-      SPtr<CModel> model = act.second->getComponent<CModel>();
-      SPtr<CSkeletalMesh> skMesh = act.second->getComponent<CSkeletalMesh>();
       if (render) {
-        if (model) {
-          if (camera->isModelOnCamera(model)) {
-            renderActors.push_back(act.second);
-          }
-        }
-        else if (skMesh) {
-          if (camera->isModelOnCamera(skMesh)) {
-            renderActors.push_back(act.second);
-          }
+        SPtr<CBounds> bounds = act.second->getComponent<CBounds>();
+        if (bounds && camera->isModelOnCamera(bounds)) {
+          renderActors.push_back(act.second);
         }
       }
     }

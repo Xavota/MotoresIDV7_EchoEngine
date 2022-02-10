@@ -1,7 +1,22 @@
+/************************************************************************/
+/**
+ * @file eeColor.h
+ * @author Diego Castellanos
+ * @date 05/02/22
+ * @brief The color class. Stores rgb values from 0.0f to 1.0f.
+ *
+ * @bug Not bug Known.
+ */
+ /************************************************************************/
+
 #pragma once
 #include "eePrerequisitesUtilities.h"
 
 namespace eeEngineSDK {
+/**
+ * @brief
+ * The color class. Stores rgb values from 0.0f to 1.0f.
+ */
 class EE_UTILITY_EXPORT Color
 {
  public:

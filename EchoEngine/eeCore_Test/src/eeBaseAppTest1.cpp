@@ -45,6 +45,7 @@
 #include <eeCCamera.h>
 #include <eeCSkeletalMesh.h>
 #include <eeCAnimation.h>
+#include <eeCBounds.h>
 
 
 using eeEngineSDK::eeConfigurations::screenWidth;
@@ -83,11 +84,14 @@ using eeEngineSDK::PixelShader;
 using eeEngineSDK::Byte;
 using eeEngineSDK::Texture;
 using eeEngineSDK::Component;
+
 using eeEngineSDK::CTransform;
 using eeEngineSDK::CModel;
 using eeEngineSDK::CRender;
 using eeEngineSDK::CSkeletalMesh;
 using eeEngineSDK::CAnimation;
+using eeEngineSDK::CBounds;
+
 using eeEngineSDK::Input;
 using eeEngineSDK::CameraDesc;
 using eeEngineSDK::String;
@@ -884,6 +888,7 @@ BaseAppTest1::initResources()
   (
     Model::cube
   );
+  actor->addComponent<CBounds>();
   actor->addComponent<CRender>();
 
 
@@ -896,6 +901,7 @@ BaseAppTest1::initResources()
   (
     Model::cube
   );
+  actor->addComponent<CBounds>();
   actor->addComponent<CRender>();
 
 
@@ -910,19 +916,21 @@ BaseAppTest1::initResources()
   (
     Model::cube
   );
+  actor->addComponent<CBounds>();
   actor->addComponent<CRender>();
 
 
 
   actor = scene->addActor("Test");
-  actor->getTransform()->setScale({ 0.1f, 0.1f, 0.1f });
+  actor->getTransform()->setScale({ 2.0f, 2.0f, 2.0f });
   actor->getTransform()->setPosition({ 3.0f, 0.0f, 0.0f });
+  actor->getTransform()->setRotation(Quaternion( {1.5707f, 0.0f, 0.0f} ));
   actor->addComponent<CModel>();
   actor->getComponent<CModel>()->setModel
   (
     resourceManager.loadModelFromFile
     (
-      "Models/steve.fbx",
+      "C:/Users/Mara May/Desktop/Extras/Clases/Octavo/Motores/Modelos/Jinx/source/arcane_jinx_sketchfab.fbx",
       "ActorTest1"
     )
   );
@@ -930,13 +938,41 @@ BaseAppTest1::initResources()
   (
     resourceManager.loadTextureFromFile
     (
-      "Textures/steve.png",
-      "SteveTex",
+      "C:/Users/Mara May/Desktop/Extras/Clases/Octavo/Motores/Modelos/Jinx/textures/F_MED_UproarBraids_Body_baseColor.png",
+      "JinxBody_tex",
       samDesc
     ),
     0
   );
+  actor->getComponent<CModel>()->getModel()->setTexture
+  (
+    resourceManager.loadTextureFromFile
+    (
+      "C:/Users/Mara May/Desktop/Extras/Clases/Octavo/Motores/Modelos/Jinx/textures/F_MED_UproarBraids_FaceAcc_baseColor.png",
+      "JinxHair_tex",
+      samDesc
+    ),
+    1
+  );
+  actor->getComponent<CModel>()->getModel()->setTexture
+  (
+    resourceManager.loadTextureFromFile
+    (
+      "C:/Users/Mara May/Desktop/Extras/Clases/Octavo/Motores/Modelos/Jinx/textures/FACE_-_TEST.png",
+      "JinxFace_tex",
+      samDesc
+    ),
+    2
+  );
+  actor->addComponent<CBounds>();
   actor->addComponent<CRender>();
+
+  resourceManager.loadTextureFromFile
+  (
+    "C:/Users/Mara May/Desktop/Extras/Clases/Octavo/Motores/Modelos/Jinx/textures/F_MED_UproarBraids_Body_normal.png",
+    "JinxNormal_tex",
+    samDesc
+  );
 
 
   resourceManager.importResourceFromFile("Models/boblampclean.md5mesh");
@@ -995,6 +1031,7 @@ BaseAppTest1::initResources()
   (
     resourceManager.getResourceAnimation("boblampclean_anim_")
   );
+  actor->addComponent<CBounds>();
   actor->addComponent<CRender>();
 
 
@@ -1013,9 +1050,13 @@ BaseAppTest1::initResources()
   (
     resourceManager.getResourceAnimation("Scary_Clown_Walk_anim_mixamo.com")
   );
+  actor->addComponent<CBounds>();
   actor->addComponent<CRender>();
 
 
+
+  m_viewPosBuffer = graphicsApi.createConstantBufferPtr();
+  m_viewPosBuffer->initData(sizeof(Vector4f), sizeof(Vector4f), nullptr);
 
   return true;
 }
@@ -1062,12 +1103,12 @@ BaseAppTest1::update()
 
 
   SPtr<Actor> actor = scene->getActor("Test");
-  if (actor) {
-    static Quaternion rot1(Vector3f(0.0f, 0.0f, 0.0f));
-    rot1 = Quaternion((rot1.getEuclidean() +
-                    Vector3f(timeManager.getDeltaTime() * .5f, 0.0f, 0.0f)));
-    actor->getTransform()->setRotation(rot1);
-  }
+  //if (actor) {
+  //  static Quaternion rot1(Vector3f(0.0f, 0.0f, 0.0f));
+  //  rot1 = Quaternion((rot1.getEuclidean() +
+  //                  Vector3f(timeManager.getDeltaTime() * .5f, 0.0f, 0.0f)));
+  //  actor->getTransform()->setRotation(rot1);
+  //}
 
 
 
@@ -1134,6 +1175,13 @@ BaseAppTest1::update()
     }
   }
 
+  Vector3f pos = trans->getPosition();
+  Vector4f vp = Vector4f(pos.x, pos.y, pos.z, 1.0f);
+  //Logger::instance().ConsoleLog("x: " + eeEngineSDK::eeToString(pos.x)
+  //                            + "y: " + eeEngineSDK::eeToString(pos.y)
+  //                            + "z: " + eeEngineSDK::eeToString(pos.z));
+  m_viewPosBuffer->updateData(reinterpret_cast<Byte*>(&vp));
+
 
   sceneManager.update();
 }
@@ -1148,7 +1196,6 @@ BaseAppTest1::render()
 
   Vector<SPtr<CCamera>> activeCams = graphicsApi.getActiveCameras();
   Color color{ 0.3f, 0.5f, 0.8f, 1.0f };
-
 
 
   // Load shaders
@@ -1194,10 +1241,11 @@ BaseAppTest1::render()
 
     Vector<SPtr<Actor>> rActors =
       sceneManager.getAllRenderableActorsInside(activeCams[0]);
-    int32 rActorsCount = static_cast<int32>(rActors.size());
+    auto rActorsCount = static_cast<int32>(rActors.size());
 
     animVS->use();
     animPS->use();
+
 
     //Draw in-cam skeletal actors
     for (int32 i = 0; i < rActorsCount; ++i) {
@@ -1207,6 +1255,8 @@ BaseAppTest1::render()
 
     vs->use();
     ps->use();
+
+    m_viewPosBuffer->setInVertex(3u);
 
     //Draw in-cam actors
     for (int32 i = 0; i < rActorsCount; ++i) {

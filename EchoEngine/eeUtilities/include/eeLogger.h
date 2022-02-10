@@ -1,3 +1,15 @@
+/************************************************************************/
+/**
+ * @file eeLogger.h
+ * @author Diego Castellanos
+ * @date 01/02/22
+ * @brief For debug porpoise, prints a string on the console, on a file or
+ * other places.
+ *
+ * @bug Not bug Known.
+ */
+ /************************************************************************/
+
 #pragma once
 #include "eePrerequisitesUtilities.h"
 #include "eeStringUtilities.h"

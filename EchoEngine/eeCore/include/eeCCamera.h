@@ -17,7 +17,7 @@
 #include "eeVector2.h"
 #include "eeQuaternion.h"
 #include "eeMatrix4.h"
-#include <eePlane.h>
+#include <eeFrustum.h>
 
 namespace eeEngineSDK{
 /**
@@ -420,7 +420,7 @@ class EE_CORE_EXPORT CCamera : public Component
    * True if the bounds are intersecting or inside the frustum.
    */
   bool
-  isModelOnCamera(SPtr<Component> ActorModel);
+  isModelOnCamera(SPtr<CBounds> ActorModel);
 
  private:
   // Camera info
@@ -491,31 +491,12 @@ class EE_CORE_EXPORT CCamera : public Component
    */
   SPtr<DepthStencil> m_depthStencil;
 
-  // Frustum
+
   /**
-   * The near plane for the frustum.
+   * The frustum for the camera view.
    */
-  Plane m_nearPlane;
-  /**
-   * The far plane for the frustum.
-   */
-  Plane m_farPlane;
-  /**
-   * The left plane for the frustum.
-   */
-  Plane m_leftPlane;
-  /**
-   * The right plane for the frustum.
-   */
-  Plane m_rightPlane;
-  /**
-   * The top plane for the frustum.
-   */
-  Plane m_topPlane;
-  /**
-   * The down plane for the frustum.
-   */
-  Plane m_downPlane;
+  Frustum m_viewFrustum;
+
   /**
    * The dirty flag for the frustum calculation.
    */

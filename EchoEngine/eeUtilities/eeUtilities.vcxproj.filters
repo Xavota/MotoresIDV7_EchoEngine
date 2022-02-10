@@ -93,6 +93,7 @@
     <ClInclude Include="include\eeStringUtilities.h">
       <Filter>include\Platform</Filter>
     </ClInclude>
+    <ClInclude Include="include\eeFrustum.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eePlatformMath.cpp">
@@ -158,5 +159,6 @@
     <ClCompile Include="src\eeStringUtilities.cpp">
       <Filter>src\Platform</Filter>
     </ClCompile>
+    <ClCompile Include="src\eeFrustum.cpp" />
   </ItemGroup>
 </Project>

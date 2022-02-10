@@ -68,7 +68,6 @@ class RasterizerState;
 class PixelShader;
 class VertexShader;
 class InputLayout;
-class Window;
 
 
 struct SimplexVertex;
@@ -98,6 +97,7 @@ class CModel;
 class CRender;
 class CCamera;
 class CSkeletalMesh;
+class CBounds;
 
 class ResourceManager;
 }

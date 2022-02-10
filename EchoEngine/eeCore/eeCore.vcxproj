@@ -180,6 +180,7 @@
     <ClCompile Include="src\eeBlendState.cpp" />
     <ClCompile Include="src\eeBuffer.cpp" />
     <ClCompile Include="src\eeCAnimation.cpp" />
+    <ClCompile Include="src\eeCBounds.cpp" />
     <ClCompile Include="src\eeCCamera.cpp" />
     <ClCompile Include="src\eeCModel.cpp" />
     <ClCompile Include="src\eeComponent.cpp" />
@@ -216,6 +217,7 @@
     <ClInclude Include="include\eeBlendState.h" />
     <ClInclude Include="include\eeBuffer.h" />
     <ClInclude Include="include\eeCAnimation.h" />
+    <ClInclude Include="include\eeCBounds.h" />
     <ClInclude Include="include\eeCCamera.h" />
     <ClInclude Include="include\eeCModel.h" />
     <ClInclude Include="include\eeComponent.h" />

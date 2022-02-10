@@ -272,11 +272,11 @@ Model::loadFromFile(const String& fileName,
   float maxDistance = 0.0f;
       //----Vertices----
   for (uint32 i = 0; i < scene->mNumMeshes; ++i) {
-    Vector<SimpleVertex> vertices;
+    Vector<ComplexVertex> vertices;
     aiMesh* AssimpMesh = scene->mMeshes[i];
 
     for (uint32 j = 0; j < AssimpMesh->mNumVertices; ++j) {
-      SimpleVertex v;
+      ComplexVertex v;
       //---Pos
       if (AssimpMesh->HasPositions()) {
         const aiVector3D& vertex = AssimpMesh->mVertices[j];
@@ -329,7 +329,7 @@ Model::loadFromFile(const String& fileName,
     }
 
     //---Tan/Bin
-    /*for (int32 j = 0; j * 3 + 2 < scene->mMeshes[i]->mNumVertices; ++j)
+    for (int32 j = 0; j * 3 + 2 < scene->mMeshes[i]->mNumVertices; ++j)
     {
       aiVector3D deltaPos1 = scene->mMeshes[i]->mVertices[j * 3 + 1] - scene->mMeshes[i]->mVertices[j * 3];
       aiVector3D deltaPos2 = scene->mMeshes[i]->mVertices[j * 3 + 2] - scene->mMeshes[i]->mVertices[j * 3];
@@ -339,30 +339,36 @@ Model::loadFromFile(const String& fileName,
       aiVector3D tangent = (deltaPos1 * deltaUV2.y - deltaPos2 * deltaUV1.y) * r;
       aiVector3D bitangent = (deltaPos2 * deltaUV1.x - deltaPos1 * deltaUV2.x) * r;
 
-      vertices[j * 3 + 0].Binormal.x = bitangent.x;
-      vertices[j * 3 + 0].Binormal.y = bitangent.y;
-      vertices[j * 3 + 0].Binormal.z = bitangent.z;
+      vertices[j * 3 + 0].binormal.x = bitangent.x;
+      vertices[j * 3 + 0].binormal.y = bitangent.y;
+      vertices[j * 3 + 0].binormal.z = bitangent.z;
+      vertices[j * 3 + 0].binormal.w = 0.0f;
 
-      vertices[j * 3 + 1].Binormal.x = bitangent.x;
-      vertices[j * 3 + 1].Binormal.y = bitangent.y;
-      vertices[j * 3 + 1].Binormal.z = bitangent.z;
+      vertices[j * 3 + 1].binormal.x = bitangent.x;
+      vertices[j * 3 + 1].binormal.y = bitangent.y;
+      vertices[j * 3 + 1].binormal.z = bitangent.z;
+      vertices[j * 3 + 1].binormal.w = 0.0f;
 
-      vertices[j * 3 + 2].Binormal.x = bitangent.x;
-      vertices[j * 3 + 2].Binormal.y = bitangent.y;
-      vertices[j * 3 + 2].Binormal.z = bitangent.z;
+      vertices[j * 3 + 2].binormal.x = bitangent.x;
+      vertices[j * 3 + 2].binormal.y = bitangent.y;
+      vertices[j * 3 + 2].binormal.z = bitangent.z;
+      vertices[j * 3 + 2].binormal.w = 0.0f;
 
 
-      vertices[j * 3 + 0].Tangente.x = tangent.x;
-      vertices[j * 3 + 0].Tangente.y = tangent.y;
-      vertices[j * 3 + 0].Tangente.z = tangent.z;
+      vertices[j * 3 + 0].tangent.x = tangent.x;
+      vertices[j * 3 + 0].tangent.y = tangent.y;
+      vertices[j * 3 + 0].tangent.z = tangent.z;
+      vertices[j * 3 + 0].tangent.w = 0.0f;
 
-      vertices[j * 3 + 1].Tangente.x = tangent.x;
-      vertices[j * 3 + 1].Tangente.y = tangent.y;
-      vertices[j * 3 + 1].Tangente.z = tangent.z;
+      vertices[j * 3 + 1].tangent.x = tangent.x;
+      vertices[j * 3 + 1].tangent.y = tangent.y;
+      vertices[j * 3 + 1].tangent.z = tangent.z;
+      vertices[j * 3 + 1].tangent.w = 0.0f;
 
-      vertices[j * 3 + 2].Tangente.x = tangent.x;
-      vertices[j * 3 + 2].Tangente.y = tangent.y;
-      vertices[j * 3 + 2].Tangente.z = tangent.z;
+      vertices[j * 3 + 2].tangent.x = tangent.x;
+      vertices[j * 3 + 2].tangent.y = tangent.y;
+      vertices[j * 3 + 2].tangent.z = tangent.z;
+      vertices[j * 3 + 2].tangent.w = 0.0f;
     }/**/
 
 

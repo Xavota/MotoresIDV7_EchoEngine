@@ -28,6 +28,7 @@ enum E
   kCamera,
   kSkeletalMesh,
   kAnimation,
+  kBounds,
   kCount
 };
 }
@@ -47,6 +48,17 @@ public:
 
   /**
    * @brief
+   * Default constructor.
+   */
+  Component() = default;
+  /**
+   * @brief
+   * Default destructor.
+   */
+  ~Component() = default;
+
+  /**
+   * @brief
    * Returns the component type.
    *
    * @description
@@ -60,17 +72,6 @@ public:
   {
     return CmpType;
   }
-
-  /**
-   * @brief
-   * Default constructor.
-   */
-  Component() = default;
-  /**
-   * @brief
-   * Default destructor.
-   */
-  ~Component() = default;
 
   /**
    * @brief

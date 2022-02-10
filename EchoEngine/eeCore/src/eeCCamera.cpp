@@ -10,6 +10,7 @@
 #include "eeCTransform.h"
 #include "eeCModel.h"
 #include "eeCSkeletalMesh.h"
+#include "eeCBounds.h"
 
 #include "eeGraficsApi.h"
 
@@ -203,107 +204,32 @@ CCamera::getDepthStencil()
   return m_depthStencil;
 }
 bool
-CCamera::isModelOnCamera(SPtr<Component> ActorModel)
+CCamera::isModelOnCamera(SPtr<CBounds> ActorBounds)
 {
-  if (!ActorModel) {
+  if (!ActorBounds) {
     return false;
   }
 
   if (m_dirtyFrustum) {
     m_dirtyFrustum = false;
 
-    // Recalculate Frustum
-    Vector3f nearFront = getFront() * m_nearZ;
-    Vector3f nearUp = getUp() * Math::tan(m_fovAngleY) * m_nearZ;
-    Vector3f nearLeft = getRight()
-           * (Math::tan(m_fovAngleY) * m_nearZ * (m_viewSize.x / m_viewSize.y));
-
-
-    Vector3f nw = (nearFront + nearUp - nearLeft) * 500.0f;
-    Vector3f ne = (nearFront + nearUp + nearLeft) * 500.0f;
-    Vector3f sw = (nearFront - nearUp - nearLeft) * 500.0f;
-    Vector3f se = (nearFront - nearUp + nearLeft) * 500.0f;
-    m_nearPlane.setNormal(getFront());
-    m_farPlane.setNormal(-getFront());
-    m_leftPlane.setNormal(nw.cross(sw).getNormalize());
-    m_rightPlane.setNormal(se.cross(ne).getNormalize());
-    m_topPlane.setNormal(ne.cross(nw).getNormalize());
-    m_downPlane.setNormal(sw.cross(se).getNormalize());
-
-    m_nearPlane.setPoint(m_eyePos + nearFront);
-    m_farPlane.setPoint(m_eyePos + getFront() * m_farZ);
-    m_leftPlane.setPoint(m_eyePos);
-    m_rightPlane.setPoint(m_eyePos);
-    m_topPlane.setPoint(m_eyePos);
-    m_downPlane.setPoint(m_eyePos);
+    m_viewFrustum.UpdateFrustum(m_eyePos,
+                                getFront(),
+                                getUp(),
+                                getRight(),
+                                m_nearZ,
+                                m_farZ,
+                                m_fovAngleY,
+                                m_viewSize.x / m_viewSize.y);
   }
 
   auto& memoryMan = MemoryManager::instance();
-  
-  Sphere boundSphere;
-  if (memoryMan.reinterpretPtr<CModel>(ActorModel)) {
-    boundSphere = memoryMan.reinterpretPtr<CModel>(ActorModel)->getBoundingSphere();
-  }
-  else if (memoryMan.reinterpretPtr<CSkeletalMesh>(ActorModel)) {
-    boundSphere = memoryMan.reinterpretPtr<CSkeletalMesh>(ActorModel)->getBoundingSphere();
-  }
 
-  if (MemoryManager::instance().reinterpretPtr<CModel>(ActorModel)
-   || MemoryManager::instance().reinterpretPtr<CModel>(ActorModel))
+  if (m_viewFrustum.isSphereInside(ActorBounds->getSphereBound()))
   {
-
-  }
-  // See if in
-  if (Math::intersectionSpherePlane(boundSphere, m_nearPlane)) {
-    return true;
-  }
-  if (Math::intersectionSpherePlane(boundSphere, m_farPlane)) {
-    return true;
-  }
-  if (Math::intersectionSpherePlane(boundSphere, m_leftPlane)) {
-    return true;
-  }
-  if (Math::intersectionSpherePlane(boundSphere, m_rightPlane)) {
-    return true;
-  }
-  if (Math::intersectionSpherePlane(boundSphere, m_topPlane)) {
-    return true;
-  }
-  if (Math::intersectionSpherePlane(boundSphere, m_downPlane)) {
-    return true;
+    return true; // m_viewFrustum.isSphereInside(boundBox);
   }
 
-  Vector3f relativePoint = boundSphere.getCenter()
-                         - m_nearPlane.getNormal() * m_nearPlane.d;
-  if (relativePoint.dot(m_nearPlane.getNormal()) < 0.0f) {
-    return false;
-  }
-  relativePoint = boundSphere.getCenter()
-                - m_farPlane.getNormal() * m_farPlane.d;
-  if (relativePoint.dot(m_farPlane.getNormal()) < 0.0f) {
-    return false;
-  }
-  relativePoint = boundSphere.getCenter()
-                - m_leftPlane.getNormal() * m_leftPlane.d;
-  if (relativePoint.dot(m_leftPlane.getNormal()) < 0.0f) {
-    return false;
-  }
-  relativePoint = boundSphere.getCenter()
-                - m_rightPlane.getNormal() * m_rightPlane.d;
-  if (relativePoint.dot(m_rightPlane.getNormal()) < 0.0f) {
-    return false;
-  }
-  relativePoint = boundSphere.getCenter()
-                - m_topPlane.getNormal() * m_topPlane.d;
-  if (relativePoint.dot(m_topPlane.getNormal()) < 0.0f) {
-    return false;
-  }
-  relativePoint = boundSphere.getCenter()
-                - m_downPlane.getNormal() * m_downPlane.d;
-  if (relativePoint.dot(m_downPlane.getNormal()) < 0.0f) {
-    return false;
-  }
-
-  return true;
+  return false;
 }
 }

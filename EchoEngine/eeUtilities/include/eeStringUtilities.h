@@ -1,3 +1,14 @@
+/************************************************************************/
+/**
+ * @file eeStringUtilities.h
+ * @author Diego Castellanos
+ * @date 07/02/22
+ * @brief For all the actions involving strings that are needed.
+ *
+ * @bug Not bug Known.
+ */
+ /************************************************************************/
+
 #pragma once
 #include "eePrerequisitesUtilities.h"
 

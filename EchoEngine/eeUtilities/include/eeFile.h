@@ -1,3 +1,14 @@
+/************************************************************************/
+/**
+ * @file eeFile.h
+ * @author Diego Castellanos
+ * @date 06/02/22
+ * @brief The file class, to wrap the file actions.
+ *
+ * @bug Not bug Known.
+ */
+ /************************************************************************/
+
 #pragma once
 #include "eePrerequisitesUtilities.h"
 
@@ -16,7 +27,7 @@ enum E : uint8
 };
 }
 
-class File
+class EE_UTILITY_EXPORT File
 {
  public:
   /**

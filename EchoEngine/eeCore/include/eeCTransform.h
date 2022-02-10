@@ -81,21 +81,21 @@ class EE_CORE_EXPORT CTransform : public Component
   virtual Matrix4f
   getModelMatrix();
 
-  /**
-   * @brief
-   * Getter for the model buffer.
-   *
-   * @description
-   * Returns the model buffer of the transformations.
-   *
-   * @return
-   * The model buffer of the transformations.
-   */
-  virtual SPtr<ConstantBuffer>
-  getModelBuffer()
-  {
-    return m_modelMatrixBuff;
-  }
+  ///**
+  // * @brief
+  // * Getter for the model buffer.
+  // *
+  // * @description
+  // * Returns the model buffer of the transformations.
+  // *
+  // * @return
+  // * The model buffer of the transformations.
+  // */
+  //virtual SPtr<ConstantBuffer>
+  //getModelBuffer()
+  //{
+  //  return m_modelMatrixBuff;
+  //}
 
   /**
    * @brief
@@ -236,10 +236,10 @@ class EE_CORE_EXPORT CTransform : public Component
    */
   Vector3f m_scale;
 
-  /**
-   * The constant buffer for the model matrix of the object.
-   */
-  SPtr<ConstantBuffer> m_modelMatrixBuff;
+  ///**
+  // * The constant buffer for the model matrix of the object.
+  // */
+  //SPtr<ConstantBuffer> m_modelMatrixBuff;
 
 
   /**

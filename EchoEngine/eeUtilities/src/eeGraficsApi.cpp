@@ -109,6 +109,13 @@ GraphicsApi::drawObject(SPtr<Actor> act)
   //}
 
 
+  static SPtr<ConstantBuffer> modelMatrixBuff = nullptr;
+  if (!modelMatrixBuff)
+  {
+    modelMatrixBuff = GraphicsApi::instance().createConstantBufferPtr();
+    modelMatrixBuff->initData(sizeof(Matrix4f), sizeof(Matrix4f), nullptr);
+  }
+
   EE_NO_EXIST_RETURN(act);
 
   auto& graphicsApi = GraphicsApi::instance();
@@ -118,13 +125,17 @@ GraphicsApi::drawObject(SPtr<Actor> act)
 
   SPtr<CTransform> transform = act->getTransform();
 
+  graphicsApi.setTextures({ ResourceManager::instance().getResourceTexture("JinxNormal_tex") }, 1u);
+
   const SPtr<CModel> model = act->getComponent<CModel>();
   if (model && model->getModel())
   {
     meshes = model->getModel()->getMeshes();
     meshesCount = static_cast<uint32>(meshes.size());
 
-    transform->getModelBuffer()->setInVertex(0u);
+    Matrix4f modelMatrix = transform->getModelMatrix();
+    modelMatrixBuff->updateData(reinterpret_cast<Byte*>(&modelMatrix));
+    modelMatrixBuff->setInVertex(0u);
 
     for (int32 i = 0; i < meshesCount; ++i) {
       if (!meshes[i].first) { break; }
@@ -147,7 +158,9 @@ GraphicsApi::drawObject(SPtr<Actor> act)
     meshes = skModel->getMeshes();
     meshesCount = static_cast<uint32>(meshes.size());
 
-    transform->getModelBuffer()->setInVertex(0u);
+    Matrix4f modelMatrix = transform->getModelMatrix();
+    modelMatrixBuff->updateData(reinterpret_cast<Byte*>(&modelMatrix));
+    modelMatrixBuff->setInVertex(0u);
 
     const SPtr<Skeletal> skeleton = skModel->getSkeletal();
     for (int32 i = 0; i < meshesCount; ++i) {
