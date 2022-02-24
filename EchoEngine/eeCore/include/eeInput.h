@@ -16,6 +16,39 @@
 #include "eeVector2.h"
 
 namespace eeEngineSDK {
+namespace KEYBOARD_INPUT {
+/**
+ * @brief
+ * Keyboard input types.
+ */
+enum E : int8
+{
+  kNone = -1,
+  kQ,
+  kW,
+  kE,
+  kA,
+  kS,
+  kD,
+  kTab,
+  kCount
+};
+}
+
+namespace MOUSE_INPUT {
+/**
+ * @brief
+ * Mouse input types.
+ */
+enum E : int8
+{
+  kNone = -1,
+  kLeftClick,
+  kRightClick,
+  kCount
+};
+}
+
 /**
  * @brief
  * The input manager for the api. 
@@ -24,36 +57,6 @@ namespace eeEngineSDK {
 class EE_CORE_EXPORT Input : public Module<Input>
 {
 public:
-  /**
-   * @brief
-   * Keyboard input types.
-   */
-  enum class eKEYBOARD
-  {
-    kNONE = -1,
-    kQ,
-    kW,
-    kE,
-    kA,
-    kS,
-    kD,
-    kTAB,
-    kCOUNT
-  };
-
-  /**
-   * @brief
-   * Mouse input types.
-   */
-  enum class eMOUSE_CLICK
-  {
-    kNONE = -1,
-    kLEFT_CLICK,
-    kRIGHT_CLICK,
-    kCOUNT
-  };
-
-
   /**
    * @brief
    * Updates the inputs.
@@ -78,7 +81,7 @@ public:
    * If it's pressed or not.
    */
   void
-  setKeyboardInputPressed(eKEYBOARD key, bool pressed);
+  setKeyboardInputPressed(KEYBOARD_INPUT::E key, bool pressed);
   /**
    * @brief
    * Set the state of a mouse input.
@@ -92,7 +95,7 @@ public:
    * If it's pressed or not.
    */
   void
-  setMouseClickInputPressed(eMOUSE_CLICK key, bool pressed);
+  setMouseClickInputPressed(MOUSE_INPUT::E key, bool pressed);
 
   /**
    * @brief
@@ -108,7 +111,7 @@ public:
    * True if it's pressed for the first time.
    */
   bool
-  getKeyboardInputPressed(eKEYBOARD key);
+  getKeyboardInputPressed(KEYBOARD_INPUT::E key);
   /**
    * @brief
    * Get if the keyboard input is pressed.
@@ -123,7 +126,7 @@ public:
    * True if it's currently being pressed.
    */
   bool
-  getKeyboardInputIsPressed(eKEYBOARD key);
+  getKeyboardInputIsPressed(KEYBOARD_INPUT::E key);
   /**
    * @brief
    * Get if the keyboard input is released.
@@ -138,7 +141,7 @@ public:
    * True if it's released for the first time.
    */
   bool
-  getKeyboardInputReleased(eKEYBOARD key);
+  getKeyboardInputReleased(KEYBOARD_INPUT::E key);
 
   /**
    * @brief
@@ -154,7 +157,7 @@ public:
    * True if it's pressed for the first time.
    */
   bool
-  getMouseClickInputPressed(eMOUSE_CLICK key);
+  getMouseClickInputPressed(MOUSE_INPUT::E key);
   /**
    * @brief
    * Get if the mouse input is pressed.
@@ -169,7 +172,7 @@ public:
    * True if it's currently being pressed.
    */
   bool
-  getMouseClickInputIsPressed(eMOUSE_CLICK key);
+  getMouseClickInputIsPressed(MOUSE_INPUT::E key);
   /**
    * @brief
    * Get if the mouse input is released.
@@ -184,7 +187,7 @@ public:
    * True if it's released for the first time.
    */
   bool
-  getMouseClickInputReleased(eMOUSE_CLICK key);
+  getMouseClickInputReleased(MOUSE_INPUT::E key);
 
   /**
    * @brief
@@ -250,11 +253,11 @@ public:
   /**
    * Map of keyboard inputs info
    */
-  Map<eKEYBOARD, InputInfo> m_keyboardInputMap;
+  Map<KEYBOARD_INPUT::E, InputInfo> m_keyboardInputMap;
   /**
    * Map of mouse inputs info
    */
-  Map<eMOUSE_CLICK, InputInfo> m_mouseClicksInputMap;
+  Map<MOUSE_INPUT::E, InputInfo> m_mouseClicksInputMap;
   /**
    * The mouse current position on screen.
    */

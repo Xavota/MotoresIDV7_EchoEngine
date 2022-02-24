@@ -28,28 +28,26 @@
 
 #include <eeVertexShader.h>
 #include <eePixelShader.h>
-#include <eeRenderTarget.h>
-#include <eeDepthStencil.h>
 #include <eeRasterizerState.h>
+#include <eeTexture.h>
 
 #include <eeObject.h>
 #include <eeAnimation.h>
 #include <eeSkeletalMesh.h>
-#include <eeModel.h>
+#include <eeStaticMesh.h>
+#include <eeMesh.h>
 #include <eeColor.h>
+#include <eeImage.h>
+#include <eeMaterial.h>
 
 #include <eeActor.h>
 #include <eeCTransform.h>
-#include <eeCModel.h>
+#include <eeCStaticMesh.h>
 #include <eeCRender.h>
 #include <eeCCamera.h>
 #include <eeCSkeletalMesh.h>
 #include <eeCAnimation.h>
 #include <eeCBounds.h>
-
-
-using eeEngineSDK::eeConfigurations::screenWidth;
-using eeEngineSDK::eeConfigurations::screenHeight;
 
 using eeEngineSDK::Logger;
 using eeEngineSDK::GraphicsApi;
@@ -61,12 +59,15 @@ using eeEngineSDK::Vector3f;
 using eeEngineSDK::Vector2f;
 using eeEngineSDK::Vector2i;
 using eeEngineSDK::Color;
+using eeEngineSDK::ColorI;
+using eeEngineSDK::Image;
+using eeEngineSDK::Material;
 using eeEngineSDK::Matrix4f;
 using eeEngineSDK::Quaternion;
 using eeEngineSDK::SimplexVertex;
 using eeEngineSDK::SimpleVertex;
 using eeEngineSDK::Object;
-using eeEngineSDK::Model;
+using eeEngineSDK::StaticMesh;
 using eeEngineSDK::Mesh;
 using eeEngineSDK::SkeletalMesh;
 using eeEngineSDK::Skeletal;
@@ -86,7 +87,7 @@ using eeEngineSDK::Texture;
 using eeEngineSDK::Component;
 
 using eeEngineSDK::CTransform;
-using eeEngineSDK::CModel;
+using eeEngineSDK::CStaticMesh;
 using eeEngineSDK::CRender;
 using eeEngineSDK::CSkeletalMesh;
 using eeEngineSDK::CAnimation;
@@ -95,7 +96,7 @@ using eeEngineSDK::CBounds;
 using eeEngineSDK::Input;
 using eeEngineSDK::CameraDesc;
 using eeEngineSDK::String;
-using eeEngineSDK::eCAMERA_PROJECTION_TYPE;
+using eeEngineSDK::CAMERA_PROJECTION_TYPE;
 
 using eeEngineSDK::MemoryManager;
 using eeEngineSDK::Time;
@@ -143,66 +144,66 @@ WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
   case WM_KEYDOWN:
     if (wParam == 'Q') {
-      inputMan.setKeyboardInputPressed(Input::eKEYBOARD::kQ, true);
+      inputMan.setKeyboardInputPressed(eeEngineSDK::KEYBOARD_INPUT::kQ, true);
     }
     else if (wParam == 'W') {
-      inputMan.setKeyboardInputPressed(Input::eKEYBOARD::kW, true);
+      inputMan.setKeyboardInputPressed(eeEngineSDK::KEYBOARD_INPUT::kW, true);
     }
     else if (wParam == 'E') {
-      inputMan.setKeyboardInputPressed(Input::eKEYBOARD::kE, true);
+      inputMan.setKeyboardInputPressed(eeEngineSDK::KEYBOARD_INPUT::kE, true);
     }
     else if (wParam == 'A') {
-      inputMan.setKeyboardInputPressed(Input::eKEYBOARD::kA, true);
+      inputMan.setKeyboardInputPressed(eeEngineSDK::KEYBOARD_INPUT::kA, true);
     }
     else if (wParam == 'S') {
-      inputMan.setKeyboardInputPressed(Input::eKEYBOARD::kS, true);
+      inputMan.setKeyboardInputPressed(eeEngineSDK::KEYBOARD_INPUT::kS, true);
     }
     else if (wParam == 'D') {
-      inputMan.setKeyboardInputPressed(Input::eKEYBOARD::kD, true);
+      inputMan.setKeyboardInputPressed(eeEngineSDK::KEYBOARD_INPUT::kD, true);
     }
     else if (wParam == 9) { // TAB
-      inputMan.setKeyboardInputPressed(Input::eKEYBOARD::kTAB, true);
+      inputMan.setKeyboardInputPressed(eeEngineSDK::KEYBOARD_INPUT::kTab, true);
     }
     break;
 
   case WM_KEYUP:
     if (wParam == 'Q') {
-      inputMan.setKeyboardInputPressed(Input::eKEYBOARD::kQ, false);
+      inputMan.setKeyboardInputPressed(eeEngineSDK::KEYBOARD_INPUT::kQ, false);
     }
     else if (wParam == 'W') {
-      inputMan.setKeyboardInputPressed(Input::eKEYBOARD::kW, false);
+      inputMan.setKeyboardInputPressed(eeEngineSDK::KEYBOARD_INPUT::kW, false);
     }
     else if (wParam == 'E') {
-      inputMan.setKeyboardInputPressed(Input::eKEYBOARD::kE, false);
+      inputMan.setKeyboardInputPressed(eeEngineSDK::KEYBOARD_INPUT::kE, false);
     }
     else if (wParam == 'A') {
-      inputMan.setKeyboardInputPressed(Input::eKEYBOARD::kA, false);
+      inputMan.setKeyboardInputPressed(eeEngineSDK::KEYBOARD_INPUT::kA, false);
     }
     else if (wParam == 'S') {
-      inputMan.setKeyboardInputPressed(Input::eKEYBOARD::kS, false);
+      inputMan.setKeyboardInputPressed(eeEngineSDK::KEYBOARD_INPUT::kS, false);
     }
     else if (wParam == 'D') {
-      inputMan.setKeyboardInputPressed(Input::eKEYBOARD::kD, false);
+      inputMan.setKeyboardInputPressed(eeEngineSDK::KEYBOARD_INPUT::kD, false);
     }
     else if (wParam == 9) { // TAB
-      inputMan.setKeyboardInputPressed(Input::eKEYBOARD::kTAB, false);
+      inputMan.setKeyboardInputPressed(eeEngineSDK::KEYBOARD_INPUT::kTab, false);
     }
     break;
 
   case WM_LBUTTONDOWN:
-    inputMan.setMouseClickInputPressed(Input::eMOUSE_CLICK::kLEFT_CLICK, true);
+    inputMan.setMouseClickInputPressed(eeEngineSDK::MOUSE_INPUT::kLeftClick, true);
     break;
 
   case WM_RBUTTONDOWN:
-    inputMan.setMouseClickInputPressed(Input::eMOUSE_CLICK::kRIGHT_CLICK, true);
+    inputMan.setMouseClickInputPressed(eeEngineSDK::MOUSE_INPUT::kRightClick, true);
     break;
 
   case WM_LBUTTONUP:
-    inputMan.setMouseClickInputPressed(Input::eMOUSE_CLICK::kLEFT_CLICK, false);
+    inputMan.setMouseClickInputPressed(eeEngineSDK::MOUSE_INPUT::kLeftClick, false);
     break;
 
   case WM_RBUTTONUP:
-    inputMan.setMouseClickInputPressed(Input::eMOUSE_CLICK::kRIGHT_CLICK, false);
+    inputMan.setMouseClickInputPressed(eeEngineSDK::MOUSE_INPUT::kRightClick, false);
     break;
 
   case WM_MOUSEMOVE:
@@ -218,7 +219,8 @@ WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       GetClientRect(reinterpret_cast<HWND>(GraphicsApi::instance().getWindow()), &rc);
       width = rc.right - rc.left;
       height = rc.bottom - rc.top;
-      GraphicsApi::instance().resizeWindow({ width, height });
+      GraphicsApi::instance().resizeWindow({ static_cast<uint32>(width),
+                                             static_cast<uint32>(height) });
     }
     _first = false;
   }
@@ -309,11 +311,11 @@ void
 DrawCameraCmp(SPtr<CCamera> cam, int32& uniqueId)
 {
   ImGui::PushID(uniqueId++);
-  eCAMERA_PROJECTION_TYPE pt = cam->getProjectionType();
+  CAMERA_PROJECTION_TYPE pt = cam->getProjectionType();
   auto projIndex = static_cast<int>(pt);
   const char* projTypes[] = { "Orthographic", "Perspective" };
   if (ImGui::Combo("Projection Types", &projIndex, projTypes, 2)) {
-    cam->setProjectionType(static_cast<eCAMERA_PROJECTION_TYPE>(projIndex));
+    cam->setProjectionType(static_cast<CAMERA_PROJECTION_TYPE>(projIndex));
   }
   ImGui::PopID();
   ImGui::PushID(uniqueId++);
@@ -343,27 +345,28 @@ DrawCameraCmp(SPtr<CCamera> cam, int32& uniqueId)
 }
 
 void
-DrawModelCmp(SPtr<CModel> model, int32& uniqueId)
+DrawStaticMeshCmp(SPtr<CStaticMesh> staticMesh, int32& uniqueId)
 {
   ImGui::PushID(uniqueId++);
-  String modelName = model->getModel()->getName();
-  Map<String, SPtr<Model>> models =
-  ResourceManager::instance().getAllModelResources();
-  int modelIndex = 0;
+  String staticMeshName = staticMesh->getStaticMesh()->getName();
+  Map<String, SPtr<StaticMesh>> staticMeshes =
+  ResourceManager::instance().getAllStaticMeshResources();
+  int staticMeshIndex = 0;
   int tempIndex = 0;
   Vector<const char*> names;
-  for (auto& m : models) {
+  for (auto& m : staticMeshes) {
     names.push_back(m.first.c_str());
-    if (m.first == modelName) {
-      modelIndex = tempIndex;
+    if (m.first == staticMeshName) {
+      staticMeshIndex = tempIndex;
     }
     tempIndex++;
   }
-  if (ImGui::Combo("Model Resource",
-                   &modelIndex,
+  if (ImGui::Combo("Static Mesh Resource",
+                   &staticMeshIndex,
                    names.data(),
                    static_cast<uint32>(names.size()))) {
-    model->setModel(ResourceManager::instance().getResourceModel(names[modelIndex]));
+    staticMesh->setStaticMesh(
+    ResourceManager::instance().getResourceStaticMesh(names[staticMeshIndex]));
   }
   ImGui::PopID();
 }
@@ -427,10 +430,10 @@ showActorData(SPtr<Actor> act, int32& uniqueId)
       DrawCameraCmp(camC, uniqueId);
       ImGui::Separator();
     }
-    SPtr<CModel> modelC = act->getComponent<CModel>();
-    if (modelC) {
-      ImGui::Text("Model");
-      DrawModelCmp(modelC, uniqueId);
+    SPtr<CStaticMesh> staticMeshC = act->getComponent<CStaticMesh>();
+    if (staticMeshC) {
+      ImGui::Text("Static Mesh");
+      DrawStaticMeshCmp(staticMeshC, uniqueId);
       ImGui::Separator();
     }
     SPtr<CRender> renderC = act->getComponent<CRender>();
@@ -651,7 +654,7 @@ UIRender()
     }
 
     ImGui::Text("Models");
-    Map<String, SPtr<Model>> models = resourceMan.getAllModelResources();
+    Map<String, SPtr<StaticMesh>> models = resourceMan.getAllStaticMeshResources();
     for (auto& m : models) {
       ImGui::Text(("  " + m.first).c_str());
     }
@@ -704,8 +707,8 @@ BaseAppTest1::run(void* /*callback*/)
   return BaseApp::run(WndProc);
 }
 
-bool
-BaseAppTest1::initResources()
+void
+BaseAppTest1::onInit()
 {
   auto& graphicsApi = GraphicsApi::instance();
   auto& resourceManager = ResourceManager::instance();
@@ -716,7 +719,6 @@ BaseAppTest1::initResources()
     ImGui_ImplDX11_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
-    return false;
   }
 
   SamplerStateDesc samDesc;
@@ -729,11 +731,19 @@ BaseAppTest1::initResources()
   samDesc.minLOD = 0;
   samDesc.maxLOD = Math::kMAX_FLOAT;
 
-  resourceManager.loadTextureFromFile("Textures/Default.png",
-                                                  "Default",
-                                                  samDesc);
+  m_sampler = memoryManager.newPtr<SamplerState>();
+  m_sampler->create(samDesc);
 
-  Model::initPrimitives();
+  resourceManager.loadTextureFromFile("Textures/Defaults/DefaultDiffuse.png",
+                                      "DefaultDiffuse");
+  resourceManager.loadTextureFromFile("Textures/Defaults/DefaultNormalMap.jpg",
+                                      "DefaultNormalMap");
+  resourceManager.loadMaterialFromTextures(
+  resourceManager.getResourceTexture("DefaultDiffuse"),
+  resourceManager.getResourceTexture("DefaultNormalMap"),
+  "Default_mat");
+
+  StaticMesh::initPrimitives();
 
 
   /*m_rtv = graphicsApi.createRenderTragetPtr();
@@ -745,8 +755,8 @@ BaseAppTest1::initResources()
 
   graphicsApi.setPrimitiveTopology(ePRIMITIVE_TOPOLOGY::TRIANGLELIST);
 
-  SPtr<Mesh> SAQ = memoryManager.newPtr<Mesh>();
-  SAQ->loadFromArray<SimpleVertex, uint32>(
+  Mesh SAQ;
+  SAQ.loadFromArray<SimpleVertex, uint32>(
   Vector<SimpleVertex>
     {
       SimpleVertex
@@ -781,54 +791,58 @@ BaseAppTest1::initResources()
     }
   );
 
+  resourceManager.loadMaterialFromTextures(m_rtv, nullptr, "SAQ_mat");
+
   m_SAQ = memoryManager.newPtr<Object>();
   m_SAQ->loadFromModel
   (
-    resourceManager.loadModelFromMeshesArray
+    resourceManager.loadStaticMeshFromMeshesArray
     (
-      Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>
+      //Vector<Pair<Mesh, SPtr<Texture>>>
+      Vector<Pair<Mesh, SPtr<Material>>>
       {
-        make_pair
+        //Pair<Mesh, SPtr<Texture>>
+        Pair<Mesh, SPtr<Material>>
         (
           SAQ,
           nullptr
         )
       },
-      "SAQ"
+      "SAQ",
+      Vector3f(1.0f, 1.0f, 0.0f),
+      Vector3f(1.0f, 1.0f, 0.0f),
+      Vector3f(-1.0f, -1.0f, 0.0f)
     ),
     Vector3f(0.0f, 0.0f, 0.0f),
     Quaternion(Vector3f(0.0f, 0.0f, 0.0f)),
     Vector3f(1.0f, 1.0f, 1.0f)
   );
-  
-  
-  if (!resourceManager.loadVertexShaderFromFile("Shaders/TestVShader.hlsl",
-                                                "TestVS")) {
-    return false;
-  }
-  if (!resourceManager.loadPixelShaderFromFile("Shaders/TestPShader.hlsl",
-                                               "TestPS")) {
-    return false;
-  }
+  m_SAQ->getModel()->setTexture
+  (
+    resourceManager.getResourceMaterial
+    (
+      "SAQ_mat"
+    ),
+    0
+  );
 
-  if (!resourceManager.loadVertexShaderFromFile("Shaders/TestVSAnimShader.hlsl",
-                                                "TestVSAnim")) {
-    return false;
-  }
-  if (!resourceManager.loadPixelShaderFromFile("Shaders/TestPSAnimShader.hlsl",
-                                               "TestPSAnim")) {
-    return false;
-  }
   
   
-  if (!resourceManager.loadVertexShaderFromFile("Shaders/TestVSSAQ.hlsl",
-                                                "TestSAQVS")) {
-    return false;
-  }
-  if (!resourceManager.loadPixelShaderFromFile("Shaders/TestPSSAQ.hlsl",
-                                               "TestSAQPS")) {
-    return false;
-  }
+  resourceManager.loadVertexShaderFromFile("Shaders/TestVShader.hlsl",
+                                           "TestVS");
+  resourceManager.loadPixelShaderFromFile("Shaders/TestPShader.hlsl",
+                                          "TestPS");
+
+  resourceManager.loadVertexShaderFromFile("Shaders/TestVSAnimShader.hlsl",
+                                           "TestVSAnim");
+  resourceManager.loadPixelShaderFromFile("Shaders/TestPSAnimShader.hlsl",
+                                          "TestPSAnim");
+  
+  
+  resourceManager.loadVertexShaderFromFile("Shaders/TestVSSAQ.hlsl",
+                                           "TestSAQVS");
+  resourceManager.loadPixelShaderFromFile("Shaders/TestPSSAQ.hlsl",
+                                          "TestSAQPS");
   
   m_viewMatrixBuffer = graphicsApi.createConstantBufferPtr();
   m_projectionMatrixBuffer = graphicsApi.createConstantBufferPtr();
@@ -843,9 +857,7 @@ BaseAppTest1::initResources()
   rasDesc.frontCounterClockwise = true;
   
   m_rasterizer = graphicsApi.createRasterizerStatePtr();
-  if (!m_rasterizer->create(rasDesc)) {
-    return false;
-  }
+  m_rasterizer->create(rasDesc);
   
   
   memset(&rasDesc, 0, sizeof(rasDesc));
@@ -854,9 +866,7 @@ BaseAppTest1::initResources()
   rasDesc.frontCounterClockwise = true;
   
   m_rasterizer2 = graphicsApi.createRasterizerStatePtr();
-  if (!m_rasterizer2->create(rasDesc)) {
-    return false;
-  }
+  m_rasterizer2->create(rasDesc);
   
 
 
@@ -870,7 +880,7 @@ BaseAppTest1::initResources()
 
 
   CameraDesc camDesc;
-  camDesc.projectionType = eCAMERA_PROJECTION_TYPE::kPerspective;
+  camDesc.projectionType = CAMERA_PROJECTION_TYPE::kPerspective;
   camDesc.fovAngleY = Math::kPI / 4.0f;
   camDesc.viewSize = { static_cast<float>(screenWidth),
                        static_cast<float>(screenHeight) };
@@ -883,10 +893,10 @@ BaseAppTest1::initResources()
   actor->addComponent<CCamera>();
   actor->getComponent<CCamera>()->init(camDesc);
   actor->getComponent<CCamera>()->setMain(true);
-  actor->addComponent<CModel>();
-  actor->getComponent<CModel>()->setModel
+  actor->addComponent<CStaticMesh>();
+  actor->getComponent<CStaticMesh>()->setStaticMesh
   (
-    Model::cube
+    StaticMesh::cube
   );
   actor->addComponent<CBounds>();
   actor->addComponent<CRender>();
@@ -896,10 +906,10 @@ BaseAppTest1::initResources()
   actor = scene->addActor("AtatchToActor");
   actor->attachTo(scene->getActor("Player"));
   actor->getTransform()->setPosition({ 0.0f, 0.0f, 30.0f });
-  actor->addComponent<CModel>();
-  actor->getComponent<CModel>()->setModel
+  actor->addComponent<CStaticMesh>();
+  actor->getComponent<CStaticMesh>()->setStaticMesh
   (
-    Model::cube
+    StaticMesh::cube
   );
   actor->addComponent<CBounds>();
   actor->addComponent<CRender>();
@@ -911,79 +921,109 @@ BaseAppTest1::initResources()
   actor->getTransform()->setScale({ 0.1f, 0.1f, 0.1f });
   actor->addComponent<CCamera>();
   actor->getComponent<CCamera>()->init(camDesc);
-  actor->addComponent<CModel>();
-  actor->getComponent<CModel>()->setModel
+  actor->addComponent<CStaticMesh>();
+  actor->getComponent<CStaticMesh>()->setStaticMesh
   (
-    Model::cube
+    StaticMesh::cube
   );
   actor->addComponent<CBounds>();
   actor->addComponent<CRender>();
 
 
+  resourceManager.importResourceFromFile("Models/arcane_jinx_sketchfab.fbx",
+  eeEngineSDK::IMPORT_FLAGS::kImportStaticMeshes);
+
+  resourceManager.importResourceFromFile("Textures/Jinx/F_MED_UproarBraids_Body_baseColor.png");
+  resourceManager.importResourceFromFile("Textures/Jinx/F_MED_UproarBraids_FaceAcc_baseColor.png");
+  resourceManager.importResourceFromFile("Textures/Jinx/FACE_-_TEST.png");
+
+  resourceManager.loadMaterialFromTextures(
+    resourceManager.getResourceTexture("F_MED_UproarBraids_Body_baseColor_tex"),
+    nullptr,
+    "F_MED_UproarBraids_Body_baseColor_mat");
+
+  resourceManager.loadMaterialFromTextures(
+    resourceManager.getResourceTexture("F_MED_UproarBraids_FaceAcc_baseColor_tex"),
+    nullptr,
+    "F_MED_UproarBraids_FaceAcc_baseColor_mat");
+
+  resourceManager.loadMaterialFromTextures(
+    resourceManager.getResourceTexture("FACE_-_TEST_tex"),
+    nullptr,
+    "FACE_-_TEST_mat");
 
   actor = scene->addActor("Test");
   actor->getTransform()->setScale({ 2.0f, 2.0f, 2.0f });
   actor->getTransform()->setPosition({ 3.0f, 0.0f, 0.0f });
   actor->getTransform()->setRotation(Quaternion( {1.5707f, 0.0f, 0.0f} ));
-  actor->addComponent<CModel>();
-  actor->getComponent<CModel>()->setModel
+  actor->addComponent<CStaticMesh>();
+  actor->getComponent<CStaticMesh>()->setStaticMesh
   (
-    resourceManager.loadModelFromFile
-    (
-      "C:/Users/Mara May/Desktop/Extras/Clases/Octavo/Motores/Modelos/Jinx/source/arcane_jinx_sketchfab.fbx",
-      "ActorTest1"
-    )
+    resourceManager.getResourceStaticMesh("arcane_jinx_sketchfab_sm")
   );
-  actor->getComponent<CModel>()->getModel()->setTexture
+  actor->getComponent<CStaticMesh>()->getStaticMesh()->setTexture
   (
-    resourceManager.loadTextureFromFile
+    resourceManager.getResourceMaterial
     (
-      "C:/Users/Mara May/Desktop/Extras/Clases/Octavo/Motores/Modelos/Jinx/textures/F_MED_UproarBraids_Body_baseColor.png",
-      "JinxBody_tex",
-      samDesc
+      "F_MED_UproarBraids_Body_baseColor_mat"
     ),
     0
   );
-  actor->getComponent<CModel>()->getModel()->setTexture
+  actor->getComponent<CStaticMesh>()->getStaticMesh()->setTexture
   (
-    resourceManager.loadTextureFromFile
+    resourceManager.getResourceMaterial
     (
-      "C:/Users/Mara May/Desktop/Extras/Clases/Octavo/Motores/Modelos/Jinx/textures/F_MED_UproarBraids_FaceAcc_baseColor.png",
-      "JinxHair_tex",
-      samDesc
+      "F_MED_UproarBraids_FaceAcc_baseColor_mat"
     ),
     1
   );
-  actor->getComponent<CModel>()->getModel()->setTexture
+  actor->getComponent<CStaticMesh>()->getStaticMesh()->setTexture
   (
-    resourceManager.loadTextureFromFile
+    resourceManager.getResourceMaterial
     (
-      "C:/Users/Mara May/Desktop/Extras/Clases/Octavo/Motores/Modelos/Jinx/textures/FACE_-_TEST.png",
-      "JinxFace_tex",
-      samDesc
+      "FACE_-_TEST_mat"
     ),
     2
   );
   actor->addComponent<CBounds>();
   actor->addComponent<CRender>();
 
-  resourceManager.loadTextureFromFile
-  (
-    "C:/Users/Mara May/Desktop/Extras/Clases/Octavo/Motores/Modelos/Jinx/textures/F_MED_UproarBraids_Body_normal.png",
-    "JinxNormal_tex",
-    samDesc
-  );
-
 
   resourceManager.importResourceFromFile("Models/boblampclean.md5mesh");
-  resourceManager.importResourceFromFile("Models/boblampclean.md5anim");
 
   resourceManager.importResourceFromFile("Textures/guard1_body.jpg");
+  resourceManager.loadMaterialFromTextures(
+  resourceManager.getResourceTexture("guard1_body_tex"),
+  nullptr,
+  "guard1_body_mat");
   resourceManager.importResourceFromFile("Textures/guard1_face.jpg");
+  resourceManager.loadMaterialFromTextures(
+  resourceManager.getResourceTexture("guard1_face_tex"),
+  nullptr,
+  "guard1_face_mat");
   resourceManager.importResourceFromFile("Textures/guard1_helmet.jpg");
+  resourceManager.loadMaterialFromTextures(
+  resourceManager.getResourceTexture("guard1_helmet_tex"),
+  nullptr,
+  "guard1_helmet_mat");
   resourceManager.importResourceFromFile("Textures/iron_grill.jpg");
+  resourceManager.loadMaterialFromTextures(
+  resourceManager.getResourceTexture("iron_grill_tex"),
+  nullptr,
+  "iron_grill_mat");
   resourceManager.importResourceFromFile("Textures/round_grill.jpg");
+  resourceManager.loadMaterialFromTextures(
+  resourceManager.getResourceTexture("round_grill_tex"),
+  nullptr,
+  "round_grill_mat");
 
+  SPtr<Image> tempImg = memoryManager.newPtr<Image>();
+  tempImg->loadFromFile("Textures/guard1_body.jpg");
+
+  SPtr<Texture> tempTex = graphicsApi.createTexturePtr();
+  tempTex->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kShaderResource, { tempImg->getWidth(), tempImg->getHeight() });
+
+  tempTex->loadImages({ tempImg });
 
 
   actor = scene->addActor("AnimTest");
@@ -998,32 +1038,32 @@ BaseAppTest1::initResources()
   );
   actor->getComponent<CSkeletalMesh>()->getModel()->setTexture
   (
-    resourceManager.getResourceTexture("guard1_body_tex"),
+    resourceManager.getResourceMaterial("guard1_body_mat"),
     0
   );
   actor->getComponent<CSkeletalMesh>()->getModel()->setTexture
   (
-    resourceManager.getResourceTexture("guard1_face_tex"),
+    resourceManager.getResourceMaterial("guard1_face_mat"),
     1
   );
   actor->getComponent<CSkeletalMesh>()->getModel()->setTexture
   (
-    resourceManager.getResourceTexture("guard1_helmet_tex"),
+    resourceManager.getResourceMaterial("guard1_helmet_mat"),
     2
   );
   actor->getComponent<CSkeletalMesh>()->getModel()->setTexture
   (
-    resourceManager.getResourceTexture("iron_grill_tex"),
+    resourceManager.getResourceMaterial("iron_grill_mat"),
     3
   );
   actor->getComponent<CSkeletalMesh>()->getModel()->setTexture
   (
-    resourceManager.getResourceTexture("round_grill_tex"),
+    resourceManager.getResourceMaterial("round_grill_mat"),
     4
   );
   actor->getComponent<CSkeletalMesh>()->getModel()->setTexture
   (
-    resourceManager.getResourceTexture("guard1_body_tex"),
+    resourceManager.getResourceMaterial("guard1_body_mat"),
     5
   );
   actor->addComponent<CAnimation>();
@@ -1058,11 +1098,19 @@ BaseAppTest1::initResources()
   m_viewPosBuffer = graphicsApi.createConstantBufferPtr();
   m_viewPosBuffer->initData(sizeof(Vector4f), sizeof(Vector4f), nullptr);
 
-  return true;
+
+  m_rtv = GraphicsApi::instance().createTexturePtr();
+  m_rtv->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kRenderTarget
+                | eeEngineSDK::eTEXTURE_BIND_FLAGS::kShaderResource,
+                  { screenWidth, screenHeight });
+
+  m_dsv = GraphicsApi::instance().createTexturePtr();
+  m_dsv->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kDepthStencil,
+                  { screenWidth, screenHeight });
 }
 
 void
-BaseAppTest1::update()
+BaseAppTest1::onUpdate(float deltaTime)
 {
   auto& inputMan = Input::instance();
   auto& sceneManager = SceneManager::instance();
@@ -1070,17 +1118,14 @@ BaseAppTest1::update()
 
   Logger::instance().FileLog(EE_FORMAT_LOG(String("Test log")),
   "C:/Users/Mara May/Documents/GitHub/MotoresIDV7_EchoEngine/EchoEngine/bin/log"
-    "s/testLog.txt", eeEngineSDK::WarningLevel::kDebug);
-
-
-  BaseApp::update();
+    "s/testLog.txt", eeEngineSDK::WARNING_LEVEL::kDebug);
 
 
   SPtr<Scene> scene = sceneManager.getScene("Main");
   EE_NO_EXIST_RETURN(scene);
 
   static String activePlayerName = "Player";
-  if (inputMan.getKeyboardInputPressed(eeEngineSDK::Input::eKEYBOARD::kTAB)) {
+  if (inputMan.getKeyboardInputPressed(eeEngineSDK::KEYBOARD_INPUT::kTab)) {
     if (scene->getActor(activePlayerName)
      && scene->getActor(activePlayerName)->getComponent<CCamera>()) {
       scene->getActor(activePlayerName)->getComponent<CCamera>()->setMain(false);
@@ -1124,29 +1169,29 @@ BaseAppTest1::update()
     rot = trans->getRotation();
 
     Vector3f cameraMovement = { 0.0f, 0.0f, 0.0f };
-    if (inputMan.getKeyboardInputIsPressed(eeEngineSDK::Input::eKEYBOARD::kW)) {
+    if (inputMan.getKeyboardInputIsPressed(eeEngineSDK::KEYBOARD_INPUT::kW)) {
       cameraMovement += rot.getFrontVector();
     }
-    if (inputMan.getKeyboardInputIsPressed(eeEngineSDK::Input::eKEYBOARD::kS)) {
+    if (inputMan.getKeyboardInputIsPressed(eeEngineSDK::KEYBOARD_INPUT::kS)) {
       cameraMovement -= rot.getFrontVector();
     }
-    if (inputMan.getKeyboardInputIsPressed(eeEngineSDK::Input::eKEYBOARD::kA)) {
+    if (inputMan.getKeyboardInputIsPressed(eeEngineSDK::KEYBOARD_INPUT::kA)) {
       cameraMovement -= rot.getRightVector();
     }
-    if (inputMan.getKeyboardInputIsPressed(eeEngineSDK::Input::eKEYBOARD::kD)) {
+    if (inputMan.getKeyboardInputIsPressed(eeEngineSDK::KEYBOARD_INPUT::kD)) {
       cameraMovement += rot.getRightVector();
     }
-    if (inputMan.getKeyboardInputIsPressed(eeEngineSDK::Input::eKEYBOARD::kQ)) {
+    if (inputMan.getKeyboardInputIsPressed(eeEngineSDK::KEYBOARD_INPUT::kQ)) {
       cameraMovement += rot.getUpVector();
     }
-    if (inputMan.getKeyboardInputIsPressed(eeEngineSDK::Input::eKEYBOARD::kE)) {
+    if (inputMan.getKeyboardInputIsPressed(eeEngineSDK::KEYBOARD_INPUT::kE)) {
       cameraMovement -= rot.getUpVector();
     }
     trans->setPosition(trans->getPosition() +
       cameraMovement * timeManager.getDeltaTime() * 10.0f);
 
     if (inputMan.getMouseClickInputIsPressed(
-                              eeEngineSDK::Input::eMOUSE_CLICK::kRIGHT_CLICK)) {
+                              eeEngineSDK::MOUSE_INPUT::kRightClick)) {
       //auto rot2 = Quaternion(rot.getEuclidean() +
       //                       Vector3f
       //                       (
@@ -1187,7 +1232,7 @@ BaseAppTest1::update()
 }
 
 void
-BaseAppTest1::render()
+BaseAppTest1::onRender()
 {
   auto& graphicsApi = GraphicsApi::instance();
   auto& resourceManager = ResourceManager::instance();
@@ -1209,67 +1254,72 @@ BaseAppTest1::render()
   SPtr<PixelShader> animPS =
     resourceManager.getResourcePixelShader("TestPSAnim");
 
+  m_sampler->use();
+
   m_rasterizer->use();
 
   for (auto& cam : activeCams) {
-    // Clean and set back buffer and depth stencil
-    graphicsApi.clearRenderTargets({ cam->getRenderTarget() }, color);
-    graphicsApi.cleanDepthStencils({ cam->getDepthStencil() });
-    graphicsApi.setRenderTargets({ cam->getRenderTarget() }, cam->getDepthStencil());
+    if (cam->isMain())
+    {
+      // Clean and set back buffer and depth stencil
+      graphicsApi.clearRenderTargets({ m_rtv }, color);
+      graphicsApi.cleanDepthStencils({ m_dsv });
+      graphicsApi.setRenderTargets({ m_rtv }, m_dsv);
 
 
 
-    // Create view/proj matrices
-    Matrix4f view = Matrix4f::kIDENTITY;
-    view = cam->getViewMatrix().getTranspose();
-    m_viewMatrixBuffer->updateData(reinterpret_cast<Byte*>(&view));
+      // Create view/proj matrices
+      Matrix4f view = Matrix4f::kIDENTITY;
+      view = cam->getViewMatrix().getTranspose();
+      m_viewMatrixBuffer->updateData(reinterpret_cast<Byte*>(&view));
 
-    Matrix4f proj = Matrix4f::kIDENTITY;
-    proj = cam->getProjectionMatrix().getTranspose();
-    m_projectionMatrixBuffer->updateData(reinterpret_cast<Byte*>(&proj));
-
-
-
-    // Set buffers
-    graphicsApi.setVSConstantBuffers
-    (
-      { m_viewMatrixBuffer, m_projectionMatrixBuffer },
-      1u
-    );
+      Matrix4f proj = Matrix4f::kIDENTITY;
+      proj = cam->getProjectionMatrix().getTranspose();
+      m_projectionMatrixBuffer->updateData(reinterpret_cast<Byte*>(&proj));
 
 
 
-    Vector<SPtr<Actor>> rActors =
-      sceneManager.getAllRenderableActorsInside(activeCams[0]);
-    auto rActorsCount = static_cast<int32>(rActors.size());
+      // Set buffers
+      graphicsApi.setVSConstantBuffers
+      (
+        { m_viewMatrixBuffer, m_projectionMatrixBuffer },
+        1u
+      );
 
-    animVS->use();
-    animPS->use();
 
 
-    //Draw in-cam skeletal actors
-    for (int32 i = 0; i < rActorsCount; ++i) {
-      if (rActors[i]->getComponent<CSkeletalMesh>())
-        graphicsApi.drawObject(rActors[i]);
-    }
+      Vector<SPtr<Actor>> rActors =
+        sceneManager.getAllRenderableActorsInside(activeCams[0]);
+      SIZE_T rActorsCount = rActors.size();
 
-    vs->use();
-    ps->use();
+      animVS->use();
+      animPS->use();
 
-    m_viewPosBuffer->setInVertex(3u);
 
-    //Draw in-cam actors
-    for (int32 i = 0; i < rActorsCount; ++i) {
-      if (!rActors[i]->getComponent<CSkeletalMesh>()) {
-        graphicsApi.drawObject(rActors[i]);
+      //Draw in-cam skeletal actors
+      for (SIZE_T i = 0; i < rActorsCount; ++i) {
+        if (rActors[i]->getComponent<CSkeletalMesh>())
+          graphicsApi.drawObject(rActors[i]);
       }
+
+      vs->use();
+      ps->use();
+
+      m_viewPosBuffer->setInVertex(3u);
+
+      //Draw in-cam actors
+      for (SIZE_T i = 0; i < rActorsCount; ++i) {
+        if (!rActors[i]->getComponent<CSkeletalMesh>()) {
+          graphicsApi.drawObject(rActors[i]);
+        }
+      }
+
+
+
+      //Unbind buffers
+      graphicsApi.unsetRenderTargets();
+      graphicsApi.unsetVSConstantBuffers(3u, 0u);
     }
-
-
-
-    //Unbind buffers
-    graphicsApi.unsetRenderTargets();
-    graphicsApi.unsetVSConstantBuffers(3u, 0u);
   }
 
 
@@ -1290,12 +1340,9 @@ BaseAppTest1::render()
   //Set the main camera render target texture to the SAQ and renders it to the
   //back buffer
   m_rasterizer2->use();
-  for (auto& cam : activeCams) {
-    if (cam->isMain()) {
-      m_SAQ->getModel()->setTexture(cam->getRenderTarget()->getAsTexture(), 0);
-      break;
-    }
-  }
+  //m_SAQ->getModel()->setTexture(m_rtv, 0);
+  resourceManager.getResourceMaterial("SAQ_mat")->m_diffuse = m_rtv;
+  m_SAQ->getModel()->setTexture(resourceManager.getResourceMaterial("SAQ_mat"), 0);
   graphicsApi.drawObject(m_SAQ);
 
 
@@ -1306,7 +1353,6 @@ BaseAppTest1::render()
 }
 
 void
-BaseAppTest1::destroy()
+BaseAppTest1::onDestroy()
 {
-  eeEngineSDK::BaseApp::destroy();
 }

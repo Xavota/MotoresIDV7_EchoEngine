@@ -1684,7 +1684,7 @@ TEST(eeUtilities, Shapes)
   EXPECT_FALSE(b.intersects(p));
   EXPECT_FALSE(b.intersects(s));
   EXPECT_FALSE(b.intersects(BoxAAB(Vector3f(4.0f, 3.0f, 0.0f),
-                                   Vector3f(4.0f, 5.0f, 1.0f))));
+                                   Vector3f(4.0f, 5.0f, 0.5f))));
   EXPECT_TRUE(c.intersects(Vector3f(2.0f, -3.0f, -1.0f)));
   EXPECT_TRUE(c.intersects(p));
   EXPECT_TRUE(c.intersects(s));

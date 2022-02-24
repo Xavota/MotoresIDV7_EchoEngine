@@ -16,9 +16,6 @@
 #include <eeVector3.h>
 #include <eeQuaternion.h>
 
-struct aiNode;
-struct aiAnimation;
-
 namespace eeEngineSDK {
 /**
  * @brief
@@ -40,7 +37,7 @@ struct Node
 struct VectorKeyFrame
 {
   float m_time = 0.0f;
-  Vector3f m_value;
+  Vector3f m_value = Vector3f(0.0f, 0.0f, 0.0f);
 };
 
 /**
@@ -50,7 +47,7 @@ struct VectorKeyFrame
 struct QuatKeyFrame
 {
   float m_time = 0.0f;
-  Quaternion m_value;
+  Quaternion m_value = Quaternion(0.0f, 0.0f, 0.0f, 0.0f);
 };
 
 /**
@@ -84,6 +81,33 @@ class EE_CORE_EXPORT Animation
   Animation() = default;
   /**
    * @brief
+   * Loads an animation.
+   *
+   * @description
+   * Loads the animation from a file.
+   *
+   * @param ticksPerSecond
+   * The number of frames per second the animation is gonna run. 1 over the
+   * seconds each frame last.
+   * @param duration
+   * The total time of the animation.
+   * @param channels
+   * The key frames of all the nodes on the animation.
+   * @param rootNode
+   * The root of the nodes tree of the animation.
+   * @param name
+   * The name of the animation resource.
+   *
+   * @return
+   * If it succeeded to load.
+   */
+  Animation(float ticksPerSecond,
+            float duration,
+            const Vector<AnimNode>& channels,
+            SPtr<Node> rootNode,
+            const String& name);
+  /**
+   * @brief
    * Default destructor.
    */
   ~Animation() = default;
@@ -95,16 +119,27 @@ class EE_CORE_EXPORT Animation
    * @description
    * Loads the animation from a file.
    *
-   * @param fileName
-   * The file path.
-   * @param animIndex
-   * The index of the loading animation.
+   * @param ticksPerSecond
+   * The number of frames per second the animation is gonna run. 1 over the
+   * seconds each frame last.
+   * @param duration
+   * The total time of the animation.
+   * @param channels
+   * The key frames of all the nodes on the animation.
+   * @param rootNode
+   * The root of the nodes tree of the animation.
+   * @param name
+   * The name of the animation resource.
    *
    * @return
    * If it succeeded to load.
    */
   bool
-  loadFromFile(const String& fileName, int32 animIndex, const String& name);
+  loadFromData(float ticksPerSecond,
+               float duration,
+               const Vector<AnimNode>& channels,
+               SPtr<Node> rootNode,
+               const String& name);
 
   /**
    * @brief
@@ -120,7 +155,7 @@ class EE_CORE_EXPORT Animation
    * The skeletal mesh to change the bone data.
    */
   void
-  boneTransform(int32 meshIndex,
+  boneTransform(SIZE_T meshIndex,
                 SPtr<Skeletal> skMesh,
                 float time);
   /**
@@ -145,7 +180,7 @@ class EE_CORE_EXPORT Animation
   readNodeHeirarchy(float animationTime,
                     const SPtr<Node> pNode,
                     const Matrix4f& parentTransform,
-                    int32 meshIndex,
+                    SIZE_T meshIndex,
                     SPtr<Skeletal> skMesh);
 
   /**
@@ -295,33 +330,6 @@ class EE_CORE_EXPORT Animation
 
  private:
   /**
-   * @brief
-   * Stores the animation graph.
-   *
-   * @description
-   * Stores the Assimp animation graph to my own nodes.
-   *
-   * @param current
-   * Current node to store.
-   * @param storage
-   * Current storage node to save.
-   */
-  void
-  storeNodes(aiNode* current, SPtr<Node> storage);
-  /**
-   * @brief
-   * Stores the animation info.
-   *
-   * @description
-   * Stores the Assimp animation info to my own.
-   *
-   * @param anim
-   * The hole animation info.
-   */
-  void
-  storeAnim(aiAnimation* anim);
-
-  /**
    * Animation frame rate.
    */
   float m_ticksPerSecond = 0.0f;
@@ -337,7 +345,7 @@ class EE_CORE_EXPORT Animation
   /**
    * The number of animation channels.
    */
-  uint32 m_channelsCount;
+  SIZE_T m_channelsCount = 0u;
   /**
    * The animation channels
    */

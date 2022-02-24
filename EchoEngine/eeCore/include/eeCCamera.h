@@ -13,54 +13,17 @@
 #pragma once
 #include "eePrerequisitesCore.h"
 #include "eeComponent.h"
-#include "eeVector3.h"
-#include "eeVector2.h"
-#include "eeQuaternion.h"
-#include "eeMatrix4.h"
+
+#include <eeUtilityCamera.h>
+
 #include <eeFrustum.h>
 
+#include <eeVector3.h>
+#include <eeVector2.h>
+#include <eeQuaternion.h>
+#include <eeMatrix4.h>
+
 namespace eeEngineSDK{
-/**
- * @brief
- * Enum for camera projection mode.
- */
-enum class eCAMERA_PROJECTION_TYPE
-{
-  kNone = -1,
-  kOrthographic,
-  kPerspective,
-  kCount
-};
-
-/**
- * @brief
- * A descriptor for the camera mode.
- */
-struct CameraDesc
-{
-  /**
-   * The camera projection mode.
-   */
-  eCAMERA_PROJECTION_TYPE projectionType = eCAMERA_PROJECTION_TYPE::kNone;
-  /**
-   * The halve field of view angle in Y direction.
-   */
-  float fovAngleY = 0.0f;
-  /**
-   * The screen size.
-   */
-  Vector2f viewSize = { 0.0f, 0.0f };
-  /**
-   * The distance to near plane.
-   */
-  float nearZ = 0.0f;
-  /**
-   * The distance to far plane.
-   */
-  float farZ = 0.0f;
-};
-
-
 /**
  * @brief
  * The Camera component.
@@ -72,13 +35,25 @@ class EE_CORE_EXPORT CCamera : public Component
    * @brief
    * The enum for identifying the component type.
    */
-  enum { CmpType = eCOMPONENT_TYPE::kCamera };
+  enum { CmpType = COMPONENT_TYPE::kCamera };
 
   /**
    * @brief
    * Default constructor.
    */
-  CCamera();
+  CCamera() = default;
+  /**
+   * @brief
+   * Initialize the camera.
+   *
+   * @description
+   * Initialize the camera using a descriptor that contains the info required to
+   * create the camera and its matrices.
+   *
+   * @param desc
+   * The descriptor of the camera.
+   */
+  CCamera(CameraDesc desc);
   /**
    * @brief
    * Default destructor.
@@ -177,7 +152,7 @@ class EE_CORE_EXPORT CCamera : public Component
    * The enum for the projection type.
    */
   void
-  setProjectionType(eCAMERA_PROJECTION_TYPE type);
+  setProjectionType(CAMERA_PROJECTION_TYPE type);
   /**
    * @brief
    * Getter for the projection type.
@@ -188,7 +163,7 @@ class EE_CORE_EXPORT CCamera : public Component
    * @return
    * The projection matrix type.
    */
-  eCAMERA_PROJECTION_TYPE
+  CAMERA_PROJECTION_TYPE
   getProjectionType();
 
   /**
@@ -381,32 +356,6 @@ class EE_CORE_EXPORT CCamera : public Component
 
   /**
    * @brief
-   * Getter for the render target.
-   *
-   * @description
-   * Return the render target of the camera, to where all is rendered.
-   *
-   * @return
-   * The render target of the camera with all its view.
-   */
-  SPtr<RenderTarget>
-  getRenderTarget();
-
-  /**
-   * @brief
-   * Getter for the depth stencil.
-   *
-   * @description
-   * Return the depth stencil of the camera.
-   *
-   * @return
-   * The depth stencil of the camera.
-   */
-  SPtr<DepthStencil>
-  getDepthStencil();
-
-  /**
-   * @brief
    * See if the model is on the camera.
    *
    * @description
@@ -423,83 +372,14 @@ class EE_CORE_EXPORT CCamera : public Component
   isModelOnCamera(SPtr<CBounds> ActorModel);
 
  private:
-  // Camera info
   /**
    * The position of the camera.
    */
-  Vector3f m_eyePos = {0.0f, 0.0f, 0.0f};
-  /**
-   * The look at position of the camera, for calculating rotation.
-   */
-  Vector3f m_lookAt = {0.0f, 0.0f, 0.0f};
-  /**
-   * The up vector of the camera, generally the up world vector.
-   */
-  Vector3f m_upVector = {0.0f, 0.0f, 0.0f};
+  UtilityCamera m_utilityCamera;
 
-  /**
-   * The projection type for the projection matrix.
-   */
-  eCAMERA_PROJECTION_TYPE m_projectionType = eCAMERA_PROJECTION_TYPE::kNone;
-  /**
-   * The halve FOV Y angle.
-   */
-  float m_fovAngleY = 0.0f;
-  /**
-   * The screen size.
-   */
-  Vector2f m_viewSize = { 0.0f, 0.0f };
-  /**
-   * The distance to the near plane.
-   */
-  float m_nearZ = 0.0f;
-  /**
-   * The distance to the far plane.
-   */
-  float m_farZ = 0.0f;
-
-  // Matrices
-  /**
-   * The view matrix stored, for not to calculate it each frame.
-   */
-  Matrix4f m_viewMat = Matrix4f::kIDENTITY;
-  /**
-   * The dirty flag for the view matrix.
-   */
-  bool m_dirtyView = false;
-  /**
-   * The projection matrix stored, for not to calculate it each frame.
-   */
-  Matrix4f m_projectionMat = Matrix4f::kIDENTITY;
-  /**
-   * The dirty flag for the projection matrix.
-   */
-  bool m_dirtyProj = false;
-
-  // Render
   /**
    * If the camera is rendering on the main view.
    */
   bool m_main = false;
-
-  /**
-   * The render target to where all is rendered.
-   */
-  SPtr<RenderTarget> m_renderTarget;
-  /**
-   * The depth stencil view for the depth stencil.
-   */
-  SPtr<DepthStencil> m_depthStencil;
-
-
-  /**
-   * The frustum for the camera view.
-   */
-  Frustum m_viewFrustum;
-
-  /**
-   * The dirty flag for the frustum calculation.
-   */
-  bool m_dirtyFrustum = true;
 };
 }

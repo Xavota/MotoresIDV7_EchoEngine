@@ -2,6 +2,10 @@
 #include "eeDX11GraphicsApi.h"
 
 namespace eeEngineSDK {
+DX11BlendState::DX11BlendState(BlendDesc desc)
+{
+  create(desc);
+}
 bool
 DX11BlendState::create(BlendDesc desc)
 {

@@ -29,6 +29,11 @@ class Vector4f;
 class Vector4i;
 class Vector4u;
 
+class Color;
+class ColorI;
+
+class Quaternion;
+
 class Matrix2f;
 class Matrix2i;
 class Matrix2u;
@@ -46,8 +51,13 @@ class Sphere;
 class BoxAAB;
 class Rectangle;
 class Capsule;
+class Frustum;
+class UtilityCamera;
 
-class Quaternion;
+class File;
 
 class Time;
+class DLLDynamics;
+class Logger;
+class MemoryManager;
 }

@@ -18,15 +18,6 @@
 namespace eeEngineSDK {
 namespace eeConfigurations {
 /**
- * The width of the screen.
- */
-const int32 screenWidth = 1280;
-/**
- * The height of the screen.
- */
-const int32 screenHeight = 720;
-
-/**
  * The active platform target.
  */
 #ifdef _M_IX86

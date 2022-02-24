@@ -26,7 +26,7 @@ struct SimplexVertex
   /**
    * The position of the vertex.
    */
-  Vector4f position;
+  Vector4f position = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
 };
 /**
  * @brief
@@ -37,15 +37,15 @@ struct SimpleVertex
   /**
    * The position of the vertex.
    */
-  Vector4f position;
+  Vector4f position = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
   /**
    * The texture coordinates of the vertex.
    */
-  Vector4f uvCoord;
+  Vector4f uvCoord = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
   /**
    * The normal direction of the vertex.
    */
-  Vector4f normal;
+  Vector4f normal = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
 };
 /**
  * @brief
@@ -57,24 +57,24 @@ struct ComplexVertex
   /**
    * The position of the vertex.
    */
-  Vector4f position;
+  Vector4f position = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
   /**
    * The texture coordinates of the vertex.
    */
-  Vector4f uvCoord;
+  Vector4f uvCoord = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
   /**
    * The normal direction of the vertex.
    */
-  Vector4f normal;
+  Vector4f normal = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
 
   /**
    * The binormal direction of the vertex.
    */
-  Vector4f binormal;
+  Vector4f binormal = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
   /**
    * The tangent direction of the vertex.
    */
-  Vector4f tangent;
+  Vector4f tangent = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
 };
 /**
  * @brief
@@ -86,24 +86,24 @@ struct SimpleAnimVertex
   /**
    * The position of the vertex.
    */
-  Vector4f position;
+  Vector4f position = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
   /**
    * The texture coordinates of the vertex.
    */
-  Vector4f uvCoord;
+  Vector4f uvCoord = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
   /**
    * The normal direction of the vertex.
    */
-  Vector4f normal;
+  Vector4f normal = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
 
   /**
    * The indices of the bones that affects the vertex.
    */
-  Vector4i boneIndices;
+  Vector4i boneIndices = Vector4i(0, 0, 0, 0);
   /**
    * The weights for the bones that affects the vertex.
    */
-  Vector4f boneWeights;
+  Vector4f boneWeights = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
 };
 /**
  * @brief
@@ -116,15 +116,15 @@ struct SimpleBigAnimVertex
   /**
    * The position of the vertex.
    */
-  Vector4f position;
+  Vector4f position = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
   /**
    * The texture coordinates of the vertex.
    */
-  Vector4f uvCoord;
+  Vector4f uvCoord = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);;
   /**
    * The normal direction of the vertex.
    */
-  Vector4f normal;
+  Vector4f normal = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);;
 
   /**
    * The indices of the bones that affects the vertex.
@@ -145,33 +145,33 @@ struct ComplexAnimVertex
   /**
    * The position of the vertex.
    */
-  Vector4f position;
+  Vector4f position = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);;
   /**
    * The texture coordinates of the vertex.
    */
-  Vector4f uvCoord;
+  Vector4f uvCoord = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);;
   /**
    * The normal direction of the vertex.
    */
-  Vector4f normal;
+  Vector4f normal = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);;
 
   /**
    * The binormal direction of the vertex.
    */
-  Vector4f binormal;
+  Vector4f binormal = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
   /**
    * The tangent direction of the vertex.
    */
-  Vector4f tangent;
+  Vector4f tangent = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
 
   /**
    * The indices of the bones that affects the vertex.
    */
-  Vector4i boneIndices;
+  Vector4i boneIndices = Vector4i(0, 0, 0, 0);
   /**
    * The weights for the bones that affects the vertex.
    */
-  Vector4f boneWeights;
+  Vector4f boneWeights = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
 };
 /**
  * @brief
@@ -184,24 +184,24 @@ struct ComplexBigAnimVertex
   /**
    * The position of the vertex.
    */
-  Vector4f position;
+  Vector4f position = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
   /**
    * The texture coordinates of the vertex.
    */
-  Vector4f uvCoord;
+  Vector4f uvCoord = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
   /**
    * The normal direction of the vertex.
    */
-  Vector4f normal;
+  Vector4f normal = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
 
   /**
    * The binormal direction of the vertex.
    */
-  Vector4f binormal;
+  Vector4f binormal = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
   /**
    * The tangent direction of the vertex.
    */
-  Vector4f tangent;
+  Vector4f tangent = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
 
   /**
    * The indices of the bones that affects the vertex.

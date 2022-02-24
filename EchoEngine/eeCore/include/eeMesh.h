@@ -4,7 +4,7 @@
  * @author Diego Castellanos
  * @date 06/10/21
  * @brief
- * The meshes to be renderized, described by vertices and indices.
+ * The meshes to be rendered, described by vertices and indices.
  *
  * @bug Not bug Known.
  */
@@ -25,6 +25,7 @@ namespace eeEngineSDK {
  * @brief
  * The meshes to be rendered, described by vertices and indices. 
  */
+/*template<class V, class I>*/
 class EE_CORE_EXPORT Mesh
 {
  public:
@@ -33,6 +34,11 @@ class EE_CORE_EXPORT Mesh
    * Default constructor
    */
   Mesh() = default;
+  /**
+   * @brief
+   * Copy constructor
+   */
+  Mesh(const Mesh& other);
   /**
    * @brief
    * Default destructor
@@ -106,7 +112,7 @@ class EE_CORE_EXPORT Mesh
    * @return
    * The number of indices stored.
    */
-  FORCEINLINE uint32
+  FORCEINLINE SIZE_T
   getIndexCount() const
   {
     return m_indexCount;
@@ -118,20 +124,29 @@ class EE_CORE_EXPORT Mesh
    */
   SPtr<VertexBuffer> m_vertexData;
   /**
-   * The vertex index stored.
+   * The index buffer stored.
    */
   SPtr<IndexBuffer> m_indexData;
+
+  ///**
+  // * The vertices stored.
+  // */
+  //Vector<V> m_vertexData;
+  ///**
+  // * The indices stored.
+  // */
+  //Vector<I> m_indexData;
 
   /**
    * The number of indices.
    */
-  uint32 m_indexCount = 0u;
+  SIZE_T m_indexCount = 0;
 };
 
 template<class V, class I>
 bool 
-Mesh::loadFromArray(const Vector<V>& vertices, 
-                    const Vector<I>& indices)
+Mesh/*<V, I>*/::loadFromArray(const Vector<V>& vertices, 
+                          const Vector<I>& indices)
 {
   auto& graphicsApi = GraphicsApi::instance();
 
@@ -146,14 +161,14 @@ Mesh::loadFromArray(const Vector<V>& vertices,
   if (!m_indexData) {
     m_indexData = graphicsApi.createIndexBufferPtr();
   }
-  m_vertexData->initData(static_cast<uint32>(vertices.size()) * sizeof(V),
+  m_vertexData->initData(vertices.size() * sizeof(V),
                          sizeof(V),
                          reinterpret_cast<const Byte*>(vertices.data()));
-  m_indexData->initData(static_cast<uint32>(indices.size()) * sizeof(I),
+  m_indexData->initData(indices.size() * sizeof(I),
                         sizeof(I),
                         reinterpret_cast<const Byte*>(indices.data()));
 
-  m_indexCount = static_cast<uint32>(indices.size());
+  m_indexCount = indices.size();
 
   return true;
 }

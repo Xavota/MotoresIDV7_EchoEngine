@@ -146,7 +146,7 @@ class EE_UTILITY_EXPORT BoxAAB
   FORCEINLINE Vector3f
   getB() const
   {
-    return m_a + Vector3f(m_size.x, m_size.y, m_size.z);
+    return m_a + m_size;
   }
 
   /**

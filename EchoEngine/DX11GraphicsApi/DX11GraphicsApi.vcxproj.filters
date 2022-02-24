@@ -37,13 +37,7 @@
     <ClInclude Include="include\eeDX11VertexShader.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\eeDX11DepthStencil.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\eeDX11RasterizerState.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\eeDX11RenderTarget.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\eeDX11SamplerState.h">
@@ -78,13 +72,7 @@
     <ClCompile Include="src\eeDX11VertexShader.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\eeDX11DepthStencil.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\eeDX11RasterizerState.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\eeDX11RenderTarget.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\eeDX11SamplerState.cpp">

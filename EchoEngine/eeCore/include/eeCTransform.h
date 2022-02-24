@@ -29,7 +29,7 @@ class EE_CORE_EXPORT CTransform : public Component
    * @brief
    * The enum for identifying the component type.
    */
-  enum { CmpType = eCOMPONENT_TYPE::kTransform };
+  enum { CmpType = COMPONENT_TYPE::kTransform };
 
   /**
    * @brief
@@ -80,22 +80,6 @@ class EE_CORE_EXPORT CTransform : public Component
    */
   virtual Matrix4f
   getModelMatrix();
-
-  ///**
-  // * @brief
-  // * Getter for the model buffer.
-  // *
-  // * @description
-  // * Returns the model buffer of the transformations.
-  // *
-  // * @return
-  // * The model buffer of the transformations.
-  // */
-  //virtual SPtr<ConstantBuffer>
-  //getModelBuffer()
-  //{
-  //  return m_modelMatrixBuff;
-  //}
 
   /**
    * @brief
@@ -235,12 +219,6 @@ class EE_CORE_EXPORT CTransform : public Component
    * The scale of the actor.
    */
   Vector3f m_scale;
-
-  ///**
-  // * The constant buffer for the model matrix of the object.
-  // */
-  //SPtr<ConstantBuffer> m_modelMatrixBuff;
-
 
   /**
    * The dirty flag of the model matrix.

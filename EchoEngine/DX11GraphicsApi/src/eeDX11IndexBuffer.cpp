@@ -2,9 +2,16 @@
 #include "eeDX11GraphicsApi.h"
 
 namespace eeEngineSDK {
-bool DX11IndexBuffer::initData(uint32 dataSize,
-                                            uint32 batchSize,
-                                            const Byte* data)
+DX11IndexBuffer::DX11IndexBuffer(SIZE_T dataSize,
+                                 uint32 batchSize,
+                                 const Byte* data)
+{
+  initData(dataSize, batchSize, data);
+}
+bool
+DX11IndexBuffer::initData(SIZE_T dataSize,
+                          uint32 batchSize,
+                          const Byte* data)
 {
   const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
@@ -30,7 +37,8 @@ bool DX11IndexBuffer::initData(uint32 dataSize,
 
   return true;
 }
-void DX11IndexBuffer::updateData(const Byte* data)
+void
+DX11IndexBuffer::updateData(const Byte* data)
 {
   const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
@@ -45,12 +53,14 @@ void DX11IndexBuffer::updateData(const Byte* data)
                                              0u);
 }
 
-void DX11IndexBuffer::release()
+void
+DX11IndexBuffer::release()
 {
   DX11SAFE_RELEASE(m_buffer);
 }
 
-void DX11IndexBuffer::set()
+void
+DX11IndexBuffer::set()
 {
   const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());

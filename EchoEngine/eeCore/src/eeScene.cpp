@@ -4,7 +4,7 @@
 
 #include "eeActor.h"
 #include "eeCRender.h"
-#include "eeCModel.h"
+#include "eeCStaticMesh.h"
 #include "eeCSkeletalMesh.h"
 #include "eeCCamera.h"
 #include "eeCBounds.h"

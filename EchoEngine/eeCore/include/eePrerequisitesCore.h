@@ -60,8 +60,10 @@ class Buffer;
 class VertexBuffer;
 class IndexBuffer;
 class ConstantBuffer;
-class RenderTarget;
-class DepthStencil;
+class Texture;
+
+class BlendState;
+class DepthStencilState;
 class SamplerState;
 class RasterizerState;
 
@@ -69,6 +71,8 @@ class PixelShader;
 class VertexShader;
 class InputLayout;
 
+class GraphicsApi;
+class BaseApp;
 
 struct SimplexVertex;
 struct SimpleVertex;
@@ -81,19 +85,22 @@ template<uint32 size = 4>
 struct ComplexBigAnimVertex;
 
 class Mesh;
-class Model;
+class StaticMesh;
 class Object;
 class Texture;
 class Skeletal;
 class SkeletalMesh;
 class Animation;
+class Image;
+class Material;
 
 class SceneManager;
 class Scene;
 class Actor;
 class Component;
+class CAnimation;
 class CTransform;
-class CModel;
+class CStaticMesh;
 class CRender;
 class CCamera;
 class CSkeletalMesh;

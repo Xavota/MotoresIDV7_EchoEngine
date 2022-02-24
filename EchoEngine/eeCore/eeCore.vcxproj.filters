@@ -34,6 +34,9 @@
     <Filter Include="src\Resources">
       <UniqueIdentifier>{902ed9bd-50a9-4e2b-935b-dbf92d9a9ac7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Externals">
+      <UniqueIdentifier>{77d00bff-6a27-4c03-bef4-0f0588b2d4d6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\eeCoreConfiguration.h">
@@ -57,7 +60,7 @@
     <ClInclude Include="include\eeCTransform.h">
       <Filter>include\SceneGraph\Components</Filter>
     </ClInclude>
-    <ClInclude Include="include\eeCModel.h">
+    <ClInclude Include="include\eeCStaticMesh.h">
       <Filter>include\SceneGraph\Components</Filter>
     </ClInclude>
     <ClInclude Include="include\eeCRender.h">
@@ -90,9 +93,6 @@
     <ClInclude Include="include\eeConstantBuffer.h">
       <Filter>include\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="include\eeDepthStencil.h">
-      <Filter>include\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="include\eeDepthStencilState.h">
       <Filter>include\Graphics</Filter>
     </ClInclude>
@@ -109,9 +109,6 @@
       <Filter>include\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="include\eeRasterizerState.h">
-      <Filter>include\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="include\eeRenderTarget.h">
       <Filter>include\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="include\eeSamplerState.h">
@@ -135,7 +132,7 @@
     <ClInclude Include="include\eeMesh.h">
       <Filter>include\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="include\eeModel.h">
+    <ClInclude Include="include\eeStaticMesh.h">
       <Filter>include\Resources</Filter>
     </ClInclude>
     <ClInclude Include="include\eeObject.h">
@@ -150,7 +147,18 @@
     <ClInclude Include="include\eeSkeletal.h">
       <Filter>include\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="include\eeCBounds.h" />
+    <ClInclude Include="externals\stb_image.h">
+      <Filter>include\Externals</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeCBounds.h">
+      <Filter>include\SceneGraph\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeImage.h">
+      <Filter>include\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeMaterial.h" />
+    <ClInclude Include="include\eeWindow.h" />
+    <ClInclude Include="include\eeEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeBaseApp.cpp">
@@ -165,7 +173,7 @@
     <ClCompile Include="src\eeCTransform.cpp">
       <Filter>src\SceneGraph\Components</Filter>
     </ClCompile>
-    <ClCompile Include="src\eeCModel.cpp">
+    <ClCompile Include="src\eeCStaticMesh.cpp">
       <Filter>src\SceneGraph\Components</Filter>
     </ClCompile>
     <ClCompile Include="src\eeCRender.cpp">
@@ -198,9 +206,6 @@
     <ClCompile Include="src\eeConstantBuffer.cpp">
       <Filter>src\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\eeDepthStencil.cpp">
-      <Filter>src\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="src\eeDepthStencilState.cpp">
       <Filter>src\Graphics</Filter>
     </ClCompile>
@@ -217,9 +222,6 @@
       <Filter>src\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\eeRasterizerState.cpp">
-      <Filter>src\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\eeRenderTarget.cpp">
       <Filter>src\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\eeSamplerState.cpp">
@@ -240,7 +242,7 @@
     <ClCompile Include="src\eeMesh.cpp">
       <Filter>src\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="src\eeModel.cpp">
+    <ClCompile Include="src\eeStaticMesh.cpp">
       <Filter>src\Resources</Filter>
     </ClCompile>
     <ClCompile Include="src\eeObject.cpp">
@@ -255,6 +257,14 @@
     <ClCompile Include="src\eeSkeletal.cpp">
       <Filter>src\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="src\eeCBounds.cpp" />
+    <ClCompile Include="src\eeCBounds.cpp">
+      <Filter>src\SceneGraph\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeImage.cpp">
+      <Filter>src\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeMaterial.cpp" />
+    <ClCompile Include="src\eeWindow.cpp" />
+    <ClCompile Include="src\eeEvent.cpp" />
   </ItemGroup>
 </Project>

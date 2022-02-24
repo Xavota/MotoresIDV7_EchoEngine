@@ -15,17 +15,17 @@
 #include "eePrerequisitesCore.h"
 #include <eeModule.h>
 #include <eeMemoryManager.h>
+
+#include <eeColor.h>
+
 #include "eeTexture.h"
 #include "eeVertexShader.h"
 #include "eePixelShader.h"
 #include "eeVertexBuffer.h"
 #include "eeIndexBuffer.h"
 #include "eeConstantBuffer.h"
-#include "eeRenderTarget.h"
-#include "eeDepthStencil.h"
 #include "eeRasterizerState.h"
 
-#include "eeColor.h"
 
 namespace eeEngineSDK {
 /**
@@ -59,7 +59,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * Weather it succeed or failed to initialize.
    */
   virtual bool
-  initialize();
+  initialize(uint32 witdh, uint32 height);
 
   /**
    * @brief
@@ -101,7 +101,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * Weather it succeed or failed to initialize.
    */
   virtual bool
-  initializeScreen(void* /*callback*/);
+  initializeScreen(void* /*callback*/, uint32 witdh, uint32 height);
 
   /**
    * @brief
@@ -118,7 +118,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * Blue part of the color. From 0 to 1 inclusive.
    */
   virtual void
-  clearRenderTargets(Vector<SPtr<RenderTarget>> rtvs, Color /*screenColor*/) {};
+  clearRenderTargets(Vector<SPtr<Texture>> rtvs, Color /*screenColor*/) {};
 
   /**
    * @brief
@@ -131,7 +131,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * The depth stencils to clean.
    */
   virtual void
-  cleanDepthStencils(Vector<SPtr<DepthStencil>> /*dsvs*/) {};
+  cleanDepthStencils(Vector<SPtr<Texture>> /*dsvs*/) {};
 
   /**
    * @brief
@@ -146,8 +146,8 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * The depth stencil for the render targets.
    */
   virtual void
-  setRenderTargets(Vector<SPtr<RenderTarget>> /*rtvs*/,
-                   SPtr<DepthStencil> /*dsv*/) {}
+  setRenderTargets(Vector<SPtr<Texture>> /*rtvs*/,
+                   SPtr<Texture> /*dsv*/) {}
 
   /**
    * @brief
@@ -509,38 +509,6 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
 
   /**
    * @brief
-   * Gets the specific render target pointer.
-   *
-   * @description
-   * Returns a pointer to a render target depending on the api.
-   *
-   * @return
-   * The pointer to a render target depending on the api.
-   */
-  FORCEINLINE virtual SPtr<RenderTarget>
-  createRenderTragetPtr() const
-  {
-    return MemoryManager::instance().newPtr<RenderTarget>();
-  }
-
-  /**
-   * @brief
-   * Gets the specific depth stencil pointer.
-   *
-   * @description
-   * Returns a pointer to a depth stencil depending on the api.
-   *
-   * @return
-   * The pointer to a depth stencil depending on the api.
-   */
-  FORCEINLINE virtual SPtr<DepthStencil>
-  createDepthStencilPtr() const
-  {
-    return MemoryManager::instance().newPtr<DepthStencil>();
-  }
-
-  /**
-   * @brief
    * Gets the specific rasterizer state pointer.
    *
    * @description
@@ -592,7 +560,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * The new size for the window.
    */
   virtual void
-  resizeWindow(Vector2i newSize);
+  resizeWindow(Vector2u newSize);
 
   /**
    * @brief
@@ -663,9 +631,13 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   clearActiveCameras();
 
   // Temporary
-  SPtr<RenderTarget>
+  //SPtr<RenderTarget>
+  //getBackBuffer() { return m_rtv; }
+  SPtr<Texture>
   getBackBuffer() { return m_rtv; }
-  SPtr<DepthStencil>
+  //SPtr<DepthStencil>
+  //getDepthStencil() { return m_dsv; }
+  SPtr<Texture>
   getDepthStencil() { return m_dsv; }
 
  protected:
@@ -680,17 +652,19 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * The number of indices to be drawn.
    */
   virtual void
-  drawIndexed(int32 /*indicesCount*/) const {}
+  drawIndexed(uint32 /*indicesCount*/) const {}
 
 
   /*
   * The back buffer.
   */
-  SPtr<RenderTarget> m_rtv;
+  //SPtr<RenderTarget> m_rtv;
+  SPtr<Texture> m_rtv;
   /*
   * The depth stencil of the back buffer
   */
-  SPtr<DepthStencil> m_dsv;
+  //SPtr<DepthStencil> m_dsv;
+  SPtr<Texture> m_dsv;
 
   /**
    * All render actors for a frame.

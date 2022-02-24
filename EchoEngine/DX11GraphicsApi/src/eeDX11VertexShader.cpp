@@ -184,8 +184,8 @@ DX11VertexShader::createInputLayout(ID3DBlob* pShaderBlob)
 
   // Try to create Input Layout
   HRESULT hr = basics->m_device->CreateInputLayout(&inputLayoutDesc[0],
-                                                   static_cast<uint32>(
-                                                        inputLayoutDesc.size()),
+                                                   static_cast<UINT>(
+                                                   inputLayoutDesc.size()),
                                                    pShaderBlob->GetBufferPointer(),
                                                    pShaderBlob->GetBufferSize(),
                                                    &m_inputLayout);

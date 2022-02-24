@@ -14,6 +14,10 @@
 
 namespace eeEngineSDK {
 namespace OPEN_TYPE {
+/**
+ * @brief
+ * The flags for opening a file.
+ */
 enum E : uint8
 {
   kNone = 0,
@@ -27,6 +31,10 @@ enum E : uint8
 };
 }
 
+/**
+ * @brief
+ * The file class, to wrap the file actions.
+ */
 class EE_UTILITY_EXPORT File
 {
  public:
@@ -35,6 +43,19 @@ class EE_UTILITY_EXPORT File
    * Default constructor
    */
   File() = default;
+  /**
+   * @brief
+   * Opens a file.
+   *
+   * @description
+   * Opens a file path and stores it.
+   *
+   * @param path
+   * The path of the file.
+   * @param openFlags
+   * The flags to open the file.
+   */
+  File(const String& path, uint8 openFlags = 0u);
   /**
    * @brief
    * Default destructor
@@ -123,6 +144,6 @@ class EE_UTILITY_EXPORT File
   /**
    * The flags for the file.
    */
-  uint8 m_flags;
+  uint8 m_flags = 0;
 };
 }

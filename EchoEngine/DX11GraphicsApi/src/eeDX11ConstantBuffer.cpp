@@ -4,8 +4,14 @@
 #include <eeMatrix4.h>
 
 namespace eeEngineSDK {
+DX11ConstantBuffer::DX11ConstantBuffer(SIZE_T dataSize,
+                                       uint32 batchSize,
+                                       const Byte* data)
+{
+  initData(dataSize, batchSize, data);
+}
 bool
-DX11ConstantBuffer::initData(uint32 dataSize,
+DX11ConstantBuffer::initData(SIZE_T dataSize,
                              uint32 batchSize,
                              const Byte* data)
 {
@@ -19,7 +25,7 @@ DX11ConstantBuffer::initData(uint32 dataSize,
   D3D11_BUFFER_DESC bd;
   ZeroMemory(&bd, sizeof(bd));
   bd.Usage = D3D11_USAGE_DEFAULT;
-  bd.ByteWidth = dataSize;
+  bd.ByteWidth = static_cast<UINT>(dataSize);
   bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
   bd.CPUAccessFlags = 0;
   HRESULT hr = basics->m_device->CreateBuffer(&bd, nullptr, &m_buffer);

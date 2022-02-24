@@ -33,6 +33,18 @@ class EE_UTILITY_EXPORT DLLDynamics
   DLLDynamics() = default;
   /**
    * @brief
+   * Initializes the dll.
+   * 
+   * @description
+   * Initializes the dll from a dll file.
+   *
+   * @param dllPath
+   * The file path of the dll.
+   */
+  DLLDynamics(const String& dllPath);
+
+  /**
+   * @brief
    * The default destructor.
    */
   ~DLLDynamics() = default;

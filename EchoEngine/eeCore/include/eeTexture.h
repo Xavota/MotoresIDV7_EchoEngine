@@ -12,11 +12,14 @@
 /************************************************************************/
 
 #pragma once
+#include "eePrerequisitesCore.h"
+
 #include <eeVector2.h>
 
-#include "eePrerequisitesCore.h"
 #include "eeBuffer.h"
 #include "eeSamplerState.h"
+
+#include "eeColor.h"
 
 namespace eeEngineSDK {
 /**
@@ -41,53 +44,77 @@ class EE_CORE_EXPORT Texture
 
   /**
    * @brief
-   * Initializes the texture.
+   * Creates a texture 2D.
    *
    * @description
-   * Initializes the texture from a file.
+   * Creates a 2 dimensional texture with the bindings and data specified.
    *
-   * @param fileName
-   * The name of the file containing the texture.
-   * @param desc
-   * The descriptor for the sampler of the texture.
+   * @param bindFlags
+   * The bindings for the texture.
+   * @param texSize
+   * The size of the texture.
+   * @param mipLevels
+   * The number of mip levels it will create.
    *
    * @return
-   * Weather it succeed or failed to initialize.
+   * Weather it succeed or failed to create.
    */
   virtual bool
-  loadFromFile(const String /*fileName*/, SamplerStateDesc /*desc*/) { return true; }
+  create2D(uint32 /*bindFlags*/,
+           const Vector2u& /*texSize*/,
+           uint32 /*mipLevels*/ = 0u) { return true; }
+           
+
+           
+  /**
+   * @brief
+   * Creates as the back buffer.
+   *
+   * @description
+   * Creates a render target as the back buffer.
+   *
+   * @return
+   * Weather it succeed or failed to create.
+   */
+  virtual bool
+  createAsBackBuffer() { return true; }
 
   /**
    * @brief
-   * Initializes the texture.
+   * Set as shader resource to the graphics api.
    *
    * @description
-   * Initializes the texture from a buffer.
-   *
-   * @param buffer
-   * The buffer containing the information about the texture.
-   * @param desc
-   * The descriptor for the sampler of the texture.
-   *
-   * @return
-   * Weather it succeed or failed to initialize.
-   */
-  virtual bool
-  loadFromBuffer(void* /*buffer*/, SamplerStateDesc /*desc*/){ return true; }
-
-  virtual bool
-  create2D() { return true; }
-
-  /**
-   * @brief
-   * Set to graphics api.
-   *
-   * @description
-   * Sets the shader for the graphic memory to use, only for override in graphics
-   * api specializations.
+   * Sets as shader resource for the graphic memory to use, only for override
+   * in graphics api specializations.
    */
   virtual void
-  use(){}
+  useAsShaderResource() {}
+  
+  /**
+   * @brief
+   * Loads from images.
+   *
+   * @description
+   * Loads images for the shader resources.
+   * 
+   * @param images
+   * The vector of images to use.
+   */
+  virtual void
+  loadImages(Vector<SPtr<Image>> images) { m_images = images; }
+
+  /**
+   * @brief
+   * Cleans the resource.
+   *
+   * @description
+   * Cleans the resource.
+   *
+   * @parm screenColor
+   * The background color.
+   */
+  virtual void
+  clean(Color /*screenColor*/ = Color(0.0f, 0.0f, 0.0f, 1.0f)) {}
 
   /**
    * @brief
@@ -105,5 +132,10 @@ class EE_CORE_EXPORT Texture
    * The name of the texture.
    */
   String name;
+
+  /**
+   * The images for the shader resources.
+   */
+  Vector<SPtr<Image>> m_images;
 };
 }

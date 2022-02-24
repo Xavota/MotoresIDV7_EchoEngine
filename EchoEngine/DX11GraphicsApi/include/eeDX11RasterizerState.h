@@ -32,6 +32,17 @@ class DX11RasterizerState : public RasterizerState
   DX11RasterizerState() = default;
   /**
    * @brief
+   * Creates a rasterizer stencil state.
+   *
+   * @description
+   * Creates the rasterizer stencil state with a descriptor.
+   *
+   * @param desc
+   * The descriptor for the rasterizer state.
+   */
+  DX11RasterizerState(RasteraizerDesc desc);
+  /**
+   * @brief
    * Default destructor.
    */
   ~DX11RasterizerState() = default;

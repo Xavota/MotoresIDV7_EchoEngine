@@ -34,15 +34,7 @@ BaseApp::run(void* callback)
 int32
 BaseApp::mainLoop(void* callback)
 {
-  if (!initSystems()) {
-    destroy();
-    return 1;
-  }
   if (!init(callback)) {
-    destroy();
-    return 1;
-  }
-  if (!initResources()) {
     destroy();
     return 1;
   }
@@ -52,10 +44,8 @@ BaseApp::mainLoop(void* callback)
   while (graphicsApi.appIsRunning()) {
     processEvents();
     time.update();
-    update();
+    update(time.getDeltaTime());
     render();
-
-    endFrame();
   }
 
   destroy();
@@ -65,18 +55,27 @@ BaseApp::mainLoop(void* callback)
 bool
 BaseApp::init(void* callback)
 {
+  if (!initSystems()) {
+    return false;
+  }
+
   auto& graphicsApi = GraphicsApi::instance();
 
-  if (!graphicsApi.initializeScreen(callback)) {
+  if (!graphicsApi.initializeScreen(callback, screenWidth, screenHeight)) {
     return false;
   }
   if (!graphicsApi.initializeBasics()) {
     return false;
   }
-  if (!graphicsApi.initialize()) {
+  if (!graphicsApi.initialize(screenWidth, screenHeight)) {
     return false;
   }
 
+  if (!initResources()) {
+    return false;
+  }
+
+  onInit();
 
   return true;
 }
@@ -97,24 +96,26 @@ BaseApp::processEvents()
 {
 }
 void
-BaseApp::update()
+BaseApp::update(float deltaTime)
 {
+  onUpdate(deltaTime);
+
+  Input::instance().update();
 }
 void
 BaseApp::render()
 {
-}
-void
-BaseApp::endFrame()
-{
+  onRender();
+
   auto& graphicsApi = GraphicsApi::instance();
   graphicsApi.clearRenderFrameActors();
   graphicsApi.clearActiveCameras();
-  Input::instance().update();
 }
 void
 BaseApp::destroy()
 {
+  onDestroy();
+
   GraphicsApi::instance().release();
   GraphicsApi::shutDown();
   ResourceManager::shutDown();

@@ -19,9 +19,9 @@ DX11GraphicsApi::~DX11GraphicsApi()
 }
 
 bool
-DX11GraphicsApi::initialize()
+DX11GraphicsApi::initialize(uint32 witdh, uint32 height)
 {
-  if (!GraphicsApi::initialize()) {
+  if (!GraphicsApi::initialize(witdh, height)) {
     return false;
   }
   return true;
@@ -84,9 +84,9 @@ DX11GraphicsApi::initializeBasics()
   return true;
 }
 bool
-DX11GraphicsApi::initializeScreen(void* callback)
+DX11GraphicsApi::initializeScreen(void* callback, uint32 witdh, uint32 height)
 {
-  if (!GraphicsApi::initializeScreen(callback)) {
+  if (!GraphicsApi::initializeScreen(callback, witdh, height)) {
     return false;
   }
 
@@ -109,10 +109,7 @@ DX11GraphicsApi::initializeScreen(void* callback)
   }
 
   // Create window
-  RECT rc = { 0,
-              0,
-              eeConfigurations::screenWidth,
-              eeConfigurations::screenHeight };
+  RECT rc = { 0, 0, witdh, height };
   AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
   m_win = reinterpret_cast<void*>(CreateWindow("TutorialWindowClass", 
                                                "EchoEngine", 
@@ -133,46 +130,48 @@ DX11GraphicsApi::initializeScreen(void* callback)
   return true;
 }
 void
-DX11GraphicsApi::clearRenderTargets(Vector<SPtr<RenderTarget>> rtvs,
+DX11GraphicsApi::clearRenderTargets(Vector<SPtr<Texture>> rtvs,
                                     Color screenColor)
 {
   for (auto& r : rtvs) {
-    r->clean(screenColor);
+    SPtr<DX11Texture> dx11Tex =
+    MemoryManager::instance().reinterpretPtr<DX11Texture>(r);
+    dx11Tex->clean(screenColor);
   }
 }
 void
-DX11GraphicsApi::cleanDepthStencils(Vector<SPtr<DepthStencil>> dsvs)
+DX11GraphicsApi::cleanDepthStencils(Vector<SPtr<Texture>> dsvs)
 {
   for (auto& d : dsvs) {
     d->clean();
   }
 }
 void
-DX11GraphicsApi::setRenderTargets(Vector<SPtr<RenderTarget>> rtvs,
-                                  SPtr<DepthStencil> dsv)
+DX11GraphicsApi::setRenderTargets(Vector<SPtr<Texture>> rtvs,
+                                  SPtr<Texture> dsv)
 {
   auto& memoryManager = MemoryManager::instance();
 
   Vector<ID3D11RenderTargetView*> dx11rts;
 
-  SPtr<DX11DepthStencil> ds = nullptr;
+  SPtr<DX11Texture> ds = nullptr;
   if (dsv) {
-    ds = memoryManager.reinterpretPtr<DX11DepthStencil>(dsv);
+    ds = memoryManager.reinterpretPtr<DX11Texture>(dsv);
   }
 
   for (const auto& r : rtvs) {
-    SPtr<DX11RenderTarget> rt =
-    memoryManager.reinterpretPtr<DX11RenderTarget>(r);
-
+    SPtr<DX11Texture> rt =
+    memoryManager.reinterpretPtr<DX11Texture>(r);
+  
     if (rt) {
-      dx11rts.push_back(rt->getResource());
+      dx11rts.push_back(rt->getRenderTarget());
     }
   }
 
   if (!dx11rts.empty()) {
     m_basics.m_deviceContext->OMSetRenderTargets(static_cast<UINT>(dx11rts.size()),
                                                  dx11rts.data(),
-                                                 ds ? ds->getResource() : nullptr);
+                                                 ds ? ds->getDepthStencil() : nullptr);
   }
 }
 void
@@ -182,7 +181,7 @@ DX11GraphicsApi::unsetRenderTargets()
 }
 void
 DX11GraphicsApi::setTextures(Vector<SPtr<Texture>> textures,
-                                  uint32 startSlot)
+                             uint32 startSlot)
 {
   auto& memoryManager = MemoryManager::instance();
 
@@ -192,7 +191,7 @@ DX11GraphicsApi::setTextures(Vector<SPtr<Texture>> textures,
     SPtr<DX11Texture> t = memoryManager.reinterpretPtr<DX11Texture>(tex);
 
     if (t) {
-      dx11texs.push_back(t->getResource());
+      dx11texs.push_back(t->getShaderResource());
     }
   }
 
@@ -220,7 +219,7 @@ DX11GraphicsApi::unsetTextures(uint32 textureCount, uint32 startSlot)
 }
 void
 DX11GraphicsApi::setVSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
-                                           uint32 startSlot)
+                                      uint32 startSlot)
 {
   auto& memoryManager = MemoryManager::instance();
 
@@ -259,7 +258,7 @@ DX11GraphicsApi::unsetVSConstantBuffers(uint32 buffersCount, uint32 startSlot)
 }
 void
 DX11GraphicsApi::setPSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
-                                           uint32 startSlot)
+                                      uint32 startSlot)
 {
   auto& memoryManager = MemoryManager::instance();
 
@@ -298,8 +297,8 @@ DX11GraphicsApi::unsetPSConstantBuffers(uint32 buffersCount, uint32 startSlot)
 }
 void
 DX11GraphicsApi::setVertexBuffers(Vector<SPtr<VertexBuffer>> buffers,
-                                       Vector<uint32> offsets,
-                                       uint32 startSlot)
+                                  Vector<uint32> offsets,
+                                  uint32 startSlot)
 {
   auto& memoryManager = MemoryManager::instance();
 
@@ -378,7 +377,7 @@ DX11GraphicsApi::setViewports(Vector<ViewportDesc> descs)
   Vector<D3D11_VIEWPORT> vps;
 
   for (ViewportDesc& d : descs) {
-    auto vSize = static_cast<int32>(vps.size());
+    SIZE_T vSize = vps.size();
     vps.emplace_back(D3D11_VIEWPORT());
 
     vps[vSize].Width = d.width;
@@ -394,7 +393,7 @@ DX11GraphicsApi::setViewports(Vector<ViewportDesc> descs)
     vps.data());
 }
 void
-DX11GraphicsApi::resizeWindow(Vector2i newSize)
+DX11GraphicsApi::resizeWindow(Vector2u newSize)
 {
   HRESULT hr =
   m_basics.m_swapChain->ResizeBuffers(1u,
@@ -411,7 +410,7 @@ DX11GraphicsApi::resizeWindow(Vector2i newSize)
   GraphicsApi::resizeWindow(newSize);
 }
 void
-DX11GraphicsApi::drawIndexed(int32 indicesCount) const
+DX11GraphicsApi::drawIndexed(uint32 indicesCount) const
 {
   m_basics.m_deviceContext->DrawIndexed(indicesCount, 0u, 0u);
 }

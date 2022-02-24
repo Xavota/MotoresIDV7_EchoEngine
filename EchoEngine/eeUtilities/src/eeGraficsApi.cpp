@@ -5,47 +5,40 @@
 #include "eePixelShader.h"
 #include "eeConstantBuffer.h"
 #include "eeObject.h"
-#include "eeModel.h"
+#include "eeStaticMesh.h"
 #include "eeMesh.h"
 #include "eeCTransform.h"
 #include "eeCSkeletalMesh.h"
 #include "eeSkeletalMesh.h"
 #include "eeSkeletal.h"
-#include "eeCModel.h"
+#include "eeCStaticMesh.h"
 #include "eeActor.h"
+#include "eeMaterial.h"
 
 namespace eeEngineSDK {
 bool
-GraphicsApi::initialize()
+GraphicsApi::initialize(uint32 witdh, uint32 height)
 {
-  //auto& graphicsApi = GraphicsApi::instance();
-  //
-  //m_rtv = graphicsApi.createRenderTragetPtr();
-  //m_rtv->createAsBackBuffer();
-  //
-  //m_dsv = graphicsApi.createDepthStencilPtr();
-  //m_dsv->create(eeConfigurations::screenWidth, eeConfigurations::screenHeight);
-
   ViewportDesc desc;
   memset(&desc, 0, sizeof(desc));
   desc.maxDepth = 1.0f;
   desc.minDepth = 0;
-  desc.width = static_cast<float>(eeConfigurations::screenWidth);
-  desc.height = static_cast<float>(eeConfigurations::screenHeight);
+  desc.width = static_cast<float>(witdh);
+  desc.height = static_cast<float>(height);
   desc.topLeftX = 0;
   desc.topLeftY = 0;
   setViewports({ desc });
-
-
-  m_rtv = createRenderTragetPtr();
+  
+  m_rtv = createTexturePtr();
   m_rtv->createAsBackBuffer();
 
-  m_dsv = createDepthStencilPtr();
-  m_dsv->create(eeConfigurations::screenWidth, eeConfigurations::screenHeight);
+  m_dsv = createTexturePtr();
+  m_dsv->create2D(eTEXTURE_BIND_FLAGS::kDepthStencil,
+                  { witdh, height });
 
   return true;
 }
-bool GraphicsApi::initializeScreen(void*)
+bool GraphicsApi::initializeScreen(void*, uint32, uint32)
 {
   return true;
 }
@@ -56,16 +49,18 @@ GraphicsApi::drawObject(SPtr<Object> obj)
 
   //m_basics.m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-  const Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>& meshes = obj->getModel()->getMeshes();
+  //Vector<Pair<Mesh, SPtr<Texture>>> meshes = obj->getModel()->getMeshes();
+  Vector<Pair<Mesh, SPtr<Material>>> meshes = obj->getModel()->getMeshes();
 
   obj->getModelBuffer()->setInVertex(0u);
 
-  for (const auto& m : meshes) {
-    m.first->set();
+  SIZE_T meshesCount = meshes.size();
+  for (SIZE_T i = 0; i < meshesCount; ++i) {
+    meshes[i].first.set();
 
-    graphicsApi.setTextures({m.second}, 0u);
+    graphicsApi.setTextures({meshes[i].second->m_diffuse}, 0u);
 
-    drawIndexed(m.first->getIndexCount());
+    drawIndexed(static_cast<uint32>(meshes[i].first.getIndexCount()));
 
     graphicsApi.unsetVertexBuffers(1u, 0u);
   }  
@@ -73,42 +68,6 @@ GraphicsApi::drawObject(SPtr<Object> obj)
 void
 GraphicsApi::drawObject(SPtr<Actor> act)
 {
-  //EE_NO_EXIST_RETURN(act);
-  //
-  //auto& graphicsApi = GraphicsApi::instance();
-  //
-  //SPtr<CTransform> transform = act->getTransform();
-  //
-  //SPtr<CModel> model = act->getComponent<CModel>();
-  //
-  //EE_NO_EXIST_RETURN(model);
-  //EE_NO_EXIST_RETURN(model->getModel());
-  //
-  //const Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>& meshes = model->getModel()->getMeshes();
-  //int32 meshesCount = static_cast<uint32>(meshes.size());
-  //
-  //const SPtr<CSkeletalMesh> skeletal = act->getComponent<CSkeletalMesh>();
-  //
-  //transform->getModelBuffer()->setInVertex(0u);
-  //
-  //for (int32 i = 0; i < meshesCount; ++i) {
-  //  if (!meshes[i].first) { break; }
-  //
-  //  meshes[i].first->set();
-  //
-  //  graphicsApi.setTextures({ meshes[i].second }, 0u);
-  //
-  //  if (skeletal && skeletal->getSkeletal()) {
-  //    skeletal->getSkeletal()->use(i);
-  //  }
-  //
-  //  drawIndexed(meshes[i].first->getIndexCount());
-  //
-  //  graphicsApi.unsetVertexBuffers(1u, 0u);
-  //  graphicsApi.unsetTextures(1u, 0u);
-  //}
-
-
   static SPtr<ConstantBuffer> modelMatrixBuff = nullptr;
   if (!modelMatrixBuff)
   {
@@ -120,32 +79,28 @@ GraphicsApi::drawObject(SPtr<Actor> act)
 
   auto& graphicsApi = GraphicsApi::instance();
 
-  Vector<Pair<SPtr<Mesh>, SPtr<Texture>>> meshes;
-  int32 meshesCount = 0;
+  Vector<Pair<Mesh, SPtr<Material>>> meshes;
+  SIZE_T meshesCount = 0;
 
   SPtr<CTransform> transform = act->getTransform();
 
-  graphicsApi.setTextures({ ResourceManager::instance().getResourceTexture("JinxNormal_tex") }, 1u);
-
-  const SPtr<CModel> model = act->getComponent<CModel>();
-  if (model && model->getModel())
+  const SPtr<CStaticMesh> staticMesh = act->getComponent<CStaticMesh>();
+  if (staticMesh && staticMesh->getStaticMesh())
   {
-    meshes = model->getModel()->getMeshes();
-    meshesCount = static_cast<uint32>(meshes.size());
-
+    meshes = staticMesh->getStaticMesh()->getMeshes();
+    meshesCount = meshes.size();
+  
     Matrix4f modelMatrix = transform->getModelMatrix();
     modelMatrixBuff->updateData(reinterpret_cast<Byte*>(&modelMatrix));
     modelMatrixBuff->setInVertex(0u);
-
-    for (int32 i = 0; i < meshesCount; ++i) {
-      if (!meshes[i].first) { break; }
-
-      meshes[i].first->set();
-
-      graphicsApi.setTextures({ meshes[i].second }, 0u);
-
-      drawIndexed(meshes[i].first->getIndexCount());
-
+  
+    for (SIZE_T i = 0; i < meshesCount; ++i) {
+      meshes[i].first.set();
+  
+      graphicsApi.setTextures({ meshes[i].second->m_diffuse }, 0u);
+  
+      drawIndexed(static_cast<uint32>(meshes[i].first.getIndexCount()));
+  
       graphicsApi.unsetVertexBuffers(1u, 0u);
       graphicsApi.unsetTextures(1u, 0u);
     }
@@ -156,26 +111,24 @@ GraphicsApi::drawObject(SPtr<Actor> act)
   {
     const SPtr<SkeletalMesh> skModel = skeletal->getModel();
     meshes = skModel->getMeshes();
-    meshesCount = static_cast<uint32>(meshes.size());
-
+    meshesCount = meshes.size();
+  
     Matrix4f modelMatrix = transform->getModelMatrix();
     modelMatrixBuff->updateData(reinterpret_cast<Byte*>(&modelMatrix));
     modelMatrixBuff->setInVertex(0u);
-
+  
     const SPtr<Skeletal> skeleton = skModel->getSkeletal();
-    for (int32 i = 0; i < meshesCount; ++i) {
-      if (!meshes[i].first) { break; }
-
-      meshes[i].first->set();
-
-      graphicsApi.setTextures({ meshes[i].second }, 0u);
-
+    for (SIZE_T i = 0; i < meshesCount; ++i) {
+      meshes[i].first.set();
+  
+      graphicsApi.setTextures({ meshes[i].second->m_diffuse }, 0u);
+  
       if (skeleton) {
         skeleton->use(i);
       }
-
-      drawIndexed(meshes[i].first->getIndexCount());
-
+  
+      drawIndexed(static_cast<uint32>(meshes[i].first.getIndexCount()));
+  
       graphicsApi.unsetVertexBuffers(1u, 0u);
       graphicsApi.unsetTextures(1u, 0u);
     }
@@ -185,12 +138,13 @@ void
 GraphicsApi::release()
 {
 }
-void GraphicsApi::resizeWindow(Vector2i newSize)
+void GraphicsApi::resizeWindow(Vector2u newSize)
 {
-  MemoryManager::instance().safeRelease<RenderTarget>(m_rtv);
+  MemoryManager::instance().safeRelease<Texture>(m_rtv);
   m_rtv->createAsBackBuffer();
-  MemoryManager::instance().safeRelease<DepthStencil>(m_dsv);
-  m_dsv->create(newSize.x, newSize.y);
+  MemoryManager::instance().safeRelease<Texture>(m_dsv);
+  m_dsv->create2D(eTEXTURE_BIND_FLAGS::kDepthStencil,
+                  { newSize.x, newSize.y });
 
   ViewportDesc desc;
   memset(&desc, 0, sizeof(desc));

@@ -78,9 +78,6 @@
     <ClInclude Include="include\eeMemoryManager.h">
       <Filter>include\Platform</Filter>
     </ClInclude>
-    <ClInclude Include="include\eeTime.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\eeLogger.h">
       <Filter>include\Platform</Filter>
     </ClInclude>
@@ -93,7 +90,15 @@
     <ClInclude Include="include\eeStringUtilities.h">
       <Filter>include\Platform</Filter>
     </ClInclude>
-    <ClInclude Include="include\eeFrustum.h" />
+    <ClInclude Include="include\eeFrustum.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeUtilityCamera.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeTime.h">
+      <Filter>include\Platform</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eePlatformMath.cpp">
@@ -144,9 +149,6 @@
     <ClCompile Include="src\eeMemoryManager.cpp">
       <Filter>src\Platform</Filter>
     </ClCompile>
-    <ClCompile Include="src\eeTime.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\eeLogger.cpp">
       <Filter>src\Platform</Filter>
     </ClCompile>
@@ -159,6 +161,14 @@
     <ClCompile Include="src\eeStringUtilities.cpp">
       <Filter>src\Platform</Filter>
     </ClCompile>
-    <ClCompile Include="src\eeFrustum.cpp" />
+    <ClCompile Include="src\eeFrustum.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeUtilityCamera.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeTime.cpp">
+      <Filter>src\Platform</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

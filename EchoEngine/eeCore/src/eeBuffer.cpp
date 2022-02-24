@@ -2,7 +2,7 @@
 
 namespace eeEngineSDK {
 bool
-Buffer::initData(uint32 dataSize, uint32 batchSize, const Byte* data)
+Buffer::initData(SIZE_T dataSize, uint32 batchSize, const Byte* data)
 {
   m_data.resize(dataSize);
   m_batchSize = batchSize;

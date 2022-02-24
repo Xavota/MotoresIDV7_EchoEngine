@@ -2,8 +2,12 @@
 #include "eeDX11GraphicsApi.h"
 
 namespace eeEngineSDK {
+DX11VertexBuffer::DX11VertexBuffer(SIZE_T dataSize, uint32 batchSize, const Byte* data)
+{
+  initData(dataSize, batchSize, data);
+}
 bool
-DX11VertexBuffer::initData(uint32 dataSize, uint32 batchSize, const Byte* data)
+DX11VertexBuffer::initData(SIZE_T dataSize, uint32 batchSize, const Byte* data)
 {
   const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
@@ -28,7 +32,8 @@ DX11VertexBuffer::initData(uint32 dataSize, uint32 batchSize, const Byte* data)
 
   return true;
 }
-void DX11VertexBuffer::updateData(const Byte* data)
+void
+DX11VertexBuffer::updateData(const Byte* data)
 {
   const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
@@ -42,11 +47,13 @@ void DX11VertexBuffer::updateData(const Byte* data)
                                              0u,
                                              0u);
 }
-void DX11VertexBuffer::release()
+void
+DX11VertexBuffer::release()
 {
   DX11SAFE_RELEASE(m_buffer);
 }
-void DX11VertexBuffer::set()
+void
+DX11VertexBuffer::set()
 {
   const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());

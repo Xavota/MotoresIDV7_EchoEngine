@@ -14,7 +14,7 @@
 #include "eePrerequisitesCore.h"
 #include "eeVector3.h"
 #include "eeQuaternion.h"
-#include "eeModel.h"
+#include "eeStaticMesh.h"
 
 #include <eeMatrix4.h>
 
@@ -82,7 +82,7 @@ class EE_CORE_EXPORT Object
    * Weather it succeed or failed to initialize.
    */
   virtual bool
-  loadFromModel(SPtr<Model> model,
+  loadFromModel(SPtr<StaticMesh> model,
                 Vector3f pos,
                 Quaternion rot,
                 Vector3f scale);
@@ -173,7 +173,7 @@ class EE_CORE_EXPORT Object
    * The model of the object.
    */
   virtual void
-  setModel(const SPtr<Model>& model);
+  setModel(const SPtr<StaticMesh>& model);
   /**
    * @brief
    * Setter for the model.
@@ -184,7 +184,7 @@ class EE_CORE_EXPORT Object
    * @param
    * The new model for the object.
    */
-  virtual SPtr<Model>
+  virtual SPtr<StaticMesh>
   getModel();
 
   /**
@@ -220,20 +220,20 @@ class EE_CORE_EXPORT Object
   /**
    * The position of the object.
    */
-  Vector3f m_position;
+  Vector3f m_position = Vector3f(0.0f, 0.0f, 0.0f);
   /**
    * The rotation of the object.
    */
-  Quaternion m_rotation;
+  Quaternion m_rotation = Quaternion(0.0f, 0.0f, 0.0f, 0.0f);
   /**
    * The scale of the object.
    */
-  Vector3f m_scale;
+  Vector3f m_scale = Vector3f(0.0f, 0.0f, 0.0f);
 
   /**
    * The model of the object.
    */
-  SPtr<Model> m_model;
+  SPtr<StaticMesh> m_model;
 
   /**
    * The constant buffer for the model matrix of the object.

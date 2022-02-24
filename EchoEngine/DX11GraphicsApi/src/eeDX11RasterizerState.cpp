@@ -2,6 +2,10 @@
 #include "eeDX11GraphicsApi.h"
 
 namespace eeEngineSDK {
+DX11RasterizerState::DX11RasterizerState(RasteraizerDesc desc)
+{
+  create(desc);
+}
 bool
 DX11RasterizerState::create(RasteraizerDesc desc)
 {

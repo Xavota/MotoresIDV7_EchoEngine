@@ -46,9 +46,6 @@ class EE_UTILITY_EXPORT Time : public Module<Time>
   float
   getDeltaTime();
 
- private:
-  friend class BaseApp;
-
   /**
    * @brief
    * Updates to change deltaTime.
@@ -59,6 +56,7 @@ class EE_UTILITY_EXPORT Time : public Module<Time>
   void
   update();
 
+ private:
   /**
    * Times at the start of each frame.
    */

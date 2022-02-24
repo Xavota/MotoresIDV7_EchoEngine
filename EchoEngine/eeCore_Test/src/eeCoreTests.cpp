@@ -7,9 +7,9 @@ using eeEngineSDK::int32;
 int
 main()
 {
-  BaseApp::startUp<BaseAppTest1>();
-  int32 r = BaseApp::instance().run(nullptr);
-  BaseApp::shutDown();
+  auto testApp = new BaseAppTest1();
+  int32 r = testApp->run(nullptr);
+  delete testApp;
 
   return r;
 }

@@ -2,6 +2,10 @@
 #include "eeDX11GraphicsApi.h"
 
 namespace eeEngineSDK{
+DX11DepthStencilState::DX11DepthStencilState(DepthStencilDesc desc)
+{
+  create(desc);
+}
 bool
 DX11DepthStencilState::create(DepthStencilDesc desc)
 {

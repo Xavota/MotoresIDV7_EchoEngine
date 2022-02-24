@@ -32,6 +32,17 @@ class DX11SamplerState : public SamplerState
   DX11SamplerState() = default;
   /**
    * @brief
+   * Creates a sampler stencil state.
+   *
+   * @description
+   * Creates the sampler stencil state with a descriptor.
+   *
+   * @param desc
+   * The descriptor for the sampler state.
+   */
+  DX11SamplerState(SamplerStateDesc desc);
+  /**
+   * @brief
    * Default destructor.
    */
   ~DX11SamplerState();

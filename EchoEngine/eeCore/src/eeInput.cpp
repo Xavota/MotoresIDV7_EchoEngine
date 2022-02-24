@@ -18,7 +18,7 @@ Input::update()
   m_mouseLastPosition = m_mousePosition;
 }
 void
-Input::setKeyboardInputPressed(eKEYBOARD key, bool pressed)
+Input::setKeyboardInputPressed(KEYBOARD_INPUT::E key, bool pressed)
 {
   if (m_keyboardInputMap.find(key) != m_keyboardInputMap.end()) {
     m_keyboardInputMap[key].isPressed = pressed;
@@ -27,7 +27,7 @@ Input::setKeyboardInputPressed(eKEYBOARD key, bool pressed)
   m_keyboardInputMap[key] = InputInfo{false, pressed};
 }
 void
-Input::setMouseClickInputPressed(eMOUSE_CLICK key, bool pressed)
+Input::setMouseClickInputPressed(MOUSE_INPUT::E key, bool pressed)
 {
   if (m_mouseClicksInputMap.find(key) != m_mouseClicksInputMap.end()) {
     m_mouseClicksInputMap[key].isPressed = pressed;
@@ -36,7 +36,7 @@ Input::setMouseClickInputPressed(eMOUSE_CLICK key, bool pressed)
   m_mouseClicksInputMap[key] = InputInfo{ false, pressed };
 }
 bool
-Input::getKeyboardInputPressed(eKEYBOARD key)
+Input::getKeyboardInputPressed(KEYBOARD_INPUT::E key)
 {
   if (m_keyboardInputMap.find(key) != m_keyboardInputMap.end()) {
     return m_keyboardInputMap[key].isPressed
@@ -45,7 +45,7 @@ Input::getKeyboardInputPressed(eKEYBOARD key)
   return false;
 }
 bool
-Input::getKeyboardInputIsPressed(eKEYBOARD key)
+Input::getKeyboardInputIsPressed(KEYBOARD_INPUT::E key)
 {
   if (m_keyboardInputMap.find(key) != m_keyboardInputMap.end()) {
     return m_keyboardInputMap[key].isPressed;
@@ -53,7 +53,7 @@ Input::getKeyboardInputIsPressed(eKEYBOARD key)
   return false;
 }
 bool
-Input::getKeyboardInputReleased(eKEYBOARD key)
+Input::getKeyboardInputReleased(KEYBOARD_INPUT::E key)
 {
   if (m_keyboardInputMap.find(key) != m_keyboardInputMap.end()) {
     return !m_keyboardInputMap[key].isPressed
@@ -62,7 +62,7 @@ Input::getKeyboardInputReleased(eKEYBOARD key)
   return false;
 }
 bool
-Input::getMouseClickInputPressed(eMOUSE_CLICK key)
+Input::getMouseClickInputPressed(MOUSE_INPUT::E key)
 {
   if (m_mouseClicksInputMap.find(key) != m_mouseClicksInputMap.end()) {
     return m_mouseClicksInputMap[key].isPressed
@@ -71,7 +71,7 @@ Input::getMouseClickInputPressed(eMOUSE_CLICK key)
   return false;
 }
 bool
-Input::getMouseClickInputIsPressed(eMOUSE_CLICK key)
+Input::getMouseClickInputIsPressed(MOUSE_INPUT::E key)
 {
   if (m_mouseClicksInputMap.find(key) != m_mouseClicksInputMap.end()) {
     return m_mouseClicksInputMap[key].isPressed;
@@ -79,7 +79,7 @@ Input::getMouseClickInputIsPressed(eMOUSE_CLICK key)
   return false;
 }
 bool
-Input::getMouseClickInputReleased(eMOUSE_CLICK key)
+Input::getMouseClickInputReleased(MOUSE_INPUT::E key)
 {
   if (m_mouseClicksInputMap.find(key) != m_mouseClicksInputMap.end()) {
     return !m_mouseClicksInputMap[key].isPressed

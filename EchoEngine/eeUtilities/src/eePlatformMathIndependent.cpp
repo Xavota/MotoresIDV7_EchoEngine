@@ -184,8 +184,8 @@ PlatformMath::intersectionBoxPoint(const BoxAAB& _box, const Vector3f& _point)
   const Vector3f& B = _box.getB();
 
   return _point.x >= A.x && _point.x <= B.x
-      && _point.y >= B.y && _point.y <= A.y
-      && _point.z >= B.z && _point.z <= A.z;
+      && _point.y >= A.y && _point.y <= B.y
+      && _point.z >= A.z && _point.z <= B.z;
 }
 bool 
 PlatformMath::intersectionBoxPlane(const BoxAAB& _box, const Plane& _plane)

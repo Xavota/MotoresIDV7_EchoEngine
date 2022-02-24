@@ -1,6 +1,10 @@
 #include "eeFile.h"
 
 namespace eeEngineSDK{
+File::File(const String& path, uint8 openFlags)
+{
+  OpenFile(path, openFlags);
+}
 void
 File::OpenFile(const String& path, uint8 openFlags)
 {

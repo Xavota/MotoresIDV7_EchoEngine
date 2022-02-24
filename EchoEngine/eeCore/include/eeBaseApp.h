@@ -13,7 +13,6 @@
 
 #pragma once
 #include "eePrerequisitesCore.h"
-#include <eeModule.h>
 
 //#include <gainput/gainput.h>
 
@@ -23,7 +22,7 @@ namespace eeEngineSDK {
  * The Base app for the program. Initializes, destroy, and run all the
  * application.
  */
-class EE_CORE_EXPORT BaseApp : public Module<BaseApp>
+class EE_CORE_EXPORT BaseApp
 {
  public:
   /**
@@ -54,18 +53,13 @@ class EE_CORE_EXPORT BaseApp : public Module<BaseApp>
  protected:
   /**
    * @brief
-   * Initializes the resources needed.
+   * Initializes the app child.
    *
    * @description
-   * Initializes the resources that the app needs, only used for hardcoding
-   * resources for testing.
-   *
-   * @return
-   * Weather it succeed or failed to initialize.
+   * The init event function for the app derivate.
    */
-  virtual bool
-  initResources(){return true;}
-
+  virtual void
+  onInit(){}
   /**
    * @brief
    * The update method.
@@ -74,7 +68,7 @@ class EE_CORE_EXPORT BaseApp : public Module<BaseApp>
    * Updates everything in the app every frame.
    */
   virtual void
-  update();
+  onUpdate(float /*deltaTime*/){};
 
   /**
    * @brief
@@ -84,17 +78,7 @@ class EE_CORE_EXPORT BaseApp : public Module<BaseApp>
    * Renders everything in the app every frame.
    */
   virtual void
-  render();
-  /**
-   * @brief
-   * Ends the frame.
-   *
-   * @description
-   * The last function to be called every frame. Ends every thing thing that
-   * needs to.
-   */
-  void
-  endFrame();
+  onRender(){};
 
   /**
    * @brief
@@ -104,7 +88,7 @@ class EE_CORE_EXPORT BaseApp : public Module<BaseApp>
    * Cleans all the memory allocated during the application run.
    */
   virtual void
-  destroy();
+  onDestroy(){};
 
  private:
   /**
@@ -146,6 +130,19 @@ class EE_CORE_EXPORT BaseApp : public Module<BaseApp>
    */
   bool
   initSystems();
+  /**
+   * @brief
+   * Initializes the resources needed.
+   *
+   * @description
+   * Initializes the resources that the app needs, only used for hardcoding
+   * resources for testing.
+   *
+   * @return
+   * Weather it succeed or failed to initialize.
+   */
+  bool
+  initResources(){return true;}
 
   /**
    * @brief
@@ -158,6 +155,45 @@ class EE_CORE_EXPORT BaseApp : public Module<BaseApp>
   void
   processEvents();
 
+  /**
+   * @brief
+   * The update method.
+   *
+   * @description
+   * Updates everything in the app every frame.
+   */
+  void
+  update(float deltaTime);
+
+  /**
+   * @brief
+   * The render method.
+   *
+   * @description
+   * Renders everything in the app every frame.
+   */
+  void
+  render();
+
+  /**
+   * @brief
+   * The destroy method.
+   *
+   * @description
+   * Cleans all the memory allocated during the application run.
+   */
+  void
+  destroy();
+
+ protected:
+  /**
+   * The width of the screen.
+   */
+  const uint32 screenWidth = 1280u;
+  /**
+   * The height of the screen.
+   */
+  const uint32 screenHeight = 720u;
 
  private:
   //gainput::InputManager m_inManager;

@@ -4,39 +4,28 @@
 
 #include <eeMath.h>
 
+#include "eeCoreConfiguration.h"
+
 #include "eeMatrix3.h"
 
 #include "eeActor.h"
 #include "eeCTransform.h"
-#include "eeCModel.h"
+#include "eeCStaticMesh.h"
 #include "eeCSkeletalMesh.h"
 #include "eeCBounds.h"
+#include "eeTexture.h"
 
 #include "eeGraficsApi.h"
 
 namespace eeEngineSDK {
-CCamera::CCamera()
+CCamera::CCamera(CameraDesc desc)
 {
-  m_upVector = Vector3f::kUP;
+  init(desc);
 }
 void
 CCamera::init(CameraDesc desc)
 {
-  m_projectionType = desc.projectionType;
-  m_fovAngleY = desc.fovAngleY;
-  m_viewSize = desc.viewSize;
-  m_nearZ = desc.nearZ;
-  m_farZ = desc.farZ;
-
-  m_dirtyView = true;
-  m_dirtyProj = true;
-
-
-  m_renderTarget = GraphicsApi::instance().createRenderTragetPtr();
-  m_renderTarget->createAsIOTexture();
-
-  m_depthStencil = GraphicsApi::instance().createDepthStencilPtr();
-  m_depthStencil->create(1280, 720);
+  m_utilityCamera.init(desc);
 }
 void
 CCamera::update()
@@ -45,10 +34,9 @@ CCamera::update()
 
   SPtr<CTransform> transform = m_actor->getTransform();
 
-  m_eyePos = transform->getPosition();
-  m_lookAt = m_eyePos + transform->getRotation().getFrontVector();
-  m_dirtyView = true;
-  m_dirtyFrustum = true;
+  m_utilityCamera.setEyePosition(transform->getPosition());
+  m_utilityCamera.setLookAtPosition(transform->getPosition() 
+                                  + transform->getRotation().getFrontVector());
 
   if (m_active) {
     GraphicsApi::instance().addActiveCamera(
@@ -58,130 +46,92 @@ CCamera::update()
 Vector3f
 CCamera::getEyePosition()
 {
-  return m_eyePos;
+  return m_utilityCamera.getEyePosition();
 }
 Vector3f
 CCamera::getLookAtPosition()
 {
-  return m_lookAt;
+  return m_utilityCamera.getLookAtPosition();
 }
 Vector3f
 CCamera::getUpVector()
 {
-  return m_upVector;
+  return m_utilityCamera.getUpVector();
 }
 void
-CCamera::setProjectionType(eCAMERA_PROJECTION_TYPE type)
+CCamera::setProjectionType(CAMERA_PROJECTION_TYPE type)
 {
-  m_projectionType = type;
-
-  m_dirtyProj = true;
+  m_utilityCamera.setProjectionType(type);
 }
-eCAMERA_PROJECTION_TYPE
+CAMERA_PROJECTION_TYPE
 CCamera::getProjectionType()
 {
-  return m_projectionType;
+  return m_utilityCamera.getProjectionType();
 }
 void
 CCamera::setFovAngle(float angle)
 {
-  m_fovAngleY = angle;
-
-  m_dirtyProj = true;
+  m_utilityCamera.setFovAngle(angle);
 }
 float
 CCamera::getFovAngle()
 {
-  return m_fovAngleY;
+  return m_utilityCamera.getFovAngle();
 }
 void
 CCamera::setViewSize(Vector2f viewSize)
 {
-  m_viewSize = viewSize;
-
-  m_dirtyProj = true;
+  m_utilityCamera.setViewSize(viewSize);
 }
 Vector2f
 CCamera::getViewSize()
 {
-  return m_viewSize;
+  return m_utilityCamera.getViewSize();
 }
 void
 CCamera::setNearPlane(float near)
 {
-  m_nearZ = near;
-
-  m_dirtyProj = true;
+  m_utilityCamera.setNearPlane(near);
 }
 float
 CCamera::getNearPlane()
 {
-  return m_nearZ;
+  return m_utilityCamera.getNearPlane();
 }
 void
 CCamera::setFarPlane(float far)
 {
-  m_farZ = far;
-
-  m_dirtyProj = true;
+  m_utilityCamera.setFarPlane(far);
 }
 float
 CCamera::getFarPlane()
 {
-  return m_farZ;
+  return m_utilityCamera.getFarPlane();
 }
 Vector3f
 CCamera::getFront()
 {
-  return (m_lookAt - m_eyePos).getNormalize();
+  return m_utilityCamera.getFront();
 }
 Vector3f
 CCamera::getRight()
 {
-  Vector3f front = getFront();
-
-  return -front.cross(m_upVector).getNormalize();
+  return m_utilityCamera.getRight();
 }
 Vector3f
 CCamera::getUp()
 {
-  return getFront().cross(getRight());
+  return m_utilityCamera.getUp();
 }
 Matrix4f
 CCamera::getViewMatrix()
 {
-  if (m_dirtyView) {
-    m_dirtyView = false;
-
-    m_viewMat = Matrix4f::viewMatrix(m_eyePos, m_lookAt, m_upVector);
-  }
-  return m_viewMat;
+  return m_utilityCamera.getViewMatrix();
 }
 Matrix4f
 CCamera::getProjectionMatrix()
 {
-  if (m_dirtyProj) {
-    m_dirtyProj = false;
-    
-    switch (m_projectionType) {
-    case eeEngineSDK::eCAMERA_PROJECTION_TYPE::kNone:
-      m_projectionMat = Matrix4f::kIDENTITY;
-      break;
-    case eeEngineSDK::eCAMERA_PROJECTION_TYPE::kOrthographic:
-      m_projectionMat = Matrix4f::orthograficMatrixMatrix(m_viewSize.x,
-                                                          m_viewSize.y,
-                                                          m_nearZ,
-                                                          m_farZ);
-      break;
-    case eeEngineSDK::eCAMERA_PROJECTION_TYPE::kPerspective:
-      m_projectionMat = Matrix4f::perspectiveMatrix(m_fovAngleY,
-                                                    m_viewSize.x / m_viewSize.y,
-                                                    m_nearZ,
-                                                    m_farZ);
-      break;
-    }
-  }
-  return m_projectionMat;
+  return m_utilityCamera.getProjectionMatrix();
 }
 bool
 CCamera::isMain()
@@ -193,16 +143,6 @@ CCamera::setMain(bool active)
 {
   m_main = active;
 }
-SPtr<RenderTarget>
-CCamera::getRenderTarget()
-{
-  return m_renderTarget;
-}
-SPtr<DepthStencil>
-CCamera::getDepthStencil()
-{
-  return m_depthStencil;
-}
 bool
 CCamera::isModelOnCamera(SPtr<CBounds> ActorBounds)
 {
@@ -210,24 +150,9 @@ CCamera::isModelOnCamera(SPtr<CBounds> ActorBounds)
     return false;
   }
 
-  if (m_dirtyFrustum) {
-    m_dirtyFrustum = false;
-
-    m_viewFrustum.UpdateFrustum(m_eyePos,
-                                getFront(),
-                                getUp(),
-                                getRight(),
-                                m_nearZ,
-                                m_farZ,
-                                m_fovAngleY,
-                                m_viewSize.x / m_viewSize.y);
-  }
-
-  auto& memoryMan = MemoryManager::instance();
-
-  if (m_viewFrustum.isSphereInside(ActorBounds->getSphereBound()))
+  if (m_utilityCamera.isSphereOnCamera(ActorBounds->getSphereBound()))
   {
-    return true; // m_viewFrustum.isSphereInside(boundBox);
+    return m_utilityCamera.isBoxOnCamera(ActorBounds->getBoxBound());
   }
 
   return false;

@@ -17,11 +17,11 @@ using eeEngineSDK::int32;
 using eeEngineSDK::SPtr;
 using eeEngineSDK::Object;
 using eeEngineSDK::ConstantBuffer;
-using eeEngineSDK::RenderTarget;
-using eeEngineSDK::DepthStencil;
 using eeEngineSDK::RasterizerState;
 using eeEngineSDK::Actor;
 using eeEngineSDK::CCamera;
+using eeEngineSDK::SamplerState;
+using eeEngineSDK::Texture;
 
 /**
 * @brief
@@ -65,8 +65,8 @@ class BaseAppTest1 : public BaseApp
   * @return
   * Weather it succeed or failed to initialize.
   */
-  virtual bool
-  initResources() override;
+  void
+  onInit() override;
 
   /**
   * @brief
@@ -78,8 +78,8 @@ class BaseAppTest1 : public BaseApp
   * @param deltaTime
   * The time elapsed since the last frame.
   */
-  virtual void
-  update() override;
+  void
+  onUpdate(float deltaTime) override;
 
   /**
   * @brief
@@ -88,8 +88,8 @@ class BaseAppTest1 : public BaseApp
   * @description
   * Renders everything in the app every frame.
   */
-  virtual void
-  render() override;
+  void
+  onRender() override;
 
   /**
   * @brief
@@ -98,8 +98,8 @@ class BaseAppTest1 : public BaseApp
   * @description
   * Cleans all the memory allocated during the application run.
   */
-  virtual void
-  destroy() override;
+  void
+  onDestroy() override;
 
 
  private:
@@ -118,14 +118,18 @@ class BaseAppTest1 : public BaseApp
   */
   SPtr<ConstantBuffer> m_projectionMatrixBuffer;
 
-  ///*
-  //* The back buffer.
-  //*/
-  //SPtr<RenderTarget> m_rtv;
-  ///*
-  //* The depth stencil of the back buffer
-  //*/
-  //SPtr<DepthStencil> m_dsv;
+  /*
+  * The back buffer.
+  */
+  SPtr<Texture> m_rtv;
+  /*
+  * The depth stencil of the back buffer
+  */
+  SPtr<Texture> m_dsv;
+  /**
+   * sampler state. The sampler of the texture.
+   */
+  SPtr<SamplerState> m_sampler = nullptr;
 
   /*
   * A rasterizer for on world objects rendering.

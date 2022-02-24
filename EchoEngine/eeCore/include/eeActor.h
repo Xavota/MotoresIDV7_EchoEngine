@@ -227,20 +227,20 @@ FORCEINLINE void
 Actor::addComponent()
 {
   T c; // This is to disable warning "constant logic expression"
-  if (c.getType() == eCOMPONENT_TYPE::kTransform) {
+  if (c.getType() == COMPONENT_TYPE::kTransform) {
     Logger::instance().ConsoleLog("Things can't be in more than one place, kido.");
     Logger::instance().ConsoleLog("ERROR ADDING TRANSFORM COMPONENT TO ACTOR.");
     Logger::instance().ConsoleLog("CANNOT ADD A TRANSFORM COMPONENT");
     return;
   }
-  auto cmpIndex = static_cast<int32>(m_components.size());
+  SIZE_T cmpIndex = m_components.size();
   m_components.push_back(MemoryManager::instance().newPtr<T>());
   m_components[cmpIndex]->init(shared_from_this());
 }
 template<class T>
 inline SPtr<T> Actor::getComponent()
 {
-  auto compCount = static_cast<uint32>(m_components.size());
+  SIZE_T compCount = m_components.size();
   for (uint32 i = 0; i != compCount; ++i) {
     if (m_components[i]->getType() == T::CmpType) {
       return MemoryManager::instance().reinterpretPtr<T>(m_components[i]);

@@ -25,84 +25,27 @@ Bone::addBoneData(VertexWeight vw)
   m_vertexWeights.push_back(vw);
 }
 
-bool
-Skeletal::loadFromFile(const String& fileName)
+Skeletal::Skeletal(const Vector<Vector<Bone>>& bonesPerMesh,
+                   const Vector<Matrix4f>& globalInverseTransforms,
+                   const Vector<Map<String, uint32>>& boneMappings,
+                   const Vector<uint32>& numsBones,
+                   const String& name)
 {
-  auto* importer = new Assimp::Importer();
-  const aiScene* scene = importer->ReadFile
-  (
-    fileName,
-    aiProcessPreset_TargetRealtime_MaxQuality
-    | aiProcess_ConvertToLeftHanded
-  );
-
-  if (!scene) {
-    Logger::instance().ConsoleLog(importer->GetErrorString());
-    delete importer;
-    return false;
-  }
-
-  for (uint32 i = 0; i < scene->mNumMeshes; i++) {
-    m_bonesPerMesh.emplace_back(Vector<Bone>(100));
-    m_boneMappings.emplace_back(Map<String, int32>());
-    m_numsBones.push_back(0);
-
-    aiMatrix4x4 globalTransform = scene->mRootNode->mTransformation;
-    globalTransform.Inverse();
-    m_globalInverseTransforms.emplace_back(Matrix4f(&globalTransform.a1));
-
-    if (scene->mMeshes[i]->HasBones()) {
-      for (uint32 j = 0; j < scene->mMeshes[i]->mNumBones; j++) {
-        uint32 boneIndex = 0;
-        String name = scene->mMeshes[i]->mBones[j]->mName.C_Str();
-
-        if (m_boneMappings[i].find(name) == m_boneMappings[i].end()) {
-          boneIndex = m_numsBones[i];
-          m_numsBones[i]++;
-        }
-        else {
-          boneIndex = m_boneMappings[i][name];
-        }
-
-        m_boneMappings[i][name] = boneIndex;
-
-        m_bonesPerMesh[i][boneIndex].m_name = name;
-        float m[16];
-        memcpy(m,
-               &scene->mMeshes[i]->mBones[boneIndex]->mOffsetMatrix.a1,
-               sizeof(float) * 16);
-        m_bonesPerMesh[i][boneIndex].m_offsetMatrix = Matrix4f(m);
-        m_bonesPerMesh[i][boneIndex].m_finalTransformation =
-                                    m_bonesPerMesh[i][boneIndex].m_offsetMatrix;
-        for (uint32 k = 0; k < scene->mMeshes[i]->mBones[j]->mNumWeights; k++) {
-          uint32 vertexID = scene->mMeshes[i]->mBones[j]->mWeights[k].mVertexId;
-          float weight = scene->mMeshes[i]->mBones[j]->mWeights[k].mWeight;
-
-          m_bonesPerMesh[i][boneIndex].addBoneData({ vertexID, weight });
-        }
-      }
-    }
-  }
-
-  for (uint32 i = 0; i < scene->mNumMeshes; i++) {
-    boneTransform(scene->mRootNode, i);
-  }
-
-  m_matricesBuffer = GraphicsApi::instance().createConstantBufferPtr();
-  m_matricesBuffer->initData(100 * sizeof(Matrix4f), sizeof(Matrix4f), nullptr);
-
-  delete importer;
-  return true;
+  loadFromData(bonesPerMesh,
+               globalInverseTransforms,
+               boneMappings,
+               numsBones,
+               name);
 }
 void
-Skeletal::boneTransform(const aiNode* root, int32 meshIndex)
+Skeletal::boneTransform(const aiNode* root, uint32 meshIndex)
 {
   readNodeHeirarchy(root, Matrix4f::kIDENTITY, meshIndex);
 }
 void
 Skeletal::readNodeHeirarchy(const aiNode* pNode,
                             const Matrix4f& ParentTransform,
-                            int32 meshIndex)
+                            SIZE_T meshIndex)
 {
   String NodeName(pNode->mName.data);
 
@@ -127,15 +70,34 @@ Skeletal::readNodeHeirarchy(const aiNode* pNode,
     readNodeHeirarchy(pNode->mChildren[i], GlobalTransformation, meshIndex);
   }
 }
+bool
+Skeletal::loadFromData(const Vector<Vector<Bone>>& bonesPerMesh,
+                       const Vector<Matrix4f>& globalInverseTransforms,
+                       const Vector<Map<String, uint32>>& boneMappings,
+                       const Vector<uint32>& numsBones,
+                       const String& name)
+{
+  m_matricesBuffer = GraphicsApi::instance().createConstantBufferPtr();
+  m_matricesBuffer->initData(100 * sizeof(Matrix4f), sizeof(Matrix4f), nullptr);
+
+  m_bonesPerMesh = bonesPerMesh;
+  m_globalInverseTransforms = globalInverseTransforms;
+  m_boneMappings = boneMappings;
+  m_numsBones = numsBones;
+
+  m_name = name;
+
+  return true;
+}
 Vector<Vector<Bone>>&
 Skeletal::getBonesData()
 {
   return m_bonesPerMesh;
 }
 bool
-Skeletal::getBonesDataForMesh(int32 index, Vector<Bone>& outBoneData) const
+Skeletal::getBonesDataForMesh(SIZE_T index, Vector<Bone>& outBoneData) const
 {
-  if (static_cast<int32>(m_bonesPerMesh.size()) > index) {
+  if (m_bonesPerMesh.size() > index) {
     outBoneData = m_bonesPerMesh[index];
     return true;
   }
@@ -143,7 +105,7 @@ Skeletal::getBonesDataForMesh(int32 index, Vector<Bone>& outBoneData) const
   return false;
 }
 
-Vector<Map<String, int32>>&
+Vector<Map<String, uint32>>&
 Skeletal::getBoneMapping()
 {
   return m_boneMappings;
@@ -156,12 +118,11 @@ Skeletal::getGlobalInverseTransforms()
 }
 
 Vector<Matrix4f>
-Skeletal::getBonesMatrices(int32 meshNum)
+Skeletal::getBonesMatrices(SIZE_T meshNum)
 {
   Vector<Matrix4f> bonesMatrices(100);
-  if (static_cast<int32>(m_bonesPerMesh.size()) > meshNum) {
-    for (uint32 i = 0; i < m_bonesPerMesh[meshNum].size(); i++) {
-      //bonesMatrices[i] = m_bonesPerMesh[meshNum][i].m_offsetMatrix;
+  if (m_bonesPerMesh.size() > meshNum) {
+    for (SIZE_T i = 0; i < m_bonesPerMesh[meshNum].size(); i++) {
       if (i >= bonesMatrices.size()) {
         break;
       }
@@ -172,10 +133,10 @@ Skeletal::getBonesMatrices(int32 meshNum)
   return bonesMatrices;
 }
 void
-Skeletal::use(int32 meshNum)
+Skeletal::use(SIZE_T meshNum)
 {
   Vector<Matrix4f> mats = getBonesMatrices(meshNum);
   m_matricesBuffer->updateData(reinterpret_cast<Byte*>(mats.data()));
-  m_matricesBuffer->setInVertex(3);
+  m_matricesBuffer->setInVertex(3); // TODO: Quitar este número mágico
 }
 }

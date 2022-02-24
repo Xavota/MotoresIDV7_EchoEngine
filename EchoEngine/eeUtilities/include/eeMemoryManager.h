@@ -84,6 +84,23 @@ class EE_UTILITY_EXPORT MemoryManager : public Module<MemoryManager>
   FORCEINLINE bool
   safeRelease(SPtr<T> ptr);
 
+  /**
+   * @brief
+   * Releases the memory.
+   *
+   * @description
+   * Releases the memory of a raw pointer.
+   *
+   * @param ptr
+   * The object to be released.
+   *
+   * @return
+   * True if it succeeded to release.
+   */
+  template<class T>
+  FORCEINLINE bool
+  rawSafeRelease(T** ptr);
+
  private:
 };
 template<class T, class... _Types>
@@ -104,6 +121,17 @@ MemoryManager::safeRelease(SPtr<T> ptr)
 {
   if (ptr) {
     ptr->release();
+    return true;
+  }
+  return false;
+}
+template<class T>
+inline bool MemoryManager::rawSafeRelease(T** ptr)
+{
+  if (*ptr)
+  {
+    delete *ptr;
+    *ptr = nullptr;
     return true;
   }
   return false;

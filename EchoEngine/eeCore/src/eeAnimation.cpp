@@ -16,117 +16,32 @@
 
 
 namespace eeEngineSDK {
-bool
-Animation::loadFromFile(const String& fileName, int32 animIndex, const String& name)
+Animation::Animation(float ticksPerSecond,
+                     float duration,
+                     const Vector<AnimNode>& channels,
+                     SPtr<Node> rootNode,
+                     const String& name)
 {
-  Assimp::Importer* importer = nullptr;
-  const aiScene* scene = nullptr;
-
-  importer = new Assimp::Importer();
-  scene = importer->ReadFile
-  (
-    fileName,
-    aiProcessPreset_TargetRealtime_MaxQuality
-    | aiProcess_ConvertToLeftHanded
-  );
-  if (!scene) {
-    Logger::instance().ConsoleLog(importer->GetErrorString());
-    delete importer;
-    return false;
-  }
-
-  if (!scene->HasAnimations()) {
-    return false;
-  }
-
+  loadFromData(ticksPerSecond , duration, channels, rootNode, name);
+}
+bool
+Animation::loadFromData(float ticksPerSecond,
+                        float duration,
+                        const Vector<AnimNode>& channels,
+                        SPtr<Node> rootNode,
+                        const String& name)
+{
+  m_ticksPerSecond = ticksPerSecond;
+  m_duration = duration;
+  m_channels = channels;
+  m_channelsCount = m_channels.size();
+  m_rootNode = rootNode;
   m_name = name;
 
-  m_rootNode = MemoryManager::instance().newPtr<Node>();
-  storeNodes(scene->mRootNode, m_rootNode);
-
-  storeAnim(scene->mAnimations[animIndex]);
-
-  delete importer;
   return true;
 }
 void
-Animation::storeNodes(aiNode* current, SPtr<Node> storage)
-{
-  auto& memoryMan = MemoryManager::instance();
-
-  storage->m_name = current->mName.C_Str();
-  float m[16];
-  memcpy(m, &current->mTransformation.a1, 16 * sizeof(float));
-  storage->m_transformation = Matrix4f(m);
-
-  storage->m_childrenCount = current->mNumChildren;
-
-  for (uint32 i = 0; i < storage->m_childrenCount; ++i) {
-    storage->m_children.push_back(memoryMan.newPtr<Node>());
-    storeNodes(current->mChildren[i], storage->m_children[i]);
-    storage->m_children[i]->m_parent = storage;
-  }
-}
-void Animation::storeAnim(aiAnimation* anim)
-{
-  //m_name = anim->mName.C_Str();
-  m_duration = static_cast<float>(anim->mDuration);
-  m_ticksPerSecond = anim->mTicksPerSecond != 0.0
-                   ? static_cast<float>(anim->mTicksPerSecond)
-                   : 25.0f;
-
-  m_channelsCount = anim->mNumChannels;
-  for (uint32 i = 0; i < m_channelsCount; ++i)
-  {
-    m_channels.emplace_back(AnimNode());
-    AnimNode& an = m_channels[i];
-    const aiNodeAnim* aina = anim->mChannels[i];
-
-    an.m_name = aina->mNodeName.C_Str();
-    an.m_positionKeysCount = aina->mNumPositionKeys;
-    an.m_rotationKeysCount = aina->mNumRotationKeys;
-    an.m_scalingKeysCount = aina->mNumScalingKeys;
-
-    for (uint32 j = 0; j < an.m_positionKeysCount; ++j)
-    {
-      an.m_positionKeys.emplace_back(VectorKeyFrame());
-      VectorKeyFrame& vkf = an.m_positionKeys[j];
-      const aiVectorKey& aiVkf = aina->mPositionKeys[j];
-
-      vkf.m_time = static_cast<float>(aiVkf.mTime);
-      vkf.m_value.x = aiVkf.mValue.x;
-      vkf.m_value.y = aiVkf.mValue.y;
-      vkf.m_value.z = aiVkf.mValue.z;
-    }
-
-    for (uint32 j = 0; j < an.m_rotationKeysCount; ++j)
-    {
-      an.m_rotationKeys.emplace_back(QuatKeyFrame());
-      QuatKeyFrame& qkf = an.m_rotationKeys[j];
-      const aiQuatKey& aiQkf = aina->mRotationKeys[j];
-
-      qkf.m_time = static_cast<float>(aiQkf.mTime);
-      qkf.m_value.w = aiQkf.mValue.w;
-      qkf.m_value.x = aiQkf.mValue.x;
-      qkf.m_value.y = aiQkf.mValue.y;
-      qkf.m_value.z = aiQkf.mValue.z;
-    }
-
-    for (uint32 j = 0; j < an.m_scalingKeysCount; ++j)
-    {
-      an.m_scalingKeys.emplace_back(VectorKeyFrame());
-      VectorKeyFrame& vkf = an.m_scalingKeys[j];
-      const aiVectorKey& aiVkf = aina->mScalingKeys[j];
-
-      vkf.m_time = static_cast<float>(aiVkf.mTime);
-      vkf.m_value.x = aiVkf.mValue.x;
-      vkf.m_value.y = aiVkf.mValue.y;
-      vkf.m_value.z = aiVkf.mValue.z;
-    }
-  }
-}
-void
-Animation::boneTransform(int32 meshIndex,
+Animation::boneTransform(SIZE_T meshIndex,
                          SPtr<Skeletal> skMesh,
                          float time)
 {
@@ -145,7 +60,7 @@ void
 Animation::readNodeHeirarchy(float animationTime,
                              const SPtr<Node> pNode,
                              const Matrix4f& parentTransform,
-                             int32 meshIndex,
+                             SIZE_T meshIndex,
                              SPtr<Skeletal> skMesh)
 {
 
@@ -182,7 +97,7 @@ Animation::readNodeHeirarchy(float animationTime,
   Matrix4f GlobalTransformation = parentTransform * NodeTransformation;
 
   Vector<Vector<Bone>>& bonesPerMesh = skMesh->getBonesData();
-  Vector<Map<String, int32>>& boneMappings = skMesh->getBoneMapping();
+  Vector<Map<String, uint32>>& boneMappings = skMesh->getBoneMapping();
   const Vector<Matrix4f>& globalInverseTransforms =
                                            skMesh->getGlobalInverseTransforms();
 

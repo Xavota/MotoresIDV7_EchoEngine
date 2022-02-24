@@ -32,6 +32,21 @@ class DX11ConstantBuffer : public ConstantBuffer
   DX11ConstantBuffer() = default;
   /**
    * @brief
+   * Initializes its data.
+   *
+   * @description
+   * Takes the data given and copies the number of bytes given.
+   *
+   * @param dataSize
+   * The number of bytes the buffer will copy.
+   * @param batchSize
+   * The number of size of the data type stored.
+   * @param data
+   * The pointer to the bytes that will be copied.
+   */
+  DX11ConstantBuffer(SIZE_T dataSize, uint32 batchSize, const Byte* data);
+  /**
+   * @brief
    * Default destructor
    */
   virtual
@@ -55,8 +70,8 @@ class DX11ConstantBuffer : public ConstantBuffer
    * @return
    * Weather it succeed or failed to initialize.
    */
-  virtual bool
-  initData(uint32 dataSize, uint32 batchSize, const Byte* data) override;
+  bool
+  initData(SIZE_T dataSize, uint32 batchSize, const Byte* data) override;
 
   /**
    * @brief
@@ -68,7 +83,7 @@ class DX11ConstantBuffer : public ConstantBuffer
    * @param data
    * The pointer to the bytes that will be copied.
    */
-  virtual void
+  void
   updateData(const Byte* data);
 
   /**
@@ -91,7 +106,7 @@ class DX11ConstantBuffer : public ConstantBuffer
    * @description
    * Deletes the memory of all data allocated.
    */
-  virtual void
+  void
   release() override;
 
   /**
@@ -105,7 +120,7 @@ class DX11ConstantBuffer : public ConstantBuffer
    * @param index
    * The index in witch the buffer will be put.
    */
-  virtual void
+  void
   setInVertex(uint32 index) override;
 
   /**
@@ -119,7 +134,7 @@ class DX11ConstantBuffer : public ConstantBuffer
    * @param index
    * The index in witch the buffer will be put.
    */
-  virtual void
+  void
   setInPixel(uint32 index) override;
 
 

@@ -1,14 +1,35 @@
 #include "eeFrustum.h"
 #include "eeMath.h"
 
-void eeEngineSDK::Frustum::UpdateFrustum(const Vector3f& position,
-                                         const Vector3f& frontVec,
-                                         const Vector3f& upVec,
-                                         const Vector3f& rightVec,
-                                         float nearDistance,
-                                         float farDistance,
-                                         float fovAngle,
-                                         float aspectRatio)
+namespace eeEngineSDK {
+Frustum::Frustum(const Vector3f& position,
+                 const Vector3f& frontVec,
+                 const Vector3f& upVec,
+                 const Vector3f& rightVec,
+                 float nearDistance,
+                 float farDistance,
+                 float fovAngle,
+                 float aspectRatio)
+{
+  UpdateFrustum(position,
+                frontVec,
+                upVec,
+                rightVec,
+                nearDistance,
+                farDistance,
+                fovAngle,
+                aspectRatio);
+}
+
+void
+Frustum::UpdateFrustum(const Vector3f& position,
+                       const Vector3f& frontVec,
+                       const Vector3f& upVec,
+                       const Vector3f& rightVec,
+                       float nearDistance,
+                       float farDistance,
+                       float fovAngle,
+                       float aspectRatio)
 {
   // Recalculate Frustum
   Vector3f nearFront = frontVec * nearDistance;
@@ -36,7 +57,8 @@ void eeEngineSDK::Frustum::UpdateFrustum(const Vector3f& position,
   m_downPlane.setPoint(position);
 }
 
-bool eeEngineSDK::Frustum::isSphereInside(const Sphere& sphere)
+bool
+Frustum::isSphereInside(const Sphere& sphere)
 {
   // See if in
   if (Math::intersectionSpherePlane(sphere, m_nearPlane)) {
@@ -91,8 +113,9 @@ bool eeEngineSDK::Frustum::isSphereInside(const Sphere& sphere)
 
   return true;
 }
-
-bool eeEngineSDK::Frustum::isBoxInside(const BoxAAB& box)
+bool
+Frustum::isBoxInside(const BoxAAB& box)
 {
   return true;
+}
 }

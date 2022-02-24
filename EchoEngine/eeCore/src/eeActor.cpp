@@ -7,7 +7,7 @@ Actor::init(String name)
 {
   m_name = name;
   if (!getTransform()) {
-    auto cmpIndex = static_cast<int32>(m_components.size());
+    SIZE_T cmpIndex = m_components.size();
     m_components.push_back(MemoryManager::instance().newPtr<CTransform>());
     m_components[cmpIndex]->init(shared_from_this());
   }
@@ -40,8 +40,8 @@ void
 Actor::attachTo(SPtr<Actor> parent)
 {
   if (m_parent) {
-    auto childsSize = static_cast<uint32>(m_parent->m_childs.size());
-    for (uint32 i = 0; i < childsSize; ++i) {
+    SIZE_T childsSize = m_parent->m_childs.size();
+    for (SIZE_T i = 0; i < childsSize; ++i) {
       if (m_parent->m_childs[i]->m_name == m_name) {
         m_parent->m_childs.erase(m_parent->m_childs.begin() + i);
         break;

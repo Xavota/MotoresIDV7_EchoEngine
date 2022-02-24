@@ -705,6 +705,24 @@ public:
   checkFloatsEqual(const float _val1,
                    const float _val2,
                    const float _gap = kFLOAT_EQUAL_SMALL_DIFFERENCE);
+  /**
+   * @brief
+   * Check if the value has the flag.
+   *
+   * @description
+   * Check if the value has the 1's bits of the flag.
+   *
+   * @param _val
+   * The value to check.
+   * @param _flag
+   * The flag to check the 1's bits.
+   *
+   * @return
+   * If the value has the 1's bits of the flag.
+   */
+  template<class V, class F>
+  static FORCEINLINE bool
+  hasFlag(V _val, F _flag);
 
   /***************************************************************************/
   /*                                                                         */
@@ -1380,5 +1398,11 @@ PlatformMath::checkFloatsEqual(const float _val1,
                                const float _gap)
 {
   return abs(_val1 - _val2) <= _gap;
+}
+template<class V, class F>
+FORCEINLINE bool
+PlatformMath::hasFlag(V _val, F _flag)
+{
+  return (_val & _flag) == _flag;
 }
 }

@@ -17,7 +17,7 @@
 #include <eeLogger.h>
 
 #include "eeTexture.h"
-#include "eeModel.h"
+#include "eeStaticMesh.h"
 #include "eeMesh.h"
 #include "eeVertexShader.h"
 #include "eePixelShader.h"
@@ -26,6 +26,28 @@
 #include <eeMemoryManager.h>
 
 namespace eeEngineSDK {
+/**
+ * @brief
+ * Flags for importing files, to tell what to try to import and what not.
+ */
+namespace IMPORT_FLAGS {
+enum E : uint16
+{
+  kNone = 0u,
+  kImportAll = 1u,
+  kNotImportTextures = 2u,
+  kNotImportStaticMeshes = 4u,
+  kNotImportSkeletalMeshes = 8u,
+  kNotImportAnimations = 16u,
+  kNotImportShaders = 32u,
+  kImportTextures = 64u,
+  kImportStaticMeshes = 128u,
+  kImportSkeletalMeshes = 256u,
+  kImportAnimations = 512u,
+  kImportShaders = 1024u,
+};
+}
+
 /**
  * @brief
  * The resource manager. It should load every resource to have a reference to
@@ -59,7 +81,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * Weather it succeed or failed to import.
    */
   bool
-  importResourceFromFile(const String& fileName);
+  importResourceFromFile(const String& fileName, uint16 importFlags = 0u);
 
   /**
    * @brief
@@ -78,69 +100,108 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    */
   SPtr<Texture>
   loadTextureFromFile(const String& fileName,
-                      const String resourceName,
-                      SamplerStateDesc desc);
-
+                      const String resourceName);
+                      
   /**
    * @brief
-   * Initializes the model.
+   * Initializes a material.
    *
    * @description
-   * Initializes the model from a file and stores it with the given name.
+   * Initializes a material from a file and stores it with the given name.
    *
-   * @param fileName
-   * The name of the file containing the model.
+   * @param diffuse
+   * The diffuse color map for the material.
+   * @param normalMap
+   * The normal map for the material.
    * @param resourceName
    * The name that the resource will be stored with.
    *
    * @return
    * The resource initialized.
    */
-  SPtr<Model> 
-  loadModelFromFile(const String& fileName,
-                    const String resourceName,
-                    const Vector<SPtr<Texture>>& textures = {});
+  SPtr<Material>
+  loadMaterialFromTextures(SPtr<Texture> diffuse,
+                           SPtr<Texture> normalMap,
+                           const String resourceName);
+
   /**
    * @brief
-   * Initializes the model.
+   * Initializes the StaticMesh.
    *
    * @description
-   * Initializes the model from an array of meshes and stores it with the given
+   * Initializes the StaticMesh from a file and stores it with the given name.
+   *
+   * @param fileName
+   * The name of the file containing the StaticMesh.
+   * @param resourceName
+   * The name that the resource will be stored with.
+   *
+   * @return
+   * The resource initialized.
+   */
+  /*template<class V, class I>*/
+  SPtr<StaticMesh/*<V, I>*/>
+  loadStaticMeshFromFile(const String& fileName,
+                         const String resourceName,
+                         const Vector<SPtr<Material>>& materials = {});
+  /**
+   * @brief
+   * Initializes the StaticMesh.
+   *
+   * @description
+   * Initializes the StaticMesh from an array of meshes and stores it with the given
    * name.
    *
    * @param meshes
    * The array of meshes.
    * @param resourceName
    * The name that the resource will be stored with.
+   * @param furtherVertexPosition
+   * The position of the vertex most far away from the origin.
+   * @param maxCoordinate
+   * The max coordinate of all vertex positions.
+   * @param minCoordinate
+   * The min coordinate of all vertex positions.
    *
    * @return
    * The resource initialized.
    */
-  SPtr<Model>
-  loadModelFromMeshesArray(const Vector<SPtr<Mesh>>& meshes,
-                           const String resourceName);
+  /*template<class V, class I>*/
+  SPtr<StaticMesh/*<V, I>*/>
+  loadStaticMeshFromMeshesArray(const Vector<Mesh/*<V,I>*/>& meshes,
+                                const String resourceName,
+                                const Vector3f& furtherVertexPosition,
+                                const Vector3f& maxCoordinate,
+                                const Vector3f& minCoordinate);
   /**
    * @brief
-   * Initializes the model.
+   * Initializes the StaticMesh.
    *
    * @description
-   * Initializes the model from an array of pairs of meshes and texture indices
+   * Initializes the StaticMesh from an array of pairs of meshes and texture indices
    * and its respective textures and stores it with the given name.
    *
    * @param meshes
-   * The array of pair of meshes and texture indices, indicating with texture it
-   * will use.
-   * @param textures
-   * The array of textures for the model.
+   * The array of pair of meshes and textures.
    * @param resourceName
    * The name that the resource will be stored with.
+   * @param furtherVertexPosition
+   * The position of the vertex most far away from the origin.
+   * @param maxCoordinate
+   * The max coordinate of all vertex positions.
+   * @param minCoordinate
+   * The min coordinate of all vertex positions.
    *
    * @return
    * The resource initialized.
    */
-  SPtr<Model>
-  loadModelFromMeshesArray(const Vector<Pair<SPtr<Mesh>, SPtr<Texture>>>& meshes,
-                           const String resourceName);
+  /*template<class V, class I>*/
+  SPtr<StaticMesh/*<V, I>*/>
+  loadStaticMeshFromMeshesArray(const Vector<Pair<Mesh/*<V,I>*/, SPtr<Material>>>& meshes,
+                                const String resourceName,
+                                const Vector3f& furtherVertexPosition,
+                                const Vector3f& maxCoordinate,
+                                const Vector3f& minCoordinate);
 
   /**
    * @brief
@@ -175,11 +236,12 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * The resource initialized.
    */
-  SPtr<SkeletalMesh> 
+  /*template<class V, class I>*/
+  SPtr<SkeletalMesh/*<V, I>*/>
   loadSkeletalMeshFromFile(const String& fileName,
                            const String& resourceName,
                            const SPtr<Skeletal> skMesh,
-                           const Vector<SPtr<Texture>>& textures = {});
+                           const Vector<SPtr<Material>>& textures = {});
   /**
    * @brief
    * Initializes an animation.
@@ -291,19 +353,35 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
   getResourceTexture(const String& resourceName);
   /**
    * @brief
-   * Gets a model.
+   * Gets a material.
    *
    * @description
-   * Gets a model by a resource name.
+   * Gets a material by a resource name.
    *
    * @param resourceName
    * The name of the resource.
    *
    * @return
-   * The model with that name.
+   * The material with that name.
    */
-  SPtr<Model>
-  getResourceModel(const String& resourceName);
+  SPtr<Material>
+  getResourceMaterial(const String& resourceName);
+  /**
+   * @brief
+   * Gets a StaticMesh.
+   *
+   * @description
+   * Gets a StaticMesh by a resource name.
+   *
+   * @param resourceName
+   * The name of the resource.
+   *
+   * @return
+   * The StaticMesh with that name.
+   */
+  /*template<class V, class I>*/
+  SPtr<StaticMesh/*<V, I>*/>
+  getResourceStaticMesh(const String& resourceName);
   /**
    * @brief
    * Gets a skeletal.
@@ -332,7 +410,8 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * The skeletal mesh with that name.
    */
-  SPtr<SkeletalMesh>
+  /*template<class V, class I>*/
+  SPtr<SkeletalMesh/*<V, I>*/>
   getResourceSkeletalMesh(const String& resourceName);
   /**
    * @brief
@@ -394,16 +473,29 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
   getAllTextureResources();
   /**
    * @brief
-   * Gets all models.
+   * Gets all materials.
    *
    * @description
-   * Gets all stored models.
+   * Gets all stored materials.
    *
    * @return
-   * All stored models.
+   * All stored materials.
    */
-  Map<String, SPtr<Model>>
-  getAllModelResources();
+  Map<String, SPtr<Material>>
+  getAllMaterialResources();
+  /**
+   * @brief
+   * Gets all StaticMeshes.
+   *
+   * @description
+   * Gets all stored StaticMeshes.
+   *
+   * @return
+   * All stored StaticMeshes.
+   */
+  /*template<class V, class I>*/
+  Map<String, SPtr<StaticMesh/*<V, I>*/>>
+  getAllStaticMeshResources();
   /**
    * @brief
    * Gets all skeletons.
@@ -426,7 +518,8 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * All stored skeletal meshes.
    */
-  Map<String, SPtr<SkeletalMesh>>
+  /*template<class V, class I>*/
+  Map<String, SPtr<SkeletalMesh/*<V, I>*/>>
   getAllSkeletalMeshResources();
   /**
    * @brief
@@ -473,9 +566,14 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    */
   Map<String, SPtr<Texture>> m_textures;
   /**
-   * The models stored.
+   * The materials stored.
    */
-  Map<String, SPtr<Model>> m_models;
+  Map<String, SPtr<Material>> m_materials;
+  /**
+   * The StaticMeshes stored.
+   */
+  /*template<class V, class I>*/
+  Map<String, SPtr<StaticMesh/*<V, I>*/>> m_staticMeshes;
   /**
    * The skeletal meshes stored.
    */
@@ -483,7 +581,8 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
   /**
    * The skeletal meshes stored.
    */
-  Map<String, SPtr<SkeletalMesh>> m_skeletalMeshes;
+  /*template<class V, class I>*/
+  Map<String, SPtr<SkeletalMesh/*<V, I>*/>> m_skeletalMeshes;
   /**
    * The animations stored.
    */

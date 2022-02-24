@@ -24,7 +24,7 @@ class EE_CORE_EXPORT CAnimation : public Component
    * @brief
    * The enum for identifying the component type.
    */
-  enum { CmpType = eCOMPONENT_TYPE::kAnimation };
+  enum { CmpType = COMPONENT_TYPE::kAnimation };
 
   /**
    * @brief
@@ -97,7 +97,7 @@ class EE_CORE_EXPORT CAnimation : public Component
   /**
    * The animation time.
    */
-  float m_animTime;
+  float m_animTime = 0.0f;
 };
 }
 

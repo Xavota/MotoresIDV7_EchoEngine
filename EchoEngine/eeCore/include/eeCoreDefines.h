@@ -14,6 +14,17 @@
 
 
 namespace eeEngineSDK {
+namespace eTEXTURE_BIND_FLAGS
+{
+enum E
+{
+  kNone = 0u,
+  kShaderResource = 1u,
+  kRenderTarget = 2u,
+  kDepthStencil = 4u
+};
+}
+
 /**
  * @brief
  * Filter for the sampler.

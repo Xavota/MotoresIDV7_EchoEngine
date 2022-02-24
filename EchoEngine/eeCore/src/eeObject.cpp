@@ -2,6 +2,8 @@
 
 #include <eeLogger.h>
 
+#include "eeResourceManager.h"
+
 
 #include "eeGraficsApi.h"
 #include "eeConstantBuffer.h"
@@ -16,8 +18,8 @@ Object::loadFromFile(const String& fileName,
 {
   // Load from resource manager
 
-  m_model = MemoryManager::instance().newPtr<Model>();
-  if (!m_model->loadFromFile(fileName, "object")) {
+  m_model = ResourceManager::instance().loadStaticMeshFromFile(fileName, "object");
+  if (!m_model) {
     return false; 
   }
 
@@ -34,7 +36,7 @@ Object::loadFromFile(const String& fileName,
   return true;
 }
 bool 
-Object::loadFromModel(SPtr<Model> model,
+Object::loadFromModel(SPtr<StaticMesh> model,
                       Vector3f pos,
                       Quaternion rot,
                       Vector3f scale)
@@ -95,11 +97,11 @@ Object::setScale(const Vector3f& scale)
   m_modelMatrixBuff->updateData(reinterpret_cast<Byte*>(&modelMat));
 }
 void 
-Object::setModel(const SPtr<Model>& model)
+Object::setModel(const SPtr<StaticMesh>& model)
 {
   m_model = model;
 }
-SPtr<Model>
+SPtr<StaticMesh>
 Object::getModel()
 {
   return m_model;

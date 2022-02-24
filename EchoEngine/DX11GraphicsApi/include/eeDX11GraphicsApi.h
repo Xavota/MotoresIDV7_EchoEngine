@@ -20,8 +20,6 @@
 #include "eeDX11VertexBuffer.h"
 #include "eeDX11IndexBuffer.h"
 #include "eeDX11ConstantBuffer.h"
-#include "eeDX11RenderTarget.h"
-#include "eeDX11DepthStencil.h"
 #include "eeDX11RasterizerState.h"
 
 #pragma warning(push, 0)   
@@ -80,7 +78,7 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
    * Weather it succeed or failed to initialize.
    */
   bool
-  initialize() override;
+  initialize(uint32 witdh, uint32 height) override;
 
   /**
    * @brief
@@ -119,7 +117,7 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
    * Weather it succeed or failed to initialize.
    */
   bool
-  initializeScreen(void* callback) override;
+  initializeScreen(void* callback, uint32 witdh, uint32 height) override;
 
   /**
    * @brief
@@ -134,7 +132,7 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
    * The color to clean with in RGBA. From 0 to 1 inclusive.
    */
   void
-  clearRenderTargets(Vector<SPtr<RenderTarget>> rtvs, Color screenColor) override;
+  clearRenderTargets(Vector<SPtr<Texture>> rtvs, Color screenColor) override;
 
   /**
    * @brief
@@ -147,7 +145,7 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
    * The depth stencils to clean.
    */
   void
-  cleanDepthStencils(Vector<SPtr<DepthStencil>> dsvs) override;
+  cleanDepthStencils(Vector<SPtr<Texture>> dsvs) override;
 
   /**
    * @brief
@@ -162,8 +160,8 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
    * The depth stencil for the render targets.
    */
   void
-  setRenderTargets(Vector<SPtr<RenderTarget>> rtvs,
-                   SPtr<DepthStencil> dsv) override;
+  setRenderTargets(Vector<SPtr<Texture>> rtvs,
+                   SPtr<Texture> dsv) override;
 
   /**
    * @brief
@@ -484,38 +482,6 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
 
   /**
    * @brief
-   * Gets the specific render target pointer.
-   *
-   * @description
-   * Returns a pointer to a render target depending on the api.
-   *
-   * @return
-   * The pointer to a render target depending on the api.
-   */
-  FORCEINLINE SPtr<RenderTarget>
-  createRenderTragetPtr() const override
-  {
-    return MemoryManager::instance().newPtr<DX11RenderTarget>();
-  }
-
-  /**
-   * @brief
-   * Gets the specific depth stencil pointer.
-   *
-   * @description
-   * Returns a pointer to a depth stencil depending on the api.
-   *
-   * @return
-   * The pointer to a depth stencil depending on the api.
-   */
-  FORCEINLINE SPtr<DepthStencil>
-  createDepthStencilPtr() const override
-  {
-    return MemoryManager::instance().newPtr<DX11DepthStencil>();
-  }
-
-  /**
-   * @brief
    * Gets the specific rasterizer state pointer.
    *
    * @description
@@ -567,7 +533,7 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
    * The new size for the window.
    */
   void
-  resizeWindow(Vector2i newSize) override;
+  resizeWindow(Vector2u newSize) override;
 
  protected:
   /**
@@ -581,7 +547,7 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
    * The number of indices to be drawn.
    */
   void
-  drawIndexed(int32 /*indicesCount*/) const override;
+  drawIndexed(uint32 /*indicesCount*/) const override;
 
  private:
   /**

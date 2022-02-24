@@ -32,6 +32,19 @@ class DX11DepthStencilState : public DepthStencilState
   DX11DepthStencilState() = default;
   /**
    * @brief
+   * Creates a depth stencil.
+   *
+   * @description
+   * Creates the depth stencil resource with a width and height screen.
+   *
+   * @param width
+   * The width of the screen.
+   * @param height
+   * The height of the screen.
+   */
+  DX11DepthStencilState(DepthStencilDesc desc);
+  /**
+   * @brief
    * Default destructor.
    */
   ~DX11DepthStencilState() = default;

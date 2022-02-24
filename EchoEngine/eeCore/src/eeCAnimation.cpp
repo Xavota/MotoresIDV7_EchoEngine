@@ -19,10 +19,9 @@ CAnimation::update()
   SPtr<Skeletal> skeleton = skMesh->getModel()->getSkeletal();
   EE_NO_EXIST_RETURN(skeleton);
 
-  auto bonesPerMesh =
-  static_cast<int32>(skeleton->getBonesData().size());
+  SIZE_T bonesPerMesh = skeleton->getBonesData().size();
   m_animTime += Time::instance().getDeltaTime();
-  for (int32 i = 0; i < bonesPerMesh; ++i) {
+  for (SIZE_T i = 0; i < bonesPerMesh; ++i) {
     m_anim->boneTransform(i, skeleton, m_animTime);
   }
 }

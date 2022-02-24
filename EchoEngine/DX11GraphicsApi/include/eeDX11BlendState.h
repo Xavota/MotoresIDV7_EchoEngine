@@ -32,6 +32,17 @@ class DX11BlendState : public BlendState
   DX11BlendState() = default;
   /**
    * @brief
+   * Creates a blend state.
+   *
+   * @description
+   * Creates a blend state using a descriptor.
+   *
+   * @param desc
+   * The descriptor of the blend state.
+   */
+  DX11BlendState(BlendDesc desc);
+  /**
+   * @brief
    * Default destructor
    */
   ~DX11BlendState() = default;

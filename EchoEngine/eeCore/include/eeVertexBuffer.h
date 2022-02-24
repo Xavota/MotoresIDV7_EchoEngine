@@ -52,7 +52,7 @@ class EE_CORE_EXPORT VertexBuffer : public Buffer
    * Weather it succeed or failed to initialize.
    */
   virtual bool
-  initData(uint32 dataSize, uint32 batchSize, const Byte* data) override
+  initData(SIZE_T dataSize, uint32 batchSize, const Byte* data) override
   {
     return Buffer::initData(dataSize, batchSize, data);
   }

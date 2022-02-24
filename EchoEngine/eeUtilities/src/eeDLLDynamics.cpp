@@ -8,6 +8,13 @@
 #include <eeLogger.h>
 
 namespace eeEngineSDK {
+DLLDynamics::DLLDynamics(const String& dllPath)
+{
+  if (initialize(dllPath))
+  {
+    m_dllInstance = nullptr;
+  }
+}
 bool
 DLLDynamics::initialize(const String& dllPath)
 {

@@ -2,6 +2,10 @@
 #include "eeDX11GraphicsApi.h"
 
 namespace eeEngineSDK {
+DX11SamplerState::DX11SamplerState(SamplerStateDesc desc)
+{
+  create(desc);
+}
 DX11SamplerState::~DX11SamplerState()
 {
   release();

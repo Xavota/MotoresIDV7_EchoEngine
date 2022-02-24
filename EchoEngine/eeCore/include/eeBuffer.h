@@ -53,7 +53,7 @@ class EE_CORE_EXPORT Buffer
    * Weather it succeed or failed to initialize.
    */
   virtual bool
-  initData(uint32 dataSize, uint32 batchSize, const Byte* data);
+  initData(SIZE_T dataSize, uint32 batchSize, const Byte* data);
 
   /**
    * @brief
@@ -88,10 +88,10 @@ class EE_CORE_EXPORT Buffer
    * @return
    * The number of bytes stored in the buffer..
    */
-  FORCEINLINE virtual uint32
+  FORCEINLINE virtual SIZE_T
   getDataSize() const
   {
-    return static_cast<uint32>(m_data.size());
+    return m_data.size();
   }
   /**
    * @brief

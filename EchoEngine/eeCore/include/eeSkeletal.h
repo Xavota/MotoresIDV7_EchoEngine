@@ -59,6 +59,32 @@ class Skeletal
    Skeletal() = default;
   /**
    * @brief
+   * Loads an skeletal mesh.
+   *
+   * @description
+   * Loads the skeletal mesh from all the data it needs.
+   *
+   * @param bonesPerMesh
+   * The bones array for every mesh.
+   * @param globalInverseTransforms
+   * The global inverse transforms array for every mesh.
+   * @param boneMappings
+   * The mappings of the bones, with names and indices, for every mesh.
+   * @param numsBones
+   * The numbers of bones array for every mesh.
+   * @param name
+   * The name of the resource.
+   *
+   * @return
+   * Whether it succeeded to load or not.
+   */
+   Skeletal(const Vector<Vector<Bone>>& bonesPerMesh,
+            const Vector<Matrix4f>& globalInverseTransforms,
+            const Vector<Map<String, uint32>>& boneMappings,
+            const Vector<uint32>& numsBones,
+            const String& name);
+  /**
+   * @brief
    * Default destructor.
    */
   ~Skeletal() = default;
@@ -68,16 +94,28 @@ class Skeletal
    * Loads an skeletal mesh.
    *
    * @description
-   * Loads the skeletal mesh from a file.
+   * Loads the skeletal mesh from all the data it needs.
    *
-   * @param fileName
-   * The file path for the skeletal.
+   * @param bonesPerMesh
+   * The bones array for every mesh.
+   * @param globalInverseTransforms
+   * The global inverse transforms array for every mesh.
+   * @param boneMappings
+   * The mappings of the bones, with names and indices, for every mesh.
+   * @param numsBones
+   * The numbers of bones array for every mesh.
+   * @param name
+   * The name of the resource.
    *
    * @return
    * Whether it succeeded to load or not.
    */
   bool
-  loadFromFile(const String& fileName);
+  loadFromData(const Vector<Vector<Bone>>& bonesPerMesh,
+               const Vector<Matrix4f>& globalInverseTransforms,
+               const Vector<Map<String, uint32>>& boneMappings,
+               const Vector<uint32>& numsBones,
+               const String& name);
 
   /**
    * @brief
@@ -105,7 +143,7 @@ class Skeletal
    * Bone data.
    */
   bool
-  getBonesDataForMesh(int32 index, Vector<Bone>& outBoneData) const;
+  getBonesDataForMesh(SIZE_T index, Vector<Bone>& outBoneData) const;
 
   /**
    * @brief
@@ -117,7 +155,7 @@ class Skeletal
    * @return
    * Bone mapping.
    */
-  Vector<Map<String, int32>>&
+  Vector<Map<String, uint32>>&
   getBoneMapping();
   /**
    * @brief
@@ -145,7 +183,7 @@ class Skeletal
    * The mesh index that is being modified.
    */
   void
-  boneTransform(const aiNode* root, int32 meshIndex);
+  boneTransform(const aiNode* root, uint32 meshIndex);
   /**
    * @brief
    * Updates the bones data.
@@ -166,7 +204,7 @@ class Skeletal
   void
   readNodeHeirarchy(const aiNode* pNode,
                     const Matrix4f& parentTransform,
-                    int32 meshIndex);
+                    SIZE_T meshIndex);
 
   /**
    * @brief
@@ -182,7 +220,7 @@ class Skeletal
    * The matrices of each bone with is transformations.
    */
   Vector<Matrix4f>
-  getBonesMatrices(int32 meshNum);
+  getBonesMatrices(SIZE_T meshNum);
 
   /**
    * @brief
@@ -195,7 +233,7 @@ class Skeletal
    * The mesh index to set.
    */
   void
-  use(int32 meshNum);
+  use(SIZE_T meshNum);
 
  private:
   /**
@@ -215,10 +253,15 @@ class Skeletal
   /**
    * Bone mapping of every mesh.
    */
-  Vector<Map<String, int32>> m_boneMappings;
+  Vector<Map<String, uint32>> m_boneMappings;
   /**
    * Bones count for every mesh.
    */
-  Vector<int32> m_numsBones;
+  Vector<uint32> m_numsBones;
+
+  /**
+   * The name of the skeleton resource.
+   */
+  String m_name;
 };
 }

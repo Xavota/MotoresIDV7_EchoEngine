@@ -102,14 +102,14 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>EE_CORE_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;$(DEVLIBS)FreeImage/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Assimp/lib/$(PlatformTarget)/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>eeUtilitiesd.lib;assimp-vc142-mtd.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Assimp/lib/$(PlatformTarget)/;$(DEVLIBS)FreeImage/lib/$(PlatformTarget)/</AdditionalLibraryDirectories>
+      <AdditionalDependencies>eeUtilitiesd.lib;assimp-vc142-mtd.lib;FreeImageLibd.lib</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -121,7 +121,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>EE_CORE_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;$(DEVLIBS)FreeImage/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
@@ -129,8 +129,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Assimp/lib/$(PlatformTarget)/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>eeUtilities.lib;%(AdditionalDependencies);assimp-vc142-mt.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Assimp/lib/$(PlatformTarget)/;$(DEVLIBS)FreeImage/lib/$(PlatformTarget)/</AdditionalLibraryDirectories>
+      <AdditionalDependencies>eeUtilities.lib;assimp-vc142-mt.lib;FreeImageLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -140,14 +140,14 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>EE_CORE_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;$(DEVLIBS)FreeImage/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Assimp/lib/$(PlatformTarget)/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>eeUtilitiesd.lib;assimp-vc142-mtd.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Assimp/lib/$(PlatformTarget)/;$(DEVLIBS)FreeImage/lib/$(PlatformTarget)/</AdditionalLibraryDirectories>
+      <AdditionalDependencies>eeUtilitiesd.lib;assimp-vc142-mtd.lib;FreeImageLibd.lib</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -159,7 +159,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>EE_CORE_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;$(DEVLIBS)FreeImage/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
@@ -167,8 +167,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Assimp/lib/$(PlatformTarget)/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>eeUtilities.lib;%(AdditionalDependencies);assimp-vc142-mt.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Assimp/lib/$(PlatformTarget)/;$(DEVLIBS)FreeImage/lib/$(PlatformTarget)/</AdditionalLibraryDirectories>
+      <AdditionalDependencies>eeUtilities.lib;assimp-vc142-mt.lib;FreeImageLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -182,23 +182,24 @@
     <ClCompile Include="src\eeCAnimation.cpp" />
     <ClCompile Include="src\eeCBounds.cpp" />
     <ClCompile Include="src\eeCCamera.cpp" />
-    <ClCompile Include="src\eeCModel.cpp" />
+    <ClCompile Include="src\eeCStaticMesh.cpp" />
     <ClCompile Include="src\eeComponent.cpp" />
     <ClCompile Include="src\eeConstantBuffer.cpp" />
     <ClCompile Include="src\eeCRender.cpp" />
     <ClCompile Include="src\eeCSkeletalMesh.cpp" />
     <ClCompile Include="src\eeCTransform.cpp" />
-    <ClCompile Include="src\eeDepthStencil.cpp" />
     <ClCompile Include="src\eeDepthStencilState.cpp" />
+    <ClCompile Include="src\eeEvent.cpp" />
+    <ClCompile Include="src\eeImage.cpp" />
     <ClCompile Include="src\eeIndexBuffer.cpp" />
     <ClCompile Include="src\eeInput.cpp" />
     <ClCompile Include="src\eeInputLayout.cpp" />
+    <ClCompile Include="src\eeMaterial.cpp" />
     <ClCompile Include="src\eeMesh.cpp" />
-    <ClCompile Include="src\eeModel.cpp" />
+    <ClCompile Include="src\eeStaticMesh.cpp" />
     <ClCompile Include="src\eeObject.cpp" />
     <ClCompile Include="src\eePixelShader.cpp" />
     <ClCompile Include="src\eeRasterizerState.cpp" />
-    <ClCompile Include="src\eeRenderTarget.cpp" />
     <ClCompile Include="src\eeResourceManager.cpp" />
     <ClCompile Include="src\eeSamplerState.cpp" />
     <ClCompile Include="src\eeScene.cpp" />
@@ -208,9 +209,11 @@
     <ClCompile Include="src\eeTexture.cpp" />
     <ClCompile Include="src\eeVertexBuffer.cpp" />
     <ClCompile Include="src\eeVertexShader.cpp" />
+    <ClCompile Include="src\eeWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\eeUtilities\include\eeGraficsApi.h" />
+    <ClInclude Include="externals\stb_image.h" />
     <ClInclude Include="include\eeAnimation.h" />
     <ClInclude Include="include\eeActor.h" />
     <ClInclude Include="include\eeBaseApp.h" />
@@ -219,7 +222,7 @@
     <ClInclude Include="include\eeCAnimation.h" />
     <ClInclude Include="include\eeCBounds.h" />
     <ClInclude Include="include\eeCCamera.h" />
-    <ClInclude Include="include\eeCModel.h" />
+    <ClInclude Include="include\eeCStaticMesh.h" />
     <ClInclude Include="include\eeComponent.h" />
     <ClInclude Include="include\eeConstantBuffer.h" />
     <ClInclude Include="include\eeCoreConfiguration.h" />
@@ -227,18 +230,19 @@
     <ClInclude Include="include\eeCRender.h" />
     <ClInclude Include="include\eeCSkeletalMesh.h" />
     <ClInclude Include="include\eeCTransform.h" />
-    <ClInclude Include="include\eeDepthStencil.h" />
     <ClInclude Include="include\eeDepthStencilState.h" />
+    <ClInclude Include="include\eeEvent.h" />
+    <ClInclude Include="include\eeImage.h" />
     <ClInclude Include="include\eeIndexBuffer.h" />
     <ClInclude Include="include\eeInput.h" />
     <ClInclude Include="include\eeInputLayout.h" />
+    <ClInclude Include="include\eeMaterial.h" />
     <ClInclude Include="include\eeMesh.h" />
-    <ClInclude Include="include\eeModel.h" />
+    <ClInclude Include="include\eeStaticMesh.h" />
     <ClInclude Include="include\eeObject.h" />
     <ClInclude Include="include\eePixelShader.h" />
     <ClInclude Include="include\eePrerequisitesCore.h" />
     <ClInclude Include="include\eeRasterizerState.h" />
-    <ClInclude Include="include\eeRenderTarget.h" />
     <ClInclude Include="include\eeResourceManager.h" />
     <ClInclude Include="include\eeSamplerState.h" />
     <ClInclude Include="include\eeScene.h" />
@@ -249,6 +253,7 @@
     <ClInclude Include="include\eeTexture.h" />
     <ClInclude Include="include\eeVertexBuffer.h" />
     <ClInclude Include="include\eeVertexShader.h" />
+    <ClInclude Include="include\eeWindow.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
