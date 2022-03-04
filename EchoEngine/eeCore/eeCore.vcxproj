@@ -102,7 +102,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>EE_CORE_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;$(DEVLIBS)Boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
@@ -121,7 +121,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>EE_CORE_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;$(DEVLIBS)Boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
@@ -140,7 +140,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>EE_CORE_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;$(DEVLIBS)Boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
@@ -159,7 +159,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>EE_CORE_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;$(DEVLIBS)Boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>

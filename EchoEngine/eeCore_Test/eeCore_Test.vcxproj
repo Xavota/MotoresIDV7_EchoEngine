@@ -75,22 +75,26 @@
     <OutDir>$(SolutionDir)bin/$(PlatformTarget)/</OutDir>
     <IntDir>$(SolutionDir)intermediate/$(ProjectName)/$(PlatformTarget)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)d</TargetName>
+    <ExternalIncludePath>$(DEVLIBS)imgui/backends;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin/$(PlatformTarget)/</OutDir>
     <IntDir>$(SolutionDir)intermediate/$(ProjectName)/$(PlatformTarget)/$(Configuration)/</IntDir>
+    <ExternalIncludePath>$(DEVLIBS)imgui/backends;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin/$(PlatformTarget)/</OutDir>
     <IntDir>$(SolutionDir)intermediate/$(ProjectName)/$(PlatformTarget)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)d</TargetName>
+    <ExternalIncludePath>$(DEVLIBS)imgui/backends;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin/$(PlatformTarget)/</OutDir>
     <IntDir>$(SolutionDir)intermediate/$(ProjectName)/$(PlatformTarget)/$(Configuration)/</IntDir>
+    <ExternalIncludePath>$(DEVLIBS)imgui/backends;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -98,7 +102,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include/;$(SolutionDir)eeCore/include;$(SolutionDir)eeUtilities/include;$(DEVLIBS)imgui;$(DEVLIBS)imgui/backends;$(SolutionDir)DX11GraphicsApi/include;%(AdditionalIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;$(SolutionDir)eeCore/include;$(SolutionDir)eeUtilities/include;$(DEVLIBS)imgui;$(DEVLIBS)imgui/backends;$(SolutionDir)DX11GraphicsApi/include;$(DEVLIBS)Boost;%(AdditionalIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
@@ -117,7 +121,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include/;$(SolutionDir)eeCore/include;$(SolutionDir)eeUtilities/include;$(DEVLIBS)imgui;$(DEVLIBS)imgui/backends;$(SolutionDir)DX11GraphicsApi/include;%(AdditionalIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;$(SolutionDir)eeCore/include;$(SolutionDir)eeUtilities/include;$(DEVLIBS)imgui;$(DEVLIBS)imgui/backends;$(SolutionDir)DX11GraphicsApi/include;$(DEVLIBS)Boost;%(AdditionalIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
@@ -137,7 +141,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include/;$(SolutionDir)eeCore/include;$(SolutionDir)eeUtilities/include;$(DEVLIBS)imgui;$(DEVLIBS)imgui/backends;$(SolutionDir)DX11GraphicsApi/include;$(DEVLIBS)Assimp/include;%(AdditionalIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;$(SolutionDir)eeCore/include;$(SolutionDir)eeUtilities/include;$(DEVLIBS)imgui;$(DEVLIBS)imgui/backends;$(SolutionDir)DX11GraphicsApi/include;$(DEVLIBS)Boost;$(DEVLIBS)Assimp/include;%(AdditionalIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
@@ -156,7 +160,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include/;$(SolutionDir)eeCore/include;$(SolutionDir)eeUtilities/include;$(DEVLIBS)imgui;$(DEVLIBS)imgui/backends;$(SolutionDir)DX11GraphicsApi/include;%(AdditionalIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;$(SolutionDir)eeCore/include;$(SolutionDir)eeUtilities/include;$(DEVLIBS)imgui;$(DEVLIBS)imgui/backends;$(SolutionDir)DX11GraphicsApi/include;$(DEVLIBS)Boost;%(AdditionalIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
@@ -171,13 +175,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="externals\imgui.cpp" />
-    <ClCompile Include="externals\imgui_demo.cpp" />
-    <ClCompile Include="externals\imgui_draw.cpp" />
-    <ClCompile Include="externals\imgui_impl_dx11.cpp" />
-    <ClCompile Include="externals\imgui_impl_win32.cpp" />
-    <ClCompile Include="externals\imgui_tables.cpp" />
-    <ClCompile Include="externals\imgui_widgets.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\Externals\imgui\backends\imgui_impl_dx11.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\Externals\imgui\backends\imgui_impl_win32.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\Externals\imgui\imgui.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\Externals\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\Externals\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\Externals\imgui\imgui_tables.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\Externals\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\eeBaseAppTest1.cpp" />
     <ClCompile Include="src\eeCoreTests.cpp" />
   </ItemGroup>

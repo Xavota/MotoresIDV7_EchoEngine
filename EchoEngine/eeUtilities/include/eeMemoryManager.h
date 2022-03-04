@@ -12,6 +12,7 @@
 
 #pragma once
 #include "eeModule.h"
+#include "eeSTDHeaders.h"
 
 namespace eeEngineSDK{
 /**
@@ -45,7 +46,7 @@ class EE_UTILITY_EXPORT MemoryManager : public Module<MemoryManager>
    * @return
    * The instance of the new SPtr.
    */
-  template<class T, class... _Types>
+  template<typename T, typename... _Types>
   FORCEINLINE SPtr<T>
   newPtr(_Types&&... _Args);
 
@@ -63,7 +64,7 @@ class EE_UTILITY_EXPORT MemoryManager : public Module<MemoryManager>
    * @return
    * The instance of a SPtr reinterpreted.
    */
-  template<class T, class U>
+  template<typename T, typename U>
   FORCEINLINE SPtr<T>
   reinterpretPtr(SPtr<U> ptr);
 
@@ -80,7 +81,7 @@ class EE_UTILITY_EXPORT MemoryManager : public Module<MemoryManager>
    * @return
    * True if it succeeded to release.
    */
-  template<class T>
+  template<typename T>
   FORCEINLINE bool
   safeRelease(SPtr<T> ptr);
 
@@ -97,25 +98,27 @@ class EE_UTILITY_EXPORT MemoryManager : public Module<MemoryManager>
    * @return
    * True if it succeeded to release.
    */
-  template<class T>
+  template<typename T>
   FORCEINLINE bool
   rawSafeRelease(T** ptr);
 
  private:
 };
-template<class T, class... _Types>
+template<typename T, typename... _Types>
 FORCEINLINE SPtr<T>
 MemoryManager::newPtr(_Types&&... _Args)
 {
-  return std::make_shared<T>(std::forward<_Types>(_Args)...);
+  return SPtr<T>(new T(std::forward<_Types>(_Args)...));
 }
-template<class T, class U>
+template<typename T, typename U>
 FORCEINLINE SPtr<T>
 MemoryManager::reinterpretPtr(SPtr<U> ptr)
 {
-  return std::reinterpret_pointer_cast<T>(ptr);
+  //return std::reinterpret_pointer_cast<T>(ptr);
+  auto p = static_cast<typename SPtr<T>::element_type*>(ptr.get());
+  return SPtr<T>(ptr, p);
 }
-template<class T>
+template<typename T>
 FORCEINLINE bool
 MemoryManager::safeRelease(SPtr<T> ptr)
 {
@@ -125,7 +128,7 @@ MemoryManager::safeRelease(SPtr<T> ptr)
   }
   return false;
 }
-template<class T>
+template<typename T>
 inline bool MemoryManager::rawSafeRelease(T** ptr)
 {
   if (*ptr)

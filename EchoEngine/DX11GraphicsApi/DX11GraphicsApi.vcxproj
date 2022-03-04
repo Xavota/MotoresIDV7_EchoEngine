@@ -137,7 +137,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>EE_PLUGINDX11_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities/include;$(SolutionDir)eeCore/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities/include;$(SolutionDir)eeCore/include;$(DEVLIBS)Boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
@@ -156,7 +156,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>EE_PLUGINDX11_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities/include;$(SolutionDir)eeCore/include;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities/include;$(SolutionDir)eeCore/include;$(DEVLIBS)Boost;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
@@ -175,7 +175,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>EE_PLUGINDX11_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities/include;$(SolutionDir)eeCore/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities/include;$(SolutionDir)eeCore/include;$(DEVLIBS)Boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
@@ -194,7 +194,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>EE_PLUGINDX11_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities/include;$(SolutionDir)eeCore/include;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities/include;$(SolutionDir)eeCore/include;$(DEVLIBS)Boost;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
