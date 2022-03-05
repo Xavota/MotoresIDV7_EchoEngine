@@ -5,6 +5,7 @@
  * @date 15/09/21
  * @brief This file defines the Matrix2 in its 3 forms: floats, int32 and
  *        uint32, as well as its functions, operators and members.
+ *        Row major
  *
  * @bug Not bug Known.
  */
@@ -18,6 +19,7 @@ namespace eeEngineSDK {
  * @brief
  * Matrix 2x2. Holds 2 rows and 2 columns of floats.
  * Has all the possible operations for matrices.
+ * Row major
  */
 class EE_UTILITY_EXPORT Matrix2f
 {
@@ -371,6 +373,7 @@ class EE_UTILITY_EXPORT Matrix2f
  * @brief
  * Matrix 2x2. Holds 2 rows and 2 columns of int32.
  * Has all the possible operations for matrices.
+ * Row major
  */
 class EE_UTILITY_EXPORT Matrix2i
 {
@@ -700,6 +703,7 @@ class EE_UTILITY_EXPORT Matrix2i
  * @brief
  * Matrix 2x2. Holds 2 rows and 2 columns of uint32.
  * Has all the possible operations for matrices.
+ * Row major
  */
 class EE_UTILITY_EXPORT Matrix2u
 {

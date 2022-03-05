@@ -5,6 +5,7 @@
  * @date 16/09/21
  * @brief This file defines the Matrix3 in its 3 forms: floats, int32 and
  *        uint32, as well as its functions, operators and members.
+ *        Row major
  *
  * @bug Not bug Known.
  */
@@ -18,6 +19,7 @@ namespace eeEngineSDK {
  * @brief
  * Matrix 3x3. Holds 3 rows and 3 columns of floats.
  * Has all the possible operations for matrices.
+ * Row major
  */
 class EE_UTILITY_EXPORT Matrix3f
 {
@@ -506,6 +508,7 @@ public:
  * @brief
  * Matrix 3x3. Holds 3 rows and 3 columns of int32.
  * Has all the possible operations for matrices.
+ * Row major
  */
 class EE_UTILITY_EXPORT Matrix3i
 {
@@ -873,6 +876,7 @@ public:
  * @brief
  * Matrix 3x3. Holds 3 rows and 3 columns of uint32.
  * Has all the possible operations for matrices.
+ * Row major
  */
 class EE_UTILITY_EXPORT Matrix3u
 {

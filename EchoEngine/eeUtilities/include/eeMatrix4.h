@@ -5,6 +5,7 @@
  * @date 18/09/21
  * @brief This file defines the Matrix4 in its 3 forms: floats, int32 and 
  *        uint32, as well as its functions, operators and members.
+ *        Row major
  *
  * @bug Not bug Known.
  */
