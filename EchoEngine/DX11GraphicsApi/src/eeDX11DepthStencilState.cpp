@@ -6,6 +6,10 @@ DX11DepthStencilState::DX11DepthStencilState(DepthStencilDesc desc)
 {
   create(desc);
 }
+DX11DepthStencilState::~DX11DepthStencilState()
+{
+  release();
+}
 bool
 DX11DepthStencilState::create(DepthStencilDesc desc)
 {
@@ -58,6 +62,7 @@ DX11DepthStencilState::use(uint32 stencilRef)
 void
 DX11DepthStencilState::release()
 {
+  DepthStencilState::release();
   DX11SAFE_RELEASE(m_depthStencil);
 }
 }

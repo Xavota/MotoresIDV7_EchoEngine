@@ -13,9 +13,6 @@
 #pragma once
 #include "eePrerequisitesDX11.h"
 #include <eeRasterizerState.h>
-#pragma warning(push, 0)   
-#include <d3d11.h>
-#pragma warning(pop)   
 
 namespace eeEngineSDK{
 /**
@@ -45,7 +42,7 @@ class DX11RasterizerState : public RasterizerState
    * @brief
    * Default destructor.
    */
-  ~DX11RasterizerState() = default;
+  ~DX11RasterizerState();
 
   /**
    * @brief

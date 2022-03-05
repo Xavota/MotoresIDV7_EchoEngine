@@ -6,6 +6,10 @@ DX11RasterizerState::DX11RasterizerState(RasteraizerDesc desc)
 {
   create(desc);
 }
+DX11RasterizerState::~DX11RasterizerState()
+{
+  release();
+}
 bool
 DX11RasterizerState::create(RasteraizerDesc desc)
 {
@@ -46,6 +50,7 @@ DX11RasterizerState::use()
 void
 DX11RasterizerState::release()
 {
+  RasterizerState::release();
   DX11SAFE_RELEASE(m_rasterizer);
 }
 }

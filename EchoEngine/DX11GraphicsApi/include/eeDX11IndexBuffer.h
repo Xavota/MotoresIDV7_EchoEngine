@@ -13,9 +13,6 @@
 #pragma once
 #include "eePrerequisitesDX11.h"
 #include <eeIndexBuffer.h>
-#pragma warning(push, 0)   
-#include <d3d11.h>
-#pragma warning(pop)   
 
 namespace eeEngineSDK {
 /**
@@ -49,7 +46,7 @@ class DX11IndexBuffer : public IndexBuffer
    * @brief
    * Default destructor
    */
-  ~DX11IndexBuffer() = default;
+  ~DX11IndexBuffer();
 
   /**
    * @brief

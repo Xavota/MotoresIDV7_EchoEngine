@@ -12,10 +12,7 @@
 
 #pragma once
 #include "eePrerequisitesDX11.h"
-#include <eeVertexBuffer.h>
-#pragma warning(push, 0)   
-#include <d3d11.h>
-#pragma warning(pop)   
+#include <eeVertexBuffer.h> 
 
 namespace eeEngineSDK {
 /**
@@ -50,7 +47,7 @@ class DX11VertexBuffer : public VertexBuffer
    * Default destructor
    */
   virtual
-  ~DX11VertexBuffer() = default;
+  ~DX11VertexBuffer();
 
 
   /**

@@ -871,12 +871,12 @@ BaseAppTest1::onInit()
   
 
 
-  SPtr<Scene> scene = sceneManager.addScene("Main");
-  scene->setActive(true);
+  SPtr<Scene> pScene = sceneManager.addScene("Main");
+  pScene->setActive(true);
 
 
 
-  SPtr<Actor> actor;
+  SPtr<Actor> pTempActor;
 
 
 
@@ -888,47 +888,47 @@ BaseAppTest1::onInit()
   camDesc.nearZ = 0.01f;
   camDesc.farZ = 100.0f;
 
-  actor = scene->addActor("Player");
-  actor->getTransform()->setPosition({ 0.0f, 3.0f, -6.0f });
+  pTempActor = pScene->addActor("Player");
+  pTempActor->getTransform()->setPosition({ 0.0f, 3.0f, -6.0f });
   //actor->getTransform()->setScale({ 0.1f, 0.1f, 0.1f });
-  actor->addComponent<CCamera>();
-  actor->getComponent<CCamera>()->init(camDesc);
-  actor->getComponent<CCamera>()->setMain(true);
-  actor->addComponent<CStaticMesh>();
-  actor->getComponent<CStaticMesh>()->setStaticMesh
+  pTempActor->addComponent<CCamera>();
+  pTempActor->getComponent<CCamera>()->init(camDesc);
+  pTempActor->getComponent<CCamera>()->setMain(true);
+  pTempActor->addComponent<CStaticMesh>();
+  pTempActor->getComponent<CStaticMesh>()->setStaticMesh
   (
     StaticMesh::cube
   );
-  actor->addComponent<CBounds>();
-  actor->addComponent<CRender>();
+  pTempActor->addComponent<CBounds>();
+  pTempActor->addComponent<CRender>();
 
 
 
-  actor = scene->addActor("AtatchToActor");
-  actor->attachTo(scene->getActor("Player"));
-  actor->getTransform()->setPosition({ 0.0f, 0.0f, 30.0f });
-  actor->addComponent<CStaticMesh>();
-  actor->getComponent<CStaticMesh>()->setStaticMesh
+  pTempActor = pScene->addActor("AtatchToActor");
+  pTempActor->attachTo(pScene->getActor("Player"));
+  pTempActor->getTransform()->setPosition({ 0.0f, 0.0f, 30.0f });
+  pTempActor->addComponent<CStaticMesh>();
+  pTempActor->getComponent<CStaticMesh>()->setStaticMesh
   (
     StaticMesh::cube
   );
-  actor->addComponent<CBounds>();
-  actor->addComponent<CRender>();
+  pTempActor->addComponent<CBounds>();
+  pTempActor->addComponent<CRender>();
 
 
 
-  actor = scene->addActor("Player2");
-  actor->getTransform()->setPosition({ 5.0f, 3.0f, -6.0f });
-  actor->getTransform()->setScale({ 0.1f, 0.1f, 0.1f });
-  actor->addComponent<CCamera>();
-  actor->getComponent<CCamera>()->init(camDesc);
-  actor->addComponent<CStaticMesh>();
-  actor->getComponent<CStaticMesh>()->setStaticMesh
+  pTempActor = pScene->addActor("Player2");
+  pTempActor->getTransform()->setPosition({ 5.0f, 3.0f, -6.0f });
+  pTempActor->getTransform()->setScale({ 0.1f, 0.1f, 0.1f });
+  pTempActor->addComponent<CCamera>();
+  pTempActor->getComponent<CCamera>()->init(camDesc);
+  pTempActor->addComponent<CStaticMesh>();
+  pTempActor->getComponent<CStaticMesh>()->setStaticMesh
   (
     StaticMesh::cube
   );
-  actor->addComponent<CBounds>();
-  actor->addComponent<CRender>();
+  pTempActor->addComponent<CBounds>();
+  pTempActor->addComponent<CRender>();
 
 
   resourceManager.importResourceFromFile("Models/arcane_jinx_sketchfab.fbx",
@@ -953,16 +953,16 @@ BaseAppTest1::onInit()
     nullptr,
     "FACE_-_TEST_mat");
 
-  actor = scene->addActor("Test");
-  actor->getTransform()->setScale({ 2.0f, 2.0f, 2.0f });
-  actor->getTransform()->setPosition({ 3.0f, 0.0f, 0.0f });
-  actor->getTransform()->setRotation(Quaternion( {1.5707f, 0.0f, 0.0f} ));
-  actor->addComponent<CStaticMesh>();
-  actor->getComponent<CStaticMesh>()->setStaticMesh
+  pTempActor = pScene->addActor("Test");
+  pTempActor->getTransform()->setScale({ 2.0f, 2.0f, 2.0f });
+  pTempActor->getTransform()->setPosition({ 3.0f, 0.0f, 0.0f });
+  pTempActor->getTransform()->setRotation(Quaternion( {1.5707f, 0.0f, 0.0f} ));
+  pTempActor->addComponent<CStaticMesh>();
+  pTempActor->getComponent<CStaticMesh>()->setStaticMesh
   (
     resourceManager.getResourceStaticMesh("arcane_jinx_sketchfab_sm")
   );
-  actor->getComponent<CStaticMesh>()->getStaticMesh()->setTexture
+  pTempActor->getComponent<CStaticMesh>()->getStaticMesh()->setTexture
   (
     resourceManager.getResourceMaterial
     (
@@ -970,7 +970,7 @@ BaseAppTest1::onInit()
     ),
     0
   );
-  actor->getComponent<CStaticMesh>()->getStaticMesh()->setTexture
+  pTempActor->getComponent<CStaticMesh>()->getStaticMesh()->setTexture
   (
     resourceManager.getResourceMaterial
     (
@@ -978,7 +978,7 @@ BaseAppTest1::onInit()
     ),
     1
   );
-  actor->getComponent<CStaticMesh>()->getStaticMesh()->setTexture
+  pTempActor->getComponent<CStaticMesh>()->getStaticMesh()->setTexture
   (
     resourceManager.getResourceMaterial
     (
@@ -986,8 +986,8 @@ BaseAppTest1::onInit()
     ),
     2
   );
-  actor->addComponent<CBounds>();
-  actor->addComponent<CRender>();
+  pTempActor->addComponent<CBounds>();
+  pTempActor->addComponent<CRender>();
 
 
   resourceManager.importResourceFromFile("Models/boblampclean.md5mesh");
@@ -1027,72 +1027,72 @@ BaseAppTest1::onInit()
   tempTex->loadImages({ tempImg });
 
 
-  actor = scene->addActor("AnimTest");
-  actor->getTransform()->setScale({ 0.03f, 0.03f, 0.03f });
-  actor->getTransform()->setRotation(Quaternion({ Math::kPI * 0.5f,
+  pTempActor = pScene->addActor("AnimTest");
+  pTempActor->getTransform()->setScale({ 0.03f, 0.03f, 0.03f });
+  pTempActor->getTransform()->setRotation(Quaternion({ Math::kPI * 0.5f,
                                                               0.0f,
                                                               0.0f }));
-  actor->addComponent<CSkeletalMesh>();
-  actor->getComponent<CSkeletalMesh>()->setModel
+  pTempActor->addComponent<CSkeletalMesh>();
+  pTempActor->getComponent<CSkeletalMesh>()->setModel
   (
     resourceManager.getResourceSkeletalMesh("boblampclean_skm")
   );
-  actor->getComponent<CSkeletalMesh>()->getModel()->setTexture
+  pTempActor->getComponent<CSkeletalMesh>()->getModel()->setTexture
   (
     resourceManager.getResourceMaterial("guard1_body_mat"),
     0
   );
-  actor->getComponent<CSkeletalMesh>()->getModel()->setTexture
+  pTempActor->getComponent<CSkeletalMesh>()->getModel()->setTexture
   (
     resourceManager.getResourceMaterial("guard1_face_mat"),
     1
   );
-  actor->getComponent<CSkeletalMesh>()->getModel()->setTexture
+  pTempActor->getComponent<CSkeletalMesh>()->getModel()->setTexture
   (
     resourceManager.getResourceMaterial("guard1_helmet_mat"),
     2
   );
-  actor->getComponent<CSkeletalMesh>()->getModel()->setTexture
+  pTempActor->getComponent<CSkeletalMesh>()->getModel()->setTexture
   (
     resourceManager.getResourceMaterial("iron_grill_mat"),
     3
   );
-  actor->getComponent<CSkeletalMesh>()->getModel()->setTexture
+  pTempActor->getComponent<CSkeletalMesh>()->getModel()->setTexture
   (
     resourceManager.getResourceMaterial("round_grill_mat"),
     4
   );
-  actor->getComponent<CSkeletalMesh>()->getModel()->setTexture
+  pTempActor->getComponent<CSkeletalMesh>()->getModel()->setTexture
   (
     resourceManager.getResourceMaterial("guard1_body_mat"),
     5
   );
-  actor->addComponent<CAnimation>();
-  actor->getComponent<CAnimation>()->setAnimation
+  pTempActor->addComponent<CAnimation>();
+  pTempActor->getComponent<CAnimation>()->setAnimation
   (
     resourceManager.getResourceAnimation("boblampclean_anim_")
   );
-  actor->addComponent<CBounds>();
-  actor->addComponent<CRender>();
+  pTempActor->addComponent<CBounds>();
+  pTempActor->addComponent<CRender>();
 
 
   resourceManager.importResourceFromFile("Models/Scary_Clown_Walk.fbx");
   
-  actor = scene->addActor("AnimTest2");
-  actor->getTransform()->setScale({ 0.01f, 0.01f, 0.01f });
-  actor->getTransform()->setPosition({ -3.0f, 0.0f, 0.0f });
-  actor->addComponent<CSkeletalMesh>();
-  actor->getComponent<CSkeletalMesh>()->setModel
+  pTempActor = pScene->addActor("AnimTest2");
+  pTempActor->getTransform()->setScale({ 0.01f, 0.01f, 0.01f });
+  pTempActor->getTransform()->setPosition({ -3.0f, 0.0f, 0.0f });
+  pTempActor->addComponent<CSkeletalMesh>();
+  pTempActor->getComponent<CSkeletalMesh>()->setModel
   (
     resourceManager.getResourceSkeletalMesh("Scary_Clown_Walk_skm")
   );
-  actor->addComponent<CAnimation>();
-  actor->getComponent<CAnimation>()->setAnimation
+  pTempActor->addComponent<CAnimation>();
+  pTempActor->getComponent<CAnimation>()->setAnimation
   (
     resourceManager.getResourceAnimation("Scary_Clown_Walk_anim_mixamo.com")
   );
-  actor->addComponent<CBounds>();
-  actor->addComponent<CRender>();
+  pTempActor->addComponent<CBounds>();
+  pTempActor->addComponent<CRender>();
 
 
 

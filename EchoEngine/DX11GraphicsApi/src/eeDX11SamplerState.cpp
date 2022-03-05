@@ -49,6 +49,7 @@ void DX11SamplerState::use()
 
 void DX11SamplerState::release()
 {
+  SamplerState::release();
   DX11SAFE_RELEASE(m_sampler);
 }
 }

@@ -6,6 +6,10 @@ DX11BlendState::DX11BlendState(BlendDesc desc)
 {
   create(desc);
 }
+DX11BlendState::~DX11BlendState()
+{
+  release();
+}
 bool
 DX11BlendState::create(BlendDesc desc)
 {
@@ -51,6 +55,7 @@ DX11BlendState::use(float blendFactor[4], uint32 sampleMask)
 void
 DX11BlendState::release()
 {
+  BlendState::release();
   DX11SAFE_RELEASE(m_blendState);
 }
 }

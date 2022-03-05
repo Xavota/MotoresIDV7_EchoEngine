@@ -8,6 +8,10 @@ DX11IndexBuffer::DX11IndexBuffer(SIZE_T dataSize,
 {
   initData(dataSize, batchSize, data);
 }
+DX11IndexBuffer::~DX11IndexBuffer()
+{
+  release();
+}
 bool
 DX11IndexBuffer::initData(SIZE_T dataSize,
                           uint32 batchSize,
@@ -56,6 +60,7 @@ DX11IndexBuffer::updateData(const Byte* data)
 void
 DX11IndexBuffer::release()
 {
+  IndexBuffer::release();
   DX11SAFE_RELEASE(m_buffer);
 }
 

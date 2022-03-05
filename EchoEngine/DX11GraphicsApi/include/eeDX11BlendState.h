@@ -13,9 +13,6 @@
 #pragma once
 #include "eePrerequisitesDX11.h"
 #include <eeBlendState.h>
-#pragma warning(push, 0)   
-#include <d3d11.h>
-#pragma warning(pop) 
 
 namespace eeEngineSDK {
 /**
@@ -45,7 +42,7 @@ class DX11BlendState : public BlendState
    * @brief
    * Default destructor
    */
-  ~DX11BlendState() = default;
+  ~DX11BlendState();
 
   /**
    * @brief

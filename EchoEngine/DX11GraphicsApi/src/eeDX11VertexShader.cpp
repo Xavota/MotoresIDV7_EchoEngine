@@ -10,7 +10,7 @@
 namespace eeEngineSDK {
 DX11VertexShader::~DX11VertexShader()
 {
-  DX11SAFE_RELEASE(m_shader);
+  release();
 }
 
 bool 
@@ -96,6 +96,13 @@ void DX11VertexShader::use()
 
   basics->m_deviceContext->IASetInputLayout(m_inputLayout);
   basics->m_deviceContext->VSSetShader(m_shader, nullptr, 0);
+}
+
+void DX11VertexShader::release()
+{
+  VertexShader::release();
+  DX11SAFE_RELEASE(m_shader);
+  DX11SAFE_RELEASE(m_inputLayout);
 }
 
 HRESULT 

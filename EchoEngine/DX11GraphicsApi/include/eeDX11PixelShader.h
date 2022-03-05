@@ -13,9 +13,6 @@
 #pragma once
 #include "eePrerequisitesDX11.h"
 #include <eePixelShader.h>
-#pragma warning(push, 0)   
-#include <d3d11.h>
-#pragma warning(pop)   
 
 namespace eeEngineSDK {
 /**
@@ -77,6 +74,16 @@ class DX11PixelShader : public PixelShader
    */
   void
   use() override;
+
+  /**
+   * @brief
+   * Releases the data.
+   *
+   * @description
+   * Deletes the memory of all data allocated.
+   */
+  void
+  release() override;
 
 private:
   /**

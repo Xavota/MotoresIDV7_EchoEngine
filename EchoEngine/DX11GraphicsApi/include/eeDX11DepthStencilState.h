@@ -13,9 +13,6 @@
 #pragma once
 #include "eePrerequisitesDX11.h"
 #include <eeDepthStencilState.h>
-#pragma warning(push, 0)   
-#include <d3d11.h>
-#pragma warning(pop) 
 
 namespace eeEngineSDK{
 /**
@@ -47,7 +44,7 @@ class DX11DepthStencilState : public DepthStencilState
    * @brief
    * Default destructor.
    */
-  ~DX11DepthStencilState() = default;
+  ~DX11DepthStencilState();
 
   /**
    * @brief

@@ -10,6 +10,10 @@ DX11ConstantBuffer::DX11ConstantBuffer(SIZE_T dataSize,
 {
   initData(dataSize, batchSize, data);
 }
+DX11ConstantBuffer::~DX11ConstantBuffer()
+{
+  release();
+}
 bool
 DX11ConstantBuffer::initData(SIZE_T dataSize,
                              uint32 batchSize,
@@ -54,6 +58,7 @@ DX11ConstantBuffer::updateData(const Byte* data)
 void
 DX11ConstantBuffer::release()
 {
+  ConstantBuffer::release();
   DX11SAFE_RELEASE(m_buffer);
 }
 void

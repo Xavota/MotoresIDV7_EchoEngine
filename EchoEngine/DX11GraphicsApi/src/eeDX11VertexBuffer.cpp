@@ -6,6 +6,10 @@ DX11VertexBuffer::DX11VertexBuffer(SIZE_T dataSize, uint32 batchSize, const Byte
 {
   initData(dataSize, batchSize, data);
 }
+DX11VertexBuffer::~DX11VertexBuffer()
+{
+  release();
+}
 bool
 DX11VertexBuffer::initData(SIZE_T dataSize, uint32 batchSize, const Byte* data)
 {
@@ -50,6 +54,7 @@ DX11VertexBuffer::updateData(const Byte* data)
 void
 DX11VertexBuffer::release()
 {
+  VertexBuffer::release();
   DX11SAFE_RELEASE(m_buffer);
 }
 void

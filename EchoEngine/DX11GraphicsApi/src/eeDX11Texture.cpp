@@ -231,6 +231,7 @@ DX11Texture::clean(Color screenColor)
 void
 DX11Texture::release()
 {
+  Texture::release();
   DX11SAFE_RELEASE(m_shaderResource);
   DX11SAFE_RELEASE(m_renderTarget);
   DX11SAFE_RELEASE(m_depthStencilView);

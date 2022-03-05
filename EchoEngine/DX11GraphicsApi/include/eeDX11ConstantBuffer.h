@@ -13,9 +13,6 @@
 #pragma once
 #include "eePrerequisitesDX11.h"
 #include <eeConstantBuffer.h>
-#pragma warning(push, 0)   
-#include <d3d11.h>
-#pragma warning(pop)   
 
 namespace eeEngineSDK {
 /**
@@ -50,7 +47,7 @@ class DX11ConstantBuffer : public ConstantBuffer
    * Default destructor
    */
   virtual
-  ~DX11ConstantBuffer() = default;
+  ~DX11ConstantBuffer();
 
 
   /**

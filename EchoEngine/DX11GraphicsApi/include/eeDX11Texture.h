@@ -14,9 +14,6 @@
 #pragma once
 #include "eePrerequisitesDX11.h"
 #include <eeTexture.h>
-#pragma warning(push, 0)   
-#include <d3d11.h>
-#pragma warning(pop)   
 
 namespace eeEngineSDK {
 /**

@@ -5,13 +5,13 @@
 #include <D3DX11async.h>
 #pragma warning(pop)   
 
-eeEngineSDK::DX11PixelShader::~DX11PixelShader()
+namespace eeEngineSDK {
+DX11PixelShader::~DX11PixelShader()
 {
-  DX11SAFE_RELEASE(m_shader);
+  release();
 }
-
 bool
-eeEngineSDK::DX11PixelShader::compileFromFile(const String& fileName)
+DX11PixelShader::compileFromFile(const String& fileName)
 {
   const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
@@ -72,18 +72,23 @@ eeEngineSDK::DX11PixelShader::compileFromFile(const String& fileName)
 
   return true;
 }
-
 bool
-eeEngineSDK::DX11PixelShader::compileFromString(const String& /*shaderString*/)
+DX11PixelShader::compileFromString(const String& /*shaderString*/)
 {
   return false;
 }
-
 void
-eeEngineSDK::DX11PixelShader::use()
+DX11PixelShader::use()
 {
   const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   basics->m_deviceContext->PSSetShader(m_shader, nullptr, 0);
+}
+void
+DX11PixelShader::release()
+{
+  PixelShader::release();
+  DX11SAFE_RELEASE(m_shader);
+}
 }

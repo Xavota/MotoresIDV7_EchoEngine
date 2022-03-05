@@ -75,6 +75,16 @@ class EE_CORE_EXPORT VertexShader
   virtual void
   use() {}  
 
+  /**
+   * @brief
+   * Releases the data.
+   *
+   * @description
+   * Deletes the memory of all data allocated.
+   */
+  virtual void
+  release() {};
+
 
  private:
   /**

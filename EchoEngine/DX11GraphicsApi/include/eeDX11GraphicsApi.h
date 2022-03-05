@@ -23,10 +23,6 @@
 #include "eeDX11RasterizerState.h"
 #include "eeDX11Window.h"
 
-#pragma warning(push, 0)   
-#include <d3d11.h>
-#pragma warning(pop)   
-
 namespace eeEngineSDK {
 /**
  * @brief

@@ -12,6 +12,9 @@
 
 #pragma once
 #include <eePrerequisitesCore.h>
+#pragma warning(push, 0)   
+#include <d3d11.h>
+#pragma warning(pop)  
 
 #define DX11SAFE_RELEASE(x) if (x) { x->Release(); x = nullptr; }
 
