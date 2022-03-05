@@ -114,7 +114,7 @@ Frustum::isSphereInside(const Sphere& sphere)
   return true;
 }
 bool
-Frustum::isBoxInside(const BoxAAB& box)
+Frustum::isBoxInside(const BoxAAB& /*box*/)
 {
   return true;
 }
