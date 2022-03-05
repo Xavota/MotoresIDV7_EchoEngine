@@ -34,8 +34,8 @@ DeferredRenderer::DeferredRenderer()
   samDesc.minLOD = 0;
   samDesc.maxLOD = Math::kMAX_FLOAT;
 
-  m_sampler = memoryManager.newPtr<SamplerState>();
-  m_sampler->create(samDesc);
+  m_samplerLinear = memoryManager.newPtr<SamplerState>();
+  m_samplerLinear->create(samDesc);
 
   Mesh SAQ;
   SAQ.loadFromArray<SimpleVertex, uint32>(
@@ -138,8 +138,8 @@ DeferredRenderer::DeferredRenderer()
   rasDesc.fillMode = eeEngineSDK::eFILL_MODE::SOLID;
   rasDesc.frontCounterClockwise = true;
   
-  m_rasterizer = graphicsApi.createRasterizerStatePtr();
-  m_rasterizer->create(rasDesc);
+  m_solidCCWRasterizer = graphicsApi.createRasterizerStatePtr();
+  m_solidCCWRasterizer->create(rasDesc);
   
   
   memset(&rasDesc, 0, sizeof(rasDesc));
@@ -155,6 +155,45 @@ DeferredRenderer::DeferredRenderer()
   m_viewPosBuffer = graphicsApi.createConstantBufferPtr();
   m_viewPosBuffer->initData(sizeof(Vector4f), sizeof(Vector4f), nullptr);
 
+  
+  /* GBuffer Resources */
+  
+  resourceManager.loadVertexShaderFromFile("Shaders/GBufferVS.hlsl",
+                                           "GBufferVS");
+  resourceManager.loadPixelShaderFromFile("Shaders/GBufferPS.hlsl",
+                                          "GBufferPS");
+
+  resourceManager.loadVertexShaderFromFile("Shaders/GBufferVSAnim.hlsl",
+                                           "GBufferVSAnim");
+  resourceManager.loadPixelShaderFromFile("Shaders/GBufferPSAnim.hlsl",
+                                          "GBufferPSAnim");
+
+  m_GBufferDepthStencil = GraphicsApi::instance().createTexturePtr();
+  m_GBufferDepthStencil->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kDepthStencil,
+                                { screenWidth, screenHeight });
+
+  m_GBufferPositionTexture = GraphicsApi::instance().createTexturePtr();
+  m_GBufferPositionTexture->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kRenderTarget
+                                   | eeEngineSDK::eTEXTURE_BIND_FLAGS::kShaderResource,
+                                   { screenWidth, screenHeight });
+
+  m_GBufferColorTexture = GraphicsApi::instance().createTexturePtr();
+  m_GBufferColorTexture->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kRenderTarget
+                                | eeEngineSDK::eTEXTURE_BIND_FLAGS::kShaderResource,
+                                { screenWidth, screenHeight });
+
+  m_GBufferNormalTexture = GraphicsApi::instance().createTexturePtr();
+  m_GBufferNormalTexture->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kRenderTarget
+                                 | eeEngineSDK::eTEXTURE_BIND_FLAGS::kShaderResource,
+                                 { screenWidth, screenHeight });
+
+
+  /* Lights Resources */
+  
+  resourceManager.loadVertexShaderFromFile("Shaders/LightsVS.hlsl",
+                                           "LightsVS");
+  resourceManager.loadPixelShaderFromFile("Shaders/LightsPS.hlsl",
+                                          "LightsPS");
 
   m_rtv = GraphicsApi::instance().createTexturePtr();
   m_rtv->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kRenderTarget
@@ -177,24 +216,13 @@ DeferredRenderer::onRender()
   auto& sceneManager = SceneManager::instance();
 
 
-  Vector<SPtr<CCamera>> activeCams = graphicsApi.getActiveCameras();
   Color color{ 0.3f, 0.5f, 0.8f, 1.0f };
+  Vector<SPtr<CCamera>> activeCams = graphicsApi.getActiveCameras();
 
 
-  // Load shaders
-  SPtr<VertexShader> vs =
-  resourceManager.getResourceVertexShader("TestVS");
-  SPtr<VertexShader> animVS =
-  resourceManager.getResourceVertexShader("TestVSAnim");
+  // Load resources
 
-  SPtr<PixelShader> ps =
-  resourceManager.getResourcePixelShader("TestPS");
-  SPtr<PixelShader> animPS =
-  resourceManager.getResourcePixelShader("TestPSAnim");
-
-  m_sampler->use();
-
-  m_rasterizer->use();
+  m_samplerLinear->use();
 
   SPtr<CCamera> mainCam = nullptr;
   for (auto& cam : activeCams) {
@@ -221,15 +249,19 @@ DeferredRenderer::onRender()
     m_projectionMatrixBuffer->updateData(reinterpret_cast<Byte*>(&proj));
 
 
-    /* First Pass */
+    /* GBuffer */
+    m_solidCCWRasterizer->use();
 
-    // Clean and set back buffer and depth stencil
-    graphicsApi.clearRenderTargets({ m_rtv }, color);
-    graphicsApi.cleanDepthStencils({ m_dsv });
-    graphicsApi.setRenderTargets({ m_rtv }, m_dsv);
+    graphicsApi.clearRenderTargets({ m_GBufferPositionTexture,
+                                     m_GBufferColorTexture,
+                                     m_GBufferNormalTexture },
+                                   Color(0.0f, 0.0f, 0.0f, 1.0f));
+    graphicsApi.cleanDepthStencils({ m_GBufferDepthStencil });
+    graphicsApi.setRenderTargets({ m_GBufferPositionTexture,
+                                   m_GBufferColorTexture,
+                                   m_GBufferNormalTexture },
+                                 m_GBufferDepthStencil);  
 
-
-    // Set buffers
     graphicsApi.setVSConstantBuffers
     (
       { m_viewMatrixBuffer, m_projectionMatrixBuffer, m_viewPosBuffer },
@@ -241,17 +273,18 @@ DeferredRenderer::onRender()
     SIZE_T rActorsCount = rActors.size();
 
 
-    animVS->use();
-    animPS->use();
+    resourceManager.getResourceVertexShader("GBufferVSAnim")->use();
+    resourceManager.getResourcePixelShader("GBufferPSAnim")->use();
 
     //Draw in-cam skeletal actors
     for (SIZE_T i = 0; i < rActorsCount; ++i) {
-      if (rActors[i]->getComponent<CSkeletalMesh>())
+      if (rActors[i]->getComponent<CSkeletalMesh>()) {
         graphicsApi.drawObject(rActors[i]);
+      }
     }
 
-    vs->use();
-    ps->use();
+    resourceManager.getResourceVertexShader("GBufferVS")->use();
+    resourceManager.getResourcePixelShader("GBufferPS")->use();
 
     //Draw in-cam actors
     for (SIZE_T i = 0; i < rActorsCount; ++i) {
@@ -259,6 +292,60 @@ DeferredRenderer::onRender()
         graphicsApi.drawObject(rActors[i]);
       }
     }
+
+    /* Lights */
+
+    graphicsApi.clearRenderTargets({ m_rtv }, color);
+    graphicsApi.cleanDepthStencils({ m_dsv });
+    graphicsApi.setRenderTargets({ m_rtv }, m_dsv);
+
+    graphicsApi.setTextures({ m_GBufferColorTexture, m_GBufferNormalTexture }, 1u);
+
+    resourceManager.getResourceVertexShader("LightsVS")->use();
+    resourceManager.getResourcePixelShader("LightsPS")->use();
+
+    resourceManager.getResourceMaterial("SAQ_mat")->m_diffuse = m_GBufferPositionTexture;
+    m_SAQ->getModel()->setTexture(resourceManager.getResourceMaterial("SAQ_mat"), 0);
+    graphicsApi.drawObject(m_SAQ);
+
+    ///* First Pass */
+    //
+    //// Clean and set back buffer and depth stencil
+    //graphicsApi.clearRenderTargets({ m_rtv }, color);
+    //graphicsApi.cleanDepthStencils({ m_dsv });
+    //graphicsApi.setRenderTargets({ m_rtv }, m_dsv);
+    //
+    //
+    //// Set buffers
+    //graphicsApi.setVSConstantBuffers
+    //(
+    //  { m_viewMatrixBuffer, m_projectionMatrixBuffer, m_viewPosBuffer },
+    //  1u
+    //);
+    //
+    //Vector<SPtr<Actor>> rActors =
+    //  sceneManager.getAllRenderableActorsInside(activeCams[0]);
+    //SIZE_T rActorsCount = rActors.size();
+    //
+    //
+    //resourceManager.getResourceVertexShader("TestVSAnim")->use();
+    //resourceManager.getResourcePixelShader("TestPSAnim")->use();
+    //
+    ////Draw in-cam skeletal actors
+    //for (SIZE_T i = 0; i < rActorsCount; ++i) {
+    //  if (rActors[i]->getComponent<CSkeletalMesh>())
+    //    graphicsApi.drawObject(rActors[i]);
+    //}
+    //
+    //resourceManager.getResourceVertexShader("TestVS")->use();
+    //resourceManager.getResourcePixelShader("TestPS")->use();
+    //
+    ////Draw in-cam actors
+    //for (SIZE_T i = 0; i < rActorsCount; ++i) {
+    //  if (!rActors[i]->getComponent<CSkeletalMesh>()) {
+    //    graphicsApi.drawObject(rActors[i]);
+    //  }
+    //}
 
 
 
