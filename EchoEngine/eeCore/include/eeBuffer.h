@@ -76,7 +76,11 @@ class EE_CORE_EXPORT Buffer
    * Deletes the memory of all data allocated.
    */
   virtual void 
-  release(){};
+  release()
+  {
+    m_data.clear();
+    m_batchSize = 0;
+  };
 
   /**
    * @brief
