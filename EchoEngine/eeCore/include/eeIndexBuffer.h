@@ -28,10 +28,31 @@ class IndexBuffer : public Buffer
   IndexBuffer() = default;
   /**
    * @brief
+   * Initializes its data.
+   *
+   * @description
+   * Takes the data given and copies the number of bytes given.
+   *
+   * @param dataSize
+   * The number of bytes the buffer will copy.
+   * @param batchSize
+   * The number of size of the data type stored.
+   * @param data
+   * The pointer to the bytes that will be copied.
+   */
+  IndexBuffer(SIZE_T dataSize, uint32 batchSize, const Byte* data)
+  {
+    initData(dataSize, batchSize, data);
+  }
+  /**
+   * @brief
    * Default destructor
    */
   virtual
-  ~IndexBuffer() = default;
+  ~IndexBuffer()
+  {
+    release();
+  }
 
 
   /**
@@ -81,7 +102,10 @@ class IndexBuffer : public Buffer
    * Deletes the memory of all data allocated.
    */
   virtual void
-  release() override {};
+  release() override
+  {
+    Buffer::release();
+  };
 
   /**
    * @brief
