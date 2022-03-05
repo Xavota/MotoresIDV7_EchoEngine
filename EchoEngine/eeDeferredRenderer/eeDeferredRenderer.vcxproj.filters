@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{d03b9ebf-0f1d-422e-9733-c887b8170a35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{b42816e0-490b-4a99-a781-2ff49c4b15ba}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\eePrerequisitesDeferredRenderer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeDeferredRenderer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\eeDeferredRenderer.cpp" />
+  </ItemGroup>
+</Project>

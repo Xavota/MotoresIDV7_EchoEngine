@@ -56,4 +56,5 @@
 
 
 namespace eeEngineSDK {
+class DX11Window;
 }

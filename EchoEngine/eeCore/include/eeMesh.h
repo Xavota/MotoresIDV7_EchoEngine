@@ -25,7 +25,7 @@ namespace eeEngineSDK {
  * @brief
  * The meshes to be rendered, described by vertices and indices. 
  */
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 class EE_CORE_EXPORT Mesh
 {
  public:
@@ -61,7 +61,7 @@ class EE_CORE_EXPORT Mesh
    * @return
    * Weather it succeed or failed to initialize.
    */
-  template<class V, class I>
+  template<typename V, typename I>
   bool
   loadFromArray(const Vector<V>& vertices,
                 const Vector<I>& indices);
@@ -143,7 +143,7 @@ class EE_CORE_EXPORT Mesh
   SIZE_T m_indexCount = 0;
 };
 
-template<class V, class I>
+template<typename V, typename I>
 bool 
 Mesh/*<V, I>*/::loadFromArray(const Vector<V>& vertices, 
                           const Vector<I>& indices)

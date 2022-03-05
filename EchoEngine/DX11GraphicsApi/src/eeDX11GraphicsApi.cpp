@@ -39,8 +39,10 @@ DX11GraphicsApi::appIsRunning()
 bool
 DX11GraphicsApi::initializeBasics()
 {
+  GraphicsApi::initializeBasics();
+
   RECT rc = {};
-  GetClientRect(reinterpret_cast<HWND>(m_win), &rc);
+  GetClientRect(reinterpret_cast<HWND>(m_mainWindow->getWindowPtr()), &rc);
   int32 width = rc.right - rc.left;
   int32 height = rc.bottom - rc.top;
 
@@ -56,7 +58,7 @@ DX11GraphicsApi::initializeBasics()
   sd.SampleDesc.Quality = 0;
   sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
   sd.BufferCount = 1;
-  sd.OutputWindow = reinterpret_cast<HWND>(m_win);
+  sd.OutputWindow = reinterpret_cast<HWND>(m_mainWindow->getWindowPtr());
   sd.Windowed = TRUE;
   sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
   sd.Flags = 0;
@@ -90,42 +92,42 @@ DX11GraphicsApi::initializeScreen(void* callback, uint32 witdh, uint32 height)
     return false;
   }
 
-  // Register class
-  WNDCLASSEX wcex;
-  wcex.cbSize = sizeof(WNDCLASSEX);
-  wcex.style = CS_HREDRAW | CS_VREDRAW;
-  wcex.lpfnWndProc = reinterpret_cast<WNDPROC>(callback);//WndProc; // TODO: MEJORAR ESTO PARA MEJOR ABSTRACCIÓN
-  wcex.cbClsExtra = 0;
-  wcex.cbWndExtra = 0;
-  wcex.hInstance = nullptr;
-  wcex.hIcon = nullptr;
-  wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
-  wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-  wcex.lpszMenuName = nullptr;
-  wcex.lpszClassName = "TutorialWindowClass";
-  wcex.hIconSm = nullptr;
-  if (!RegisterClassEx(&wcex)) {
-    return false;
-  }
-
-  // Create window
-  RECT rc = { 0, 0, witdh, height };
-  AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
-  m_win = reinterpret_cast<void*>(CreateWindow("TutorialWindowClass", 
-                                               "EchoEngine", 
-                                               WS_OVERLAPPEDWINDOW,
-                                               CW_USEDEFAULT, 
-                                               CW_USEDEFAULT, 
-                                               rc.right,
-                                               rc.bottom, 
-                                               nullptr, 
-                                               nullptr, 
-                                               nullptr, 
-                                               nullptr));
-  if (!m_win) {
-    return false;
-  }
-  ShowWindow(reinterpret_cast<HWND>(m_win), SW_SHOWNORMAL);
+  //// Register class
+  //WNDCLASSEX wcex;
+  //wcex.cbSize = sizeof(WNDCLASSEX);
+  //wcex.style = CS_HREDRAW | CS_VREDRAW;
+  //wcex.lpfnWndProc = reinterpret_cast<WNDPROC>(callback);//WndProc; // TODO: MEJORAR ESTO PARA MEJOR ABSTRACCIÓN
+  //wcex.cbClsExtra = 0;
+  //wcex.cbWndExtra = 0;
+  //wcex.hInstance = nullptr;
+  //wcex.hIcon = nullptr;
+  //wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+  //wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+  //wcex.lpszMenuName = nullptr;
+  //wcex.lpszClassName = "TutorialWindowClass";
+  //wcex.hIconSm = nullptr;
+  //if (!RegisterClassEx(&wcex)) {
+  //  return false;
+  //}
+  //
+  //// Create window
+  //RECT rc = { 0, 0, witdh, height };
+  //AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
+  //m_win = reinterpret_cast<void*>(CreateWindow("TutorialWindowClass", 
+  //                                             "EchoEngine", 
+  //                                             WS_OVERLAPPEDWINDOW,
+  //                                             CW_USEDEFAULT, 
+  //                                             CW_USEDEFAULT, 
+  //                                             rc.right,
+  //                                             rc.bottom, 
+  //                                             nullptr, 
+  //                                             nullptr, 
+  //                                             nullptr, 
+  //                                             nullptr));
+  //if (!m_win) {
+  //  return false;
+  //}
+  //ShowWindow(reinterpret_cast<HWND>(m_win), SW_SHOWNORMAL);
 
   return true;
 }
@@ -402,8 +404,7 @@ DX11GraphicsApi::resizeWindow(Vector2u newSize)
                                       DXGI_FORMAT_B8G8R8A8_UNORM,
                                       0);
 
-  if (FAILED(hr))
-  {
+  if (FAILED(hr)) {
     return;
   }
 

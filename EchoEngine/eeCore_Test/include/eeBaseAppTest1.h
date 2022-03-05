@@ -103,45 +103,45 @@ class BaseAppTest1 : public BaseApp
 
 
  private:
-  /*
-  * A Screen Align Quad, used for rendering textures of a render target on
-  * another
-  */
-  SPtr<Object> m_SAQ;
-
-  /*
-  * The buffer for the view matrix.
-  */
-  SPtr<ConstantBuffer> m_viewMatrixBuffer;
-  /*
-  * The buffer for the projection matrix.
-  */
-  SPtr<ConstantBuffer> m_projectionMatrixBuffer;
-
-  /*
-  * The back buffer.
-  */
-  SPtr<Texture> m_rtv;
-  /*
-  * The depth stencil of the back buffer
-  */
-  SPtr<Texture> m_dsv;
-  /**
-   * sampler state. The sampler of the texture.
-   */
-  SPtr<SamplerState> m_sampler = nullptr;
-
-  /*
-  * A rasterizer for on world objects rendering.
-  */
-  SPtr<RasterizerState> m_rasterizer;
-  /*
-  * A rasterizer for on screen rendering.
-  */
-  SPtr<RasterizerState> m_rasterizer2;
-
-
-  SPtr<ConstantBuffer> m_viewPosBuffer;
-
-  SPtr<ConstantBuffer> m_constantBuffers;
+  ///*
+  //* A Screen Align Quad, used for rendering textures of a render target on
+  //* another
+  //*/
+  //SPtr<Object> m_SAQ;
+  //
+  ///*
+  //* The buffer for the view matrix.
+  //*/
+  //SPtr<ConstantBuffer> m_viewMatrixBuffer;
+  ///*
+  //* The buffer for the projection matrix.
+  //*/
+  //SPtr<ConstantBuffer> m_projectionMatrixBuffer;
+  //
+  ///*
+  //* The back buffer.
+  //*/
+  //SPtr<Texture> m_rtv;
+  ///*
+  //* The depth stencil of the back buffer
+  //*/
+  //SPtr<Texture> m_dsv;
+  ///**
+  // * sampler state. The sampler of the texture.
+  // */
+  //SPtr<SamplerState> m_sampler = nullptr;
+  //
+  ///*
+  //* A rasterizer for on world objects rendering.
+  //*/
+  //SPtr<RasterizerState> m_rasterizer;
+  ///*
+  //* A rasterizer for on screen rendering.
+  //*/
+  //SPtr<RasterizerState> m_rasterizer2;
+  //
+  //
+  //SPtr<ConstantBuffer> m_viewPosBuffer;
+  //
+  //SPtr<ConstantBuffer> m_constantBuffers;
 };

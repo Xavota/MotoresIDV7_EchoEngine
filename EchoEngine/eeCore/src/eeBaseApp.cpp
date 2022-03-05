@@ -5,6 +5,7 @@
 #include "eeCoreConfiguration.h"
 #include "eeDLLDynamics.h"
 #include "eeGraficsApi.h"
+#include "eeRenderer.h"
 #include "eeResourceManager.h"
 #include "eeInput.h"
 #include "eeSceneManager.h"
@@ -15,20 +16,6 @@ namespace eeEngineSDK {
 int32
 BaseApp::run(void* callback)
 {
-  DLLDynamics api;
-  api.initialize(eeConfigurations::graphicsApi
-               + eeConfigurations::platformConfigPrefix
-               + eeConfigurations::dynamicLibSuffix);
-
-  auto apiInit = api.getFunction("initPlugin");
-  if (apiInit) {
-    apiInit();
-  }
-
-  if (!GraphicsApi::isStarted()) {
-    return 1;
-  }
-
   return mainLoop(callback);
 }
 int32
@@ -55,7 +42,40 @@ BaseApp::mainLoop(void* callback)
 bool
 BaseApp::init(void* callback)
 {
-  if (!initSystems()) {
+  if (!initSystems(callback)) {
+    return false;
+  }
+
+  if (!initResources()) {
+    return false;
+  }
+
+  onInit();
+
+  return true;
+}
+bool
+BaseApp::initSystems(void* callback)
+{
+  Logger::startUp();
+  ResourceManager::startUp();
+  Input::startUp();
+  SceneManager::startUp();
+  MemoryManager::startUp();
+  Time::startUp();
+
+  
+  DLLDynamics api;
+  api.initialize(eeConfigurations::graphicsApi
+               + eeConfigurations::platformConfigPrefix
+               + eeConfigurations::dynamicLibSuffix);
+
+  auto apiInit = api.getFunction("initPlugin");
+  if (apiInit) {
+    apiInit();
+  }
+
+  if (!GraphicsApi::isStarted()) {
     return false;
   }
 
@@ -71,23 +91,20 @@ BaseApp::init(void* callback)
     return false;
   }
 
-  if (!initResources()) {
-    return false;
+
+  DLLDynamics renderer;
+  renderer.initialize(eeConfigurations::rendererName
+                    + eeConfigurations::platformConfigPrefix
+                    + eeConfigurations::dynamicLibSuffix);
+  
+  auto rendererInit = renderer.getFunction("initPlugin");
+  if (rendererInit) {
+    rendererInit();
   }
 
-  onInit();
-
-  return true;
-}
-bool
-BaseApp::initSystems()
-{
-  Logger::startUp();
-  ResourceManager::startUp();
-  Input::startUp();
-  SceneManager::startUp();
-  MemoryManager::startUp();
-  Time::startUp();
+  if (!Renderer::isStarted()) {
+    return false;
+  }
 
   return true;
 }
@@ -105,6 +122,8 @@ BaseApp::update(float deltaTime)
 void
 BaseApp::render()
 {
+  Renderer::instance().onRender();
+
   onRender();
 
   auto& graphicsApi = GraphicsApi::instance();
@@ -116,8 +135,8 @@ BaseApp::destroy()
 {
   onDestroy();
 
-  GraphicsApi::instance().release();
   GraphicsApi::shutDown();
+  Renderer::shutDown();
   ResourceManager::shutDown();
   Input::shutDown();
   SceneManager::shutDown();

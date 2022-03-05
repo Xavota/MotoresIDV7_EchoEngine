@@ -28,7 +28,7 @@ using std::to_string;
  * @return
  * The value inside the int8 to a string.
  */
-template<class T>
+template<typename T>
 FORCEINLINE String
 eeToString(const T i)
 {

@@ -18,7 +18,7 @@
 #include "eeMaterial.h"
 
 namespace eeEngineSDK {
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 StaticMesh/*<V,I>*/::StaticMesh(const Vector<Mesh/*<V, I>*/>&meshes,
                             const String& name,
                             const Vector3f& furtherVertexPosition,
@@ -31,7 +31,7 @@ StaticMesh/*<V,I>*/::StaticMesh(const Vector<Mesh/*<V, I>*/>&meshes,
                  maxCoordinate,
                  minCoordinate);
 }
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 StaticMesh/*<V, I>*/::StaticMesh(const Vector<Pair<Mesh/*<V,I>*/, SPtr<Material>>>& meshes,
                              const String& name,
                              const Vector3f& furtherVertexPosition,
@@ -44,7 +44,7 @@ StaticMesh/*<V, I>*/::StaticMesh(const Vector<Pair<Mesh/*<V,I>*/, SPtr<Material>
                  maxCoordinate,
                  minCoordinate);
 }
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 bool
 StaticMesh/*<V, I>*/::loadFromMeshes(const Vector<Mesh/*<V,I>*/>& meshes,
                                  const String& name,
@@ -79,7 +79,7 @@ StaticMesh/*<V, I>*/::loadFromMeshes(const Vector<Mesh/*<V,I>*/>& meshes,
   m_boundCube.setSize(maxCoordinate - minCoordinate);
   return true;
 }
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 bool
 StaticMesh/*<V, I>*/::loadFromMeshes(const Vector<Pair<Mesh/*<V,I>*/, SPtr<Material>>>& meshes,
                                  const String& name,
@@ -103,13 +103,13 @@ StaticMesh/*<V, I>*/::loadFromMeshes(const Vector<Pair<Mesh/*<V,I>*/, SPtr<Mater
   m_boundCube.setSize(maxCoordinate - minCoordinate);
   return true;
 }
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 Vector<Pair<Mesh/*<V,I>*/, SPtr<Material>>>
 StaticMesh/*<V, I>*/::getMeshes()
 {
   return m_meshes;
 }
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 Vector<SPtr<Material>>
 StaticMesh/*<V, I>*/::getTextures()
 {
@@ -119,7 +119,7 @@ StaticMesh/*<V, I>*/::getTextures()
   }
   return textures;
 }
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 void
 StaticMesh/*<V, I>*/::setTexture(SPtr<Material> texture, SIZE_T index)
 {
@@ -128,48 +128,48 @@ StaticMesh/*<V, I>*/::setTexture(SPtr<Material> texture, SIZE_T index)
   }
 }
 
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 String
 StaticMesh/*<V, I>*/::getName()
 {
   return m_name;
 }
 
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 const Sphere&
 StaticMesh/*<V, I>*/::getBoundingSphere()
 {
   return m_boundSphere;
 }
 
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 const Vector3f&
 StaticMesh/*<V, I>*/::getFurtherPosition()
 {
   return m_furtherPosition;
 }
 
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 const BoxAAB&
 StaticMesh/*<V, I>*/::getBoundingBox()
 {
   return m_boundCube;
 }
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 SPtr<StaticMesh/*<V,I>*/> StaticMesh/*<V,I>*/::cube = nullptr;
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 SPtr<StaticMesh/*<V,I>*/> StaticMesh/*<V,I>*/::tetrahedron = nullptr;
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 SPtr<StaticMesh/*<V,I>*/> StaticMesh/*<V,I>*/::cone = nullptr;
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 SPtr<StaticMesh/*<V,I>*/> StaticMesh/*<V,I>*/::cylinder = nullptr;
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 SPtr<StaticMesh/*<V,I>*/> StaticMesh/*<V,I>*/::sphere = nullptr;
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 SPtr<StaticMesh/*<V,I>*/> StaticMesh/*<V,I>*/::capsule = nullptr;
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 SPtr<StaticMesh/*<V,I>*/> StaticMesh/*<V,I>*/::SAQ = nullptr;
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 void
 StaticMesh/*<V, I>*/::initPrimitives()
 {

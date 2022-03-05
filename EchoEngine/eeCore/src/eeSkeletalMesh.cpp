@@ -21,7 +21,7 @@
 #include "eeMaterial.h"
 
 namespace eeEngineSDK {
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 SkeletalMesh/*<V, I>*/::SkeletalMesh(const Vector<Mesh/*<V, I>*/>& meshes,
                                  SPtr<Skeletal> skeleton,
                                  const String& name,
@@ -36,7 +36,7 @@ SkeletalMesh/*<V, I>*/::SkeletalMesh(const Vector<Mesh/*<V, I>*/>& meshes,
                  maxCoordinate,
                  minCoordinate);
 }
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 SkeletalMesh/*<V, I>*/::SkeletalMesh(const Vector<Pair<Mesh/*<V, I>*/, SPtr<Material>>>& meshes,
                                  SPtr<Skeletal> skeleton,
                                  const String& name,
@@ -51,7 +51,7 @@ SkeletalMesh/*<V, I>*/::SkeletalMesh(const Vector<Pair<Mesh/*<V, I>*/, SPtr<Mate
                  maxCoordinate,
                  minCoordinate);
 }
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 bool
 SkeletalMesh/*<V, I>*/::loadFromMeshes(const Vector<Mesh/*<V, I>*/>& meshes,
                                        SPtr<Skeletal> skeleton,
@@ -89,7 +89,7 @@ SkeletalMesh/*<V, I>*/::loadFromMeshes(const Vector<Mesh/*<V, I>*/>& meshes,
   m_boundCube.setSize(maxCoordinate - minCoordinate);
   return true;
 }
-/*template<class V, class I>*/
+/*template<typename V, class I>*/
 bool
 SkeletalMesh/*<V, I>*/::loadFromMeshes(const Vector<Pair<Mesh/*<V, I>*/, SPtr<Material>>>& meshes,
                                    SPtr<Skeletal> skeleton,
@@ -116,13 +116,13 @@ SkeletalMesh/*<V, I>*/::loadFromMeshes(const Vector<Pair<Mesh/*<V, I>*/, SPtr<Ma
   m_boundCube.setSize(maxCoordinate - minCoordinate);
   return true;
 }
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 Vector<Pair<Mesh/*<V, I>*/, SPtr<Material>>>
 SkeletalMesh/*<V, I>*/::getMeshes()
 {
   return m_meshes;
 }
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 Vector<SPtr<Material>>
 SkeletalMesh/*<V, I>*/::getTextures()
 {
@@ -132,7 +132,7 @@ SkeletalMesh/*<V, I>*/::getTextures()
   }
   return textures;
 }
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 void
 SkeletalMesh/*<V, I>*/::setTexture(SPtr<Material> texture, uint32 index)
 {
@@ -140,26 +140,26 @@ SkeletalMesh/*<V, I>*/::setTexture(SPtr<Material> texture, uint32 index)
     m_meshes[index].second = texture;
   }
 }
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 String
 SkeletalMesh/*<V, I>*/::getName()
 {
   return m_name;
 }
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 const Sphere&
 SkeletalMesh/*<V, I>*/::getBoundingSphere()
 {
   return m_boundSphere;
 }
 
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 const Vector3f&
 SkeletalMesh/*<V, I>*/::getFurtherPosition()
 {
   return m_furtherPosition;
 }
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 const BoxAAB&
 SkeletalMesh/*<V, I>*/::getBoundingBox()
 {

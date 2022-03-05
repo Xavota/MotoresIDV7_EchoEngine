@@ -16,6 +16,10 @@
 #include "eeMaterial.h"
 
 namespace eeEngineSDK {
+GraphicsApi::~GraphicsApi()
+{
+  release();
+}
 bool
 GraphicsApi::initialize(uint32 witdh, uint32 height)
 {
@@ -29,17 +33,25 @@ GraphicsApi::initialize(uint32 witdh, uint32 height)
   desc.topLeftY = 0;
   setViewports({ desc });
   
-  m_rtv = createTexturePtr();
-  m_rtv->createAsBackBuffer();
+  //m_rtv = createTexturePtr();
+  //m_rtv->createAsBackBuffer();
+  //
+  //m_dsv = createTexturePtr();
+  //m_dsv->create2D(eTEXTURE_BIND_FLAGS::kDepthStencil,
+  //                { witdh, height });
 
-  m_dsv = createTexturePtr();
-  m_dsv->create2D(eTEXTURE_BIND_FLAGS::kDepthStencil,
-                  { witdh, height });
+  m_mainWindow->initRenders();
 
   return true;
 }
-bool GraphicsApi::initializeScreen(void*, uint32, uint32)
+bool
+GraphicsApi::initializeScreen(void* callback, uint32 witdh, uint32 height)
 {
+  m_mainWindow = createWindowPtr();
+  if (!m_mainWindow->initWindow(callback, witdh, height)) {
+    return false;
+  }
+  m_mainWindow->showWindow();
   return true;
 }
 void
@@ -140,11 +152,12 @@ GraphicsApi::release()
 }
 void GraphicsApi::resizeWindow(Vector2u newSize)
 {
-  MemoryManager::instance().safeRelease<Texture>(m_rtv);
-  m_rtv->createAsBackBuffer();
-  MemoryManager::instance().safeRelease<Texture>(m_dsv);
-  m_dsv->create2D(eTEXTURE_BIND_FLAGS::kDepthStencil,
-                  { newSize.x, newSize.y });
+  //MemoryManager::instance().safeRelease<Texture>(m_rtv);
+  //m_rtv->createAsBackBuffer();
+  //MemoryManager::instance().safeRelease<Texture>(m_dsv);
+  //m_dsv->create2D(eTEXTURE_BIND_FLAGS::kDepthStencil,
+  //                { newSize.x, newSize.y });
+  m_mainWindow->resize(newSize.x, newSize.y);
 
   ViewportDesc desc;
   memset(&desc, 0, sizeof(desc));

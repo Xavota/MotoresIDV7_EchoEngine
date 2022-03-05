@@ -13,6 +13,8 @@
 #pragma once
 #define DX11
 
+#define DEFERRED_RENDERING
+
 #include "eePrerequisitesUtilities.h"
 
 namespace eeEngineSDK {
@@ -46,6 +48,15 @@ const String graphicsApi = "DX11GraphicsApi";
 const String graphicsApi = "OGLGraphicsApi";
 #else
 const String graphicsApi;
+#endif
+
+/**
+ * The current render pipeline.
+ */
+#ifdef DEFERRED_RENDERING
+const String rendererName = "eeDeferredRenderer";
+#else
+const String rendererName;
 #endif
 
 /**

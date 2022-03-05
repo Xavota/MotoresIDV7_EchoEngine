@@ -61,6 +61,7 @@ class VertexBuffer;
 class IndexBuffer;
 class ConstantBuffer;
 class Texture;
+class Window;
 
 class BlendState;
 class DepthStencilState;

@@ -196,6 +196,7 @@
     <ClCompile Include="src\eeInputLayout.cpp" />
     <ClCompile Include="src\eeMaterial.cpp" />
     <ClCompile Include="src\eeMesh.cpp" />
+    <ClCompile Include="src\eeRenderer.cpp" />
     <ClCompile Include="src\eeStaticMesh.cpp" />
     <ClCompile Include="src\eeObject.cpp" />
     <ClCompile Include="src\eePixelShader.cpp" />
@@ -238,6 +239,7 @@
     <ClInclude Include="include\eeInputLayout.h" />
     <ClInclude Include="include\eeMaterial.h" />
     <ClInclude Include="include\eeMesh.h" />
+    <ClInclude Include="include\eeRenderer.h" />
     <ClInclude Include="include\eeStaticMesh.h" />
     <ClInclude Include="include\eeObject.h" />
     <ClInclude Include="include\eePixelShader.h" />

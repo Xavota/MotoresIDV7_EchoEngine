@@ -21,6 +21,7 @@
 #include "eeDX11IndexBuffer.h"
 #include "eeDX11ConstantBuffer.h"
 #include "eeDX11RasterizerState.h"
+#include "eeDX11Window.h"
 
 #pragma warning(push, 0)   
 #include <d3d11.h>
@@ -112,6 +113,13 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
    *
    * @description
    * Initializes the screen depending on the graphics api active.
+   *
+   * @param callback
+   * The function callback for the window events.
+   * @param width
+   * The width of the window.
+   * @param height
+   * The height of the window.
    *
    * @return
    * Weather it succeed or failed to initialize.
@@ -498,6 +506,22 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
 
   /**
    * @brief
+   * Gets the specific window pointer.
+   *
+   * @description
+   * Returns a pointer to a window depending on the api.
+   *
+   * @return
+   * The pointer to a window depending on the api.
+   */
+  FORCEINLINE virtual SPtr<Window>
+  createWindowPtr() const
+  {
+    return MemoryManager::instance().newPtr<DX11Window>();
+  }
+
+  /**
+   * @brief
    * Gets the specifics for the api.
    *
    * @description
@@ -508,19 +532,6 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
    */
   FORCEINLINE const void*
   getBasics() const override { return reinterpret_cast<const void*>(&m_basics); }
-
-  /**
-   * @brief
-   * Gets the window for the api.
-   *
-   * @description
-   * Returns the window that the api is using.
-   *
-   * @return
-   * A void pointer containing the window that the api is using.
-   */
-  FORCEINLINE void*
-  getWindow() override { return m_win; }
   
   /**
    * @brief
@@ -550,10 +561,10 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
   drawIndexed(uint32 /*indicesCount*/) const override;
 
  private:
-  /**
-   * The screen information
-   */
-  void* m_win = nullptr;
+  ///**
+  // * The screen information
+  // */
+  //void* m_win = nullptr;
 
   /**
    * The basics for DX11

@@ -159,6 +159,7 @@
     <ClInclude Include="include\eeMaterial.h" />
     <ClInclude Include="include\eeWindow.h" />
     <ClInclude Include="include\eeEvent.h" />
+    <ClInclude Include="include\eeRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeBaseApp.cpp">
@@ -266,5 +267,6 @@
     <ClCompile Include="src\eeMaterial.cpp" />
     <ClCompile Include="src\eeWindow.cpp" />
     <ClCompile Include="src\eeEvent.cpp" />
+    <ClCompile Include="src\eeRenderer.cpp" />
   </ItemGroup>
 </Project>

@@ -123,6 +123,22 @@ class EE_CORE_EXPORT Buffer
   {
     return m_batchSize;
   }
+  
+  /**
+   * @brief
+   * Check if the buffer exists.
+   *
+   * @description
+   * Checks the buffer if is valid.
+   *
+   * @return
+   * True if the buffer is valid
+   */
+  FORCEINLINE virtual bool
+  isValid() const
+  {
+    return !m_data.empty() && m_batchSize > 0;
+  }
 
   /**
    * @brief

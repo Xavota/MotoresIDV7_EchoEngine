@@ -137,6 +137,6 @@ Skeletal::use(SIZE_T meshNum)
 {
   Vector<Matrix4f> mats = getBonesMatrices(meshNum);
   m_matricesBuffer->updateData(reinterpret_cast<Byte*>(mats.data()));
-  m_matricesBuffer->setInVertex(3); // TODO: Quitar este número mágico
+  m_matricesBuffer->setInVertex(4); // TODO: Quitar este número mágico
 }
 }

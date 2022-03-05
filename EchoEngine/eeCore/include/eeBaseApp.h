@@ -129,7 +129,7 @@ class EE_CORE_EXPORT BaseApp
    * Weather it succeed or failed to initialize.
    */
   bool
-  initSystems();
+  initSystems(void* callback);
   /**
    * @brief
    * Initializes the resources needed.

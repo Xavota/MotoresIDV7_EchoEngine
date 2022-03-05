@@ -22,7 +22,7 @@ namespace eeEngineSDK {
  * @brief
  * The model to be rendered, contains meshes and textures.
  */
-/*template<class V, class I>*/
+/*template<typename V, typename I>*/
 class EE_CORE_EXPORT StaticMesh
 {
  public: 

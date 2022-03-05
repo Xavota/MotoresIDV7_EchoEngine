@@ -22,7 +22,7 @@ namespace eeEngineSDK {
  * @brief
  * The skeletal mesh resource, contains meshes with bones data and a skeletal.
  */
-/*template<class V, class I>*/
+/*template<typename V, class I>*/
 class EE_CORE_EXPORT SkeletalMesh
 {
  public:

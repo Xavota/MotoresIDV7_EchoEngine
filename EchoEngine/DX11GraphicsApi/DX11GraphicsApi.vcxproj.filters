@@ -49,6 +49,7 @@
     <ClInclude Include="include\eeDX11BlendState.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\eeDX11Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeDX11Texture.cpp">
@@ -84,5 +85,6 @@
     <ClCompile Include="src\eeDX11DepthStencilState.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\eeDX11Window.cpp" />
   </ItemGroup>
 </Project>

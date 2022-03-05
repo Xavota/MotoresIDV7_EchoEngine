@@ -18,6 +18,8 @@
 
 #include <eeColor.h>
 
+#include "eeWindow.h"
+
 #include "eeTexture.h"
 #include "eeVertexShader.h"
 #include "eePixelShader.h"
@@ -46,7 +48,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * Default destructor
    */
   virtual
-  ~GraphicsApi() = default;
+  ~GraphicsApi();
 
   /**
    * @brief
@@ -94,14 +96,19 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * @description
    * Initializes the screen depending on the graphics api active.
    *
+   *
    * @param callback
-   * The function callback for the inputs.
+   * The function callback for the window events.
+   * @param width
+   * The width of the window.
+   * @param height
+   * The height of the window.
    *
    * @return
    * Weather it succeed or failed to initialize.
    */
   virtual bool
-  initializeScreen(void* /*callback*/, uint32 witdh, uint32 height);
+  initializeScreen(void* callback, uint32 witdh, uint32 height);
 
   /**
    * @brief
@@ -525,6 +532,22 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
 
   /**
    * @brief
+   * Gets the specific window pointer.
+   *
+   * @description
+   * Returns a pointer to a window depending on the api.
+   *
+   * @return
+   * The pointer to a window depending on the api.
+   */
+  FORCEINLINE virtual SPtr<Window>
+  createWindowPtr() const
+  {
+    return MemoryManager::instance().newPtr<Window>();
+  }
+
+  /**
+   * @brief
    * Gets the specifics for the api.
    *
    * @description
@@ -535,19 +558,6 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    */
   FORCEINLINE virtual const void*
   getBasics() const { return nullptr; }
-
-  /**
-   * @brief
-   * Gets the window for the api.
-   *
-   * @description
-   * Returns the window that the api is using.
-   *
-   * @return
-   * A void pointer containing the window that the api is using.
-   */
-  FORCEINLINE virtual void*
-  getWindow() { return nullptr; }
   
   /**
    * @brief
@@ -629,16 +639,24 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    */
   virtual void
   clearActiveCameras();
-
-  // Temporary
-  //SPtr<RenderTarget>
+  
+  //SPtr<Texture>
   //getBackBuffer() { return m_rtv; }
-  SPtr<Texture>
-  getBackBuffer() { return m_rtv; }
-  //SPtr<DepthStencil>
+  //SPtr<Texture>
   //getDepthStencil() { return m_dsv; }
-  SPtr<Texture>
-  getDepthStencil() { return m_dsv; }
+
+  /**
+   * @brief
+   * Returns the main window of the api.
+   *
+   * @description
+   * Returns the main window of the api.
+   *
+   * @return
+   * The main window of the api.
+   */
+  SPtr<Window>
+  getMainWindow() { return m_mainWindow; }
 
  protected:
   /**
@@ -655,16 +673,16 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   drawIndexed(uint32 /*indicesCount*/) const {}
 
 
-  /*
-  * The back buffer.
-  */
-  //SPtr<RenderTarget> m_rtv;
-  SPtr<Texture> m_rtv;
-  /*
-  * The depth stencil of the back buffer
-  */
-  //SPtr<DepthStencil> m_dsv;
-  SPtr<Texture> m_dsv;
+  ///*
+  //* The back buffer.
+  //*/
+  ////SPtr<RenderTarget> m_rtv;
+  //SPtr<Texture> m_rtv;
+  ///*
+  //* The depth stencil of the back buffer
+  //*/
+  ////SPtr<DepthStencil> m_dsv;
+  //SPtr<Texture> m_dsv;
 
   /**
    * All render actors for a frame.
@@ -674,5 +692,10 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * All active cameras for a frame.
    */
   Vector<SPtr<CCamera>> m_activeCameras;
+
+  /**
+   * The main window.
+   */
+  SPtr<Window> m_mainWindow;
 };
 }

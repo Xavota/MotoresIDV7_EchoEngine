@@ -1,6 +1,6 @@
 /************************************************************************/
 /**
- * @file eeWindow.h
+ * @file eeDX11Window.h
  * @author Diego Castellanos
  * @date 05/03/22
  * @brief
@@ -11,21 +11,22 @@
  /************************************************************************/
 
 #pragma once
-#include "eePrerequisitesCore.h"
+#include "eePrerequisitesDX11.h"
+#include <eeWindow.h>
 
 namespace eeEngineSDK {
 /**
  * @brief
  * The window class, for managing the windows in any api.
  */
-class EE_CORE_EXPORT Window
+class EE_PLUGINDX11_EXPORT DX11Window : public Window
 {
  public: 
   /**
    * @brief
    * Default constructor
    */
-   Window() = default;
+  DX11Window() = default;
   /**
    * @brief
    * Initializes the window.
@@ -40,13 +41,12 @@ class EE_CORE_EXPORT Window
    * @param height
    * The height of the window.
    */
-   Window(void* callback, uint32 width, uint32 height);
+  DX11Window(void* callback, uint32 width, uint32 height);
   /**
    * @brief
    * Default destructor
    */
-  virtual 
-  ~Window() = default;
+  ~DX11Window() = default;
 
 
   /**
@@ -66,20 +66,8 @@ class EE_CORE_EXPORT Window
    * @return
    * Weather it succeed or failed to initialize.
    */
-  virtual bool
-  initWindow(void* callback, uint32 width, uint32 height);
-  /**
-   * @brief
-   * Initializes the window.
-   *
-   * @description
-   * Initializes the window from its size.
-   *
-   * @return
-   * Weather it succeed or failed to initialize.
-   */
-  virtual bool
-  initRenders();
+  bool
+  initWindow(void* callback, uint32 width, uint32 height) override;
 
   /**
    * @brief
@@ -88,8 +76,8 @@ class EE_CORE_EXPORT Window
    * @description
    * Opens the window on the screen.
    */
-  virtual void
-  showWindow() {}
+  void
+  showWindow() override;
   /**
    * @brief
    * Minimizes the window.
@@ -97,8 +85,8 @@ class EE_CORE_EXPORT Window
    * @description
    * Minimizes the window.
    */
-  virtual void
-  minimizeWindow() {}
+  void
+  minimizeWindow() override;
   /**
    * @brief
    * Maximizes the window.
@@ -106,8 +94,8 @@ class EE_CORE_EXPORT Window
    * @description
    * Maximizes the window.
    */
-  virtual void
-  maximizeWindow() {}
+  void
+  maximizeWindow() override;
   /**
    * @brief
    * Closes the window.
@@ -115,8 +103,8 @@ class EE_CORE_EXPORT Window
    * @description
    * Closes the window.
    */
-  virtual void
-  closeWindow() {}
+  void
+  closeWindow() override;
 
   /**
    * @brief
@@ -133,70 +121,9 @@ class EE_CORE_EXPORT Window
    * @return
    * Weather it succeed or failed to resize.
    */
-  virtual bool
-  resize(uint32 width, uint32 height);
+  bool
+  resize(uint32 width, uint32 height) override;
 
-
-  /**
-   * @brief
-   * Returns the render target of the window.
-   *
-   * @description
-   * Returns the render target of the window.
-   *
-   * @return
-   * The render target of the window.
-   */
-  SPtr<Texture>
-  getRenderTarget() const { return m_rtv; }
-  /**
-   * @brief
-   * Returns the depth stencil of the window.
-   *
-   * @description
-   * Returns the depth stencil of the window.
-   *
-   * @return
-   * The depth stencil of the window.
-   */
-  SPtr<Texture>
-  getDepthStencil() const { return m_dsv; }
-
-  /**
-   * @brief
-   * Returns the window pointer.
-   *
-   * @description
-   * Returns the window pointer.
-   *
-   * @return
-   * The window pointer.
-   */
-  void*
-  getWindowPtr() { return m_win; }
-
- protected:
-  /**
-   * The width of the window
-   */
-  uint32 m_width = 0u;
-  /**
-   * The height of the window
-   */
-  uint32 m_height = 0u;
-
-  /*
-  * The back buffer.
-  */
-  SPtr<Texture> m_rtv;
-  /*
-  * The depth stencil of the back buffer
-  */
-  SPtr<Texture> m_dsv;
-
-  /**
-   * The screen information
-   */
-  void* m_win = nullptr;
+ private:
 };
 }

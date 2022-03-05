@@ -139,7 +139,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * The resource initialized.
    */
-  /*template<class V, class I>*/
+  /*template<typename V, typename I>*/
   SPtr<StaticMesh/*<V, I>*/>
   loadStaticMeshFromFile(const String& fileName,
                          const String resourceName,
@@ -166,7 +166,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * The resource initialized.
    */
-  /*template<class V, class I>*/
+  /*template<typename V, typename I>*/
   SPtr<StaticMesh/*<V, I>*/>
   loadStaticMeshFromMeshesArray(const Vector<Mesh/*<V,I>*/>& meshes,
                                 const String resourceName,
@@ -195,7 +195,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * The resource initialized.
    */
-  /*template<class V, class I>*/
+  /*template<typename V, typename I>*/
   SPtr<StaticMesh/*<V, I>*/>
   loadStaticMeshFromMeshesArray(const Vector<Pair<Mesh/*<V,I>*/, SPtr<Material>>>& meshes,
                                 const String resourceName,
@@ -236,7 +236,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * The resource initialized.
    */
-  /*template<class V, class I>*/
+  /*template<typename V, typename I>*/
   SPtr<SkeletalMesh/*<V, I>*/>
   loadSkeletalMeshFromFile(const String& fileName,
                            const String& resourceName,
@@ -379,7 +379,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * The StaticMesh with that name.
    */
-  /*template<class V, class I>*/
+  /*template<typename V, typename I>*/
   SPtr<StaticMesh/*<V, I>*/>
   getResourceStaticMesh(const String& resourceName);
   /**
@@ -410,7 +410,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * The skeletal mesh with that name.
    */
-  /*template<class V, class I>*/
+  /*template<typename V, typename I>*/
   SPtr<SkeletalMesh/*<V, I>*/>
   getResourceSkeletalMesh(const String& resourceName);
   /**
@@ -493,7 +493,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * All stored StaticMeshes.
    */
-  /*template<class V, class I>*/
+  /*template<typename V, typename I>*/
   Map<String, SPtr<StaticMesh/*<V, I>*/>>
   getAllStaticMeshResources();
   /**
@@ -518,7 +518,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * All stored skeletal meshes.
    */
-  /*template<class V, class I>*/
+  /*template<typename V, typename I>*/
   Map<String, SPtr<SkeletalMesh/*<V, I>*/>>
   getAllSkeletalMeshResources();
   /**
@@ -572,7 +572,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
   /**
    * The StaticMeshes stored.
    */
-  /*template<class V, class I>*/
+  /*template<typename V, typename I>*/
   Map<String, SPtr<StaticMesh/*<V, I>*/>> m_staticMeshes;
   /**
    * The skeletal meshes stored.
@@ -581,7 +581,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
   /**
    * The skeletal meshes stored.
    */
-  /*template<class V, class I>*/
+  /*template<typename V, typename I>*/
   Map<String, SPtr<SkeletalMesh/*<V, I>*/>> m_skeletalMeshes;
   /**
    * The animations stored.

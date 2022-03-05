@@ -108,6 +108,32 @@ Vector2f::operator%(float other) const
   return Vector2f(Math::fmod(this->x, other),
          Math::fmod(this->y, other));
 }
+EE_UTILITY_EXPORT Vector2f
+operator+(const float& other, const Vector2f& otherV)
+{
+  return Vector2f(other + otherV.x, other + otherV.y);
+}
+EE_UTILITY_EXPORT Vector2f
+operator-(const float& other, const Vector2f& otherV)
+{
+  return Vector2f(other - otherV.x, other - otherV.y);
+}
+EE_UTILITY_EXPORT Vector2f
+operator*(const float& other, const Vector2f& otherV)
+{
+  return Vector2f(other * otherV.x, other * otherV.y);
+}
+EE_UTILITY_EXPORT Vector2f
+operator/(const float& other, const Vector2f& otherV)
+{
+  return Vector2f(other / otherV.x, other / otherV.y);
+}
+EE_UTILITY_EXPORT Vector2f
+operator%(const float& other, const Vector2f& otherV)
+{
+  return Vector2f(Math::fmod(other, otherV.x),
+    Math::fmod(other, otherV.y));
+}
 Vector2f
 Vector2f::operator-() const
 {

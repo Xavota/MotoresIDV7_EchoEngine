@@ -222,7 +222,7 @@ class EE_CORE_EXPORT Actor : public EnableSPtrFromThis<Actor>
    */
   String m_name;
 };
-template<class T>
+template<typename T>
 FORCEINLINE void
 Actor::addComponent()
 {
@@ -237,7 +237,7 @@ Actor::addComponent()
   m_components.push_back(MemoryManager::instance().newPtr<T>());
   m_components[cmpIndex]->init(shared_from_this());
 }
-template<class T>
+template<typename T>
 inline SPtr<T> Actor::getComponent()
 {
   SIZE_T compCount = m_components.size();

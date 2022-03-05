@@ -318,6 +318,85 @@ class EE_UTILITY_EXPORT Vector2f
   operator%(float other) const;
 
   /**
+   * @brief The sum of the vector plus a number.
+   *
+   * @description Returns a vector with the sum of every component of
+   * the original plus the given number.
+   *
+   * @param other
+   * The number for the operation.
+   *
+   * @return
+   * The sum of the vector plus the number.
+   */
+  friend EE_UTILITY_EXPORT Vector2f
+  operator+(const float& other, const Vector2f& otherV);
+  /**
+   * @brief 
+   * The subtraction of the vector minus a number.
+   *
+   * @description 
+   * Returns a vector with the subtraction of every component of
+   * the original minus the given number.
+   *
+   * @param other
+   * The number for the operation.
+   *
+   * @return
+   * The subtraction of the vector minus the number.
+   */
+  friend EE_UTILITY_EXPORT Vector2f
+  operator-(const float& other, const Vector2f& otherV);
+  /**
+   * @brief
+   * The multiplication of the vector times a number.
+   *
+   * @description
+   * Returns a vector with the multiplication of every component of
+   * the original times the given number.
+   *
+   * @param other
+   * The number for the operation.
+   *
+   * @return
+   * The multiplication of the vector times the number.
+   */
+  friend EE_UTILITY_EXPORT Vector2f
+  operator*(const float& other, const Vector2f& otherV);
+  /**
+   * @brief
+   * The quotient of the vector divided by a number.
+   *
+   * @description
+   * Returns a vector with the quotient of every component of
+   * the original divided by the given number.
+   *
+   * @param other
+   * The number for the operation.
+   *
+   * @return
+   * The quotient of the vector divided by the number.
+   */
+  friend EE_UTILITY_EXPORT Vector2f
+  operator/(const float& other, const Vector2f& otherV);
+  /**
+   * @brief
+   * The residue of the vector divided by a number.
+   *
+   * @description
+   * Returns a vector with the residue of every component of
+   * the original divided by the given number.
+   *
+   * @param other
+   * The number for the operation.
+   *
+   * @return
+   * The residue of the vector divided by the number.
+   */
+  friend EE_UTILITY_EXPORT Vector2f
+  operator%(const float& other, const Vector2f& otherV);
+
+  /**
    * @brief
    * The minus operator.
    *

@@ -11,8 +11,8 @@
 
 #pragma once
 
-//#define STD
-#define BOOST
+#define STD
+//#define BOOST
 
 #include <cassert>
 

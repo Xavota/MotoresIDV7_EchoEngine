@@ -720,7 +720,7 @@ public:
    * @return
    * If the value has the 1's bits of the flag.
    */
-  template<class V, class F>
+  template<typename V, typename F>
   static FORCEINLINE bool
   hasFlag(V _val, F _flag);
 
@@ -1399,7 +1399,7 @@ PlatformMath::checkFloatsEqual(const float _val1,
 {
   return abs(_val1 - _val2) <= _gap;
 }
-template<class V, class F>
+template<typename V, typename F>
 FORCEINLINE bool
 PlatformMath::hasFlag(V _val, F _flag)
 {

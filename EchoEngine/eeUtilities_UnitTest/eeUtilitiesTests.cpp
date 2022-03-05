@@ -105,8 +105,7 @@ TEST(eeUtilities, Vector2)
   EXPECT_EQ(vf2.getMagnitud(), 5.0f);
 
   float mag = vf.getMagnitud();
-  EXPECT_TRUE(vf.getNormalize() == Vector2f(-0.948683f, 
-                                                          0.316228f));
+  EXPECT_TRUE(vf.getNormalize() == Vector2f(-0.948683f, 0.316228f));
   vf.normalize();
   EXPECT_TRUE(vf == Vector2f(-0.948683f, 0.316228f));
   EXPECT_TRUE(vf.getTruncate(7.0f) == Vector2f(-6.64078309f, 
@@ -126,10 +125,15 @@ TEST(eeUtilities, Vector2)
 
   // Operators with numbers
   EXPECT_TRUE(vf + 1.0f == Vector2f(-2.0f,  2.0f));
+  EXPECT_TRUE(1.0f + vf == Vector2f(-2.0f,  2.0f));
   EXPECT_TRUE(vf - 2.0f == Vector2f(-5.0f, -1.0f));
+  EXPECT_TRUE(2.0f - vf == Vector2f( 5.0f,  1.0f));
   EXPECT_TRUE(vf * 3.0f == Vector2f(-9.0f,  3.0f));
+  EXPECT_TRUE(3.0f * vf == Vector2f(-9.0f,  3.0f));
   EXPECT_TRUE(vf / 2.0f == Vector2f(-1.5f,  0.5f));
+  EXPECT_TRUE(2.0f / vf == Vector2f(-0.66666666f,  2.0f));
   EXPECT_TRUE(vf % 1.5f == Vector2f( 0.0f,  1.0f));
+  EXPECT_TRUE(1.5f % vf == Vector2f( 1.5f,  0.5f));
 
 
   // Assign operators with other vectors
