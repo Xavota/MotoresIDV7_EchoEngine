@@ -1,37 +1,20 @@
 #include "eeMaterial.h"
 #include "eeResourceManager.h"
+#include "eeGraficsApi.h"
 
 namespace eeEngineSDK {
-Material::Material()
+Material::Material(const Map<uint32, SPtr<Texture>>& texturesMap)
 {
-  auto& resourceMan = ResourceManager::instance();
-
-  m_diffuse = resourceMan.getResourceTexture("DefaultDiffuse");
-  m_normalMap = resourceMan.getResourceTexture("DefaultNormalMap");
-}
-Material::Material(SPtr<Texture> diffuse,
-                   SPtr<Texture> normalMap)
-{
-  createMaterial(diffuse, normalMap);
+  createMaterial(texturesMap);
 }
 void
-Material::createMaterial(SPtr<Texture> diffuse,
-                         SPtr<Texture> normalMap)
+Material::createMaterial(const Map<uint32, SPtr<Texture>>& texturesMap)
 {
-  auto& resourceMan = ResourceManager::instance();
-
-  if (diffuse) {
-    m_diffuse = diffuse;
-  }
-  else {
-    m_diffuse = resourceMan.getResourceTexture("DefaultDiffuse");
-  }
-
-  if (normalMap) {
-    m_normalMap = normalMap;
-  }
-  else {
-    m_normalMap = resourceMan.getResourceTexture("DefaultNormalMap");
-  }
+  m_texturesMap = texturesMap;
+}
+void
+Material::setTexture(SPtr<Texture> texture, uint32 index)
+{
+  m_texturesMap[index] = texture;
 }
 }

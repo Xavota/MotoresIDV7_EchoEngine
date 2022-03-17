@@ -19,7 +19,7 @@ namespace eeEngineSDK{
  * @brief
  * The Depth Stencil for the graphics module.
  */
-class DX11DepthStencilState : public DepthStencilState
+class EE_PLUGINDX11_EXPORT DX11DepthStencilState : public DepthStencilState
 {
  public:
   /**

@@ -19,7 +19,7 @@ namespace eeEngineSDK {
  * @brief
  * The Blend state class.
  */
-class DX11BlendState : public BlendState
+class EE_PLUGINDX11_EXPORT DX11BlendState : public BlendState
 {
  public:
   /**

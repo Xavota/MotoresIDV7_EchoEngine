@@ -18,7 +18,7 @@ namespace eeEngineSDK {
  * @brief
  * A buffer that tells the graphic memory the indices to be drawn.
  */
-class IndexBuffer : public Buffer
+class EE_CORE_EXPORT IndexBuffer : public Buffer
 {
  public:
   /**

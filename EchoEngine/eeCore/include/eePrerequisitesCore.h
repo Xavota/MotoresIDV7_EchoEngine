@@ -75,16 +75,6 @@ class InputLayout;
 class GraphicsApi;
 class BaseApp;
 
-struct SimplexVertex;
-struct SimpleVertex;
-struct ComplexVertex;
-struct SimpleAnimVertex;
-struct ComplexAnimVertex;
-template<uint32 size = 4>
-struct SimpleBigAnimVertex;
-template<uint32 size = 4>
-struct ComplexBigAnimVertex;
-
 class Mesh;
 class StaticMesh;
 class Object;

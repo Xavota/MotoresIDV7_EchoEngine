@@ -9,6 +9,8 @@
 #include <eeMemoryManager.h>
 #include <eeMath.h>
 
+#include <eeVertex.h>
+
 #include "eeMesh.h"
 #include "eeTexture.h"
 #include "eeMaterial.h"
@@ -92,52 +94,26 @@ loadStaticMeshFromAssimp(const aiScene* scene,
         v.normal = Vector4f{};
       }
 
+      //---Tan
+      if (AssimpMesh->HasTangentsAndBitangents()) {
+        const aiVector3D& tan = AssimpMesh->mTangents[j];
+        v.tangent.x = tan.x;
+        v.tangent.y = tan.y;
+        v.tangent.z = tan.z;
+        v.tangent.w = 0.0f;
+      }
+
+      //---Bit
+      if (AssimpMesh->HasTangentsAndBitangents()) {
+        const aiVector3D& bit = AssimpMesh->mBitangents[j];
+        v.binormal.x = bit.x;
+        v.binormal.y = bit.y;
+        v.binormal.z = bit.z;
+        v.binormal.w = 0.0f;
+      }
+
       vertices.push_back(v);
     }
-
-    //---Tan/Bin
-    for (uint32 j = 0; j * 3 + 2 < scene->mMeshes[i]->mNumVertices; ++j)
-    {
-      aiVector3D deltaPos1 = scene->mMeshes[i]->mVertices[j * 3 + 1] - scene->mMeshes[i]->mVertices[j * 3];
-      aiVector3D deltaPos2 = scene->mMeshes[i]->mVertices[j * 3 + 2] - scene->mMeshes[i]->mVertices[j * 3];
-      aiVector3D deltaUV1 = scene->mMeshes[i]->mTextureCoords[0][j * 3 + 1] - scene->mMeshes[i]->mTextureCoords[0][j * 3];
-      aiVector3D deltaUV2 = scene->mMeshes[i]->mTextureCoords[0][j * 3 + 2] - scene->mMeshes[i]->mTextureCoords[0][j * 3];
-      float r = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
-      aiVector3D tangent = (deltaPos1 * deltaUV2.y - deltaPos2 * deltaUV1.y) * r;
-      aiVector3D bitangent = (deltaPos2 * deltaUV1.x - deltaPos1 * deltaUV2.x) * r;
-
-      vertices[static_cast<SIZE_T>(j) * 3 + 0].binormal.x = bitangent.x;
-      vertices[static_cast<SIZE_T>(j) * 3 + 0].binormal.y = bitangent.y;
-      vertices[static_cast<SIZE_T>(j) * 3 + 0].binormal.z = bitangent.z;
-      vertices[static_cast<SIZE_T>(j) * 3 + 0].binormal.w = 0.0f;
-
-      vertices[static_cast<SIZE_T>(j) * 3 + 1].binormal.x = bitangent.x;
-      vertices[static_cast<SIZE_T>(j) * 3 + 1].binormal.y = bitangent.y;
-      vertices[static_cast<SIZE_T>(j) * 3 + 1].binormal.z = bitangent.z;
-      vertices[static_cast<SIZE_T>(j) * 3 + 1].binormal.w = 0.0f;
-
-      vertices[static_cast<SIZE_T>(j) * 3 + 2].binormal.x = bitangent.x;
-      vertices[static_cast<SIZE_T>(j) * 3 + 2].binormal.y = bitangent.y;
-      vertices[static_cast<SIZE_T>(j) * 3 + 2].binormal.z = bitangent.z;
-      vertices[static_cast<SIZE_T>(j) * 3 + 2].binormal.w = 0.0f;
-
-
-      vertices[static_cast<SIZE_T>(j) * 3 + 0].tangent.x = tangent.x;
-      vertices[static_cast<SIZE_T>(j) * 3 + 0].tangent.y = tangent.y;
-      vertices[static_cast<SIZE_T>(j) * 3 + 0].tangent.z = tangent.z;
-      vertices[static_cast<SIZE_T>(j) * 3 + 0].tangent.w = 0.0f;
-
-      vertices[static_cast<SIZE_T>(j) * 3 + 1].tangent.x = tangent.x;
-      vertices[static_cast<SIZE_T>(j) * 3 + 1].tangent.y = tangent.y;
-      vertices[static_cast<SIZE_T>(j) * 3 + 1].tangent.z = tangent.z;
-      vertices[static_cast<SIZE_T>(j) * 3 + 1].tangent.w = 0.0f;
-
-      vertices[static_cast<SIZE_T>(j) * 3 + 2].tangent.x = tangent.x;
-      vertices[static_cast<SIZE_T>(j) * 3 + 2].tangent.y = tangent.y;
-      vertices[static_cast<SIZE_T>(j) * 3 + 2].tangent.z = tangent.z;
-      vertices[static_cast<SIZE_T>(j) * 3 + 2].tangent.w = 0.0f;
-    }/**/
-
 
 
     Vector<uint32> indices;
@@ -184,12 +160,12 @@ loadSkeletalMeshFromAssimp(const aiScene* scene,
   Vector3f minBound(99999.99f, 99999.99f, 99999.99f);
   Vector3f furtherPosition = Vector3f(0.0f, 0.0f, 0.0f);
   for (uint32 i = 0; i < scene->mNumMeshes; ++i) {
-    Vector<SimpleBigAnimVertex<6>> vertices;
+    Vector<ComplexBigAnimVertex<5>> vertices;
     aiMesh* AssimpMesh = scene->mMeshes[i];
 
     for (uint32 j = 0; j < AssimpMesh->mNumVertices; ++j) {
-      SimpleBigAnimVertex<6> v;
-      memset(&v, 0, sizeof(SimpleBigAnimVertex<6>));
+      ComplexBigAnimVertex<5> v;
+      memset(&v, 0, sizeof(ComplexBigAnimVertex<5>));
       // Positions
       if (AssimpMesh->HasPositions()) {
         const aiVector3D& vertex = AssimpMesh->mVertices[j];
@@ -241,45 +217,26 @@ loadSkeletalMeshFromAssimp(const aiScene* scene,
         v.normal = Vector4f{};
       }
 
+      //---Tan
+      if (AssimpMesh->HasTangentsAndBitangents()) {
+        const aiVector3D& tan = AssimpMesh->mTangents[j];
+        v.tangent.x = tan.x;
+        v.tangent.y = tan.y;
+        v.tangent.z = tan.z;
+        v.tangent.w = 0.0f;
+      }
+
+      //---Bit
+      if (AssimpMesh->HasTangentsAndBitangents()) {
+        const aiVector3D& bit = AssimpMesh->mBitangents[j];
+        v.binormal.x = bit.x;
+        v.binormal.y = bit.y;
+        v.binormal.z = bit.z;
+        v.binormal.w = 0.0f;
+      }
+
       vertices.push_back(v);
     }
-
-    // Tangents/Bitangents
-    /*for (int32 j = 0; j * 3 + 2 < scene->mMeshes[i]->mNumVertices; ++j)
-    {
-      aiVector3D deltaPos1 = scene->mMeshes[i]->mVertices[j * 3 + 1] - scene->mMeshes[i]->mVertices[j * 3];
-      aiVector3D deltaPos2 = scene->mMeshes[i]->mVertices[j * 3 + 2] - scene->mMeshes[i]->mVertices[j * 3];
-      aiVector3D deltaUV1 = scene->mMeshes[i]->mTextureCoords[0][j * 3 + 1] - scene->mMeshes[i]->mTextureCoords[0][j * 3];
-      aiVector3D deltaUV2 = scene->mMeshes[i]->mTextureCoords[0][j * 3 + 2] - scene->mMeshes[i]->mTextureCoords[0][j * 3];
-      float r = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
-      aiVector3D tangent = (deltaPos1 * deltaUV2.y - deltaPos2 * deltaUV1.y) * r;
-      aiVector3D bitangent = (deltaPos2 * deltaUV1.x - deltaPos1 * deltaUV2.x) * r;
-
-      vertices[j * 3 + 0].Binormal.x = bitangent.x;
-      vertices[j * 3 + 0].Binormal.y = bitangent.y;
-      vertices[j * 3 + 0].Binormal.z = bitangent.z;
-
-      vertices[j * 3 + 1].Binormal.x = bitangent.x;
-      vertices[j * 3 + 1].Binormal.y = bitangent.y;
-      vertices[j * 3 + 1].Binormal.z = bitangent.z;
-
-      vertices[j * 3 + 2].Binormal.x = bitangent.x;
-      vertices[j * 3 + 2].Binormal.y = bitangent.y;
-      vertices[j * 3 + 2].Binormal.z = bitangent.z;
-
-
-      vertices[j * 3 + 0].Tangente.x = tangent.x;
-      vertices[j * 3 + 0].Tangente.y = tangent.y;
-      vertices[j * 3 + 0].Tangente.z = tangent.z;
-
-      vertices[j * 3 + 1].Tangente.x = tangent.x;
-      vertices[j * 3 + 1].Tangente.y = tangent.y;
-      vertices[j * 3 + 1].Tangente.z = tangent.z;
-
-      vertices[j * 3 + 2].Tangente.x = tangent.x;
-      vertices[j * 3 + 2].Tangente.y = tangent.y;
-      vertices[j * 3 + 2].Tangente.z = tangent.z;
-    }/**/
 
     Vector<Bone> bones;
     if (skeleton && skeleton->getBonesDataForMesh(i, bones)) {
@@ -532,9 +489,9 @@ storeNodes(aiNode* current, SPtr<Node> storage)
   storage->m_childrenCount = current->mNumChildren;
 
   for (uint32 i = 0; i < storage->m_childrenCount; ++i) {
-    storage->m_children.push_back(memoryMan.newPtr<Node>());
-    storeNodes(current->mChildren[i], storage->m_children[i]);
-    storage->m_children[i]->m_parent = storage;
+    storage->m_pChildren.push_back(memoryMan.newPtr<Node>());
+    storeNodes(current->mChildren[i], storage->m_pChildren[i]);
+    storage->m_pChildren[i]->m_pParent = storage;
   }
 }
 SPtr<Animation>
@@ -708,7 +665,7 @@ ResourceManager::loadTextureFromFile(const String& fileName,
 
   SPtr<Texture> tex = GraphicsApi::instance().createTexturePtr();
   tex->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kShaderResource,
-                { tempImg->getWidth(), tempImg->getHeight() });
+                Point2D{ tempImg->getWidth(), tempImg->getHeight() });
 
   tex->loadImages({ tempImg });
 
@@ -716,8 +673,7 @@ ResourceManager::loadTextureFromFile(const String& fileName,
   return m_textures[resourceName];
 }
 SPtr<Material>
-ResourceManager::loadMaterialFromTextures(SPtr<Texture> diffuse,
-                                          SPtr<Texture> normalMap,
+ResourceManager::loadMaterialFromTextures(Map<uint32, SPtr<Texture>> textures,
                                           const String resourceName)
 {
   if (m_textures.find(resourceName) != m_textures.end()) {
@@ -726,7 +682,7 @@ ResourceManager::loadMaterialFromTextures(SPtr<Texture> diffuse,
   }
 
   SPtr<Material> mat =
-  MemoryManager::instance().newPtr<Material>(diffuse, normalMap);
+  MemoryManager::instance().newPtr<Material>(textures);
 
   m_materials.insert(Pair<String, SPtr<Material>>(resourceName, mat));
   return m_materials[resourceName];

@@ -99,6 +99,10 @@
     <ClInclude Include="include\eeTime.h">
       <Filter>include\Platform</Filter>
     </ClInclude>
+    <ClInclude Include="include\eeTriangle.h" />
+    <ClInclude Include="include\eeVertex.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eePlatformMath.cpp">
@@ -170,5 +174,6 @@
     <ClCompile Include="src\eeTime.cpp">
       <Filter>src\Platform</Filter>
     </ClCompile>
+    <ClCompile Include="src\eeTriangle.cpp" />
   </ItemGroup>
 </Project>

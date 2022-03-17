@@ -29,7 +29,7 @@ class EE_UTILITY_EXPORT Vector4f
    * @brief
    * Default constructor
    */
-  Vector4f();
+  Vector4f() = default;
   /**
    * @brief
    * Initializes the vector with the values given.
@@ -47,7 +47,9 @@ class EE_UTILITY_EXPORT Vector4f
    * @param _w
    * The initial w for the vector.
    */
-  Vector4f(float _x, float _y, float _z, float _w);
+  FORCEINLINE explicit
+  Vector4f(float _x, float _y, float _z, float _w)
+    : x(_x), y(_y), z(_z), w(_w) {}
   /**
    * @brief
    * Frees the memory allocated on the vector.
@@ -56,7 +58,7 @@ class EE_UTILITY_EXPORT Vector4f
    * Releases and deletes all the possible memory
    * allocated in the vector.
    */
-  ~Vector4f();
+  ~Vector4f() = default;
 
   /**
    * @brief
@@ -147,7 +149,7 @@ class EE_UTILITY_EXPORT Vector4f
   getTruncate(float newSize) const;
   /**
    * @brief
-   * Changes the magnitud of the vector with the new size.
+   * Changes the magnitude of the vector with the new size.
    *
    * @description
    * Modifies the vector with the same direction as the original
@@ -597,7 +599,7 @@ class EE_UTILITY_EXPORT Vector4i
    * @brief
    * The default constructor.
    */
-  Vector4i();
+  Vector4i() = default;
   /**
    * @brief
    * Initializes the vector with the values given.
@@ -615,7 +617,9 @@ class EE_UTILITY_EXPORT Vector4i
    * @param _w
    * The initial w for the vector.
    */
-  Vector4i(int32 _x, int32 _y, int32 _z, int32 _w);
+  FORCEINLINE explicit
+  Vector4i(int32 _x, int32 _y, int32 _z, int32 _w)
+    : x(_x), y(_y), z(_z), w(_w) {}
   /**
    * @brief
    * Frees the memory allocated on the vector.
@@ -623,7 +627,7 @@ class EE_UTILITY_EXPORT Vector4i
    * @description Releases and deletes all the possible memory
    * allocated in the vector.
    */
-  ~Vector4i();
+  ~Vector4i() = default;
 
   /**
    * @brief
@@ -1099,14 +1103,14 @@ class EE_UTILITY_EXPORT Vector4i
  * Four dimensional vector made by uint32.
  * It can be used as a point or as a direction or even as a color.
  */
-class EE_UTILITY_EXPORT Vector4u
+class EE_UTILITY_EXPORT Point4D
 {
  public:
   /**
    * @brief
    * The default constructor.
    */
-  Vector4u();
+  Point4D() = default;
   /**
    * @brief
    * Initializes the vector with the values given.
@@ -1124,7 +1128,9 @@ class EE_UTILITY_EXPORT Vector4u
    * @param _w
    * The initial w for the vector.
    */
-  Vector4u(uint32 _x, uint32 _y, uint32 _z, uint32 _w);
+  FORCEINLINE explicit
+  Point4D(uint32 _x, uint32 _y, uint32 _z, uint32 _w)
+    : x(_x), y(_y), z(_z), w(_w) {}
   /**
    * @brief
    * Frees the memory allocated on the vector.
@@ -1132,24 +1138,7 @@ class EE_UTILITY_EXPORT Vector4u
    * @description Releases and deletes all the possible memory
    * allocated in the vector.
    */
-  ~Vector4u();
-
-  /**
-   * @brief
-   * The dot product of two vectors.
-   *
-   * @description
-   * Returns the result of the dot product between the
-   * current vector and the one pass to the function.
-   *
-   * @param other
-   * The other vector for the dot product.
-   *
-   * @return
-   * The result of the dot product of the two vectors.
-   */
-  float
-  dot(const Vector4u& other) const;
+  ~Point4D() = default;
 
   /**
    * @brief
@@ -1166,7 +1155,7 @@ class EE_UTILITY_EXPORT Vector4u
    * The distance between the point and the other point.
    */
   float
-  getDistance(const Vector4u& other) const;
+  getDistance(const Point4D& other) const;
   /**
    * @brief
    * The length of the vector.
@@ -1194,8 +1183,8 @@ class EE_UTILITY_EXPORT Vector4u
    * @return
    * The sum of the two vectors.
    */
-  Vector4u
-  operator+(const Vector4u& other) const;
+  Point4D
+  operator+(const Point4D& other) const;
   /**
    * @brief
    * The subtraction of two vectors.
@@ -1210,8 +1199,8 @@ class EE_UTILITY_EXPORT Vector4u
    * @return
    * The subtraction of the two vectors.
    */
-  Vector4u
-  operator-(const Vector4u& other) const;
+  Point4D
+  operator-(const Point4D& other) const;
   /**
    * @brief
    * The multiplication of two vectors.
@@ -1226,8 +1215,8 @@ class EE_UTILITY_EXPORT Vector4u
    * @return
    * The multiplication of the two vectors.
    */
-  Vector4u
-  operator*(const Vector4u& other) const;
+  Point4D
+  operator*(const Point4D& other) const;
   /**
    * @brief
    * The quotient of two vectors.
@@ -1242,8 +1231,8 @@ class EE_UTILITY_EXPORT Vector4u
    * @return
    * The quotient of the original vector divided by the other vector.
    */
-  Vector4u
-  operator/(const Vector4u& other) const;
+  Point4D
+  operator/(const Point4D& other) const;
   /**
    * @brief
    * The residue of the division of two vectors.
@@ -1258,8 +1247,8 @@ class EE_UTILITY_EXPORT Vector4u
    * @return
    * The residue of the original vector divided by the other vector.
    */
-  Vector4u
-  operator%(const Vector4u& other) const;
+  Point4D
+  operator%(const Point4D& other) const;
   /**
    * @brief The sum of the vector plus a number.
    *
@@ -1272,7 +1261,7 @@ class EE_UTILITY_EXPORT Vector4u
    * @return
    * The sum of the vector plus the number.
    */
-  Vector4u
+  Point4D
   operator+(uint32 other) const;
   /**
    * @brief
@@ -1288,7 +1277,7 @@ class EE_UTILITY_EXPORT Vector4u
    * @return
    * The subtraction of the vector minus the number.
    */
-  Vector4u
+  Point4D
   operator-(uint32 other) const;
   /**
    * @brief
@@ -1304,7 +1293,7 @@ class EE_UTILITY_EXPORT Vector4u
    * @return
    * The multiplication of the vector times the number.
    */
-  Vector4u
+  Point4D
   operator*(uint32 other) const;
   /**
    * @brief
@@ -1320,7 +1309,7 @@ class EE_UTILITY_EXPORT Vector4u
    * @return
    * The quotient of the vector divided by the number.
    */
-  Vector4u
+  Point4D
   operator/(uint32 other) const;
   /**
    * @brief
@@ -1336,7 +1325,7 @@ class EE_UTILITY_EXPORT Vector4u
    * @return
    * The residue of the vector divided by the number.
    */
-  Vector4u
+  Point4D
   operator%(uint32 other) const;
 
   /**
@@ -1353,8 +1342,8 @@ class EE_UTILITY_EXPORT Vector4u
    * @return
    * The original vector after the operation.
    */
-  Vector4u&
-  operator=(const Vector4u& other);
+  Point4D&
+  operator=(const Point4D& other);
 
   /**
    * @brief
@@ -1370,8 +1359,8 @@ class EE_UTILITY_EXPORT Vector4u
    * @return
    * The original vector after the operation.
    */
-  Vector4u&
-  operator+=(const Vector4u& other);
+  Point4D&
+  operator+=(const Point4D& other);
   /**
    * @brief
    * Makes the original vector equal to the itself minus the other.
@@ -1386,8 +1375,8 @@ class EE_UTILITY_EXPORT Vector4u
    * @return
    * The original vector after the operation.
    */
-  Vector4u&
-  operator-=(const Vector4u& other);
+  Point4D&
+  operator-=(const Point4D& other);
   /**
    * @brief
    * Makes the original vector equal to the itself times the other.
@@ -1402,8 +1391,8 @@ class EE_UTILITY_EXPORT Vector4u
    * @return
    * The original vector after the operation.
    */
-  Vector4u&
-  operator*=(const Vector4u& other);
+  Point4D&
+  operator*=(const Point4D& other);
   /**
    * @brief
    * Makes the original vector equal to the itself divided by the other.
@@ -1418,8 +1407,8 @@ class EE_UTILITY_EXPORT Vector4u
    * @return
    * The original vector after the operation.
    */
-  Vector4u&
-  operator/=(const Vector4u& other);
+  Point4D&
+  operator/=(const Point4D& other);
   /**
    * @brief
    * Makes the original vector equal to the itself module by the other.
@@ -1434,8 +1423,8 @@ class EE_UTILITY_EXPORT Vector4u
    * @return
    * The original vector after the operation.
    */
-  Vector4u&
-  operator%=(const Vector4u& other);
+  Point4D&
+  operator%=(const Point4D& other);
   /**
    * @brief
    * Makes the original vector equal to the itself plus a number.
@@ -1450,7 +1439,7 @@ class EE_UTILITY_EXPORT Vector4u
    * @return
    * The original vector after the operation.
    */
-  Vector4u&
+  Point4D&
   operator+=(uint32 other);
   /**
    * @brief
@@ -1466,7 +1455,7 @@ class EE_UTILITY_EXPORT Vector4u
    * @return
    * The original vector after the operation.
    */
-  Vector4u&
+  Point4D&
   operator-=(uint32 other);
   /**
    * @brief
@@ -1482,7 +1471,7 @@ class EE_UTILITY_EXPORT Vector4u
    * @return
    * The original vector after the operation.
    */
-  Vector4u&
+  Point4D&
   operator*=(uint32 other);
   /**
    * @brief
@@ -1498,7 +1487,7 @@ class EE_UTILITY_EXPORT Vector4u
    * @return
    * The original vector after the operation.
    */
-  Vector4u&
+  Point4D&
   operator/=(uint32 other);
   /**
    * @brief
@@ -1514,7 +1503,7 @@ class EE_UTILITY_EXPORT Vector4u
    * @return
    * The original vector after the operation.
    */
-  Vector4u&
+  Point4D&
   operator%=(uint32 other);
 
   /**
@@ -1532,7 +1521,7 @@ class EE_UTILITY_EXPORT Vector4u
    * True if they are equal.
    */
   bool
-  operator==(const Vector4u& other) const;
+  operator==(const Point4D& other) const;
   /**
    * @brief
    * Compares the two vectors to see if they are not equal.
@@ -1548,7 +1537,7 @@ class EE_UTILITY_EXPORT Vector4u
    * True if they are not equal.
    */
   bool
-  operator!=(const Vector4u& other) const;
+  operator!=(const Point4D& other) const;
 
  public:
   /**
@@ -1586,7 +1575,7 @@ class EE_UTILITY_EXPORT Vector4u
   /*
    * A vector with 0u on its components
    */
-  static const Vector4u kZERO;
+  static const Point4D kZERO;
 };
 }
 

@@ -14,6 +14,13 @@
 #include "eePrerequisitesCore.h"
 
 namespace eeEngineSDK{
+namespace RENDER_ACTOR_FLAGS {
+enum E : uint8{
+  kNone = 0,
+  kStaticMesh = 1,
+  kSkeletalMesh = 2
+};
+}
 /**
  * @brief
  * The scene, contains the actors graph.
@@ -42,12 +49,35 @@ class EE_CORE_EXPORT Scene
    *
    * @param camera
    * The camera to check the frustum.
+   * @param flags
+   * Flags for the type of actor needed.
    *
    * @return
    * All actors inside.
    */
   Vector<SPtr<Actor>>
-  getAllRenderableActorsInside(SPtr<CCamera> camera);
+  getAllRenderableActorsInside(SPtr<CCamera> camera,
+                               RENDER_ACTOR_FLAGS::E flags);
+  /**
+   * @brief
+   * Gets all actors of the scene inside the camera.
+   *
+   * @description
+   * Gets all actors of the scene that are inside the frustum of the camera and
+   * have a model and a render component.
+   *
+   * @param camera
+   * The camera to check the frustum.
+   * @param flags
+   * Flags for the type of actor needed.
+   * @param outRenderActors
+   * The actors that can be rendered.
+   */
+  void
+  getAllRenderableActorsInsideHelper(SPtr<CCamera> camera,
+                                     Vector<SPtr<Actor>> actors,
+                                     RENDER_ACTOR_FLAGS::E flags,
+                                     Vector<SPtr<Actor>>& outRenderActors);
 
   /**
    * @brief
@@ -80,6 +110,24 @@ class EE_CORE_EXPORT Scene
    */
   SPtr<Actor>
   getActor(String name);
+  
+  /**
+   * @brief
+   * Sets an actor child.
+   *
+   * @description
+   * Sets an actor to be the child of another.
+   *
+   * @param parentName
+   * The name of the parent actor.
+   * @param childName
+   * The name of the child actor.
+   *
+   * @return
+   * True if it could do it.
+   */
+  bool
+  setActorChild(String parentName, String childName);
 
   /**
    * @brief
@@ -175,6 +223,23 @@ class EE_CORE_EXPORT Scene
   getAllActors()
   {
     return m_actors;
+  }
+  /**
+   * @brief
+   * Gets all the actors.
+   *
+   * @description
+   * Returns an vector of all the actors, with out its names.
+   *
+   * @return
+   * All actors.
+   */
+  void
+  getAllActorsVector(Vector<SPtr<Actor>>& acts)
+  {
+    for (auto& act : m_actors) {
+      acts.emplace_back(act.second);
+    }
   }
 
  private:

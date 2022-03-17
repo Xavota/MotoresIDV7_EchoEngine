@@ -29,7 +29,7 @@ class EE_UTILITY_EXPORT Vector2f
    * @brief
    * The default constructor.
    */
-  Vector2f();
+  Vector2f() = default;
   /**
    * @brief
    * Initializes the vector with the values given.
@@ -43,7 +43,8 @@ class EE_UTILITY_EXPORT Vector2f
    * @param _y
    * The initial y for the vector.
    */
-  Vector2f(float _x, float _y);
+  FORCEINLINE explicit
+  Vector2f(float _x, float _y) : x(_x), y(_y) {}
   /**
    * @brief
    * Frees the memory allocated on the vector.
@@ -52,7 +53,7 @@ class EE_UTILITY_EXPORT Vector2f
    * Releases and deletes all the possible memory
    * allocated in the vector.
    */
-  ~Vector2f();
+  ~Vector2f() = default;
 
   /**
    * @brief
@@ -664,7 +665,7 @@ class EE_UTILITY_EXPORT Vector2i
    * @brief
    * The default constructor.
    */
-  Vector2i();
+  Vector2i() = default;
   /**
    * @brief
    * Initializes the vector with the values given.
@@ -678,7 +679,8 @@ class EE_UTILITY_EXPORT Vector2i
    * @param _y
    * The initial y for the vector.
    */
-  Vector2i(int32 _x, int32 _y);
+  FORCEINLINE explicit
+  Vector2i(int32 _x, int32 _y) : x(_x), y(_y) {}
   /**
    * @brief
    * Frees the memory allocated on the vector.
@@ -687,7 +689,7 @@ class EE_UTILITY_EXPORT Vector2i
    * Releases and deletes all the possible memory
    * allocated in the vector.
    */
-  ~Vector2i();
+  ~Vector2i() = default;
      
   /**
    * @brief
@@ -1155,14 +1157,14 @@ class EE_UTILITY_EXPORT Vector2i
  * Two dimensional vector made by uint32.
  * It can be used as a point or as a direction.
  */
-class EE_UTILITY_EXPORT Vector2u
+class EE_UTILITY_EXPORT Point2D
 {
  public:
   /**
    * @brief
    * The default constructor.
    */
-  Vector2u();
+  Point2D() = default;
   /**
    * @brief
    * Initializes the vector with the values given.
@@ -1176,7 +1178,8 @@ class EE_UTILITY_EXPORT Vector2u
    * @param _y
    * The initial y for the vector.
    */
-  Vector2u(uint32 _x, uint32 _y);
+  FORCEINLINE explicit
+  Point2D(uint32 _x, uint32 _y) : x(_x), y(_y) {}
   /**
    * @brief
    * Frees the memory allocated on the vector.
@@ -1185,7 +1188,7 @@ class EE_UTILITY_EXPORT Vector2u
    * Releases and deletes all the possible memory
    * allocated in the vector.
    */
-  ~Vector2u();
+  ~Point2D() = default;
 
   /**
    * @brief
@@ -1202,7 +1205,7 @@ class EE_UTILITY_EXPORT Vector2u
    * The result of the dot product of the two vectors.
    */
   float
-  dot(const Vector2u& other) const;
+  dot(const Point2D& other) const;
 
   /**
    * @brief
@@ -1219,7 +1222,7 @@ class EE_UTILITY_EXPORT Vector2u
    * The distance between the point and the other point.
    */
   float
-  getDistance(const Vector2u& other) const;
+  getDistance(const Point2D& other) const;
   /**
    * @brief
    * The length of the vector.
@@ -1247,8 +1250,8 @@ class EE_UTILITY_EXPORT Vector2u
    * @return
    * The sum of the two vectors.
    */
-  Vector2u
-  operator+(const Vector2u& other) const;
+  Point2D
+  operator+(const Point2D& other) const;
   /**
    * @brief
    * The subtraction of two vectors.
@@ -1263,8 +1266,8 @@ class EE_UTILITY_EXPORT Vector2u
    * @return
    * The subtraction of the two vectors.
    */
-  Vector2u
-  operator-(const Vector2u& other) const;
+  Point2D
+  operator-(const Point2D& other) const;
   /**
    * @brief
    * The multiplication of two vectors.
@@ -1279,8 +1282,8 @@ class EE_UTILITY_EXPORT Vector2u
    * @return
    * The multiplication of the two vectors.
    */
-  Vector2u
-  operator*(const Vector2u& other) const;
+  Point2D
+  operator*(const Point2D& other) const;
   /**
    * @brief
    * The quotient of two vectors.
@@ -1295,8 +1298,8 @@ class EE_UTILITY_EXPORT Vector2u
    * @return
    * The quotient of the original vector divided by the other vector.
    */
-  Vector2u
-  operator/(const Vector2u& other) const;
+  Point2D
+  operator/(const Point2D& other) const;
   /**
    * @brief
    * The residue of the division of two vectors.
@@ -1311,8 +1314,8 @@ class EE_UTILITY_EXPORT Vector2u
    * @return
    * The residue of the original vector divided by the other vector.
    */
-  Vector2u
-  operator%(const Vector2u& other) const;
+  Point2D
+  operator%(const Point2D& other) const;
   /**
    * @brief The sum of the vector plus a number.
    *
@@ -1325,7 +1328,7 @@ class EE_UTILITY_EXPORT Vector2u
    * @return
    * The sum of the vector plus the number.
    */
-  Vector2u
+  Point2D
   operator+(uint32 other) const;
   /**
    * @brief
@@ -1341,7 +1344,7 @@ class EE_UTILITY_EXPORT Vector2u
    * @return
    * The subtraction of the vector minus the number.
    */
-  Vector2u
+  Point2D
   operator-(uint32 other) const;
   /**
    * @brief
@@ -1357,7 +1360,7 @@ class EE_UTILITY_EXPORT Vector2u
    * @return
    * The multiplication of the vector times the number.
    */
-  Vector2u
+  Point2D
   operator*(uint32 other) const;
   /**
    * @brief
@@ -1373,7 +1376,7 @@ class EE_UTILITY_EXPORT Vector2u
    * @return
    * The quotient of the vector divided by the number.
    */
-  Vector2u
+  Point2D
   operator/(uint32 other) const;
   /**
    * @brief
@@ -1389,7 +1392,7 @@ class EE_UTILITY_EXPORT Vector2u
    * @return
    * The residue of the vector divided by the number.
    */
-  Vector2u
+  Point2D
   operator%(uint32 other) const;
 
   /**
@@ -1406,8 +1409,8 @@ class EE_UTILITY_EXPORT Vector2u
    * @return
    * The original vector after the operation.
    */
-  Vector2u&
-  operator=(const Vector2u& other);
+  Point2D&
+  operator=(const Point2D& other);
 
   /**
    * @brief
@@ -1423,8 +1426,8 @@ class EE_UTILITY_EXPORT Vector2u
    * @return
    * The original vector after the operation.
    */
-  Vector2u&
-  operator+=(const Vector2u& other);
+  Point2D&
+  operator+=(const Point2D& other);
   /**
    * @brief
    * Makes the original vector equal to the itself minus the other.
@@ -1439,8 +1442,8 @@ class EE_UTILITY_EXPORT Vector2u
    * @return
    * The original vector after the operation.
    */
-  Vector2u&
-  operator-=(const Vector2u& other);
+  Point2D&
+  operator-=(const Point2D& other);
   /**
    * @brief
    * Makes the original vector equal to the itself times the other.
@@ -1455,8 +1458,8 @@ class EE_UTILITY_EXPORT Vector2u
    * @return
    * The original vector after the operation.
    */
-  Vector2u&
-  operator*=(const Vector2u& other);
+  Point2D&
+  operator*=(const Point2D& other);
   /**
    * @brief
    * Makes the original vector equal to the itself divided by the other.
@@ -1471,8 +1474,8 @@ class EE_UTILITY_EXPORT Vector2u
    * @return
    * The original vector after the operation.
    */
-  Vector2u&
-  operator/=(const Vector2u& other);
+  Point2D&
+  operator/=(const Point2D& other);
   /**
    * @brief
    * Makes the original vector equal to the itself module by the other.
@@ -1487,8 +1490,8 @@ class EE_UTILITY_EXPORT Vector2u
    * @return
    * The original vector after the operation.
    */
-  Vector2u&
-  operator%=(const Vector2u& other);
+  Point2D&
+  operator%=(const Point2D& other);
   /**
    * @brief
    * Makes the original vector equal to the itself plus a number.
@@ -1503,7 +1506,7 @@ class EE_UTILITY_EXPORT Vector2u
    * @return
    * The original vector after the operation.
    */
-  Vector2u&
+  Point2D&
   operator+=(uint32 other);
   /**
    * @brief
@@ -1519,7 +1522,7 @@ class EE_UTILITY_EXPORT Vector2u
    * @return
    * The original vector after the operation.
    */
-  Vector2u&
+  Point2D&
   operator-=(uint32 other);
   /**
    * @brief
@@ -1535,7 +1538,7 @@ class EE_UTILITY_EXPORT Vector2u
    * @return
    * The original vector after the operation.
    */
-  Vector2u&
+  Point2D&
   operator*=(uint32 other);
   /**
    * @brief
@@ -1551,7 +1554,7 @@ class EE_UTILITY_EXPORT Vector2u
    * @return
    * The original vector after the operation.
    */
-  Vector2u&
+  Point2D&
   operator/=(uint32 other);
   /**
    * @brief
@@ -1567,7 +1570,7 @@ class EE_UTILITY_EXPORT Vector2u
    * @return
    * The original vector after the operation.
    */
-  Vector2u&
+  Point2D&
   operator%=(uint32 other);
 
   /**
@@ -1585,7 +1588,7 @@ class EE_UTILITY_EXPORT Vector2u
    * True if they are equal.
    */
   bool
-  operator==(const Vector2u& other) const;
+  operator==(const Point2D& other) const;
   /**
    * @brief
    * Compares the two vectors to see if they are not equal.
@@ -1601,7 +1604,7 @@ class EE_UTILITY_EXPORT Vector2u
    * True if they are not equal.
    */
   bool
-  operator!=(const Vector2u& other) const;
+  operator!=(const Point2D& other) const;
   /**
    * @brief
    * Compares the length of the vector to see if it's greater than the other.
@@ -1645,6 +1648,6 @@ class EE_UTILITY_EXPORT Vector2u
   /*
    * A vector with 0u on its components
    */
-  static const Vector2u kZERO;
+  static const Point2D kZERO;
 };
 }

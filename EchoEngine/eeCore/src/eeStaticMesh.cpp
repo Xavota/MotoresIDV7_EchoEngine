@@ -12,6 +12,8 @@
 #include <eeQuaternion.h>
 #include <eeMath.h>
 
+#include <eeVertex.h>
+
 #include "eeResourceManager.h"
 #include "eeSkeletalMesh.h"
 #include "eeSkeletal.h"
@@ -377,5 +379,7 @@ StaticMesh/*<V, I>*/::initPrimitives()
     Vector3f(0.5f, 0.5f, 0.5f),
     Vector3f(-0.5f, -0.5f, -0.5f)
   );
+
+  Mesh::initPrimitives();
 }
 }

@@ -133,7 +133,7 @@ class EE_CORE_EXPORT Actor : public EnableSPtrFromThis<Actor>
    * The new parent actor, nullptr if no parent.
    */
   void
-  attachTo(SPtr<Actor> parent);
+  attachTo(SPtr<Actor> pParent);
   /**
    * @brief
    * Gets the parent.
@@ -147,7 +147,7 @@ class EE_CORE_EXPORT Actor : public EnableSPtrFromThis<Actor>
   SPtr<Actor>
   getParent()
   {
-    return m_parent;
+    return m_pParent;
   }
 
   /**
@@ -177,7 +177,7 @@ class EE_CORE_EXPORT Actor : public EnableSPtrFromThis<Actor>
   Vector<SPtr<Actor>>
   getChildren()
   {
-    return m_childs;
+    return m_pChilds;
   }
   
   /**
@@ -200,17 +200,17 @@ class EE_CORE_EXPORT Actor : public EnableSPtrFromThis<Actor>
   /**
    * The list of components.
    */
-  Vector<SPtr<Component>> m_components;
+  Vector<SPtr<Component>> m_pComponents;
 
   /**
    * The list of child actors.
    */
-  Vector<SPtr<Actor>> m_childs;
+  Vector<SPtr<Actor>> m_pChilds;
 
   /**
    * A parent actor, if it is.
    */
-  SPtr<Actor> m_parent = nullptr;
+  SPtr<Actor> m_pParent = nullptr;
 
   /**
    * If the actor is active or not.
@@ -233,17 +233,17 @@ Actor::addComponent()
     Logger::instance().ConsoleLog("CANNOT ADD A TRANSFORM COMPONENT");
     return;
   }
-  SIZE_T cmpIndex = m_components.size();
-  m_components.push_back(MemoryManager::instance().newPtr<T>());
-  m_components[cmpIndex]->init(shared_from_this());
+  SIZE_T cmpIndex = m_pComponents.size();
+  m_pComponents.push_back(MemoryManager::instance().newPtr<T>());
+  m_pComponents[cmpIndex]->init(shared_from_this());
 }
 template<typename T>
 inline SPtr<T> Actor::getComponent()
 {
-  SIZE_T compCount = m_components.size();
+  SIZE_T compCount = m_pComponents.size();
   for (uint32 i = 0; i != compCount; ++i) {
-    if (m_components[i]->getType() == T::CmpType) {
-      return MemoryManager::instance().reinterpretPtr<T>(m_components[i]);
+    if (m_pComponents[i]->getType() == T::CmpType) {
+      return MemoryManager::instance().reinterpretPtr<T>(m_pComponents[i]);
     }
   }
   return nullptr;

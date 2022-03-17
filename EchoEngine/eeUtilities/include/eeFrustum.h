@@ -132,6 +132,22 @@ class EE_UTILITY_EXPORT Frustum
   bool
   isBoxInside(const BoxAAB& box);
 
+  /**
+   * @brief
+   * Checks if the point is in the frustum.
+   *
+   * @description
+   * Checks if the point is inside the frustum.
+   *
+   * @param point
+   * The point to check.
+   *
+   * @return
+   * If the point is inside the frustum.
+   */
+  bool
+  isPointIn(const Vector3f point);
+
  private:
   /**
    * The near plane for the frustum.

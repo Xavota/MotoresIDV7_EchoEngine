@@ -7,15 +7,15 @@ Actor::init(String name)
 {
   m_name = name;
   if (!getTransform()) {
-    SIZE_T cmpIndex = m_components.size();
-    m_components.push_back(MemoryManager::instance().newPtr<CTransform>());
-    m_components[cmpIndex]->init(shared_from_this());
+    SIZE_T cmpIndex = m_pComponents.size();
+    m_pComponents.push_back(MemoryManager::instance().newPtr<CTransform>());
+    m_pComponents[cmpIndex]->init(shared_from_this());
   }
 }
 void
 Actor::update()
 {
-  for (auto& cmp : m_components) {
+  for (auto& cmp : m_pComponents) {
     if (cmp->getActive())
       cmp->update();
   }
@@ -23,8 +23,8 @@ Actor::update()
 void
 Actor::destroy()
 {
-  m_components.clear();
-  m_childs.clear();
+  m_pComponents.clear();
+  m_pChilds.clear();
 }
 bool
 Actor::isActive()
@@ -37,25 +37,25 @@ Actor::setActive(bool active)
   m_active = active;
 }
 void
-Actor::attachTo(SPtr<Actor> parent)
+Actor::attachTo(SPtr<Actor> pParent)
 {
-  if (m_parent) {
-    SIZE_T childsSize = m_parent->m_childs.size();
+  if (m_pParent) {
+    SIZE_T childsSize = m_pParent->m_pChilds.size();
     for (SIZE_T i = 0; i < childsSize; ++i) {
-      if (m_parent->m_childs[i]->m_name == m_name) {
-        m_parent->m_childs.erase(m_parent->m_childs.begin() + i);
+      if (m_pParent->m_pChilds[i]->m_name == m_name) {
+        m_pParent->m_pChilds.erase(m_pParent->m_pChilds.begin() + i);
         break;
       }
     }
   }
 
-  m_parent = parent;
-  EE_NO_EXIST_RETURN(m_parent);
+  m_pParent = pParent;
+  EE_NO_EXIST_RETURN(m_pParent);
 
-  m_parent->m_childs.push_back(shared_from_this());
+  m_pParent->m_pChilds.push_back(shared_from_this());
 
-  if (m_parent->getTransform() && getTransform()) {
-    getTransform()->attatchTo(m_parent->getTransform());
+  if (m_pParent->getTransform() && getTransform()) {
+    getTransform()->attatchTo(m_pParent->getTransform());
   }
 }
 SPtr<CTransform>

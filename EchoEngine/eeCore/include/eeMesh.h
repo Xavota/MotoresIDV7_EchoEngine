@@ -15,7 +15,7 @@
 
 #include <eeLogger.h>
 
-#include "eeVertex.h"
+#include <eeTriangle.h>
 #include "eeVertexBuffer.h"
 #include "eeIndexBuffer.h"
 #include "eeGraficsApi.h"
@@ -39,6 +39,21 @@ class EE_CORE_EXPORT Mesh
    * Copy constructor
    */
   Mesh(const Mesh& other);
+  /**
+   * @brief
+   * Initializes the mesh.
+   *
+   * @description
+   * Initializes the mesh from an array of vertex and index.
+   *
+   * @param vertices
+   * The vertex data.
+   * @param indices
+   * The index data.
+   */
+  template<typename V, typename I>
+  Mesh(const Vector<V>& vertices,
+       const Vector<I>& indices);
   /**
    * @brief
    * Default destructor
@@ -75,7 +90,7 @@ class EE_CORE_EXPORT Mesh
    * api specializations.
    */
   virtual void
-  set();
+  set() const;
 
   /**
    * @brief
@@ -118,6 +133,71 @@ class EE_CORE_EXPORT Mesh
     return m_indexCount;
   }
 
+  /**
+   * @brief
+   * Initializes the primitive models.
+   *
+   * @description
+   * Initializes the primitive pre-charged models.
+   */
+  static void
+  initPrimitives();
+  
+  /**
+   * @brief
+   * Creates a sphere primitive.
+   *
+   * @description
+   * Creates a sphere primitive mesh, divided in parts in vertical and
+   * horizontal axis.
+   * 
+   * @param verticalParts
+   * The number of parts in the vertical axis.
+   * @param horizontalParts
+   * The number of parts in the horizontal axis.
+   * @param outMesh
+   * The output mesh.
+   * 
+   * @return
+   * Returns a sphere mesh.
+   */
+  static bool
+  getSpherePrimitive(float radius,
+                     uint32 verticalParts,
+                     uint32 horizontalParts,
+                     Mesh& outMesh);
+
+
+  
+  /**
+   * A pre-charged cube model
+   */
+  static Mesh cube;
+  /**
+   * A pre-charged tetrahedron model
+   */
+  static Mesh tetrahedron;
+  /**
+   * A pre-charged cone model
+   */
+  static Mesh cone;
+  /**
+   * A pre-charged cylinder model
+   */
+  static Mesh cylinder;
+  /**
+   * A pre-charged sphere model
+   */
+  static Mesh sphere;
+  /**
+   * A pre-charged capsule model
+   */
+  static Mesh capsule;
+  /**
+   * A pre-charged SAQ model
+   */
+  static Mesh SAQ;
+
  protected:
   /**
    * The vertex buffer stored.
@@ -142,6 +222,12 @@ class EE_CORE_EXPORT Mesh
    */
   SIZE_T m_indexCount = 0;
 };
+
+template<typename V, typename I>
+inline Mesh::Mesh(const Vector<V>& vertices, const Vector<I>& indices)
+{
+  loadFromArray(vertices, indices);
+}
 
 template<typename V, typename I>
 bool 

@@ -19,49 +19,47 @@ namespace eeEngineSDK {
 Animation::Animation(float ticksPerSecond,
                      float duration,
                      const Vector<AnimNode>& channels,
-                     SPtr<Node> rootNode,
+                     SPtr<Node> pRootNode,
                      const String& name)
 {
-  loadFromData(ticksPerSecond , duration, channels, rootNode, name);
+  loadFromData(ticksPerSecond , duration, channels, pRootNode, name);
 }
 bool
 Animation::loadFromData(float ticksPerSecond,
                         float duration,
                         const Vector<AnimNode>& channels,
-                        SPtr<Node> rootNode,
+                        SPtr<Node> pRootNode,
                         const String& name)
 {
   m_ticksPerSecond = ticksPerSecond;
   m_duration = duration;
   m_channels = channels;
   m_channelsCount = m_channels.size();
-  m_rootNode = rootNode;
+  m_pRootNode = pRootNode;
   m_name = name;
 
   return true;
 }
 void
 Animation::boneTransform(SIZE_T meshIndex,
-                         SPtr<Skeletal> skMesh,
+                         SPtr<Skeletal> pSkMesh,
                          float time)
 {
-  Matrix4f Identity;
-
   float TimeInTicks = time * m_ticksPerSecond;
   float AnimationTime = Math::fmod(TimeInTicks, m_duration);
 
   readNodeHeirarchy(AnimationTime,
-                    m_rootNode,
+                    m_pRootNode,
                     Matrix4f::kIDENTITY,
                     meshIndex,
-                    skMesh);
+                    pSkMesh);
 }
 void
 Animation::readNodeHeirarchy(float animationTime,
                              const SPtr<Node> pNode,
                              const Matrix4f& parentTransform,
                              SIZE_T meshIndex,
-                             SPtr<Skeletal> skMesh)
+                             SPtr<Skeletal> pSkMesh)
 {
 
   String NodeName(pNode->m_name);
@@ -96,10 +94,10 @@ Animation::readNodeHeirarchy(float animationTime,
 
   Matrix4f GlobalTransformation = parentTransform * NodeTransformation;
 
-  Vector<Vector<Bone>>& bonesPerMesh = skMesh->getBonesData();
-  Vector<Map<String, uint32>>& boneMappings = skMesh->getBoneMapping();
+  Vector<Vector<Bone>>& bonesPerMesh = pSkMesh->getBonesData();
+  Vector<Map<String, uint32>>& boneMappings = pSkMesh->getBoneMapping();
   const Vector<Matrix4f>& globalInverseTransforms =
-                                           skMesh->getGlobalInverseTransforms();
+                                           pSkMesh->getGlobalInverseTransforms();
 
   if (boneMappings[meshIndex].find(NodeName) != boneMappings[meshIndex].end()) {
     uint32 BoneIndex = boneMappings[meshIndex][NodeName];
@@ -111,10 +109,10 @@ Animation::readNodeHeirarchy(float animationTime,
 
   for (uint32 i = 0; i < pNode->m_childrenCount; ++i) {
     readNodeHeirarchy(animationTime,
-                      pNode->m_children[i],
+                      pNode->m_pChildren[i],
                       GlobalTransformation,
                       meshIndex,
-                      skMesh);
+                      pSkMesh);
   }
 }
 bool

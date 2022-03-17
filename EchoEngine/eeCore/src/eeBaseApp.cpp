@@ -127,6 +127,9 @@ BaseApp::render()
   onRender();
 
   auto& graphicsApi = GraphicsApi::instance();
+  graphicsApi.present(0u, 0u);
+
+
   graphicsApi.clearRenderFrameActors();
   graphicsApi.clearActiveCameras();
 }

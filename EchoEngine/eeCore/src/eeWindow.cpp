@@ -25,7 +25,8 @@ Window::initRenders()
   m_rtv->createAsBackBuffer();
 
   m_dsv = graphicsApi.createTexturePtr();
-  m_dsv->create2D(eTEXTURE_BIND_FLAGS::kDepthStencil, { m_width, m_height });
+  m_dsv->create2D(eTEXTURE_BIND_FLAGS::kDepthStencil,
+                  Point2D{ m_width, m_height });
 
   return true;
 }
@@ -35,7 +36,7 @@ Window::resize(uint32 width, uint32 height)
   MemoryManager::instance().safeRelease<Texture>(m_rtv);
   m_rtv->createAsBackBuffer();
   MemoryManager::instance().safeRelease<Texture>(m_dsv);
-  m_dsv->create2D(eTEXTURE_BIND_FLAGS::kDepthStencil, { width, height });
+  m_dsv->create2D(eTEXTURE_BIND_FLAGS::kDepthStencil, Point2D{ width, height });
 
   return true;
 }

@@ -19,7 +19,7 @@ namespace eeEngineSDK {
  * @brief
  * The vertex shader for the graphic memory.
  */
-class DX11VertexShader : public VertexShader
+class EE_PLUGINDX11_EXPORT DX11VertexShader : public VertexShader
 {
  public:
   /**

@@ -18,7 +18,7 @@ DX11SamplerState::create(SamplerStateDesc desc)
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   D3D11_SAMPLER_DESC sampDesc;
-  ZeroMemory(&sampDesc, sizeof(sampDesc));
+  memset(&sampDesc, 0, sizeof(sampDesc));
   sampDesc.Filter = static_cast<D3D11_FILTER>(desc.filter);
   sampDesc.AddressU = static_cast<D3D11_TEXTURE_ADDRESS_MODE>(desc.addressU);
   sampDesc.AddressV = static_cast<D3D11_TEXTURE_ADDRESS_MODE>(desc.addressV);

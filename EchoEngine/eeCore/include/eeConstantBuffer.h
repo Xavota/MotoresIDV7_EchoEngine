@@ -18,7 +18,7 @@ namespace eeEngineSDK {
  * @brief
  * A buffer for passing any information to the graphics memory.
  */
-class ConstantBuffer : public Buffer
+class EE_CORE_EXPORT ConstantBuffer : public Buffer
 {
  public:
   /**

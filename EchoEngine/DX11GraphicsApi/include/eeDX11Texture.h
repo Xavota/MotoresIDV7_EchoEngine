@@ -44,7 +44,7 @@ public:
    * The number of mip levels it will create.
    */
   DX11Texture(uint32 bindFlags,
-              const Vector2u& texSize,
+              const Point2D& texSize,
               uint32 mipLevels = 0u);
   /**
    * @brief
@@ -71,7 +71,7 @@ public:
    */
   bool
   create2D(uint32 bindFlags,
-           const Vector2u& texSize,
+           const Point2D& texSize,
            uint32 mipLevels = 0u) override;
 
            

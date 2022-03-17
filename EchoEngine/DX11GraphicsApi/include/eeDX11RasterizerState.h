@@ -19,7 +19,7 @@ namespace eeEngineSDK{
  * @brief
  * Rasterizer state, to describe how to interpret pixels.
  */
-class DX11RasterizerState : public RasterizerState
+class EE_PLUGINDX11_EXPORT DX11RasterizerState : public RasterizerState
 {
  public:
   /**

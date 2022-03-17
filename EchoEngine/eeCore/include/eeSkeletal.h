@@ -49,7 +49,7 @@ struct Bone
  * @brief
  * The skeleton info for the skeletal mesh.
  */
-class Skeletal
+class EE_CORE_EXPORT Skeletal
 {
  public:
   /**

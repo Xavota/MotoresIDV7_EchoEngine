@@ -13,6 +13,13 @@
 #include "eePrerequisitesCore.h"
 
 namespace eeEngineSDK {
+namespace TEXTURE_TYPE_INDEX {
+enum E : uint8 {
+  kDiffuse,
+  kNormal
+};
+}
+
 /**
  * @brief
  * The material class. Holds various textures of different kinds.
@@ -24,21 +31,18 @@ class EE_CORE_EXPORT Material
    * @brief
    * Default constructor
    */
-  Material();
+  Material() = default;
   /**
    * @brief
    * Load all textures.
-   * 
+   *
    * @description
-   * Loads all textures of the Material. Sets them to the default if nullptr.
-   * 
-   * @param diffuse
-   * The color map.
-   * @param normalMap
-   * The normal map
+   * Loads all textures of the Material.
+   *
+   * @param texturesMap
+   * The map of textures and its indices to be set on.
    */
-  Material(SPtr<Texture> diffuse,
-           SPtr<Texture> normalMap = nullptr);
+  Material(const Map<uint32, SPtr<Texture>>& texturesMap);
   /**
    * @brief
    * Copy constructor
@@ -51,24 +55,45 @@ class EE_CORE_EXPORT Material
    * Load all textures.
    * 
    * @description
-   * Loads all textures of the Material. Sets them to the default if nullptr.
+   * Loads all textures of the Material.
    * 
-   * @param diffuse
-   * The color map.
-   * @param normalMap
-   * The normal map
+   * @param texturesMap
+   * The map of textures and its indices to be set on.
    */
   void
-  createMaterial(SPtr<Texture> diffuse = nullptr,
-                 SPtr<Texture> normalMap = nullptr);
+  createMaterial(const Map<uint32, SPtr<Texture>>& texturesMap);
+  
+  /**
+   * @brief
+   * Sets a texture.
+   * 
+   * @description
+   * Sets a texture in the material on the given index.
+   * 
+   * @param texture
+   * The texture to set.
+   * @param index
+   * The index to set it on.
+   */
+  void
+  setTexture(SPtr<Texture> texture, uint32 index);
+  
+  /**
+   * @brief
+   * Getter of the textures map.
+   * 
+   * @description
+   * Returns the textures map where they are stored.
+   * 
+   * @return
+   * The textures map where they are stored.
+   */
+  FORCEINLINE const Map<uint32, SPtr<Texture>>&
+  getTexturesMap() { return m_texturesMap; }
 
   /**
-   * The color texture.
+   * The textures stored.
    */
-  SPtr<Texture> m_diffuse = nullptr;
-  /**
-   * The normal texture.
-   */
-  SPtr<Texture> m_normalMap = nullptr;
+  Map<uint32, SPtr<Texture>> m_texturesMap;
 };
 }

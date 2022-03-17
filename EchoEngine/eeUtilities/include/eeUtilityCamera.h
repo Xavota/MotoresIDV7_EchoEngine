@@ -46,7 +46,7 @@ struct CameraDesc
   /**
    * The screen size.
    */
-  Vector2f viewSize = { 0.0f, 0.0f };
+  Vector2f viewSize = Vector2f{ 0.0f, 0.0f };
   /**
    * The distance to near plane.
    */
@@ -403,11 +403,11 @@ class EE_UTILITY_EXPORT UtilityCamera
   /**
    * The position of the camera.
    */
-  Vector3f m_eyePos = {0.0f, 0.0f, 0.0f};
+  Vector3f m_eyePos = Vector3f{0.0f, 0.0f, 0.0f};
   /**
    * The look at position of the camera, for calculating rotation.
    */
-  Vector3f m_lookAt = {0.0f, 0.0f, 0.0f};
+  Vector3f m_lookAt = Vector3f{0.0f, 0.0f, 0.0f};
   /**
    * The up vector of the camera, generally the up world vector.
    */
@@ -424,7 +424,7 @@ class EE_UTILITY_EXPORT UtilityCamera
   /**
    * The screen size.
    */
-  Vector2f m_viewSize = { 0.0f, 0.0f };
+  Vector2f m_viewSize = Vector2f{ 0.0f, 0.0f };
   /**
    * The distance to the near plane.
    */

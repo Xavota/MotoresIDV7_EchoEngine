@@ -45,7 +45,8 @@ class EE_UTILITY_EXPORT Vector3f
    * @param _z
    * The initial z for the vector.
    */
-  Vector3f(float _x, float _y, float _z);
+  FORCEINLINE explicit
+  Vector3f(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {}
   /**
    * @brief
    * Frees the memory allocated on the vector.
@@ -666,7 +667,7 @@ class EE_UTILITY_EXPORT Vector3i
    * @brief
    * The default constructor.
    */
-  Vector3i();
+  Vector3i() = default;
   /**
    * @brief
    * Initializes the vector with the values given.
@@ -682,7 +683,8 @@ class EE_UTILITY_EXPORT Vector3i
    * @param _z
    * The initial z for the vector.
    */
-  Vector3i(int32 _x, int32 _y, int32 _z);
+  FORCEINLINE explicit
+  Vector3i(int32 _x, int32 _y, int32 _z) : x(_x), y(_y), z(_z) {}
   /**
    * @brief
    * Frees the memory allocated on the vector.
@@ -690,7 +692,7 @@ class EE_UTILITY_EXPORT Vector3i
    * @description Releases and deletes all the possible memory
    * allocated in the vector.
    */
-  ~Vector3i();
+  ~Vector3i() = default;
 
   /**
    * @brief
@@ -1190,14 +1192,14 @@ class EE_UTILITY_EXPORT Vector3i
  * Three dimensional vector made by uint32.
  * It can be used as a point or as a direction.
  */
-class EE_UTILITY_EXPORT Vector3u
+class EE_UTILITY_EXPORT Point3D
 {
  public:
   /**
    * @brief
    * The default constructor.
    */
-  Vector3u();
+  Point3D() = default;
   /**
    * @brief
    * Initializes the vector with the values given.
@@ -1213,7 +1215,8 @@ class EE_UTILITY_EXPORT Vector3u
    * @param _z
    * The initial z for the vector.
    */
-  Vector3u(uint32 _x, uint32 _y, uint32 _z);
+  FORCEINLINE explicit
+  Point3D(uint32 _x, uint32 _y, uint32 _z) : x(_x), y(_y), z(_z) {}
   /**
    * @brief
    * Frees the memory allocated on the vector.
@@ -1221,40 +1224,7 @@ class EE_UTILITY_EXPORT Vector3u
    * @description Releases and deletes all the possible memory
    * allocated in the vector.
    */
-  ~Vector3u();
-
-  /**
-   * @brief
-   * The dot product of two vectors.
-   *
-   * @description
-   * Returns the result of the dot product between the
-   * current vector and the one pass to the function.
-   *
-   * @param other
-   * The other vector for the dot product.
-   *
-   * @return
-   * The result of the dot product of the two vectors.
-   */
-  float
-  dot(const Vector3u& other) const;
-  /**
-   * @brief
-   * The cross product of two vectors.
-   *
-   * @description
-   * Returns a vector perpendicular to the 2 vectors
-   * given
-   *
-   * @param other
-   * The other vector for the cross product.
-   *
-   * @return
-   * The result of the cross product of the two vectors.
-   */
-  Vector3f
-  cross(const Vector3u& other) const;
+  ~Point3D() = default;
 
   /**
    * @brief
@@ -1271,7 +1241,7 @@ class EE_UTILITY_EXPORT Vector3u
    * The distance between the point and the other point.
    */
   float
-  getDistance(const Vector3u& other) const;
+  getDistance(const Point3D& other) const;
   /**
    * @brief
    * The length of the vector.
@@ -1299,8 +1269,8 @@ class EE_UTILITY_EXPORT Vector3u
    * @return
    * The sum of the two vectors.
    */
-  Vector3u
-  operator+(const Vector3u& other) const;
+  Point3D
+  operator+(const Point3D& other) const;
   /**
    * @brief
    * The subtraction of two vectors.
@@ -1315,8 +1285,8 @@ class EE_UTILITY_EXPORT Vector3u
    * @return
    * The subtraction of the two vectors.
    */
-  Vector3u
-  operator-(const Vector3u& other) const;
+  Point3D
+  operator-(const Point3D& other) const;
   /**
    * @brief
    * The multiplication of two vectors.
@@ -1331,8 +1301,8 @@ class EE_UTILITY_EXPORT Vector3u
    * @return
    * The multiplication of the two vectors.
    */
-  Vector3u
-  operator*(const Vector3u& other) const;
+  Point3D
+  operator*(const Point3D& other) const;
   /**
    * @brief
    * The quotient of two vectors.
@@ -1347,8 +1317,8 @@ class EE_UTILITY_EXPORT Vector3u
    * @return
    * The quotient of the original vector divided by the other vector.
    */
-  Vector3u
-  operator/(const Vector3u& other) const;
+  Point3D
+  operator/(const Point3D& other) const;
   /**
    * @brief
    * The residue of the division of two vectors.
@@ -1363,8 +1333,8 @@ class EE_UTILITY_EXPORT Vector3u
    * @return
    * The residue of the original vector divided by the other vector.
    */
-  Vector3u
-  operator%(const Vector3u& other) const;
+  Point3D
+  operator%(const Point3D& other) const;
   /**
    * @brief The sum of the vector plus a number.
    *
@@ -1377,7 +1347,7 @@ class EE_UTILITY_EXPORT Vector3u
    * @return
    * The sum of the vector plus the number.
    */
-  Vector3u
+  Point3D
   operator+(uint32 other) const;
   /**
    * @brief
@@ -1393,7 +1363,7 @@ class EE_UTILITY_EXPORT Vector3u
    * @return
    * The subtraction of the vector minus the number.
    */
-  Vector3u
+  Point3D
   operator-(uint32 other) const;
   /**
    * @brief
@@ -1409,7 +1379,7 @@ class EE_UTILITY_EXPORT Vector3u
    * @return
    * The multiplication of the vector times the number.
    */
-  Vector3u
+  Point3D
   operator*(uint32 other) const;
   /**
    * @brief
@@ -1425,7 +1395,7 @@ class EE_UTILITY_EXPORT Vector3u
    * @return
    * The quotient of the vector divided by the number.
    */
-  Vector3u
+  Point3D
   operator/(uint32 other) const;
   /**
    * @brief
@@ -1441,7 +1411,7 @@ class EE_UTILITY_EXPORT Vector3u
    * @return
    * The residue of the vector divided by the number.
    */
-  Vector3u
+  Point3D
   operator%(uint32 other) const;
 
   /**
@@ -1458,8 +1428,8 @@ class EE_UTILITY_EXPORT Vector3u
    * @return
    * The original vector after the operation.
    */
-  Vector3u&
-  operator=(const Vector3u& other);
+  Point3D&
+  operator=(const Point3D& other);
 
   /**
    * @brief
@@ -1475,8 +1445,8 @@ class EE_UTILITY_EXPORT Vector3u
    * @return
    * The original vector after the operation.
    */
-  Vector3u&
-  operator+=(const Vector3u& other);
+  Point3D&
+  operator+=(const Point3D& other);
   /**
    * @brief
    * Makes the original vector equal to the itself minus the other.
@@ -1491,8 +1461,8 @@ class EE_UTILITY_EXPORT Vector3u
    * @return
    * The original vector after the operation.
    */
-  Vector3u&
-  operator-=(const Vector3u& other);
+  Point3D&
+  operator-=(const Point3D& other);
   /**
    * @brief
    * Makes the original vector equal to the itself times the other.
@@ -1507,8 +1477,8 @@ class EE_UTILITY_EXPORT Vector3u
    * @return
    * The original vector after the operation.
    */
-  Vector3u&
-  operator*=(const Vector3u& other);
+  Point3D&
+  operator*=(const Point3D& other);
   /**
    * @brief
    * Makes the original vector equal to the itself divided by the other.
@@ -1523,8 +1493,8 @@ class EE_UTILITY_EXPORT Vector3u
    * @return
    * The original vector after the operation.
    */
-  Vector3u&
-  operator/=(const Vector3u& other);
+  Point3D&
+  operator/=(const Point3D& other);
   /**
    * @brief
    * Makes the original vector equal to the itself module by the other.
@@ -1539,8 +1509,8 @@ class EE_UTILITY_EXPORT Vector3u
    * @return
    * The original vector after the operation.
    */
-  Vector3u&
-  operator%=(const Vector3u& other);
+  Point3D&
+  operator%=(const Point3D& other);
   /**
    * @brief
    * Makes the original vector equal to the itself plus a number.
@@ -1555,7 +1525,7 @@ class EE_UTILITY_EXPORT Vector3u
    * @return
    * The original vector after the operation.
    */
-  Vector3u&
+  Point3D&
   operator+=(uint32 other);
   /**
    * @brief
@@ -1571,7 +1541,7 @@ class EE_UTILITY_EXPORT Vector3u
    * @return
    * The original vector after the operation.
    */
-  Vector3u&
+  Point3D&
   operator-=(uint32 other);
   /**
    * @brief
@@ -1587,7 +1557,7 @@ class EE_UTILITY_EXPORT Vector3u
    * @return
    * The original vector after the operation.
    */
-  Vector3u&
+  Point3D&
   operator*=(uint32 other);
   /**
    * @brief
@@ -1603,7 +1573,7 @@ class EE_UTILITY_EXPORT Vector3u
    * @return
    * The original vector after the operation.
    */
-  Vector3u&
+  Point3D&
   operator/=(uint32 other);
   /**
    * @brief
@@ -1619,7 +1589,7 @@ class EE_UTILITY_EXPORT Vector3u
    * @return
    * The original vector after the operation.
    */
-  Vector3u&
+  Point3D&
   operator%=(uint32 other);
 
   /**
@@ -1637,7 +1607,7 @@ class EE_UTILITY_EXPORT Vector3u
    * True if they are equal.
    */
   bool
-  operator==(const Vector3u& other) const;
+  operator==(const Point3D& other) const;
   /**
    * @brief
    * Compares the two vectors to see if they are not equal.
@@ -1653,7 +1623,7 @@ class EE_UTILITY_EXPORT Vector3u
    * True if they are not equal.
    */
   bool
-  operator!=(const Vector3u& other) const;
+  operator!=(const Point3D& other) const;
 
  public:
   /**
@@ -1687,18 +1657,18 @@ class EE_UTILITY_EXPORT Vector3u
   /*
    * A vector with 0u on its components
    */
-  static const Vector3u kZERO;
+  static const Point3D kZERO;
   /*
    * A unitary vector pointing forward
    */
-  static const Vector3u kFORWARD;
+  static const Point3D kFORWARD;
   /*
    * A unitary vector pointing right
    */
-  static const Vector3u kRIGHT;
+  static const Point3D kRIGHT;
   /*
    * A unitary vector pointing up
    */
-  static const Vector3u kUP;
+  static const Point3D kUP;
 };
 }

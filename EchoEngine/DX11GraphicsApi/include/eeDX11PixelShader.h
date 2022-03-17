@@ -19,7 +19,7 @@ namespace eeEngineSDK {
  * @brief
  * The pixel shader for the graphic memory to paint every pixel.
  */
-class DX11PixelShader : public PixelShader
+class EE_PLUGINDX11_EXPORT DX11PixelShader : public PixelShader
 {
  public:
   /**

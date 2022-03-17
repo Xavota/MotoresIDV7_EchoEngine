@@ -5,17 +5,9 @@ namespace eeEngineSDK
 {
 const Vector2f Vector2f::kZERO = Vector2f(0.0f, 0.0f);
 const Vector2i Vector2i::kZERO = Vector2i(0, 0);
-const Vector2u Vector2u::kZERO = Vector2u(0u, 0u);
+const Point2D Point2D::kZERO = Point2D(0u, 0u);
 
-Vector2f::Vector2f()
-{
-}
-Vector2f::Vector2f(float _x, float _y) : x(_x), y(_y)
-{
-}
-Vector2f::~Vector2f()
-{
-}
+
 float
 Vector2f::dot(const Vector2f& other) const
 {
@@ -219,15 +211,6 @@ Vector2f::operator!=(const Vector2f& other) const
 }
 
 
-Vector2i::Vector2i()
-{
-}
-Vector2i::Vector2i(int32 _x, int32 _y) : x(_x), y(_y)
-{
-}
-Vector2i::~Vector2i()
-{
-}
 float
 Vector2i::dot(const Vector2i& other) const
 {
@@ -381,158 +364,149 @@ Vector2i::operator!=(const Vector2i& other) const
 }
 
 
-Vector2u::Vector2u()
-{
-}
-Vector2u::Vector2u(uint32 _x, uint32 _y) : x(_x), y(_y)
-{
-}
-Vector2u::~Vector2u()
-{
-}
 float
-Vector2u::dot(const Vector2u& other) const
+Point2D::dot(const Point2D& other) const
 {
   return static_cast<float>(this->x * other.x) +
     static_cast<float>(this->y * other.y);
 }
 float
-Vector2u::getDistance(const Vector2u& other) const
+Point2D::getDistance(const Point2D& other) const
 {
-  Vector2u d = other - *this;
+  Point2D d = other - *this;
   return Math::sqrt(static_cast<float>(d.x * d.x)
                   + static_cast<float>(d.y * d.y));
 }
 float
-Vector2u::getMagnitud() const
+Point2D::getMagnitud() const
 {
   return Math::sqrt(static_cast<float>(this->x * this->x)
                   + static_cast<float>(this->y * this->y));
 }
-Vector2u
-Vector2u::operator+(const Vector2u& other) const
+Point2D
+Point2D::operator+(const Point2D& other) const
 {
-  return Vector2u(this->x + other.x, this->y + other.y);
+  return Point2D(this->x + other.x, this->y + other.y);
 }
-Vector2u
-Vector2u::operator-(const Vector2u& other) const
+Point2D
+Point2D::operator-(const Point2D & other) const
 {
-  return Vector2u(this->x - other.x, this->y - other.y);
+  return Point2D(this->x - other.x, this->y - other.y);
 }
-Vector2u
-Vector2u::operator*(const Vector2u& other) const
+Point2D
+Point2D::operator*(const Point2D & other) const
 {
-  return Vector2u(this->x * other.x, this->y * other.y);
+  return Point2D(this->x * other.x, this->y * other.y);
 }
-Vector2u
-Vector2u::operator/(const Vector2u& other) const
+Point2D
+Point2D::operator/(const Point2D & other) const
 {
-  return Vector2u(this->x / other.x, this->y / other.y);
+  return Point2D(this->x / other.x, this->y / other.y);
 }
-Vector2u
-Vector2u::operator%(const Vector2u& other) const
+Point2D
+Point2D::operator%(const Point2D & other) const
 {
-  return Vector2u(this->x % other.x, this->y % other.y);
+  return Point2D(this->x % other.x, this->y % other.y);
 }
-Vector2u
-Vector2u::operator+(uint32 other) const
+Point2D
+Point2D::operator+(uint32 other) const
 {
-  return Vector2u(this->x + other, this->y + other);
+  return Point2D(this->x + other, this->y + other);
 }
-Vector2u
-Vector2u::operator-(uint32 other) const
+Point2D
+Point2D::operator-(uint32 other) const
 {
-  return Vector2u(this->x - other, this->y - other);
+  return Point2D(this->x - other, this->y - other);
 }
-Vector2u
-Vector2u::operator*(uint32 other) const
+Point2D
+Point2D::operator*(uint32 other) const
 {
-  return Vector2u(this->x * other, this->y * other);
+  return Point2D(this->x * other, this->y * other);
 }
-Vector2u
-Vector2u::operator/(uint32 other) const
+Point2D
+Point2D::operator/(uint32 other) const
 {
-  return Vector2u(this->x / other, this->y / other);
+  return Point2D(this->x / other, this->y / other);
 }
-Vector2u
-Vector2u::operator%(uint32 other) const
+Point2D
+Point2D::operator%(uint32 other) const
 {
-  return Vector2u(this->x % other, this->y % other);
+  return Point2D(this->x % other, this->y % other);
 }
-Vector2u&
-Vector2u::operator=(const Vector2u& other)
+Point2D&
+Point2D::operator=(const Point2D& other)
 {
   this->x = other.x;
   this->y = other.y;
   return *this;
 }
-Vector2u&
-Vector2u::operator+=(const Vector2u& other)
+Point2D&
+Point2D::operator+=(const Point2D& other)
 {
   *this = *this + other;
   return *this;
 }
-Vector2u&
-Vector2u::operator-=(const Vector2u& other)
+Point2D&
+Point2D::operator-=(const Point2D& other)
 {
   *this = *this - other;
   return *this;
 }
-Vector2u&
-Vector2u::operator*=(const Vector2u& other)
+Point2D&
+Point2D::operator*=(const Point2D& other)
 {
   *this = *this * other;
   return *this;
 }
-Vector2u&
-Vector2u::operator/=(const Vector2u& other)
+Point2D&
+Point2D::operator/=(const Point2D& other)
 {
   *this = *this / other;
   return *this;
 }
-Vector2u&
-Vector2u::operator%=(const Vector2u& other)
+Point2D&
+Point2D::operator%=(const Point2D& other)
 {
   *this = *this % other;
   return *this;
 }
-Vector2u&
-Vector2u::operator+=(uint32 other)
+Point2D&
+Point2D::operator+=(uint32 other)
 {
   *this = *this + other;
   return *this;
 }
-Vector2u&
-Vector2u::operator-=(uint32 other)
+Point2D&
+Point2D::operator-=(uint32 other)
 {
   *this = *this - other;
   return *this;
 }
-Vector2u&
-Vector2u::operator*=(uint32 other)
+Point2D&
+Point2D::operator*=(uint32 other)
 {
   *this = *this * other;
   return *this;
 }
-Vector2u&
-Vector2u::operator/=(uint32 other)
+Point2D&
+Point2D::operator/=(uint32 other)
 {
   *this = *this / other;
   return *this;
 }
-Vector2u&
-Vector2u::operator%=(uint32 other)
+Point2D&
+Point2D::operator%=(uint32 other)
 {
   *this = *this % other;
   return *this;
 }
 bool
-Vector2u::operator==(const Vector2u& other) const
+Point2D::operator==(const Point2D& other) const
 {
   return this->x == other.x && this->y == other.y;
 }
 bool
-Vector2u::operator!=(const Vector2u& other) const
+Point2D::operator!=(const Point2D& other) const
 {
   return !(*this == other);
 }

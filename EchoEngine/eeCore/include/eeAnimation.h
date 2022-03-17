@@ -25,9 +25,9 @@ struct Node
 {
   String m_name;
   Matrix4f m_transformation;
-  SPtr<Node> m_parent = nullptr;
+  SPtr<Node> m_pParent = nullptr;
   uint32 m_childrenCount = 0;
-  Vector<SPtr<Node>> m_children;
+  Vector<SPtr<Node>> m_pChildren;
 };
 
 /**
@@ -104,7 +104,7 @@ class EE_CORE_EXPORT Animation
   Animation(float ticksPerSecond,
             float duration,
             const Vector<AnimNode>& channels,
-            SPtr<Node> rootNode,
+            SPtr<Node> pRootNode,
             const String& name);
   /**
    * @brief
@@ -138,7 +138,7 @@ class EE_CORE_EXPORT Animation
   loadFromData(float ticksPerSecond,
                float duration,
                const Vector<AnimNode>& channels,
-               SPtr<Node> rootNode,
+               SPtr<Node> pRootNode,
                const String& name);
 
   /**
@@ -156,7 +156,7 @@ class EE_CORE_EXPORT Animation
    */
   void
   boneTransform(SIZE_T meshIndex,
-                SPtr<Skeletal> skMesh,
+                SPtr<Skeletal> pSkMesh,
                 float time);
   /**
    * @brief
@@ -181,7 +181,7 @@ class EE_CORE_EXPORT Animation
                     const SPtr<Node> pNode,
                     const Matrix4f& parentTransform,
                     SIZE_T meshIndex,
-                    SPtr<Skeletal> skMesh);
+                    SPtr<Skeletal> pSkMesh);
 
   /**
    * @brief
@@ -351,6 +351,6 @@ class EE_CORE_EXPORT Animation
    */
   Vector<AnimNode> m_channels;
 
-  SPtr<Node> m_rootNode = nullptr;
+  SPtr<Node> m_pRootNode = nullptr;
 };
 }

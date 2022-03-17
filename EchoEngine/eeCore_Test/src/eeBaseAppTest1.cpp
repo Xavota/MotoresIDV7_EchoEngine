@@ -32,7 +32,6 @@
 #include <eeRasterizerState.h>
 #include <eeTexture.h>
 
-#include <eeObject.h>
 #include <eeAnimation.h>
 #include <eeSkeletalMesh.h>
 #include <eeStaticMesh.h>
@@ -59,6 +58,7 @@ using eeEngineSDK::Vector4f;
 using eeEngineSDK::Vector3f;
 using eeEngineSDK::Vector2f;
 using eeEngineSDK::Vector2i;
+using eeEngineSDK::Point2D;
 using eeEngineSDK::Color;
 using eeEngineSDK::ColorI;
 using eeEngineSDK::Image;
@@ -111,6 +111,8 @@ using eeEngineSDK::ePRIMITIVE_TOPOLOGY;
 using eeEngineSDK::SamplerStateDesc;
 using eeEngineSDK::ViewportDesc;
 using eeEngineSDK::RasteraizerDesc;
+
+using eeEngineSDK::Window;
 
 
 
@@ -208,7 +210,7 @@ WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     break;
 
   case WM_MOUSEMOVE:
-    inputMan.setMousePosition({ GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) });
+    inputMan.setMousePosition(Vector2i{ GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) });
     break;
 
   case WM_SIZE:
@@ -220,8 +222,8 @@ WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       GetClientRect(reinterpret_cast<HWND>(GraphicsApi::instance().getMainWindow()->getWindowPtr()), &rc);
       width = rc.right - rc.left;
       height = rc.bottom - rc.top;
-      GraphicsApi::instance().resizeWindow({ static_cast<uint32>(width),
-                                             static_cast<uint32>(height) });
+      GraphicsApi::instance().resizeWindow(Point2D{ static_cast<uint32>(width),
+                                                    static_cast<uint32>(height) });
     }
     _first = false;
   }
@@ -232,6 +234,32 @@ WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
   }
 
   return 0;
+}
+
+String
+loadFileDialog()
+{
+  // common dialog box structure, setting all fields to 0 is important
+  OPENFILENAME ofn = { 0 };
+  TCHAR szFile[260] = { 0 };
+
+  // Initialize remaining fields of OPENFILENAME structure
+  ofn.lStructSize = sizeof(ofn);
+  ofn.hwndOwner = nullptr;
+  ofn.lpstrFile = szFile;
+  ofn.nMaxFile = sizeof(szFile);
+  ofn.lpstrFilter = ("All\0*.*");
+  ofn.nFilterIndex = 1;
+  ofn.lpstrFileTitle = nullptr;
+  ofn.nMaxFileTitle = 0;
+  ofn.lpstrInitialDir = nullptr;
+  ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+  if (GetOpenFileName(&ofn) == TRUE) {
+    return szFile;
+  }
+
+  return "";
 }
 
 HRESULT
@@ -348,7 +376,6 @@ DrawCameraCmp(SPtr<CCamera> cam, int32& uniqueId)
 void
 DrawStaticMeshCmp(SPtr<CStaticMesh> staticMesh, int32& uniqueId)
 {
-  ImGui::PushID(uniqueId++);
   String staticMeshName = staticMesh->getStaticMesh()->getName();
   Map<String, SPtr<StaticMesh>> staticMeshes =
   ResourceManager::instance().getAllStaticMeshResources();
@@ -362,6 +389,7 @@ DrawStaticMeshCmp(SPtr<CStaticMesh> staticMesh, int32& uniqueId)
     }
     tempIndex++;
   }
+  ImGui::PushID(uniqueId++);
   if (ImGui::Combo("Static Mesh Resource",
                    &staticMeshIndex,
                    names.data(),
@@ -398,81 +426,73 @@ DrawSkeletalMeshCmp(SPtr<CSkeletalMesh> skMesh, int32& uniqueId)
   ImGui::PopID();
 }
 
-void
-AddChildActorsToUI(SPtr<Actor> act, int32& uniqueId);
-
 SPtr<Actor> g_actorAddingCmp;
 bool g_addingCmp = false;
 void
 showActorData(SPtr<Actor> act, int32& uniqueId)
 {
   ImGui::PushID(uniqueId++);
-  if (ImGui::TreeNode(act->getName().c_str())) {
-    ImGui::PushID(uniqueId++);
-    bool actActive = act->isActive();
-    if (ImGui::Checkbox("Active", &actActive)) {
-      act->setActive(actActive);
-    }
-    ImGui::PopID();
-
-    ImGui::Separator();
-    ImGui::Text("Transform");
-    DrawTransformCmp(act->getTransform(), uniqueId);
-    ImGui::Separator();
-    SPtr<CAnimation> animC = act->getComponent<CAnimation>();
-    if (animC) {
-      ImGui::Text("Animation");
-      DrawAnimationCmp(animC, uniqueId);
-      ImGui::Separator();
-    }
-    SPtr<CCamera> camC = act->getComponent<CCamera>();
-    if (camC) {
-      ImGui::Text("Camera");
-      DrawCameraCmp(camC, uniqueId);
-      ImGui::Separator();
-    }
-    SPtr<CStaticMesh> staticMeshC = act->getComponent<CStaticMesh>();
-    if (staticMeshC) {
-      ImGui::Text("Static Mesh");
-      DrawStaticMeshCmp(staticMeshC, uniqueId);
-      ImGui::Separator();
-    }
-    SPtr<CRender> renderC = act->getComponent<CRender>();
-    if (renderC) {
-      ImGui::Text("Render");
-      ImGui::Separator();
-    }
-    SPtr<CSkeletalMesh> skMeshC = act->getComponent<CSkeletalMesh>();
-    if (skMeshC) {
-      ImGui::Text("Skeletal Mesh");
-      DrawSkeletalMeshCmp(skMeshC, uniqueId);
-      ImGui::Separator();
-    }
-
-    ImGui::PushID(uniqueId++);
-    if (ImGui::Button("AddComponent")) {
-      g_addingCmp = true;
-      g_actorAddingCmp = act;
-    }
-    ImGui::PopID();
-
-    ImGui::PushID(uniqueId++);
-    if (ImGui::TreeNode("Children")) {
-      AddChildActorsToUI(act, uniqueId);
-      ImGui::TreePop();
-    }
-    ImGui::PopID();
-    ImGui::TreePop();
+  bool actActive = act->isActive();
+  if (ImGui::Checkbox("Active", &actActive)) {
+    act->setActive(actActive);
   }
   ImGui::PopID();
-}
 
-void
-AddChildActorsToUI(SPtr<Actor> act, int32& uniqueId)
-{
-  for (auto& child : act->getChildren()) {
-    showActorData(child, uniqueId);
+
+  ImGui::Separator();
+  ImGui::Text("Transform");
+  DrawTransformCmp(act->getTransform(), uniqueId);
+  ImGui::Separator();
+  SPtr<CAnimation> animC = act->getComponent<CAnimation>();
+  if (animC) {
+    if (ImGui::TreeNode("Animation")) {
+      DrawAnimationCmp(animC, uniqueId);
+      ImGui::TreePop();
+    }
+    ImGui::Separator();
   }
+  SPtr<CBounds> boundsC = act->getComponent<CBounds>();
+  if (boundsC) {
+    ImGui::Text("Bounds");
+    ImGui::Separator();
+  }
+  SPtr<CCamera> camC = act->getComponent<CCamera>();
+  if (camC) {
+    if (ImGui::TreeNode("Camera")) {
+      DrawCameraCmp(camC, uniqueId);
+      ImGui::TreePop();
+    }
+    ImGui::Separator();
+  }
+  SPtr<CRender> renderC = act->getComponent<CRender>();
+  if (renderC) {
+    ImGui::Text("Render");
+    ImGui::Separator();
+  }
+  SPtr<CSkeletalMesh> skMeshC = act->getComponent<CSkeletalMesh>();
+  if (skMeshC) {
+    if (ImGui::TreeNode("Skeletal Mesh")) {
+      DrawSkeletalMeshCmp(skMeshC, uniqueId);
+      ImGui::TreePop();
+    }
+    ImGui::Separator();
+  }
+  SPtr<CStaticMesh> staticMeshC = act->getComponent<CStaticMesh>();
+  if (staticMeshC) {
+    if (ImGui::TreeNode("Static Mesh")) {
+      DrawStaticMeshCmp(staticMeshC, uniqueId);
+      ImGui::TreePop();
+    }
+    ImGui::Separator();
+  }
+
+
+  ImGui::PushID(uniqueId++);
+  if (ImGui::Button("AddComponent")) {
+    g_addingCmp = true;
+    g_actorAddingCmp = act;
+  }
+  ImGui::PopID();
 }
 
 bool
@@ -500,7 +520,7 @@ NewSceneWindow(bool& added, char* name)
 bool
 NewActorWindow(bool& added, char* name)
 {
-  if (ImGui::Begin("New Scene")) {
+  if (ImGui::Begin("New Actor")) {
     ImGui::InputText("Name", name, 255);
 
     if (ImGui::Button("Create")) {
@@ -519,30 +539,31 @@ NewActorWindow(bool& added, char* name)
   return false;
 }
 
-String
-loadFileDialog()
+void 
+MakeActorsTree(Vector<SPtr<Actor>> actors,
+               SPtr<Actor>& ActorOnInspector,
+               int32& n,
+               int32& uniqueId)
 {
-  // common dialog box structure, setting all fields to 0 is important
-  OPENFILENAME ofn = { 0 };
-  TCHAR szFile[260] = { 0 };
+  static int selected = -1;
+  for (auto& act : actors) {
+    ImGui::PushID(uniqueId++);
+    if (ImGui::Selectable(act->getName().c_str(), selected == n)) {
+      selected = n;
+      ActorOnInspector = act;
+    }
+    ImGui::PopID();
 
-  // Initialize remaining fields of OPENFILENAME structure
-  ofn.lStructSize = sizeof(ofn);
-  ofn.hwndOwner = nullptr;
-  ofn.lpstrFile = szFile;
-  ofn.nMaxFile = sizeof(szFile);
-  ofn.lpstrFilter = ("All\0*.*");
-  ofn.nFilterIndex = 1;
-  ofn.lpstrFileTitle = nullptr;
-  ofn.nMaxFileTitle = 0;
-  ofn.lpstrInitialDir = nullptr;
-  ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+    Vector<SPtr<Actor>> childs = act->getChildren();
+    if (!childs.empty()) {
+      if (ImGui::TreeNode("Children")) {
+        MakeActorsTree(childs, ActorOnInspector, n, uniqueId);
+        ImGui::TreePop();
+      }
+    }
 
-  if (GetOpenFileName(&ofn) == TRUE) {
-    return szFile;
+    ++n;
   }
-
-  return "";
 }
 
 void
@@ -558,8 +579,11 @@ UIRender()
 
   static bool AddingScene = false;
   static bool AddingActor = false;
-  static String AddingActorScene  ;
+  static String AddingActorScene;
 
+  static SPtr<Actor> ActorOnInspector = nullptr;
+
+  // Popup menus
   if (AddingScene) {
     bool added = false;
     static char name[255];
@@ -580,6 +604,7 @@ UIRender()
       AddingScene = false;
     }
   }
+
 
   int32 uniqueId = 0;
 
@@ -620,21 +645,21 @@ UIRender()
         }
         ImGui::PopID();
 
-
-        const Map<String, SPtr<Actor>>& actors =
-          sc.second->getAllActors();
-
-        for (auto& act : actors) {
-          if (!act.second->getParent()) {
-            showActorData(act.second, uniqueId);
-          }
-        }
+        Vector<SPtr<Actor>> actors;
+        sc.second->getAllActorsVector(actors);
+        int32 n = 0;
+        MakeActorsTree(actors, ActorOnInspector, n, uniqueId);
         ImGui::TreePop();
       }
       ImGui::PopID();
     }
+  }
+  ImGui::End();
 
-
+  if (ImGui::Begin("Inspector")) {
+    if (ActorOnInspector) {
+      showActorData(ActorOnInspector, uniqueId);
+    }
   }
   ImGui::End();
 
@@ -722,152 +747,23 @@ BaseAppTest1::onInit()
     ImGui::DestroyContext();
   }
 
-  //SamplerStateDesc samDesc;
-  //memset(&samDesc, 0, sizeof(samDesc));
-  //samDesc.filter = eFILTER::kMIN_MAG_MIP_LINEAR;
-  //samDesc.addressU = eTEXTURE_ADDRESS_MODE::WRAP;
-  //samDesc.addressV = eTEXTURE_ADDRESS_MODE::WRAP;
-  //samDesc.addressW = eTEXTURE_ADDRESS_MODE::WRAP;
-  //samDesc.comparisonFunc = eCOMPARISON_FUNC::NEVER;
-  //samDesc.minLOD = 0;
-  //samDesc.maxLOD = Math::kMAX_FLOAT;
-  //
-  //m_sampler = memoryManager.newPtr<SamplerState>();
-  //m_sampler->create(samDesc);
+  Map<uint32, SPtr<Texture>> texturesMap;
 
   resourceManager.loadTextureFromFile("Textures/Defaults/DefaultDiffuse.png",
                                       "DefaultDiffuse");
   resourceManager.loadTextureFromFile("Textures/Defaults/DefaultNormalMap.jpg",
                                       "DefaultNormalMap");
-  resourceManager.loadMaterialFromTextures(
-  resourceManager.getResourceTexture("DefaultDiffuse"),
-  resourceManager.getResourceTexture("DefaultNormalMap"),
-  "Default_mat");
+  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  resourceManager.getResourceTexture("DefaultDiffuse");
+  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
+  resourceManager.getResourceTexture("DefaultNormalMap");
+  resourceManager.loadMaterialFromTextures(texturesMap, "Default_mat");
 
   StaticMesh::initPrimitives();
 
 
-  /*m_rtv = graphicsApi.createRenderTragetPtr();
-  m_rtv->createAsBackBuffer();
-
-  m_dsv = graphicsApi.createDepthStencilPtr();
-  m_dsv->create(screenWidth, screenHeight);*/
-
 
   graphicsApi.setPrimitiveTopology(ePRIMITIVE_TOPOLOGY::TRIANGLELIST);
-
-  //Mesh SAQ;
-  //SAQ.loadFromArray<SimpleVertex, uint32>(
-  //Vector<SimpleVertex>
-  //  {
-  //    SimpleVertex
-  //    {
-  //      Vector4f(-1.0f,  1.0f, 0.0f, 1.0f),
-  //      Vector4f( 0.0f,  0.0f, 0.0f, 0.0f),
-  //      Vector4f( 0.0f,  0.0f, 0.0f, 0.0f)
-  //    },
-  //    SimpleVertex
-  //    {
-  //      Vector4f( 1.0f,  1.0f, 0.0f, 1.0f),
-  //      Vector4f( 1.0f,  0.0f, 0.0f, 0.0f),
-  //      Vector4f( 0.0f,  0.0f, 0.0f, 0.0f)
-  //    },
-  //    SimpleVertex
-  //    {
-  //      Vector4f( 1.0f, -1.0f,  0.0f, 1.0f),
-  //      Vector4f( 1.0f,  1.0f,  0.0f, 0.0f),
-  //      Vector4f( 0.0f,  0.0f,  0.0f, 0.0f)
-  //    },
-  //    SimpleVertex
-  //    {
-  //      Vector4f(-1.0f, -1.0f,  0.0f, 1.0f),
-  //      Vector4f( 0.0f,  1.0f,  0.0f, 0.0f),
-  //      Vector4f( 0.0f,  0.0f,  0.0f, 0.0f)
-  //    }
-  //  },
-  //  Vector<uint32>
-  //  {
-  //    0, 1, 2, 
-  //    0, 2, 3
-  //  }
-  //);
-  //
-  //resourceManager.loadMaterialFromTextures(m_rtv, nullptr, "SAQ_mat");
-
-  //m_SAQ = memoryManager.newPtr<Object>();
-  //m_SAQ->loadFromModel
-  //(
-  //  resourceManager.loadStaticMeshFromMeshesArray
-  //  (
-  //    //Vector<Pair<Mesh, SPtr<Texture>>>
-  //    Vector<Pair<Mesh, SPtr<Material>>>
-  //    {
-  //      //Pair<Mesh, SPtr<Texture>>
-  //      Pair<Mesh, SPtr<Material>>
-  //      (
-  //        SAQ,
-  //        nullptr
-  //      )
-  //    },
-  //    "SAQ",
-  //    Vector3f(1.0f, 1.0f, 0.0f),
-  //    Vector3f(1.0f, 1.0f, 0.0f),
-  //    Vector3f(-1.0f, -1.0f, 0.0f)
-  //  ),
-  //  Vector3f(0.0f, 0.0f, 0.0f),
-  //  Quaternion(Vector3f(0.0f, 0.0f, 0.0f)),
-  //  Vector3f(1.0f, 1.0f, 1.0f)
-  //);
-  //m_SAQ->getModel()->setTexture
-  //(
-  //  resourceManager.getResourceMaterial
-  //  (
-  //    "SAQ_mat"
-  //  ),
-  //  0
-  //);
-
-  
-  
-  //resourceManager.loadVertexShaderFromFile("Shaders/TestVShader.hlsl",
-  //                                         "TestVS");
-  //resourceManager.loadPixelShaderFromFile("Shaders/TestPShader.hlsl",
-  //                                        "TestPS");
-  //
-  //resourceManager.loadVertexShaderFromFile("Shaders/TestVSAnimShader.hlsl",
-  //                                         "TestVSAnim");
-  //resourceManager.loadPixelShaderFromFile("Shaders/TestPSAnimShader.hlsl",
-  //                                        "TestPSAnim");
-  //
-  //
-  //resourceManager.loadVertexShaderFromFile("Shaders/TestVSSAQ.hlsl",
-  //                                         "TestSAQVS");
-  //resourceManager.loadPixelShaderFromFile("Shaders/TestPSSAQ.hlsl",
-  //                                        "TestSAQPS");
-  //
-  //m_viewMatrixBuffer = graphicsApi.createConstantBufferPtr();
-  //m_projectionMatrixBuffer = graphicsApi.createConstantBufferPtr();
-  //m_viewMatrixBuffer->initData(sizeof(Matrix4f), sizeof(Matrix4f), nullptr);
-  //m_projectionMatrixBuffer->initData(sizeof(Matrix4f), sizeof(Matrix4f), nullptr);
-  //
-  //
-  //RasteraizerDesc rasDesc;
-  //memset(&rasDesc, 0, sizeof(rasDesc));
-  //rasDesc.cullMode = eeEngineSDK::eCULL_MODE::FRONT;
-  //rasDesc.fillMode = eeEngineSDK::eFILL_MODE::SOLID;
-  //rasDesc.frontCounterClockwise = true;
-  //
-  //m_rasterizer = graphicsApi.createRasterizerStatePtr();
-  //m_rasterizer->create(rasDesc);
-  //
-  //
-  //memset(&rasDesc, 0, sizeof(rasDesc));
-  //rasDesc.cullMode = eeEngineSDK::eCULL_MODE::FRONT;
-  //rasDesc.fillMode = eeEngineSDK::eFILL_MODE::SOLID;
-  //rasDesc.frontCounterClockwise = true;
-  //
-  //m_rasterizer2 = graphicsApi.createRasterizerStatePtr();
-  //m_rasterizer2->create(rasDesc);
   
 
 
@@ -879,17 +775,30 @@ BaseAppTest1::onInit()
   SPtr<Actor> pTempActor;
 
 
+  
+  resourceManager.loadStaticMeshFromMeshesArray({ Mesh::cube },
+                                                "Cube",
+                                                Vector3f{ 1.0f, 1.0f, 1.0f },
+                                                Vector3f{ 1.0f, 1.0f, 1.0f },
+                                                Vector3f{ -1.0f, -1.0f, -1.f });
+  resourceManager.loadStaticMeshFromMeshesArray({ Mesh::tetrahedron },
+                                                "Tetrahedron",
+                                                Vector3f{ 1.0f, -0.54f, -0.58f },
+                                                Vector3f{ 1.0f, 1.09f, 1.15f },
+                                                Vector3f{ -1.0f, -0.54f, -0.58f });
+
+
 
   CameraDesc camDesc;
   camDesc.projectionType = CAMERA_PROJECTION_TYPE::kPerspective;
   camDesc.fovAngleY = Math::kPI / 4.0f;
-  camDesc.viewSize = { static_cast<float>(screenWidth),
-                       static_cast<float>(screenHeight) };
+  camDesc.viewSize = Vector2f{ static_cast<float>(screenWidth),
+                               static_cast<float>(screenHeight) };
   camDesc.nearZ = 0.01f;
   camDesc.farZ = 100.0f;
 
   pTempActor = pScene->addActor("Player");
-  pTempActor->getTransform()->setPosition({ 0.0f, 3.0f, -6.0f });
+  pTempActor->getTransform()->setPosition(Vector3f{ 0.0f, 3.0f, -6.0f });
   //actor->getTransform()->setScale({ 0.1f, 0.1f, 0.1f });
   pTempActor->addComponent<CCamera>();
   pTempActor->getComponent<CCamera>()->init(camDesc);
@@ -897,7 +806,7 @@ BaseAppTest1::onInit()
   pTempActor->addComponent<CStaticMesh>();
   pTempActor->getComponent<CStaticMesh>()->setStaticMesh
   (
-    StaticMesh::cube
+    resourceManager.getResourceStaticMesh("Cube")
   );
   pTempActor->addComponent<CBounds>();
   pTempActor->addComponent<CRender>();
@@ -905,12 +814,13 @@ BaseAppTest1::onInit()
 
 
   pTempActor = pScene->addActor("AtatchToActor");
-  pTempActor->attachTo(pScene->getActor("Player"));
-  pTempActor->getTransform()->setPosition({ 0.0f, 0.0f, 30.0f });
+  //pTempActor->attachTo(pScene->getActor("Player"));
+  pScene->setActorChild("Player", "AtatchToActor");
+  pTempActor->getTransform()->setPosition(Vector3f{ 0.0f, 0.0f, 30.0f });
   pTempActor->addComponent<CStaticMesh>();
   pTempActor->getComponent<CStaticMesh>()->setStaticMesh
   (
-    StaticMesh::cube
+    resourceManager.getResourceStaticMesh("Tetrahedron")
   );
   pTempActor->addComponent<CBounds>();
   pTempActor->addComponent<CRender>();
@@ -918,8 +828,8 @@ BaseAppTest1::onInit()
 
 
   pTempActor = pScene->addActor("Player2");
-  pTempActor->getTransform()->setPosition({ 5.0f, 3.0f, -6.0f });
-  pTempActor->getTransform()->setScale({ 0.1f, 0.1f, 0.1f });
+  pTempActor->getTransform()->setPosition(Vector3f{ 5.0f, 3.0f, -6.0f });
+  pTempActor->getTransform()->setScale(Vector3f{ 0.1f, 0.1f, 0.1f });
   pTempActor->addComponent<CCamera>();
   pTempActor->getComponent<CCamera>()->init(camDesc);
   pTempActor->addComponent<CStaticMesh>();
@@ -935,28 +845,43 @@ BaseAppTest1::onInit()
   eeEngineSDK::IMPORT_FLAGS::kImportStaticMeshes);
 
   resourceManager.importResourceFromFile("Textures/Jinx/F_MED_UproarBraids_Body_baseColor.png");
+  resourceManager.importResourceFromFile("Textures/Jinx/F_MED_UproarBraids_Body_normal.png");
   resourceManager.importResourceFromFile("Textures/Jinx/F_MED_UproarBraids_FaceAcc_baseColor.png");
+  resourceManager.importResourceFromFile("Textures/Jinx/F_MED_UproarBraids_FaceAcc_normal.png");
   resourceManager.importResourceFromFile("Textures/Jinx/FACE_-_TEST.png");
+  resourceManager.importResourceFromFile("Textures/Jinx/F_MED_UproarBraids_Head_normal.png");
 
-  resourceManager.loadMaterialFromTextures(
-    resourceManager.getResourceTexture("F_MED_UproarBraids_Body_baseColor_tex"),
-    nullptr,
-    "F_MED_UproarBraids_Body_baseColor_mat");
+  texturesMap.clear();
+  
+  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  resourceManager.getResourceTexture("F_MED_UproarBraids_Body_baseColor_tex");
+  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
+  resourceManager.getResourceTexture("F_MED_UproarBraids_Body_normal_tex");
+  resourceManager.loadMaterialFromTextures(texturesMap,
+                                       "F_MED_UproarBraids_Body_baseColor_mat");
 
-  resourceManager.loadMaterialFromTextures(
-    resourceManager.getResourceTexture("F_MED_UproarBraids_FaceAcc_baseColor_tex"),
-    nullptr,
-    "F_MED_UproarBraids_FaceAcc_baseColor_mat");
+  texturesMap.clear();
+  
+  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  resourceManager.getResourceTexture("F_MED_UproarBraids_FaceAcc_baseColor_te");
+  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
+  resourceManager.getResourceTexture("F_MED_UproarBraids_FaceAcc_normal_tex");
+  resourceManager.loadMaterialFromTextures(texturesMap,
+                                    "F_MED_UproarBraids_FaceAcc_baseColor_mat");
 
-  resourceManager.loadMaterialFromTextures(
-    resourceManager.getResourceTexture("FACE_-_TEST_tex"),
-    nullptr,
-    "FACE_-_TEST_mat");
+  texturesMap.clear();
+  
+  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  resourceManager.getResourceTexture("FACE_-_TEST_tex");
+  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
+  resourceManager.getResourceTexture("F_MED_UproarBraids_Head_normal_tex");
+  resourceManager.loadMaterialFromTextures(texturesMap,
+                                           "FACE_-_TEST_mat");
 
   pTempActor = pScene->addActor("Test");
-  pTempActor->getTransform()->setScale({ 2.0f, 2.0f, 2.0f });
-  pTempActor->getTransform()->setPosition({ 3.0f, 0.0f, 0.0f });
-  pTempActor->getTransform()->setRotation(Quaternion( {1.5707f, 0.0f, 0.0f} ));
+  pTempActor->getTransform()->setScale(Vector3f{ 2.0f, 2.0f, 2.0f });
+  pTempActor->getTransform()->setPosition(Vector3f{ 3.0f, 0.0f, 0.0f });
+  pTempActor->getTransform()->setRotation(Quaternion(Vector3f{1.5707f, 0.0f, 0.0f} ));
   pTempActor->addComponent<CStaticMesh>();
   pTempActor->getComponent<CStaticMesh>()->setStaticMesh
   (
@@ -993,45 +918,51 @@ BaseAppTest1::onInit()
   resourceManager.importResourceFromFile("Models/boblampclean.md5mesh");
 
   resourceManager.importResourceFromFile("Textures/guard1_body.jpg");
-  resourceManager.loadMaterialFromTextures(
-  resourceManager.getResourceTexture("guard1_body_tex"),
-  nullptr,
-  "guard1_body_mat");
+  texturesMap.clear();
+  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  resourceManager.getResourceTexture("guard1_body_tex");
+  resourceManager.loadMaterialFromTextures(texturesMap,
+                                           "guard1_body_mat");
   resourceManager.importResourceFromFile("Textures/guard1_face.jpg");
-  resourceManager.loadMaterialFromTextures(
-  resourceManager.getResourceTexture("guard1_face_tex"),
-  nullptr,
-  "guard1_face_mat");
+  texturesMap.clear();
+  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  resourceManager.getResourceTexture("guard1_face_tex");
+  resourceManager.loadMaterialFromTextures(texturesMap,
+                                           "guard1_face_mat");
   resourceManager.importResourceFromFile("Textures/guard1_helmet.jpg");
-  resourceManager.loadMaterialFromTextures(
-  resourceManager.getResourceTexture("guard1_helmet_tex"),
-  nullptr,
-  "guard1_helmet_mat");
+  texturesMap.clear();
+  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  resourceManager.getResourceTexture("guard1_helmet_tex");
+  resourceManager.loadMaterialFromTextures(texturesMap,
+                                           "guard1_helmet_mat");
   resourceManager.importResourceFromFile("Textures/iron_grill.jpg");
-  resourceManager.loadMaterialFromTextures(
-  resourceManager.getResourceTexture("iron_grill_tex"),
-  nullptr,
-  "iron_grill_mat");
+  texturesMap.clear();
+  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  resourceManager.getResourceTexture("iron_grill_tex");
+  resourceManager.loadMaterialFromTextures(texturesMap,
+                                           "iron_grill_mat");
   resourceManager.importResourceFromFile("Textures/round_grill.jpg");
-  resourceManager.loadMaterialFromTextures(
-  resourceManager.getResourceTexture("round_grill_tex"),
-  nullptr,
-  "round_grill_mat");
+  texturesMap.clear();
+  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  resourceManager.getResourceTexture("round_grill_tex");
+  resourceManager.loadMaterialFromTextures(texturesMap,
+                                           "round_grill_mat");
 
   SPtr<Image> tempImg = memoryManager.newPtr<Image>();
   tempImg->loadFromFile("Textures/guard1_body.jpg");
 
   SPtr<Texture> tempTex = graphicsApi.createTexturePtr();
-  tempTex->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kShaderResource, { tempImg->getWidth(), tempImg->getHeight() });
+  tempTex->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kShaderResource,
+                    Point2D{ tempImg->getWidth(), tempImg->getHeight() });
 
   tempTex->loadImages({ tempImg });
 
 
   pTempActor = pScene->addActor("AnimTest");
-  pTempActor->getTransform()->setScale({ 0.03f, 0.03f, 0.03f });
-  pTempActor->getTransform()->setRotation(Quaternion({ Math::kPI * 0.5f,
-                                                              0.0f,
-                                                              0.0f }));
+  pTempActor->getTransform()->setScale(Vector3f{ 0.03f, 0.03f, 0.03f });
+  pTempActor->getTransform()->setRotation(Quaternion(Vector3f{ Math::kPI * 0.5f,
+                                                                           0.0f,
+                                                                           0.0f }));
   pTempActor->addComponent<CSkeletalMesh>();
   pTempActor->getComponent<CSkeletalMesh>()->setModel
   (
@@ -1079,8 +1010,8 @@ BaseAppTest1::onInit()
   resourceManager.importResourceFromFile("Models/Scary_Clown_Walk.fbx");
   
   pTempActor = pScene->addActor("AnimTest2");
-  pTempActor->getTransform()->setScale({ 0.01f, 0.01f, 0.01f });
-  pTempActor->getTransform()->setPosition({ -3.0f, 0.0f, 0.0f });
+  pTempActor->getTransform()->setScale(Vector3f{ 0.01f, 0.01f, 0.01f });
+  pTempActor->getTransform()->setPosition(Vector3f{ -3.0f, 0.0f, 0.0f });
   pTempActor->addComponent<CSkeletalMesh>();
   pTempActor->getComponent<CSkeletalMesh>()->setModel
   (
@@ -1093,21 +1024,6 @@ BaseAppTest1::onInit()
   );
   pTempActor->addComponent<CBounds>();
   pTempActor->addComponent<CRender>();
-
-
-
-  //m_viewPosBuffer = graphicsApi.createConstantBufferPtr();
-  //m_viewPosBuffer->initData(sizeof(Vector4f), sizeof(Vector4f), nullptr);
-  //
-  //
-  //m_rtv = GraphicsApi::instance().createTexturePtr();
-  //m_rtv->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kRenderTarget
-  //              | eeEngineSDK::eTEXTURE_BIND_FLAGS::kShaderResource,
-  //                { screenWidth, screenHeight });
-  //
-  //m_dsv = GraphicsApi::instance().createTexturePtr();
-  //m_dsv->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kDepthStencil,
-  //                { screenWidth, screenHeight });
 }
 
 void
@@ -1144,12 +1060,6 @@ BaseAppTest1::onUpdate(float deltaTime)
 
 
   SPtr<Actor> actor = scene->getActor("Test");
-  //if (actor) {
-  //  static Quaternion rot1(Vector3f(0.0f, 0.0f, 0.0f));
-  //  rot1 = Quaternion((rot1.getEuclidean() +
-  //                  Vector3f(timeManager.getDeltaTime() * .5f, 0.0f, 0.0f)));
-  //  actor->getTransform()->setRotation(rot1);
-  //}
 
 
 
@@ -1164,7 +1074,7 @@ BaseAppTest1::onUpdate(float deltaTime)
   if (trans) {
     rot = trans->getRotation();
 
-    Vector3f cameraMovement = { 0.0f, 0.0f, 0.0f };
+    Vector3f cameraMovement = Vector3f{ 0.0f, 0.0f, 0.0f };
     if (inputMan.getKeyboardInputIsPressed(eeEngineSDK::KEYBOARD_INPUT::kW)) {
       cameraMovement += rot.getFrontVector();
     }
@@ -1216,13 +1126,6 @@ BaseAppTest1::onUpdate(float deltaTime)
     }
   }
 
-  //Vector3f pos = trans->getPosition();
-  //Vector4f vp = Vector4f(pos.x, pos.y, pos.z, 1.0f);
-  ////Logger::instance().ConsoleLog("x: " + eeEngineSDK::eeToString(pos.x)
-  ////                            + "y: " + eeEngineSDK::eeToString(pos.y)
-  ////                            + "z: " + eeEngineSDK::eeToString(pos.z));
-  //m_viewPosBuffer->updateData(reinterpret_cast<Byte*>(&vp));
-
 
   sceneManager.update();
 }
@@ -1231,121 +1134,14 @@ void
 BaseAppTest1::onRender()
 {
   auto& graphicsApi = GraphicsApi::instance();
-  //auto& resourceManager = ResourceManager::instance();
-  //auto& sceneManager = SceneManager::instance();
-  //
-  //
-  //Vector<SPtr<CCamera>> activeCams = graphicsApi.getActiveCameras();
-  //Color color{ 0.3f, 0.5f, 0.8f, 1.0f };
-  //
-  //
-  //// Load shaders
-  //SPtr<VertexShader> vs =
-  //  resourceManager.getResourceVertexShader("TestVS");
-  //SPtr<VertexShader> animVS =
-  //  resourceManager.getResourceVertexShader("TestVSAnim");
-  //
-  //SPtr<PixelShader> ps =
-  //  resourceManager.getResourcePixelShader("TestPS");
-  //SPtr<PixelShader> animPS =
-  //  resourceManager.getResourcePixelShader("TestPSAnim");
-  //
-  //m_sampler->use();
-  //
-  //m_rasterizer->use();
-  //
-  //for (auto& cam : activeCams) {
-  //  if (cam->isMain())
-  //  {
-  //    // Clean and set back buffer and depth stencil
-  //    graphicsApi.clearRenderTargets({ m_rtv }, color);
-  //    graphicsApi.cleanDepthStencils({ m_dsv });
-  //    graphicsApi.setRenderTargets({ m_rtv }, m_dsv);
-  //
-  //
-  //
-  //    // Create view/proj matrices
-  //    Matrix4f view = Matrix4f::kIDENTITY;
-  //    view = cam->getViewMatrix().getTranspose();
-  //    m_viewMatrixBuffer->updateData(reinterpret_cast<Byte*>(&view));
-  //
-  //    Matrix4f proj = Matrix4f::kIDENTITY;
-  //    proj = cam->getProjectionMatrix().getTranspose();
-  //    m_projectionMatrixBuffer->updateData(reinterpret_cast<Byte*>(&proj));
-  //
-  //
-  //
-  //    // Set buffers
-  //    graphicsApi.setVSConstantBuffers
-  //    (
-  //      { m_viewMatrixBuffer, m_projectionMatrixBuffer },
-  //      1u
-  //    );
-  //
-  //
-  //
-  //    Vector<SPtr<Actor>> rActors =
-  //      sceneManager.getAllRenderableActorsInside(activeCams[0]);
-  //    SIZE_T rActorsCount = rActors.size();
-  //
-  //    animVS->use();
-  //    animPS->use();
-  //
-  //
-  //    //Draw in-cam skeletal actors
-  //    for (SIZE_T i = 0; i < rActorsCount; ++i) {
-  //      if (rActors[i]->getComponent<CSkeletalMesh>())
-  //        graphicsApi.drawObject(rActors[i]);
-  //    }
-  //
-  //    vs->use();
-  //    ps->use();
-  //
-  //    m_viewPosBuffer->setInVertex(3u);
-  //
-  //    //Draw in-cam actors
-  //    for (SIZE_T i = 0; i < rActorsCount; ++i) {
-  //      if (!rActors[i]->getComponent<CSkeletalMesh>()) {
-  //        graphicsApi.drawObject(rActors[i]);
-  //      }
-  //    }
-  //
-  //
-  //
-  //    //Unbind buffers
-  //    graphicsApi.unsetRenderTargets();
-  //    graphicsApi.unsetVSConstantBuffers(3u, 0u);
-  //  }
-  //}
-  //
-  //
-  ////Set Back Buffer
-  //graphicsApi.clearRenderTargets({ graphicsApi.getBackBuffer() }, color);
-  //graphicsApi.cleanDepthStencils({ graphicsApi.getDepthStencil() });
-  //graphicsApi.setRenderTargets({ graphicsApi.getBackBuffer() }, graphicsApi.getDepthStencil());
-  //
-  //
-  //
-  //// Load shaders
-  //resourceManager.getResourceVertexShader("TestSAQVS")->use();
-  //
-  //resourceManager.getResourcePixelShader("TestSAQPS")->use();
-  //
-  //
-  //
-  ////Set the main camera render target texture to the SAQ and renders it to the
-  ////back buffer
-  //m_rasterizer2->use();
-  ////m_SAQ->getModel()->setTexture(m_rtv, 0);
-  //resourceManager.getResourceMaterial("SAQ_mat")->m_diffuse = m_rtv;
-  //m_SAQ->getModel()->setTexture(resourceManager.getResourceMaterial("SAQ_mat"), 0);
-  //graphicsApi.drawObject(m_SAQ);
 
+  SPtr<Window> mainWin = graphicsApi.getMainWindow();
+  graphicsApi.setRenderTargets({ mainWin->getRenderTarget() },
+                               mainWin->getDepthStencil());
 
   UIRender();
 
-
-  graphicsApi.present(0u, 0u);
+  graphicsApi.unsetRenderTargets();
 }
 
 void

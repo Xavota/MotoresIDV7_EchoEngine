@@ -19,7 +19,7 @@ namespace eeEngineSDK {
  * @brief
  * A buffer that tells the graphic memory the vertices to be drawn.
  */
-class DX11VertexBuffer : public VertexBuffer
+class EE_PLUGINDX11_EXPORT DX11VertexBuffer : public VertexBuffer
 {
  public:
   /**

@@ -11,7 +11,7 @@
 /************************************************************************/
 
 #pragma once
-#include "eePrerequisitesCore.h"
+#include "eePrerequisitesUtilities.h"
 #include "eeVector2.h"
 #include "eeVector3.h"
 #include "eeVector4.h"

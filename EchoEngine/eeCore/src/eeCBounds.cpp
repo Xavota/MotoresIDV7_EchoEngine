@@ -1,4 +1,7 @@
 #include "eeCBounds.h"
+
+#include <eeVector4.h>
+
 #include "eeActor.h"
 #include "eeCStaticMesh.h"
 #include "eeStaticMesh.h"
@@ -43,14 +46,12 @@ CBounds::update()
   }
 
   SPtr<CTransform> trans = m_actor->getTransform();
-  Matrix4f modelMatrix = trans->getModelMatrix();
 
-  Vector4f newFurtherPosition =
-  modelMatrix 
-* Vector4f(furtherPosition.x, furtherPosition.y, furtherPosition.z, 0.0f);
   m_sphereBound =
-  Sphere(trans->getGlobalPosition(), newFurtherPosition.getMagnitude());
+  Sphere(trans->getGlobalPosition(), m_sphereBound.getRadious() * trans->getScale().getMagnitud());
 
+
+  Matrix4f modelMatrix = trans->getModelMatrix();
 
   Vector3f A = m_boxBound.getA();
   Vector3f B = m_boxBound.getB();

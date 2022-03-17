@@ -94,12 +94,6 @@ private:
   */
   SPtr<RasterizerState> m_rasterizer2 = nullptr;
 
-  /*
-  * A Screen Align Quad, used for rendering textures of a render target on
-  * another
-  */
-  SPtr<Object> m_SAQ = nullptr;
-
   /* Pases */
   // GBuffer
   /*

@@ -109,10 +109,8 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @description
    * Initializes a material from a file and stores it with the given name.
    *
-   * @param diffuse
-   * The diffuse color map for the material.
-   * @param normalMap
-   * The normal map for the material.
+   * @param textures
+   * The textures map for the material.
    * @param resourceName
    * The name that the resource will be stored with.
    *
@@ -120,8 +118,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * The resource initialized.
    */
   SPtr<Material>
-  loadMaterialFromTextures(SPtr<Texture> diffuse,
-                           SPtr<Texture> normalMap,
+  loadMaterialFromTextures(Map<uint32, SPtr<Texture>> textures,
                            const String resourceName);
 
   /**

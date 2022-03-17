@@ -395,7 +395,7 @@ DX11GraphicsApi::setViewports(Vector<ViewportDesc> descs)
     vps.data());
 }
 void
-DX11GraphicsApi::resizeWindow(Vector2u newSize)
+DX11GraphicsApi::resizeWindow(Point2D newSize)
 {
   HRESULT hr =
   m_basics.m_swapChain->ResizeBuffers(1u,

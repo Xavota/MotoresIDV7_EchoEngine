@@ -5,5 +5,6 @@ namespace eeEngineSDK {
 class Event
 {
  public:
+  
 };
 }

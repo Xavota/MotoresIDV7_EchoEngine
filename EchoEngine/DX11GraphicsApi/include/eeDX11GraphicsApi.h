@@ -540,7 +540,7 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
    * The new size for the window.
    */
   void
-  resizeWindow(Vector2u newSize) override;
+  resizeWindow(Point2D newSize) override;
 
  protected:
   /**

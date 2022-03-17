@@ -61,7 +61,7 @@ class EE_CORE_EXPORT Texture
    */
   virtual bool
   create2D(uint32 /*bindFlags*/,
-           const Vector2u& /*texSize*/,
+           const Point2D& /*texSize*/,
            uint32 /*mipLevels*/ = 0u) { return true; }
            
 

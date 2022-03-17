@@ -198,7 +198,6 @@
     <ClCompile Include="src\eeMesh.cpp" />
     <ClCompile Include="src\eeRenderer.cpp" />
     <ClCompile Include="src\eeStaticMesh.cpp" />
-    <ClCompile Include="src\eeObject.cpp" />
     <ClCompile Include="src\eePixelShader.cpp" />
     <ClCompile Include="src\eeRasterizerState.cpp" />
     <ClCompile Include="src\eeResourceManager.cpp" />
@@ -241,7 +240,6 @@
     <ClInclude Include="include\eeMesh.h" />
     <ClInclude Include="include\eeRenderer.h" />
     <ClInclude Include="include\eeStaticMesh.h" />
-    <ClInclude Include="include\eeObject.h" />
     <ClInclude Include="include\eePixelShader.h" />
     <ClInclude Include="include\eePrerequisitesCore.h" />
     <ClInclude Include="include\eeRasterizerState.h" />
@@ -251,7 +249,6 @@
     <ClInclude Include="include\eeSceneManager.h" />
     <ClInclude Include="include\eeSkeletal.h" />
     <ClInclude Include="include\eeSkeletalMesh.h" />
-    <ClInclude Include="include\eeVertex.h" />
     <ClInclude Include="include\eeTexture.h" />
     <ClInclude Include="include\eeVertexBuffer.h" />
     <ClInclude Include="include\eeVertexShader.h" />

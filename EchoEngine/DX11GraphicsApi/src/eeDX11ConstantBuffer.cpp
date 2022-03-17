@@ -27,7 +27,7 @@ DX11ConstantBuffer::initData(SIZE_T dataSize,
   }
 
   D3D11_BUFFER_DESC bd;
-  ZeroMemory(&bd, sizeof(bd));
+  memset(&bd, 0, sizeof(bd));
   bd.Usage = D3D11_USAGE_DEFAULT;
   bd.ByteWidth = static_cast<UINT>(dataSize);
   bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;

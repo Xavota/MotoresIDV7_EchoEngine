@@ -19,15 +19,15 @@
 namespace eeEngineSDK {
 class Vector2f;
 class Vector2i;
-class Vector2u;
+class Point2D;
 
 class Vector3f;
 class Vector3i;
-class Vector3u;
+class Point3D;
 
 class Vector4f;
 class Vector4i;
-class Vector4u;
+class Point4D;
 
 class Color;
 class ColorI;
@@ -45,6 +45,19 @@ class Matrix3u;
 class Matrix4f;
 class Matrix4i;
 class Matrix4u;
+
+struct SimplexVertex;
+struct SimpleVertex;
+struct ComplexVertex;
+struct SimpleAnimVertex;
+struct ComplexAnimVertex;
+template<uint32 size = 4>
+struct SimpleBigAnimVertex;
+template<uint32 size = 4>
+struct ComplexBigAnimVertex;
+
+template<typename V>
+struct Triangle;
 
 class Plane;
 class Sphere;

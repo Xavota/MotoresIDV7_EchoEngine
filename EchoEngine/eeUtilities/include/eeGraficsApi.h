@@ -357,20 +357,20 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * The object to draw.
    */
   virtual void
-  drawObject(SPtr<Object> obj);
+  drawOnSAQ(Map<int32, SPtr<Texture>> texs);
 
   /**
    * @brief
-   * Draws the actor.
+   * Draws a mesh.
    *
    * @description
-   * Draws the given actor.
+   * Draws the given mesh.
    *
-   * @param obj
-   * The actor to draw.
+   * @param meshToDraw
+   * The mesh to draw.
    */
   virtual void
-  drawObject(SPtr<Actor> act);
+  drawMesh(const Mesh& meshToDraw);
 
   /**
    * @brief
@@ -570,7 +570,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * The new size for the window.
    */
   virtual void
-  resizeWindow(Vector2u newSize);
+  resizeWindow(Point2D newSize);
 
   /**
    * @brief

@@ -123,9 +123,6 @@
     <ClInclude Include="include\eeVertexShader.h">
       <Filter>include\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="include\eeVertex.h">
-      <Filter>include\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="include\eeAnimation.h">
       <Filter>include\Resources</Filter>
     </ClInclude>
@@ -133,9 +130,6 @@
       <Filter>include\Resources</Filter>
     </ClInclude>
     <ClInclude Include="include\eeStaticMesh.h">
-      <Filter>include\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="include\eeObject.h">
       <Filter>include\Resources</Filter>
     </ClInclude>
     <ClInclude Include="include\eeResourceManager.h">
@@ -244,9 +238,6 @@
       <Filter>src\Resources</Filter>
     </ClCompile>
     <ClCompile Include="src\eeStaticMesh.cpp">
-      <Filter>src\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\eeObject.cpp">
       <Filter>src\Resources</Filter>
     </ClCompile>
     <ClCompile Include="src\eeResourceManager.cpp">

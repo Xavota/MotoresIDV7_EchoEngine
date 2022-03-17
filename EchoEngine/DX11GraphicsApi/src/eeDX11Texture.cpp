@@ -1,8 +1,8 @@
 #include "eeDX11Texture.h"
 
-#pragma warning(push, 0)   
+#pragma warning(push, 0)
 #include <d3dx11.h>
-#pragma warning(pop)   
+#pragma warning(pop)
 
 #include <eeMemoryManager.h>
 
@@ -13,7 +13,7 @@
 
 namespace eeEngineSDK {
 DX11Texture::DX11Texture(uint32 bindFlags,
-                         const Vector2u& texSize,
+                         const Point2D& texSize,
                          uint32 mipLevels)
 {
   create2D(bindFlags, texSize, mipLevels);
@@ -25,7 +25,7 @@ DX11Texture::~DX11Texture()
 
 bool
 DX11Texture::create2D(uint32 bindFlags,
-                      const Vector2u& texSize,
+                      const Point2D& texSize,
                       uint32 mipLevels)
 {
   const auto* basics =

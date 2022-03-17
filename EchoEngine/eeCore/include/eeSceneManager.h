@@ -14,6 +14,8 @@
 #include "eePrerequisitesCore.h"
 #include <eeModule.h>
 
+#include "eeScene.h"
+
 namespace eeEngineSDK{
 /**
  * @brief
@@ -89,7 +91,8 @@ class EE_CORE_EXPORT SceneManager : public Module<SceneManager>
    * All actors inside.
    */
   Vector<SPtr<Actor>>
-  getAllRenderableActorsInside(SPtr<CCamera> camera);
+  getAllRenderableActorsInside(SPtr<CCamera> camera,
+                       RENDER_ACTOR_FLAGS::E flags = RENDER_ACTOR_FLAGS::kNone);
 
   /**
    * @brief

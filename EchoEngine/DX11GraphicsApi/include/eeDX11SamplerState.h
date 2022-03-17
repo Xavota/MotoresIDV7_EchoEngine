@@ -19,7 +19,7 @@ namespace eeEngineSDK{
  * @brief
  * Sampler state, to describe how to read texture info.
  */
-class DX11SamplerState : public SamplerState
+class EE_PLUGINDX11_EXPORT DX11SamplerState : public SamplerState
 {
  public:
   /**

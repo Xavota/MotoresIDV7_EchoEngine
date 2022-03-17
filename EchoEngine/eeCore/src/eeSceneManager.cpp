@@ -1,5 +1,4 @@
 #include "eeSceneManager.h"
-#include "eeScene.h"
 
 #include <eeLogger.h>
 
@@ -45,15 +44,16 @@ SceneManager::getScene(String name)
   return m_scenes[name];
 }
 Vector<SPtr<Actor>>
-SceneManager::getAllRenderableActorsInside(SPtr<CCamera> camera)
+SceneManager::getAllRenderableActorsInside(SPtr<CCamera> camera,
+                                           RENDER_ACTOR_FLAGS::E flags)
 {
-  if (!camera) { return Vector<SPtr<Actor>>(); }
+  if (!camera) { return {}; }
 
   Vector<SPtr<Actor>> renderActors;
   for (auto& sc : m_scenes) {
     Vector<SPtr<Actor>> tmpRenderActors;
     if (sc.second->isActive()) {
-      tmpRenderActors = sc.second->getAllRenderableActorsInside(camera);
+      tmpRenderActors = sc.second->getAllRenderableActorsInside(camera, flags);
     }
 
     for (auto& ra : tmpRenderActors) {

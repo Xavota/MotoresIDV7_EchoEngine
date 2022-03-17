@@ -17,18 +17,11 @@ const Vector3i Vector3i::kFORWARD = Vector3i(0, 0, 1);
 const Vector3i Vector3i::kRIGHT = Vector3i(1, 0, 0);
 const Vector3i Vector3i::kUP = Vector3i(0, 1, 0);
 
-const Vector3u Vector3u::kZERO = Vector3u(0u, 0u, 0u);
-const Vector3u Vector3u::kFORWARD = Vector3u(0u, 0u, 1u);
-const Vector3u Vector3u::kRIGHT = Vector3u(1u, 0u, 0u);
-const Vector3u Vector3u::kUP = Vector3u(0u, 1u, 0u);
+const Point3D Point3D::kZERO = Point3D(0u, 0u, 0u);
+const Point3D Point3D::kFORWARD = Point3D(0u, 0u, 1u);
+const Point3D Point3D::kRIGHT = Point3D(1u, 0u, 0u);
+const Point3D Point3D::kUP = Point3D(0u, 1u, 0u);
 
-
-Vector3f::Vector3f(float _x, float _y, float _z)
- : x(_x),
-   y(_y),
-   z(_z)
-{
-}
 
 float
 Vector3f::dot(const Vector3f& other) const
@@ -249,19 +242,6 @@ Vector3f::operator*=(const Matrix3f& other)
 }
 
 
-Vector3i::Vector3i()
-{
-}
-Vector3i::Vector3i(int32 _x, int32 _y, int32 _z)
- : x(_x),
-   y(_y),
-   z(_z)
-{
-}
-Vector3i::~Vector3i()
-{
-}
-
 float
 Vector3i::dot(const Vector3i& other) const
 {
@@ -301,22 +281,22 @@ Vector3i::operator+(const Vector3i& other) const
   return Vector3i(this->x + other.x, this->y + other.y, this->z + other.z);
 }
 Vector3i
-Vector3i::operator-(const Vector3i& other) const
+Vector3i::operator-(const Vector3i & other) const
 {
   return Vector3i(this->x - other.x, this->y - other.y, this->z - other.z);
 }
 Vector3i
-Vector3i::operator*(const Vector3i& other) const
+Vector3i::operator*(const Vector3i & other) const
 {
   return Vector3i(this->x * other.x, this->y * other.y, this->z * other.z);
 }
 Vector3i
-Vector3i::operator/(const Vector3i& other) const
+Vector3i::operator/(const Vector3i & other) const
 {
   return Vector3i(this->x / other.x, this->y / other.y, this->z / other.z);
 }
 Vector3i
-Vector3i::operator%(const Vector3i& other) const
+Vector3i::operator%(const Vector3i & other) const
 {
   return Vector3i(this->x % other.x, this->y % other.y, this->z % other.z);
 }
@@ -429,177 +409,147 @@ Vector3i::operator!=(const Vector3i& other) const
 }
 
 
-Vector3u::Vector3u()
-{
-}
-Vector3u::Vector3u(uint32 _x, uint32 _y, uint32 _z) :
-  x(_x),
-  y(_y),
-  z(_z)
-{
-}
-Vector3u::~Vector3u()
-{
-}
-
 float
-Vector3u::dot(const Vector3u& other) const
+Point3D::getDistance(const Point3D& other) const
 {
-  return static_cast<float>(this->x * other.x)
-       + static_cast<float>(this->y * other.y)
-       + static_cast<float>(this->z * other.z);
-}
-Vector3f
-Vector3u::cross(const Vector3u& other) const
-{
-  return Vector3f(static_cast<float>(this->y * other.z)
-                - static_cast<float>(this->z * other.y),
-                  static_cast<float>(this->z * other.x)
-                - static_cast<float>(this->x * other.z),
-                  static_cast<float>(this->x * other.y)
-                - static_cast<float>(this->y * other.x));
-}
-float
-Vector3u::getDistance(const Vector3u& other) const
-{
-  Vector3u d = other - *this;
+  Point3D d = other - *this;
   return Math::sqrt(static_cast<float>(d.x * d.x)
                   + static_cast<float>(d.y * d.y)
                   + static_cast<float>(d.z * d.z));
 }
 float
-Vector3u::getMagnitud() const
+Point3D::getMagnitud() const
 {
   return Math::sqrt(static_cast<float>(this->x * this->x)
                   + static_cast<float>(this->y * this->y)
                   + static_cast<float>(this->z * this->z));
 }
 
-Vector3u
-Vector3u::operator+(const Vector3u& other) const
+Point3D
+Point3D::operator+(const Point3D& other) const
 {
-  return Vector3u(this->x + other.x, this->y + other.y, this->z + other.z);
+  return Point3D(this->x + other.x, this->y + other.y, this->z + other.z);
 }
-Vector3u
-Vector3u::operator-(const Vector3u& other) const
+Point3D
+Point3D::operator-(const Point3D& other) const
 {
-  return Vector3u(this->x - other.x, this->y - other.y, this->z - other.z);
+  return Point3D(this->x - other.x, this->y - other.y, this->z - other.z);
 }
-Vector3u
-Vector3u::operator*(const Vector3u& other) const
+Point3D
+Point3D::operator*(const Point3D& other) const
 {
-  return Vector3u(this->x * other.x, this->y * other.y, this->z * other.z);
+  return Point3D(this->x * other.x, this->y * other.y, this->z * other.z);
 }
-Vector3u
-Vector3u::operator/(const Vector3u& other) const
+Point3D
+Point3D::operator/(const Point3D& other) const
 {
-  return Vector3u(this->x / other.x, this->y / other.y, this->z / other.z);
+  return Point3D(this->x / other.x, this->y / other.y, this->z / other.z);
 }
-Vector3u
-Vector3u::operator%(const Vector3u& other) const
+Point3D
+Point3D::operator%(const Point3D& other) const
 {
-  return Vector3u(this->x % other.x, this->y % other.y, this->z % other.z);
+  return Point3D(this->x % other.x, this->y % other.y, this->z % other.z);
 }
-Vector3u
-Vector3u::operator+(uint32 other) const
+Point3D
+Point3D::operator+(uint32 other) const
 {
-  return Vector3u(this->x + other, this->y + other, this->z + other);
+  return Point3D(this->x + other, this->y + other, this->z + other);
 }
-Vector3u
-Vector3u::operator-(uint32 other) const
+Point3D
+Point3D::operator-(uint32 other) const
 {
-  return Vector3u(this->x - other, this->y - other, this->z - other);
+  return Point3D(this->x - other, this->y - other, this->z - other);
 }
-Vector3u
-Vector3u::operator*(uint32 other) const
+Point3D
+Point3D::operator*(uint32 other) const
 {
-  return Vector3u(this->x * other, this->y * other, this->z * other);
+  return Point3D(this->x * other, this->y * other, this->z * other);
 }
-Vector3u
-Vector3u::operator/(uint32 other) const
+Point3D
+Point3D::operator/(uint32 other) const
 {
-  return Vector3u(this->x / other, this->y / other, this->z / other);
+  return Point3D(this->x / other, this->y / other, this->z / other);
 }
-Vector3u
-Vector3u::operator%(uint32 other) const
+Point3D
+Point3D::operator%(uint32 other) const
 {
-  return Vector3u(this->x % other, this->y % other, this->z % other);
+  return Point3D(this->x % other, this->y % other, this->z % other);
 }
-Vector3u&
-Vector3u::operator=(const Vector3u& other)
+Point3D&
+Point3D::operator=(const Point3D& other)
 {
   this->x = other.x;
   this->y = other.y;
   this->z = other.z;
   return *this;
 }
-Vector3u&
-Vector3u::operator+=(const Vector3u& other)
+Point3D&
+Point3D::operator+=(const Point3D& other)
 {
   *this = *this + other;
   return *this;
 }
-Vector3u&
-Vector3u::operator-=(const Vector3u& other)
+Point3D&
+Point3D::operator-=(const Point3D& other)
 {
   *this = *this - other;
   return *this;
 }
-Vector3u&
-Vector3u::operator*=(const Vector3u& other)
+Point3D&
+Point3D::operator*=(const Point3D& other)
 {
   *this = *this * other;
   return *this;
 }
-Vector3u&
-Vector3u::operator/=(const Vector3u& other)
+Point3D&
+Point3D::operator/=(const Point3D& other)
 {
   *this = *this / other;
   return *this;
 }
-Vector3u&
-Vector3u::operator%=(const Vector3u& other)
+Point3D&
+Point3D::operator%=(const Point3D& other)
 {
   *this = *this % other;
   return *this;
 }
-Vector3u&
-Vector3u::operator+=(uint32 other)
+Point3D&
+Point3D::operator+=(uint32 other)
 {
   *this = *this + other;
   return *this;
 }
-Vector3u&
-Vector3u::operator-=(uint32 other)
+Point3D&
+Point3D::operator-=(uint32 other)
 {
   *this = *this - other;
   return *this;
 }
-Vector3u&
-Vector3u::operator*=(uint32 other)
+Point3D&
+Point3D::operator*=(uint32 other)
 {
   *this = *this * other;
   return *this;
 }
-Vector3u&
-Vector3u::operator/=(uint32 other)
+Point3D&
+Point3D::operator/=(uint32 other)
 {
   *this = *this / other;
   return *this;
 }
-Vector3u&
-Vector3u::operator%=(uint32 other)
+Point3D&
+Point3D::operator%=(uint32 other)
 {
   *this = *this % other;
   return *this;
 }
 bool
-Vector3u::operator==(const Vector3u& other) const
+Point3D::operator==(const Point3D& other) const
 {
   return this->x == other.x && this->y == other.y && this->z == other.z;
 }
 bool
-Vector3u::operator!=(const Vector3u& other) const
+Point3D::operator!=(const Point3D& other) const
 {
   return !(*this == other);
 }

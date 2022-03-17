@@ -4,7 +4,6 @@
 #include "eeVertexShader.h"
 #include "eePixelShader.h"
 #include "eeConstantBuffer.h"
-#include "eeObject.h"
 #include "eeStaticMesh.h"
 #include "eeMesh.h"
 #include "eeCTransform.h"
@@ -55,102 +54,35 @@ GraphicsApi::initializeScreen(void* callback, uint32 witdh, uint32 height)
   return true;
 }
 void
-GraphicsApi::drawObject(SPtr<Object> obj)
+GraphicsApi::drawOnSAQ(Map<int32, SPtr<Texture>> texs)
 {
-  auto& graphicsApi = GraphicsApi::instance();
+  static Mesh SAQ = Mesh::SAQ;
+  SAQ.set();
 
-  //m_basics.m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+  Vector<SPtr<Texture>> texsVec;
+  int32 current = 0;
+  for (auto& t : texs) {
+    int32 gap = t.first - current;
+    current = t.first + 1;
+    for (int32 i = 0; i < gap; ++i) {
+      texsVec.push_back(nullptr);
+    }
+    texsVec.push_back(t.second);
+  }
+  setTextures(texsVec, 0u);
 
-  //Vector<Pair<Mesh, SPtr<Texture>>> meshes = obj->getModel()->getMeshes();
-  Vector<Pair<Mesh, SPtr<Material>>> meshes = obj->getModel()->getMeshes();
-
-  obj->getModelBuffer()->setInVertex(0u);
-
-  SIZE_T meshesCount = meshes.size();
-  for (SIZE_T i = 0; i < meshesCount; ++i) {
-    meshes[i].first.set();
-
-    graphicsApi.setTextures({meshes[i].second->m_diffuse}, 0u);
-
-    drawIndexed(static_cast<uint32>(meshes[i].first.getIndexCount()));
-
-    graphicsApi.unsetVertexBuffers(1u, 0u);
-  }  
+  drawIndexed(static_cast<uint32>(SAQ.getIndexCount()));
+  unsetVertexBuffers(1u, 0u);
+}
+void GraphicsApi::drawMesh(const Mesh& meshToDraw)
+{
+  meshToDraw.set();
+  drawIndexed(static_cast<uint32>(meshToDraw.getIndexCount()));
+  unsetVertexBuffers(1u, 0u);
 }
 void
-GraphicsApi::drawObject(SPtr<Actor> act)
-{
-  static SPtr<ConstantBuffer> modelMatrixBuff = nullptr;
-  if (!modelMatrixBuff)
-  {
-    modelMatrixBuff = GraphicsApi::instance().createConstantBufferPtr();
-    modelMatrixBuff->initData(sizeof(Matrix4f), sizeof(Matrix4f), nullptr);
-  }
-
-  EE_NO_EXIST_RETURN(act);
-
-  auto& graphicsApi = GraphicsApi::instance();
-
-  Vector<Pair<Mesh, SPtr<Material>>> meshes;
-  SIZE_T meshesCount = 0;
-
-  SPtr<CTransform> transform = act->getTransform();
-
-  const SPtr<CStaticMesh> staticMesh = act->getComponent<CStaticMesh>();
-  if (staticMesh && staticMesh->getStaticMesh())
-  {
-    meshes = staticMesh->getStaticMesh()->getMeshes();
-    meshesCount = meshes.size();
-  
-    Matrix4f modelMatrix = transform->getModelMatrix();
-    modelMatrixBuff->updateData(reinterpret_cast<Byte*>(&modelMatrix));
-    modelMatrixBuff->setInVertex(0u);
-  
-    for (SIZE_T i = 0; i < meshesCount; ++i) {
-      meshes[i].first.set();
-  
-      graphicsApi.setTextures({ meshes[i].second->m_diffuse }, 0u);
-  
-      drawIndexed(static_cast<uint32>(meshes[i].first.getIndexCount()));
-  
-      graphicsApi.unsetVertexBuffers(1u, 0u);
-      graphicsApi.unsetTextures(1u, 0u);
-    }
-  }
-
-  const SPtr<CSkeletalMesh> skeletal = act->getComponent<CSkeletalMesh>();
-  if (skeletal && skeletal->getModel())
-  {
-    const SPtr<SkeletalMesh> skModel = skeletal->getModel();
-    meshes = skModel->getMeshes();
-    meshesCount = meshes.size();
-  
-    Matrix4f modelMatrix = transform->getModelMatrix();
-    modelMatrixBuff->updateData(reinterpret_cast<Byte*>(&modelMatrix));
-    modelMatrixBuff->setInVertex(0u);
-  
-    const SPtr<Skeletal> skeleton = skModel->getSkeletal();
-    for (SIZE_T i = 0; i < meshesCount; ++i) {
-      meshes[i].first.set();
-  
-      graphicsApi.setTextures({ meshes[i].second->m_diffuse }, 0u);
-  
-      if (skeleton) {
-        skeleton->use(i);
-      }
-  
-      drawIndexed(static_cast<uint32>(meshes[i].first.getIndexCount()));
-  
-      graphicsApi.unsetVertexBuffers(1u, 0u);
-      graphicsApi.unsetTextures(1u, 0u);
-    }
-  }
-}
-void
-GraphicsApi::release()
-{
-}
-void GraphicsApi::resizeWindow(Vector2u newSize)
+GraphicsApi::release() {}
+void GraphicsApi::resizeWindow(Point2D newSize)
 {
   //MemoryManager::instance().safeRelease<Texture>(m_rtv);
   //m_rtv->createAsBackBuffer();

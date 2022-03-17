@@ -5,22 +5,9 @@ namespace eeEngineSDK
 {
 const Vector4f Vector4f::kZERO = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
 const Vector4i Vector4i::kZERO = Vector4i(0, 0, 0, 0);
-const Vector4u Vector4u::kZERO = Vector4u(0u, 0u, 0u, 0u);
+const Point4D Point4D::kZERO = Point4D(0u, 0u, 0u, 0u);
 
 
-Vector4f::Vector4f()
-{
-}
-Vector4f::Vector4f(float _x, float _y, float _z, float _w)
- : x(_x),
-   y(_y),
-   z(_z),
-   w(_w)
-{
-}
-Vector4f::~Vector4f()
-{
-}
 float
 Vector4f::dot(const Vector4f& other) const
 {
@@ -215,19 +202,6 @@ Vector4f::operator!=(const Vector4f& other) const
 }
 
 
-Vector4i::Vector4i()
-{
-}
-Vector4i::Vector4i(int32 _x, int32 _y, int32 _z, int32 _w)
- : x(_x),
-   y(_y),
-   z(_z),
-   w(_w)
-{
-}
-Vector4i::~Vector4i()
-{
-}
 float
 Vector4i::dot(const Vector4i& other) const
 {
@@ -399,106 +373,85 @@ Vector4i::operator!=(const Vector4i& other) const
 }
 
 
-Vector4u::Vector4u()
-{
-}
-Vector4u::Vector4u(uint32 _x, uint32 _y, uint32 _z, uint32 _w)
- : x(_x),
-   y(_y),
-   z(_z),
-   w(_w)
-{
-}
-Vector4u::~Vector4u()
-{
-}
 float
-Vector4u::dot(const Vector4u& other) const
+Point4D::getDistance(const Point4D& other) const
 {
-  return static_cast<float>(this->x * other.x)
-       + static_cast<float>(this->y * other.y)
-       + static_cast<float>(this->z * other.z)
-       + static_cast<float>(this->w * other.w);
-}
-float
-Vector4u::getDistance(const Vector4u& other) const
-{
-  Vector4u d = other - *this;
+  Point4D d = other - *this;
   return Math::sqrt(static_cast<float>(d.x * d.x)
                   + static_cast<float>(d.y * d.y)
                   + static_cast<float>(d.z * d.z)
                   + static_cast<float>(d.w * d.w));
 }
 float
-Vector4u::getMagnitude() const
+Point4D::getMagnitude() const
 {
   return Math::sqrt(static_cast<float>(this->x * this->x)
                   + static_cast<float>(this->y * this->y)
                   + static_cast<float>(this->z * this->z)
                   + static_cast<float>(this->w * this->w));
 }
-Vector4u
-Vector4u::operator+(const Vector4u& other) const
+Point4D
+Point4D::operator+(const Point4D& other) const
 {
-  return Vector4u(this->x + other.x, this->y + other.y,
-                  this->z + other.z, this->w + other.w);
+  return Point4D(this->x + other.x, this->y + other.y,
+                 this->z + other.z, this->w + other.w);
 }
-Vector4u
-Vector4u::operator-(const Vector4u& other) const
+Point4D
+Point4D::operator-(const Point4D& other) const
 {
-  return Vector4u(this->x - other.x, this->y - other.y,
-                  this->z - other.z, this->w - other.w);
+  return Point4D(this->x - other.x, this->y - other.y,
+                 this->z - other.z, this->w - other.w);
 }
-Vector4u
-Vector4u::operator*(const Vector4u& other) const
+Point4D
+Point4D::operator*(const Point4D& other) const
 {
-  return Vector4u(this->x * other.x, this->y * other.y,
-                  this->z * other.z, this->w * other.w);
+  return Point4D(this->x * other.x, this->y * other.y,
+                 this->z * other.z, this->w * other.w);
 }
-Vector4u
-Vector4u::operator/(const Vector4u& other) const
+Point4D
+Point4D::operator/(const Point4D& other) const
 {
-  return Vector4u(this->x / other.x, this->y / other.y,
-                  this->z / other.z, this->w / other.w);
+  return Point4D(this->x / other.x, this->y / other.y,
+                 this->z / other.z, this->w / other.w);
 }
-Vector4u
-Vector4u::operator%(const Vector4u& other) const
+Point4D
+Point4D::operator%(const Point4D& other) const
 {
-  return Vector4u(this->x % other.x, this->y % other.y,
-                  this->z % other.z, this->w % other.w);
+  return Point4D(this->x % other.x, this->y % other.y,
+                 this->z % other.z, this->w % other.w);
 }
-Vector4u
-Vector4u::operator+(uint32 other) const
+Point4D
+Point4D::operator+(uint32 other) const
 {
-  return Vector4u(this->x + other, this->y + other,
-                  this->z + other, this->w + other);
+  return Point4D(this->x + other, this->y + other,
+                 this->z + other, this->w + other);
 }
-Vector4u
-Vector4u::operator-(uint32 other) const
+Point4D
+Point4D::operator-(uint32 other) const
 {
-  return Vector4u(this->x - other, this->y - other,
-                  this->z - other, this->w - other);
+  return Point4D(this->x - other, this->y - other,
+                 this->z - other, this->w - other);
 }
-Vector4u
-Vector4u::operator*(uint32 other) const
+Point4D
+Point4D::operator*(uint32 other) const
 {
-  return Vector4u(this->x * other, this->y * other,
-                  this->z * other, this->w * other);
+  return Point4D(this->x * other, this->y * other,
+                 this->z * other, this->w * other);
 }
-Vector4u
-Vector4u::operator/(uint32 other) const
+Point4D
+Point4D::operator/(uint32 other) const
 {
-  return Vector4u(this->x / other, this->y / other,
-                  this->z / other, this->w / other);
+  return Point4D(this->x / other, this->y / other,
+                 this->z / other, this->w / other);
 }
-Vector4u
-Vector4u::operator%(uint32 other) const
+Point4D
+Point4D::operator%(uint32 other) const
 {
-  return Vector4u(this->x % other, this->y % other,
-                  this->z % other, this->w % other);
+  return Point4D(this->x % other, this->y % other,
+                 this->z % other, this->w % other);
 }
-Vector4u&
-Vector4u::operator=(const Vector4u& other)
+Point4D&
+Point4D::operator=(const Point4D& other)
 {
   this->x = other.x;
   this->y = other.y;
@@ -506,74 +459,74 @@ Vector4u::operator=(const Vector4u& other)
   this->w = other.w;
   return *this;
 }
-Vector4u&
-Vector4u::operator+=(const Vector4u& other)
+Point4D&
+Point4D::operator+=(const Point4D& other)
 {
   *this = *this + other;
   return *this;
 }
-Vector4u&
-Vector4u::operator-=(const Vector4u& other)
+Point4D&
+Point4D::operator-=(const Point4D& other)
 {
   *this = *this - other;
   return *this;
 }
-Vector4u&
-Vector4u::operator*=(const Vector4u& other)
+Point4D&
+Point4D::operator*=(const Point4D& other)
 {
   *this = *this * other;
   return *this;
 }
-Vector4u&
-Vector4u::operator/=(const Vector4u& other)
+Point4D&
+Point4D::operator/=(const Point4D& other)
 {
   *this = *this / other;
   return *this;
 }
-Vector4u&
-Vector4u::operator%=(const Vector4u& other)
+Point4D&
+Point4D::operator%=(const Point4D& other)
 {
   *this = *this % other;
   return *this;
 }
-Vector4u&
-Vector4u::operator+=(uint32 other)
+Point4D&
+Point4D::operator+=(uint32 other)
 {
   *this = *this + other;
   return *this;
 }
-Vector4u&
-Vector4u::operator-=(uint32 other)
+Point4D&
+Point4D::operator-=(uint32 other)
 {
   *this = *this - other;
   return *this;
 }
-Vector4u&
-Vector4u::operator*=(uint32 other)
+Point4D&
+Point4D::operator*=(uint32 other)
 {
   *this = *this * other;
   return *this;
 }
-Vector4u&
-Vector4u::operator/=(uint32 other)
+Point4D&
+Point4D::operator/=(uint32 other)
 {
   *this = *this / other;
   return *this;
 }
-Vector4u&
-Vector4u::operator%=(uint32 other)
+Point4D&
+Point4D::operator%=(uint32 other)
 {
   *this = *this % other;
   return *this;
 }
 bool
-Vector4u::operator==(const Vector4u& other) const
+Point4D::operator==(const Point4D& other) const
 {
   return this->x == other.x && this->y == other.y
       && this->z == other.z && this->w == other.w;
 }
 bool
-Vector4u::operator!=(const Vector4u& other) const
+Point4D::operator!=(const Point4D& other) const
 {
   return !(*this == other);
 }
