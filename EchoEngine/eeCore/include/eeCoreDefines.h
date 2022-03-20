@@ -14,6 +14,10 @@
 
 
 namespace eeEngineSDK {
+/**
+ * @brief
+ * The types of texture binds.
+ */
 namespace eTEXTURE_BIND_FLAGS
 {
 enum E
@@ -27,9 +31,71 @@ enum E
 
 /**
  * @brief
+ * Texture formats.
+ */
+namespace eTEXTURE_FORMAT
+{
+enum E
+{
+  kNone = 0u,
+  kUnknown,
+  kR32G32B32A32_Float ,
+  kR32G32B32A32_Uint,
+  kR32G32B32A32_Sint,
+  kR32G32B32A32_Typeless,
+  kR32G32B32_Float,
+  kR32G32B32_Uint,
+  kR32G32B32_Sint,
+  kR32G32B32_Typeless,
+  kR16G16B16A16_Float,
+  kR16G16B16A16_Uint,
+  kR16G16B16A16_Unorm,
+  kR16G16B16A16_Sint,
+  kR16G16B16A16_Snorm,
+  kR16G16B16A16_Typeless,
+  kR8G8B8A8_Uint,
+  kR8G8B8A8_Unorm,
+  kR8G8B8A8_Unorm_Srgb,
+  kR8G8B8A8_Sint,
+  kR8G8B8A8_Snorm,
+  kR8G8B8A8_Typeless,
+  kB8G8R8A8_Unorm,
+  kB8G8R8A8_Unorm_Srgb,
+  kB8G8R8A8_Typeless,
+  kR16_Float,
+  kR16_Uint,
+  kR16_Unorm,
+  kR16_Sint,
+  kR16_Snorm,
+  kR16_Typeless,
+  kR8_Uint,
+  kR8_Unorm,
+  kR8_Sint,
+  kR8_Snorm,
+  kR8_Typeless,
+  kD32_Float,
+  kD24_Unorm_S8_Uint,
+  kD16_Unorm
+};
+//DXGI_FORMAT_R16_TYPELESS = 53,
+//DXGI_FORMAT_R16_FLOAT = 54,
+//DXGI_FORMAT_R16_UNORM = 56,
+//DXGI_FORMAT_R16_UINT = 57,
+//DXGI_FORMAT_R16_SNORM = 58,
+//DXGI_FORMAT_R16_SINT = 59,
+//DXGI_FORMAT_R8_TYPELESS = 60,
+//DXGI_FORMAT_R8_UNORM = 61,
+//DXGI_FORMAT_R8_UINT = 62,
+//DXGI_FORMAT_R8_SNORM = 63,
+//DXGI_FORMAT_R8_SINT = 64,
+}
+
+/**
+ * @brief
  * Filter for the sampler.
  */
-enum class eFILTER
+namespace eFILTER {
+enum E
 {
   kMinMagMipPoint,
   kMinMagPointMipLinear,
@@ -68,162 +134,60 @@ enum class eFILTER
   kMAXIMUM_MIN_MAG_MIP_LINEAR,
   kMAXIMUM_ANISOTROPIC
 };
+}
 
 /**
  * @brief
  * How to interpret the UVs outside the range 0.0 - 1.0
  */
-enum class eTEXTURE_ADDRESS_MODE
+namespace eTEXTURE_ADDRESS_MODE {
+enum E
 {
-  WRAP,
-  MIRROR,
-  CLAMP,
-  BORDER,
-  MIRROR_ONCE
+  kWrap,
+  kMirror,
+  kClamp,
+  kBorder,
+  kMirrorOnce
 };
+}
 
 /**
  * @brief
  * Comparison function.
  */
-enum class eCOMPARISON_FUNC
+namespace eCOMPARISON_FUNC {
+enum E
 {
-  NEVER,
-  LESS,
-  EQUAL,
-  LESS_EQUAL,
-  GREATER,
-  NOT_EQUAL,
-  GREATER_EQUAL,
-  ALWAYS
+  kNever,
+  kLess,
+  kEqual,
+  kLessEqual,
+  kGreater,
+  kNotEqual,
+  kGreaterEqual,
+  kAlways
 };
+}
 
 /**
  * @brief
  * How to render the vertices.
  */
-enum class ePRIMITIVE_TOPOLOGY
+namespace ePRIMITIVE_TOPOLOGY {
+enum E
 {
-  UNDEFINED = 0,
-  POINTLIST = 1,
-  LINELIST = 2,
-  LINESTRIP = 3,
-  TRIANGLELIST = 4,
-  TRIANGLESTRIP = 5,
-  LINELIST_ADJ = 10,
-  LINESTRIP_ADJ = 11,
-  TRIANGLELIST_ADJ = 12,
-  TRIANGLESTRIP_ADJ = 13
+  kUndefined = 0,
+  kPointlist = 1,
+  kLinelist = 2,
+  kLinestrip = 3,
+  kTrianglelist = 4,
+  kTrianglestrip = 5,
+  kLinelistADJ = 10,
+  kLinestripADJ = 11,
+  kTrienglelistADJ = 12,
+  kTrianglestripADJ = 13
 }; 
-
-/**
- * @brief
- * Format for read the texture info.
- */
-enum class eFORMAT
-{
-  UNKNOWN = 0,
-  R32G32B32A32_TYPELESS = 1,
-  R32G32B32A32_FLOAT = 2,
-  R32G32B32A32_UINT = 3,
-  R32G32B32A32_SINT = 4,
-  R32G32B32_TYPELESS = 5,
-  R32G32B32_FLOAT = 6,
-  R32G32B32_UINT = 7,
-  R32G32B32_SINT = 8,
-  R16G16B16A16_TYPELESS = 9,
-  R16G16B16A16_FLOAT = 10,
-  R16G16B16A16_UNORM = 11,
-  R16G16B16A16_UINT = 12,
-  R16G16B16A16_SNORM = 13,
-  R16G16B16A16_SINT = 14,
-  R32G32_TYPELESS = 15,
-  R32G32_FLOAT = 16,
-  R32G32_UINT = 17,
-  R32G32_SINT = 18,
-  R32G8X24_TYPELESS = 19,
-  D32_FLOAT_S8X24_UINT = 20,
-  R32_FLOAT_X8X24_TYPELESS = 21,
-  X32_TYPELESS_G8X24_UINT = 22,
-  R10G10B10A2_TYPELESS = 23,
-  R10G10B10A2_UNORM = 24,
-  R10G10B10A2_UINT = 25,
-  R11G11B10_FLOAT = 26,
-  R8G8B8A8_TYPELESS = 27,
-  R8G8B8A8_UNORM = 28,
-  R8G8B8A8_UNORM_SRGB = 29,
-  R8G8B8A8_UINT = 30,
-  R8G8B8A8_SNORM = 31,
-  R8G8B8A8_SINT = 32,
-  R16G16_TYPELESS = 33,
-  R16G16_FLOAT = 34,
-  R16G16_UNORM = 35,
-  R16G16_UINT = 36,
-  R16G16_SNORM = 37,
-  R16G16_SINT = 38,
-  R32_TYPELESS = 39,
-  D32_FLOAT = 40,
-  R32_FLOAT = 41,
-  R32_UINT = 42,
-  R32_SINT = 43,
-  R24G8_TYPELESS = 44,
-  D24_UNORM_S8_UINT = 45,
-  R24_UNORM_X8_TYPELESS = 46,
-  X24_TYPELESS_G8_UINT = 47,
-  R8G8_TYPELESS = 48,
-  R8G8_UNORM = 49,
-  R8G8_UINT = 50,
-  R8G8_SNORM = 51,
-  R8G8_SINT = 52,
-  R16_TYPELESS = 53,
-  R16_FLOAT = 54,
-  D16_UNORM = 55,
-  R16_UNORM = 56,
-  R16_UINT = 57,
-  R16_SNORM = 58,
-  R16_SINT = 59,
-  R8_TYPELESS = 60,
-  R8_UNORM = 61,
-  R8_UINT = 62,
-  R8_SNORM = 63,
-  R8_SINT = 64,
-  A8_UNORM = 65,
-  R1_UNORM = 66,
-  R9G9B9E5_SHAREDEXP = 67,
-  R8G8_B8G8_UNORM = 68,
-  G8R8_G8B8_UNORM = 69,
-  BC1_TYPELESS = 70,
-  BC1_UNORM = 71,
-  BC1_UNORM_SRGB = 72,
-  BC2_TYPELESS = 73,
-  BC2_UNORM = 74,
-  BC2_UNORM_SRGB = 75,
-  BC3_TYPELESS = 76,
-  BC3_UNORM = 77,
-  BC3_UNORM_SRGB = 78,
-  BC4_TYPELESS = 79,
-  BC4_UNORM = 80,
-  BC4_SNORM = 81,
-  BC5_TYPELESS = 82,
-  BC5_UNORM = 83,
-  BC5_SNORM = 84,
-  B5G6R5_UNORM = 85,
-  B5G5R5A1_UNORM = 86,
-  B8G8R8A8_UNORM = 87,
-  B8G8R8X8_UNORM = 88,
-  R10G10B10_XR_BIAS_A2_UNORM = 89,
-  B8G8R8A8_TYPELESS = 90,
-  B8G8R8A8_UNORM_SRGB = 91,
-  B8G8R8X8_TYPELESS = 92,
-  B8G8R8X8_UNORM_SRGB = 93,
-  BC6H_TYPELESS = 94,
-  BC6H_UF16 = 95,
-  BC6H_SF16 = 96,
-  BC7_TYPELESS = 97,
-  BC7_UNORM = 98,
-  BC7_UNORM_SRGB = 99,
-  //FORCE_UINT = 0xffffffff
-};
+}
 
 /**
  * @brief
@@ -231,30 +195,10 @@ enum class eFORMAT
  */
 enum class eUSAGE
 {
-  DEFAULT = 0,
-  IMMUTABLE = 1,
-  DYNAMIC = 2,
-  STAGING = 3
-};
-
-/**
- * @brief
- * Dimension of the textures.
- */
-enum class eSRV_DIMENSION
-{
-  UNKNOWN = 0,
-  BUFFER = 1,
-  TEXTURE1D = 2,
-  TEXTURE1DARRAY = 3,
-  TEXTURE2D = 4,
-  TEXTURE2DARRAY = 5,
-  TEXTURE2DMS = 6,
-  TEXTURE2DMSARRAY = 7,
-  TEXTURE3D = 8,
-  TEXTURECUBE = 9,
-  TEXTURECUBEARRAY = 10,
-  BUFFEREX = 11
+  kDefault = 0,
+  kImmutable = 1,
+  kDynamic = 2,
+  kStaging = 3
 };
 
 /**
@@ -263,8 +207,8 @@ enum class eSRV_DIMENSION
  */
 enum class eFILL_MODE
 {
-  WIREFRAME = 2,
-  SOLID = 3
+  kWireframe = 2,
+  kSolid = 3
 };
 
 /**
@@ -273,9 +217,9 @@ enum class eFILL_MODE
  */
 enum class eCULL_MODE
 {
-  NONE = 1,
-  FRONT = 2,
-  BACK = 3
+  kNone = 1,
+  kFront = 2,
+  kBack = 3
 };
 
 /**
@@ -284,8 +228,8 @@ enum class eCULL_MODE
  */
 enum class eDEPTH_WRITE_MASK
 {
-  ZERO,
-  ALL
+  kZero,
+  kAll
 };
 
 /**
@@ -294,14 +238,14 @@ enum class eDEPTH_WRITE_MASK
  */
 enum eSTENCIL_OP
 {
-  KEEP,
-  ZERO,
-  REPLACE,
-  INCR_SAT,
-  DECR_SAT,
-  INVERT,
-  INCR,
-  DECR
+  kKeep,
+  kZero,
+  kReplace,
+  kIncrSat,
+  kDecrSat,
+  kInvert,
+  kIncr,
+  kDecr
 };
 
 /**
@@ -335,12 +279,14 @@ enum class eBLEND
  */
 enum class eBLEND_OP
 {
- ADD,
- SUBTRACT,
- REV_SUBTRACT,
- MIN,
- MAX
+  Add,
+  Subtract,
+  RevSubtract,
+  Min,
+  Max
 };
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 /*                                                                            */
@@ -370,16 +316,16 @@ struct ViewportDesc
  */
 struct SamplerStateDesc
 {
-  eFILTER               filter;
-  eTEXTURE_ADDRESS_MODE addressU;
-  eTEXTURE_ADDRESS_MODE addressV;
-  eTEXTURE_ADDRESS_MODE addressW;
-  float                 mipLODBias;
-  uint32                maxAnisotropy;
-  eCOMPARISON_FUNC      comparisonFunc;
-  float                 borderColor[4];
-  float                 minLOD;
-  float                 maxLOD;
+  eFILTER::E               filter;
+  eTEXTURE_ADDRESS_MODE::E addressU;
+  eTEXTURE_ADDRESS_MODE::E addressV;
+  eTEXTURE_ADDRESS_MODE::E addressW;
+  float                    mipLODBias;
+  uint32                   maxAnisotropy;
+  eCOMPARISON_FUNC::E      comparisonFunc;
+  float                    borderColor[4];
+  float                    minLOD;
+  float                    maxLOD;
 };
 
 /**
@@ -390,24 +336,6 @@ struct SampleDesc
 {
   uint32 count;
   uint32 quality;
-};
-
-/**
- * @brief
- * Descriptor for a texture 2D buffer.
- */
-struct Texture2DDesc
-{
-  uint32     width;
-  uint32     height;
-  uint32     mipLevels;
-  uint32     arraySize;
-  eFORMAT    format;
-  SampleDesc sampleDesc;
-  eUSAGE     usage;
-  uint32     bindFlags;
-  uint32     CPUAccessFlags;
-  uint32     miscFlags;
 };
 
 /**
@@ -536,30 +464,6 @@ struct BufferExSRV
 
 /**
  * @brief
- * Descriptor for shader resource view.
- */
-struct ShaderResourceViewDesc
-{
-  eFORMAT        format;
-  eSRV_DIMENSION viewDimension;
-  union
-  {
-    BufferSRV       buffer;
-    Tex1DSRV        texture1D;
-    Tex1dArraySRV   texture1DArray;
-    Tex2DSRV        texture2D;
-    Tex2dArraySRV   texture2DArray;
-    Tex2DMsSRV      texture2DMS;
-    Tex2DMsArraySRV texture2DMSArray;
-    Tex3DSRV        texture3D;
-    TexcubeSRV      textureCube;
-    TexcubeArraySRV textureCubeArray;
-    BufferExSRV     bufferEx;
-  };
-};
-
-/**
- * @brief
  * Descriptor for a rasterizer state.
  */
 struct RasteraizerDesc
@@ -582,10 +486,10 @@ struct RasteraizerDesc
  */
 struct DepthStencilOPDesc
 {
-  eSTENCIL_OP      stencilFailOp;
-  eSTENCIL_OP      stencilDepthFailOp;
-  eSTENCIL_OP      stencilPassOp;
-  eCOMPARISON_FUNC stencilFunc;
+  eSTENCIL_OP         stencilFailOp;
+  eSTENCIL_OP         stencilDepthFailOp;
+  eSTENCIL_OP         stencilPassOp;
+  eCOMPARISON_FUNC::E stencilFunc;
 };
 
 /**
@@ -594,14 +498,14 @@ struct DepthStencilOPDesc
  */
 struct DepthStencilDesc
 {
-  bool               depthEnable;
-  eDEPTH_WRITE_MASK  depthWriteMask;
-  eCOMPARISON_FUNC   depthFunc;
-  bool               stencilEnable;
-  uint8              stencilReadMask;
-  uint8              stencilWriteMask;
-  DepthStencilOPDesc frontFace;
-  DepthStencilOPDesc backFace;
+  bool                depthEnable;
+  eDEPTH_WRITE_MASK   depthWriteMask;
+  eCOMPARISON_FUNC::E depthFunc;
+  bool                stencilEnable;
+  uint8               stencilReadMask;
+  uint8               stencilWriteMask;
+  DepthStencilOPDesc  frontFace;
+  DepthStencilOPDesc  backFace;
 };
 
 /**

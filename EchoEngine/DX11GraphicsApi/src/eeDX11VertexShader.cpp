@@ -34,23 +34,23 @@ DX11VertexShader::compileFromFile(const String& fileName)
   ID3DBlob* pVSBlob = nullptr;
   ID3DBlob* pErrorBlob = nullptr;
 
-  hr = D3DX11CompileFromFileA(fileName.c_str(),
-                              nullptr,
-                              nullptr,
-                              "main",
-                              "vs_4_0",
-                              dwShaderFlags,
-                              0,
-                              nullptr,
-                              &pVSBlob,
-                              &pErrorBlob,
-                              nullptr);
+  hr = D3DX11CompileFromFile(fileName.c_str(),
+                             nullptr,
+                             nullptr,
+                             "main",
+                             "vs_4_0",
+                             dwShaderFlags,
+                             0,
+                             nullptr,
+                             &pVSBlob,
+                             &pErrorBlob,
+                             nullptr);
   if (FAILED(hr)) {
     if (pVSBlob) {
       DX11SAFE_RELEASE(pVSBlob);
     }
     if (pErrorBlob != nullptr) {
-      OutputDebugStringA((char*)pErrorBlob->GetBufferPointer());
+      OutputDebugString((char*)pErrorBlob->GetBufferPointer());
     }
     DX11SAFE_RELEASE(pErrorBlob);
 

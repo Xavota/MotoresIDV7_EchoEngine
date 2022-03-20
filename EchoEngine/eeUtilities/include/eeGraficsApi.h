@@ -344,20 +344,17 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * The topology to set.
    */
   virtual void
-  setPrimitiveTopology(ePRIMITIVE_TOPOLOGY /*topology*/) {}
+  setPrimitiveTopology(ePRIMITIVE_TOPOLOGY::E /*topology*/) {}
 
   /**
    * @brief
-   * Draws the object.
+   * Draws on a Screen Align Quad object.
    *
    * @description
-   * Draws the given object.
-   *
-   * @param obj
-   * The object to draw.
+   * Draws on a Screen Align Quad object.
    */
   virtual void
-  drawOnSAQ(Map<int32, SPtr<Texture>> texs);
+  drawOnSAQ();
 
   /**
    * @brief

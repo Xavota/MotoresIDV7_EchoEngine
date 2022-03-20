@@ -52,6 +52,7 @@ class EE_CORE_EXPORT StaticMesh
    * @return
    * Weather it succeed or failed to initialize.
    */
+  //template<typename V, typename I>
   StaticMesh(const Vector<Mesh/*<V,I>*/>& meshes,
              const String& name,
              const Vector3f& furtherVertexPosition,
@@ -78,6 +79,7 @@ class EE_CORE_EXPORT StaticMesh
    * @return
    * Weather it succeed or failed to initialize.
    */
+  //template<typename V, typename I>
   StaticMesh(const Vector<Pair<Mesh/*<V, I>*/, SPtr<Material>>>& meshes,
              const String& name,
              const Vector3f& furtherVertexPosition,
@@ -111,7 +113,8 @@ class EE_CORE_EXPORT StaticMesh
    * @return
    * Weather it succeed or failed to initialize.
    */
-  virtual bool
+  //template<typename V, typename I>
+  bool
   loadFromMeshes(const Vector<Mesh/*<V,I>*/>& meshes,
                  const String& name,
                  const Vector3f& furtherVertexPosition,
@@ -138,7 +141,8 @@ class EE_CORE_EXPORT StaticMesh
    * @return
    * Weather it succeed or failed to initialize.
    */
-  virtual bool
+  //template<typename V, typename I>
+  bool
   loadFromMeshes(const Vector<Pair<Mesh/*<V,I>*/, SPtr<Material>>>& meshes,
                  const String& name,
                  const Vector3f& furtherVertexPosition,
@@ -155,7 +159,8 @@ class EE_CORE_EXPORT StaticMesh
    * @return
    * The vector of pairs of meshes and texture.
    */
-  virtual Vector<Pair<Mesh/*<V,I>*/, SPtr<Material>>>
+  //template<typename V, typename I>
+  Vector<Pair<Mesh/*<V,I>*/, SPtr<Material>>>
   getMeshes();
   /**
    * @brief
@@ -278,7 +283,7 @@ class EE_CORE_EXPORT StaticMesh
   /**
    * The vector of pairs of meshes and texture indices.
    */
-  Vector<Pair<Mesh/*<V, I>*/, SPtr<Material>>> m_meshes;
+  Vector<Pair<Mesh, SPtr<Material>>> m_meshes;
   /**
    * The resource name.
    */

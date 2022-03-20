@@ -77,9 +77,6 @@ Skeletal::loadFromData(const Vector<Vector<Bone>>& bonesPerMesh,
                        const Vector<uint32>& numsBones,
                        const String& name)
 {
-  m_matricesBuffer = GraphicsApi::instance().createConstantBufferPtr();
-  m_matricesBuffer->initData(100 * sizeof(Matrix4f), sizeof(Matrix4f), nullptr);
-
   m_bonesPerMesh = bonesPerMesh;
   m_globalInverseTransforms = globalInverseTransforms;
   m_boneMappings = boneMappings;
@@ -131,12 +128,5 @@ Skeletal::getBonesMatrices(SIZE_T meshNum)
   }
 
   return bonesMatrices;
-}
-void
-Skeletal::use(SIZE_T meshNum)
-{
-  Vector<Matrix4f> mats = getBonesMatrices(meshNum);
-  m_matricesBuffer->updateData(reinterpret_cast<Byte*>(mats.data()));
-  m_matricesBuffer->setInVertex(4); // TODO: Quitar este número mágico
 }
 }

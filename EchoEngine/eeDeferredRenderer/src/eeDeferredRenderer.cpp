@@ -29,47 +29,47 @@ DeferredRenderer::DeferredRenderer()
   auto& resourceManager = ResourceManager::instance();
   auto& memoryManager = MemoryManager::instance();
 
-  SamplerStateDesc samDesc;
-  memset(&samDesc, 0, sizeof(samDesc));
-  samDesc.filter = eFILTER::kMIN_MAG_MIP_LINEAR;
-  samDesc.addressU = eTEXTURE_ADDRESS_MODE::WRAP;
-  samDesc.addressV = eTEXTURE_ADDRESS_MODE::WRAP;
-  samDesc.addressW = eTEXTURE_ADDRESS_MODE::WRAP;
-  samDesc.comparisonFunc = eCOMPARISON_FUNC::NEVER;
-  samDesc.minLOD = 0;
-  samDesc.maxLOD = Math::kMAX_FLOAT;
 
   m_samplerLinear = memoryManager.newPtr<SamplerState>();
-  m_samplerLinear->create(samDesc);
+  m_samplerLinear->create(eFILTER::kMIN_MAG_MIP_LINEAR,
+                          eTEXTURE_ADDRESS_MODE::kWrap,
+                          eTEXTURE_ADDRESS_MODE::kWrap,
+                          eTEXTURE_ADDRESS_MODE::kWrap);
 
-  
-  
-  resourceManager.loadVertexShaderFromFile("Shaders/TestVShader.hlsl",
-                                           "TestVS");
-  resourceManager.loadPixelShaderFromFile("Shaders/TestPShader.hlsl",
-                                          "TestPS");
-
-  resourceManager.loadVertexShaderFromFile("Shaders/TestVSAnimShader.hlsl",
-                                           "TestVSAnim");
-  resourceManager.loadPixelShaderFromFile("Shaders/TestPSAnimShader.hlsl",
-                                          "TestPSAnim");
   
   
   resourceManager.loadVertexShaderFromFile("Shaders/TestVSSAQ.hlsl",
                                            "TestSAQVS");
   resourceManager.loadPixelShaderFromFile("Shaders/TestPSSAQ.hlsl",
                                           "TestSAQPS");
-  
+
+
+  m_modelMatrixBuff = GraphicsApi::instance().createConstantBufferPtr();
+  m_modelMatrixBuff->initData(sizeof(Matrix4f), sizeof(Matrix4f), nullptr);
   m_viewMatrixBuffer = graphicsApi.createConstantBufferPtr();
-  m_projectionMatrixBuffer = graphicsApi.createConstantBufferPtr();
   m_viewMatrixBuffer->initData(sizeof(Matrix4f), sizeof(Matrix4f), nullptr);
+  m_projectionMatrixBuffer = graphicsApi.createConstantBufferPtr();
   m_projectionMatrixBuffer->initData(sizeof(Matrix4f), sizeof(Matrix4f), nullptr);
+  m_viewPosBuffer = graphicsApi.createConstantBufferPtr();
+  m_viewPosBuffer->initData(sizeof(Vector4f), sizeof(Vector4f), nullptr);
+  m_bonesBuffer = graphicsApi.createConstantBufferPtr();
+  m_bonesBuffer->initData(100 * sizeof(Matrix4f), sizeof(Matrix4f), nullptr);
+  Vector<float> ssaoData =
+  {
+    1.0f, // sample_rad
+    2.0f, // intensity
+    0.01f, // scale
+    0.08f // bias
+  };
+  m_ssaoDataBuffer = graphicsApi.createConstantBufferPtr();
+  m_ssaoDataBuffer->initData(sizeof(float) * 4, sizeof(float),
+                             reinterpret_cast<Byte*>(ssaoData.data()));
   
   
   RasteraizerDesc rasDesc;
   memset(&rasDesc, 0, sizeof(rasDesc));
-  rasDesc.cullMode = eeEngineSDK::eCULL_MODE::FRONT;
-  rasDesc.fillMode = eeEngineSDK::eFILL_MODE::SOLID;
+  rasDesc.cullMode = eeEngineSDK::eCULL_MODE::kFront;
+  rasDesc.fillMode = eeEngineSDK::eFILL_MODE::kSolid;
   rasDesc.frontCounterClockwise = true;
   
   m_solidCCWRasterizer = graphicsApi.createRasterizerStatePtr();
@@ -77,8 +77,8 @@ DeferredRenderer::DeferredRenderer()
   
   
   memset(&rasDesc, 0, sizeof(rasDesc));
-  rasDesc.cullMode = eeEngineSDK::eCULL_MODE::FRONT;
-  rasDesc.fillMode = eeEngineSDK::eFILL_MODE::SOLID;
+  rasDesc.cullMode = eeEngineSDK::eCULL_MODE::kFront;
+  rasDesc.fillMode = eeEngineSDK::eFILL_MODE::kSolid;
   rasDesc.frontCounterClockwise = true;
   
   m_rasterizer2 = graphicsApi.createRasterizerStatePtr();
@@ -86,8 +86,8 @@ DeferredRenderer::DeferredRenderer()
 
 
 
-  m_viewPosBuffer = graphicsApi.createConstantBufferPtr();
-  m_viewPosBuffer->initData(sizeof(Vector4f), sizeof(Vector4f), nullptr);
+
+
 
   
   /* GBuffer Resources */
@@ -102,6 +102,16 @@ DeferredRenderer::DeferredRenderer()
   resourceManager.loadPixelShaderFromFile("Shaders/GBufferPSAnim.hlsl",
                                           "GBufferPSAnim");
 
+  resourceManager.loadVertexShaderFromFile("Shaders/LightsVS.hlsl",
+                                           "LightsVS");
+  resourceManager.loadPixelShaderFromFile("Shaders/LightsPS.hlsl",
+                                          "LightsPS");
+
+  resourceManager.loadVertexShaderFromFile("Shaders/SSAOVS.hlsl",
+                                           "SSAOVS");
+  resourceManager.loadPixelShaderFromFile("Shaders/SSAOPS.hlsl",
+                                          "SSAOPS");
+
   m_GBufferDepthStencil = GraphicsApi::instance().createTexturePtr();
   m_GBufferDepthStencil->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kDepthStencil,
                                   Point2D{ screenWidth, screenHeight });
@@ -109,33 +119,34 @@ DeferredRenderer::DeferredRenderer()
   m_GBufferPositionTexture = GraphicsApi::instance().createTexturePtr();
   m_GBufferPositionTexture->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kRenderTarget
                                    | eeEngineSDK::eTEXTURE_BIND_FLAGS::kShaderResource,
-                                     Point2D{ screenWidth, screenHeight });
+                                     Point2D{ screenWidth, screenHeight },
+                                     eTEXTURE_FORMAT::kR16G16B16A16_Float);
 
   m_GBufferColorTexture = GraphicsApi::instance().createTexturePtr();
   m_GBufferColorTexture->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kRenderTarget
                                 | eeEngineSDK::eTEXTURE_BIND_FLAGS::kShaderResource,
-                                  Point2D{ screenWidth, screenHeight });
+                                  Point2D{ screenWidth, screenHeight },
+                                  eTEXTURE_FORMAT::kR8G8B8A8_Unorm);
 
   m_GBufferNormalTexture = GraphicsApi::instance().createTexturePtr();
   m_GBufferNormalTexture->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kRenderTarget
                                  | eeEngineSDK::eTEXTURE_BIND_FLAGS::kShaderResource,
-                                   Point2D{ screenWidth, screenHeight });
+                                   Point2D{ screenWidth, screenHeight },
+                                   eTEXTURE_FORMAT::kR8G8B8A8_Unorm);
+                                   
+  m_GBufferSSAOTexture = GraphicsApi::instance().createTexturePtr();
+  m_GBufferSSAOTexture->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kRenderTarget
+                               | eeEngineSDK::eTEXTURE_BIND_FLAGS::kShaderResource,
+                                 Point2D{ screenWidth, screenHeight },
+                                 eTEXTURE_FORMAT::kR16_Float);
 
 
   /* Lights Resources */
   
-  resourceManager.loadVertexShaderFromFile("Shaders/LightsVS.hlsl",
-                                           "LightsVS");
-  resourceManager.loadPixelShaderFromFile("Shaders/LightsPS.hlsl",
-                                          "LightsPS");
 
-  m_rtv = GraphicsApi::instance().createTexturePtr();
-  m_rtv->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kRenderTarget
+  m_copyShaderRenderTarget = GraphicsApi::instance().createTexturePtr();
+  m_copyShaderRenderTarget->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kRenderTarget
                 | eeEngineSDK::eTEXTURE_BIND_FLAGS::kShaderResource,
-                  Point2D{ screenWidth, screenHeight });
-
-  m_dsv = GraphicsApi::instance().createTexturePtr();
-  m_dsv->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kDepthStencil,
                   Point2D{ screenWidth, screenHeight });
 }
 void
@@ -150,16 +161,10 @@ DeferredRenderer::onRender()
   auto& sceneManager = SceneManager::instance();
 
 
-  static SPtr<ConstantBuffer> modelMatrixBuff = nullptr;
-  if (!modelMatrixBuff) {
-    modelMatrixBuff = GraphicsApi::instance().createConstantBufferPtr();
-    modelMatrixBuff->initData(sizeof(Matrix4f), sizeof(Matrix4f), nullptr);
-  }
-
   Vector<Pair<Mesh, SPtr<Material>>> meshes;
   SIZE_T meshesCount = 0;
 
-  Color color{ 0.3f, 0.5f, 0.8f, 1.0f };
+  Color color{ 0.0f, 0.0f, 0.0f, 1.0f };
 
 
   // Get main camera
@@ -253,8 +258,8 @@ DeferredRenderer::onRender()
       // Set model buffer
       SPtr<CTransform> transform = rActors[i]->getTransform();
       Matrix4f modelMatrix = transform->getModelMatrix();
-      modelMatrixBuff->updateData(reinterpret_cast<Byte*>(&modelMatrix));
-      graphicsApi.setVSConstantBuffers({ modelMatrixBuff }, 0u);
+      m_modelMatrixBuff->updateData(reinterpret_cast<Byte*>(&modelMatrix));
+      graphicsApi.setVSConstantBuffers({ m_modelMatrixBuff }, 0u);
 
 
       // Set textures
@@ -277,10 +282,11 @@ DeferredRenderer::onRender()
           texs.push_back(resourceManager.getResourceTexture("DefaultNormalMap"));
         }
         graphicsApi.setTextures(texs, 0u);
-        texs.clear();
    
         if (skeleton) {
-          skeleton->use(j);
+          Vector<Matrix4f> mats = skeleton->getBonesMatrices(j);
+          m_bonesBuffer->updateData(reinterpret_cast<Byte*>(mats.data()));
+          graphicsApi.setVSConstantBuffers({ m_bonesBuffer }, 3u);
         }
 
 
@@ -289,7 +295,11 @@ DeferredRenderer::onRender()
 
 
         // Unbind buffers
-        graphicsApi.unsetTextures(2u, 0u);
+        graphicsApi.unsetTextures(static_cast<uint32>(texs.size()), 0u);
+        texs.clear();
+        if (skeleton) {
+          graphicsApi.unsetVSConstantBuffers(1u, 3u);
+        }
       }
       // Unbind buffers
       graphicsApi.unsetVSConstantBuffers(1u, 0u);
@@ -318,8 +328,8 @@ DeferredRenderer::onRender()
       // Set model buffer
       SPtr<CTransform> transform = rActors[i]->getTransform();
       Matrix4f modelMatrix = transform->getModelMatrix();
-      modelMatrixBuff->updateData(reinterpret_cast<Byte*>(&modelMatrix));
-      graphicsApi.setVSConstantBuffers({ modelMatrixBuff }, 0u);
+      m_modelMatrixBuff->updateData(reinterpret_cast<Byte*>(&modelMatrix));
+      graphicsApi.setVSConstantBuffers({ m_modelMatrixBuff }, 0u);
 
 
       // Set textures
@@ -341,7 +351,6 @@ DeferredRenderer::onRender()
           texs.push_back(resourceManager.getResourceTexture("DefaultNormalMap"));
         }
         graphicsApi.setTextures(texs, 0u);
-        texs.clear();
 
 
         // Draw mesh
@@ -349,41 +358,83 @@ DeferredRenderer::onRender()
 
 
         // Unbind buffers
-        graphicsApi.unsetTextures(1u, 0u);
+        graphicsApi.unsetTextures(static_cast<uint32>(texs.size()), 0u);
+        texs.clear();
       }
       // Unbind buffers
       graphicsApi.unsetVSConstantBuffers(1u, 0u);
     }
   }
+  // Unbind buffers
+  graphicsApi.unsetVSConstantBuffers(2u, 1u);
 
-  /* Lights */
+
+  /* SSAO */
 
   // Clear and set render targets
-  graphicsApi.clearRenderTargets({ m_rtv }, color);
-  graphicsApi.cleanDepthStencils({ m_dsv });
-  graphicsApi.setRenderTargets({ m_rtv }, m_dsv);
+  graphicsApi.clearRenderTargets({ m_GBufferSSAOTexture }, color);
+  graphicsApi.setRenderTargets({ m_GBufferSSAOTexture }, nullptr);
+  
+   
+  // Set constant buffers
+  graphicsApi.setPSConstantBuffers
+  ({ m_ssaoDataBuffer }, 0u );
 
 
+  // Load shaders
+  resourceManager.getResourceVertexShader("SSAOVS")->use();
+  resourceManager.getResourcePixelShader("SSAOPS")->use();
+
+
+  // Set textures
+  graphicsApi.setTextures({ m_GBufferPositionTexture,
+                            m_GBufferNormalTexture },
+                          0u);
+
+
+  // Draw using a SAQ
+  graphicsApi.drawOnSAQ();
+
+
+  // Unbind buffers
+  graphicsApi.unsetRenderTargets();
+  graphicsApi.unsetPSConstantBuffers(1u, 0u);
+  graphicsApi.unsetTextures(2u, 0u);
+
+
+  /* Lights */
+  
+  // Clear and set render targets
+  graphicsApi.clearRenderTargets({ m_copyShaderRenderTarget }, color);
+  graphicsApi.setRenderTargets({ m_copyShaderRenderTarget }, nullptr);
+  
+  
   // Set constant buffers
   graphicsApi.setVSConstantBuffers
-  ({ m_viewPosBuffer }, 3u );
-
-
+  ({ m_viewPosBuffer }, 0u );
+  
+  
   // Load shaders
   resourceManager.getResourceVertexShader("LightsVS")->use();
   resourceManager.getResourcePixelShader("LightsPS")->use();
 
 
+  // Set textures
+  graphicsApi.setTextures({ m_GBufferPositionTexture,
+                            m_GBufferColorTexture,
+                            m_GBufferNormalTexture,
+                            m_GBufferSSAOTexture },
+                          0u);
+  
+  
   // Draw using a SAQ
-  graphicsApi.drawOnSAQ({ make_pair(0, m_GBufferPositionTexture),
-                          make_pair(1, m_GBufferColorTexture),
-                          make_pair(2, m_GBufferNormalTexture) });
-
-
-
+  graphicsApi.drawOnSAQ();
+  
+  
   // Unbind buffers
   graphicsApi.unsetRenderTargets();
-  graphicsApi.unsetVSConstantBuffers(2u, 1u);
+  graphicsApi.unsetVSConstantBuffers(1u, 0u);
+  graphicsApi.unsetTextures(4u, 0u);
 
 
   /* Copy */
@@ -391,9 +442,7 @@ DeferredRenderer::onRender()
   // Set Back Buffer
   SPtr<Window> mainWin = graphicsApi.getMainWindow();
   graphicsApi.clearRenderTargets({ mainWin->getRenderTarget() }, color);
-  graphicsApi.cleanDepthStencils({ mainWin->getDepthStencil() });
-  graphicsApi.setRenderTargets({ mainWin->getRenderTarget() },
-                               mainWin->getDepthStencil());
+  graphicsApi.setRenderTargets({ mainWin->getRenderTarget() }, nullptr);
 
 
   // Load shaders
@@ -401,13 +450,19 @@ DeferredRenderer::onRender()
   resourceManager.getResourcePixelShader("TestSAQPS")->use();
 
 
+  // Set textures
+  graphicsApi.setTextures({ m_copyShaderRenderTarget },
+                          0u);
+
+
   // Draw using a SAQ
   m_rasterizer2->use();
-  graphicsApi.drawOnSAQ({ make_pair(0, m_rtv) });
+  graphicsApi.drawOnSAQ();
 
 
   // Unbind buffers
   graphicsApi.unsetRenderTargets();
+  graphicsApi.unsetTextures(1u, 0u);
 }
 
 

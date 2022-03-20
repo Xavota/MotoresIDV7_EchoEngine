@@ -54,23 +54,10 @@ GraphicsApi::initializeScreen(void* callback, uint32 witdh, uint32 height)
   return true;
 }
 void
-GraphicsApi::drawOnSAQ(Map<int32, SPtr<Texture>> texs)
+GraphicsApi::drawOnSAQ()
 {
   static Mesh SAQ = Mesh::SAQ;
   SAQ.set();
-
-  Vector<SPtr<Texture>> texsVec;
-  int32 current = 0;
-  for (auto& t : texs) {
-    int32 gap = t.first - current;
-    current = t.first + 1;
-    for (int32 i = 0; i < gap; ++i) {
-      texsVec.push_back(nullptr);
-    }
-    texsVec.push_back(t.second);
-  }
-  setTextures(texsVec, 0u);
-
   drawIndexed(static_cast<uint32>(SAQ.getIndexCount()));
   unsetVertexBuffers(1u, 0u);
 }

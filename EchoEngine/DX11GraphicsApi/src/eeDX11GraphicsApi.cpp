@@ -416,7 +416,7 @@ DX11GraphicsApi::drawIndexed(uint32 indicesCount) const
   m_basics.m_deviceContext->DrawIndexed(indicesCount, 0u, 0u);
 }
 void
-DX11GraphicsApi::setPrimitiveTopology(ePRIMITIVE_TOPOLOGY topology)
+DX11GraphicsApi::setPrimitiveTopology(ePRIMITIVE_TOPOLOGY::E topology)
 {
   m_basics.m_deviceContext->IASetPrimitiveTopology(
   static_cast<D3D11_PRIMITIVE_TOPOLOGY>(topology));

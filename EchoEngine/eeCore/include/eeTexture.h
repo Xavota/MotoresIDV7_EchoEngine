@@ -53,6 +53,8 @@ class EE_CORE_EXPORT Texture
    * The bindings for the texture.
    * @param texSize
    * The size of the texture.
+   * @param format
+   * The format for the texture.
    * @param mipLevels
    * The number of mip levels it will create.
    *
@@ -62,6 +64,7 @@ class EE_CORE_EXPORT Texture
   virtual bool
   create2D(uint32 /*bindFlags*/,
            const Point2D& /*texSize*/,
+           eTEXTURE_FORMAT::E /*format*/ = eTEXTURE_FORMAT::kNone,
            uint32 /*mipLevels*/ = 0u) { return true; }
            
 

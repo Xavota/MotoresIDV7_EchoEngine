@@ -40,11 +40,14 @@ public:
    * The bindings for the texture.
    * @param texSize
    * The size of the texture.
+   * @param format
+   * The format for the texture.
    * @param mipLevels
    * The number of mip levels it will create.
    */
   DX11Texture(uint32 bindFlags,
               const Point2D& texSize,
+              eTEXTURE_FORMAT::E format = eTEXTURE_FORMAT::kNone,
               uint32 mipLevels = 0u);
   /**
    * @brief
@@ -63,6 +66,8 @@ public:
    * The bindings for the texture.
    * @param texSize
    * The size of the texture.
+   * @param format
+   * The format for the texture.
    * @param mipLevels
    * The number of mip levels it will create.
    *
@@ -72,6 +77,7 @@ public:
   bool
   create2D(uint32 bindFlags,
            const Point2D& texSize,
+           eTEXTURE_FORMAT::E format = eTEXTURE_FORMAT::kUnknown,
            uint32 mipLevels = 0u) override;
 
            

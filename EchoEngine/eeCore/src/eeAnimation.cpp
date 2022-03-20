@@ -61,7 +61,6 @@ Animation::readNodeHeirarchy(float animationTime,
                              SIZE_T meshIndex,
                              SPtr<Skeletal> pSkMesh)
 {
-
   String NodeName(pNode->m_name);
 
   //trans

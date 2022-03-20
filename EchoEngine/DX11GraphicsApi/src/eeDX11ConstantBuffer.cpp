@@ -32,7 +32,12 @@ DX11ConstantBuffer::initData(SIZE_T dataSize,
   bd.ByteWidth = static_cast<UINT>(dataSize);
   bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
   bd.CPUAccessFlags = 0;
-  HRESULT hr = basics->m_device->CreateBuffer(&bd, nullptr, &m_buffer);
+  D3D11_SUBRESOURCE_DATA subdata;
+  if (data) {
+    memset(&subdata, 0, sizeof(subdata));
+    subdata.pSysMem = reinterpret_cast<const void*>(data);
+  }
+  HRESULT hr = basics->m_device->CreateBuffer(&bd, data ? &subdata : nullptr, &m_buffer);
   if (FAILED(hr)) {
     DX11SAFE_RELEASE(m_buffer);
     return false;

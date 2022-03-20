@@ -34,10 +34,19 @@ class EE_PLUGINDX11_EXPORT DX11SamplerState : public SamplerState
    * @description
    * Creates the sampler stencil state with a descriptor.
    *
-   * @param desc
-   * The descriptor for the sampler state.
+   * @param filter
+   * The filter for the sampler.
+   * @param adressU
+   * The address function in horizontal axis.
+   * @param adressV
+   * The address function in vertical axis.
+   * @param adressW
+   * The address function in W axis.
    */
-  DX11SamplerState(SamplerStateDesc desc);
+  DX11SamplerState(eFILTER::E filter,
+              eTEXTURE_ADDRESS_MODE::E addressU = eTEXTURE_ADDRESS_MODE::kWrap,
+              eTEXTURE_ADDRESS_MODE::E addressV = eTEXTURE_ADDRESS_MODE::kWrap,
+              eTEXTURE_ADDRESS_MODE::E addressW = eTEXTURE_ADDRESS_MODE::kWrap);
   /**
    * @brief
    * Default destructor.
@@ -51,14 +60,23 @@ class EE_PLUGINDX11_EXPORT DX11SamplerState : public SamplerState
    * @description
    * Creates the sampler stencil state with a descriptor.
    *
-   * @param desc
-   * The descriptor for the sampler state.
+   * @param filter
+   * The filter for the sampler.
+   * @param adressU
+   * The address function in horizontal axis.
+   * @param adressV
+   * The address function in vertical axis.
+   * @param adressW
+   * The address function in W axis.
    *
    * @return
    * Whether it succeeded to create or not.
    */
   bool
-  create(SamplerStateDesc desc) override;
+  create(eFILTER::E filter,
+         eTEXTURE_ADDRESS_MODE::E addressU = eTEXTURE_ADDRESS_MODE::kWrap,
+         eTEXTURE_ADDRESS_MODE::E addressV = eTEXTURE_ADDRESS_MODE::kWrap,
+         eTEXTURE_ADDRESS_MODE::E addressW = eTEXTURE_ADDRESS_MODE::kWrap) override;
 
   /**
    * @brief

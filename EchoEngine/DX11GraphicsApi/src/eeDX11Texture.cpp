@@ -14,9 +14,10 @@
 namespace eeEngineSDK {
 DX11Texture::DX11Texture(uint32 bindFlags,
                          const Point2D& texSize,
+                         eTEXTURE_FORMAT::E format,
                          uint32 mipLevels)
 {
-  create2D(bindFlags, texSize, mipLevels);
+  create2D(bindFlags, texSize, format, mipLevels);
 }
 DX11Texture::~DX11Texture()
 {
@@ -26,6 +27,7 @@ DX11Texture::~DX11Texture()
 bool
 DX11Texture::create2D(uint32 bindFlags,
                       const Point2D& texSize,
+                      eTEXTURE_FORMAT::E format,
                       uint32 mipLevels)
 {
   const auto* basics =
@@ -41,12 +43,133 @@ DX11Texture::create2D(uint32 bindFlags,
   descText.Height = texSize.y;
   descText.MipLevels = mipLevels;
   descText.ArraySize = 1;
-  if ((m_bindFlags & eTEXTURE_BIND_FLAGS::kDepthStencil)
-                  == eTEXTURE_BIND_FLAGS::kDepthStencil) {
-    descText.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+  if (format == eTEXTURE_FORMAT::kNone) {
+    if ((m_bindFlags & eTEXTURE_BIND_FLAGS::kDepthStencil)
+                    == eTEXTURE_BIND_FLAGS::kDepthStencil) {
+      descText.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    }
+    else {
+      descText.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    }
   }
   else {
-    descText.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    switch (format)
+    {
+    case eTEXTURE_FORMAT::kUnknown:
+      descText.Format = DXGI_FORMAT_UNKNOWN;
+      break;
+    case eTEXTURE_FORMAT::kR32G32B32A32_Float:
+      descText.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+      break;
+    case eTEXTURE_FORMAT::kR32G32B32A32_Uint:
+      descText.Format = DXGI_FORMAT_R32G32B32A32_UINT;
+      break;
+    case eTEXTURE_FORMAT::kR32G32B32A32_Sint:
+      descText.Format = DXGI_FORMAT_R32G32B32A32_SINT;
+      break;
+    case eTEXTURE_FORMAT::kR32G32B32A32_Typeless:
+      descText.Format = DXGI_FORMAT_R32G32B32A32_TYPELESS;
+      break;
+    case eTEXTURE_FORMAT::kR32G32B32_Float:
+      descText.Format = DXGI_FORMAT_R32G32B32_FLOAT;
+      break;
+    case eTEXTURE_FORMAT::kR32G32B32_Uint:
+      descText.Format = DXGI_FORMAT_R32G32B32_UINT;
+      break;
+    case eTEXTURE_FORMAT::kR32G32B32_Sint:
+      descText.Format = DXGI_FORMAT_R32G32B32_SINT;
+      break;
+    case eTEXTURE_FORMAT::kR32G32B32_Typeless:
+      descText.Format = DXGI_FORMAT_R32G32B32_TYPELESS;
+      break;
+    case eTEXTURE_FORMAT::kR16G16B16A16_Float:
+      descText.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+      break;
+    case eTEXTURE_FORMAT::kR16G16B16A16_Uint:
+      descText.Format = DXGI_FORMAT_R16G16B16A16_UINT;
+      break;
+    case eTEXTURE_FORMAT::kR16G16B16A16_Unorm:
+      descText.Format = DXGI_FORMAT_R16G16B16A16_UNORM;
+      break;
+    case eTEXTURE_FORMAT::kR16G16B16A16_Sint:
+      descText.Format = DXGI_FORMAT_R16G16B16A16_SINT;
+      break;
+    case eTEXTURE_FORMAT::kR16G16B16A16_Snorm:
+      descText.Format = DXGI_FORMAT_R16G16B16A16_SNORM;
+      break;
+    case eTEXTURE_FORMAT::kR16G16B16A16_Typeless:
+      descText.Format = DXGI_FORMAT_R16G16B16A16_TYPELESS;
+      break;
+    case eTEXTURE_FORMAT::kR8G8B8A8_Uint:
+      descText.Format = DXGI_FORMAT_R8G8B8A8_UINT;
+      break;
+    case eTEXTURE_FORMAT::kR8G8B8A8_Unorm:
+      descText.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+      break;
+    case eTEXTURE_FORMAT::kR8G8B8A8_Unorm_Srgb:
+      descText.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+      break;
+    case eTEXTURE_FORMAT::kR8G8B8A8_Sint:
+      descText.Format = DXGI_FORMAT_R8G8B8A8_SINT;
+      break;
+    case eTEXTURE_FORMAT::kR8G8B8A8_Snorm:
+      descText.Format = DXGI_FORMAT_R8G8B8A8_SNORM;
+      break;
+    case eTEXTURE_FORMAT::kR8G8B8A8_Typeless:
+      descText.Format = DXGI_FORMAT_R8G8B8A8_TYPELESS;
+      break;
+    case eTEXTURE_FORMAT::kB8G8R8A8_Unorm:
+      descText.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+      break;
+    case eTEXTURE_FORMAT::kB8G8R8A8_Unorm_Srgb:
+      descText.Format = DXGI_FORMAT_B8G8R8A8_UNORM_SRGB;
+      break;
+    case eTEXTURE_FORMAT::kB8G8R8A8_Typeless:
+      descText.Format = DXGI_FORMAT_B8G8R8A8_TYPELESS;
+      break;
+    case eTEXTURE_FORMAT::kR16_Float:
+      descText.Format = DXGI_FORMAT_R16_FLOAT;
+      break;
+    case eTEXTURE_FORMAT::kR16_Uint:
+      descText.Format = DXGI_FORMAT_R16_UINT;
+      break;
+    case eTEXTURE_FORMAT::kR16_Unorm:
+      descText.Format = DXGI_FORMAT_R16_UNORM;
+      break;
+    case eTEXTURE_FORMAT::kR16_Sint:
+      descText.Format = DXGI_FORMAT_R16_SINT;
+      break;
+    case eTEXTURE_FORMAT::kR16_Snorm:
+      descText.Format = DXGI_FORMAT_R16_SNORM;
+      break;
+    case eTEXTURE_FORMAT::kR16_Typeless:
+      descText.Format = DXGI_FORMAT_R16_TYPELESS;
+      break;
+    case eTEXTURE_FORMAT::kR8_Uint:
+      descText.Format = DXGI_FORMAT_R8_UINT;
+      break;
+    case eTEXTURE_FORMAT::kR8_Unorm:
+      descText.Format = DXGI_FORMAT_R8_SNORM;
+      break;
+    case eTEXTURE_FORMAT::kR8_Sint:
+      descText.Format = DXGI_FORMAT_R8_SINT;
+      break;
+    case eTEXTURE_FORMAT::kR8_Snorm:
+      descText.Format = DXGI_FORMAT_R8_SNORM;
+      break;
+    case eTEXTURE_FORMAT::kR8_Typeless:
+      descText.Format = DXGI_FORMAT_R8_TYPELESS;
+      break;
+    case eTEXTURE_FORMAT::kD32_Float:
+      descText.Format = DXGI_FORMAT_D32_FLOAT;
+      break;
+    case eTEXTURE_FORMAT::kD24_Unorm_S8_Uint:
+      descText.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+      break;
+    case eTEXTURE_FORMAT::kD16_Unorm:
+      descText.Format = DXGI_FORMAT_D16_UNORM;
+      break;
+    }
   }
   descText.SampleDesc.Count = 1;
   descText.SampleDesc.Quality = 0;

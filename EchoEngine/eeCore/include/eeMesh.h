@@ -25,7 +25,7 @@ namespace eeEngineSDK {
  * @brief
  * The meshes to be rendered, described by vertices and indices. 
  */
-/*template<typename V, typename I>*/
+//template<typename V, typename I>
 class EE_CORE_EXPORT Mesh
 {
  public:
@@ -54,6 +54,8 @@ class EE_CORE_EXPORT Mesh
   template<typename V, typename I>
   Mesh(const Vector<V>& vertices,
        const Vector<I>& indices);
+  //Mesh(const Vector<ComplexBigAnimVertex<4>>& vertices,
+  //     const Vector<uint32>& indices);
   /**
    * @brief
    * Default destructor
@@ -80,6 +82,9 @@ class EE_CORE_EXPORT Mesh
   bool
   loadFromArray(const Vector<V>& vertices,
                 const Vector<I>& indices);
+  //bool
+  //loadFromArray(const Vector<ComplexBigAnimVertex<4>>& vertices,
+  //              const Vector<uint32>& indices);
 
   /**
    * @brief
@@ -211,11 +216,11 @@ class EE_CORE_EXPORT Mesh
   ///**
   // * The vertices stored.
   // */
-  //Vector<V> m_vertexData;
+  //Vector<ComplexBigAnimVertex<4>> m_vertexArray;
   ///**
   // * The indices stored.
   // */
-  //Vector<I> m_indexData;
+  //Vector<uint32> m_indexArray;
 
   /**
    * The number of indices.
@@ -224,7 +229,8 @@ class EE_CORE_EXPORT Mesh
 };
 
 template<typename V, typename I>
-inline Mesh::Mesh(const Vector<V>& vertices, const Vector<I>& indices)
+inline Mesh/*<V,I>*/::Mesh(const Vector<V>& vertices, const Vector<I>& indices)
+//inline Mesh::Mesh(const Vector<ComplexBigAnimVertex<4>>& vertices, const Vector<uint32>& indices)
 {
   loadFromArray(vertices, indices);
 }
@@ -233,6 +239,9 @@ template<typename V, typename I>
 bool 
 Mesh/*<V, I>*/::loadFromArray(const Vector<V>& vertices, 
                           const Vector<I>& indices)
+//bool
+//Mesh::loadFromArray(const Vector<ComplexBigAnimVertex<4>>& vertices,
+//                              const Vector<uint32>& indices)
 {
   auto& graphicsApi = GraphicsApi::instance();
 
@@ -253,6 +262,12 @@ Mesh/*<V, I>*/::loadFromArray(const Vector<V>& vertices,
   m_indexData->initData(indices.size() * sizeof(I),
                         sizeof(I),
                         reinterpret_cast<const Byte*>(indices.data()));
+  //m_vertexData->initData(vertices.size() * sizeof(ComplexBigAnimVertex<4>),
+  //                       sizeof(ComplexBigAnimVertex<4>),
+  //                       reinterpret_cast<const Byte*>(vertices.data()));
+  //m_indexData->initData(indices.size() * sizeof(uint32),
+  //                      sizeof(uint32),
+  //                      reinterpret_cast<const Byte*>(indices.data()));
 
   m_indexCount = indices.size();
 

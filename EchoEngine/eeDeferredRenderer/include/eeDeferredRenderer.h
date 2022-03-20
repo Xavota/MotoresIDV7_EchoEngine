@@ -68,6 +68,10 @@ private:
 
   /* Buffers */
   /*
+  * The buffer for the model matrix.
+  */
+  SPtr<ConstantBuffer> m_modelMatrixBuff = nullptr;
+  /*
   * The buffer for the view matrix.
   */
   SPtr<ConstantBuffer> m_viewMatrixBuffer = nullptr;
@@ -76,9 +80,17 @@ private:
   */
   SPtr<ConstantBuffer> m_projectionMatrixBuffer = nullptr;
   /*
-  * A test buffer for the view position.
+  * The buffer for the view position.
   */
   SPtr<ConstantBuffer> m_viewPosBuffer = nullptr;
+  /*
+  * The buffer for the bones of a skeletal mesh.
+  */
+  SPtr<ConstantBuffer> m_bonesBuffer = nullptr;
+  /*
+  * The buffer for the SSAO data.
+  */
+  SPtr<ConstantBuffer> m_ssaoDataBuffer = nullptr;
 
   /* Resources */
   /**
@@ -112,15 +124,15 @@ private:
   * The back buffer.
   */
   SPtr<Texture> m_GBufferNormalTexture;
+  /*
+  * The back buffer.
+  */
+  SPtr<Texture> m_GBufferSSAOTexture;
 
   /* Luces */
   /*
   * The back buffer.
   */
-  SPtr<Texture> m_rtv;
-  /*
-  * The depth stencil of the back buffer
-  */
-  SPtr<Texture> m_dsv;
+  SPtr<Texture> m_copyShaderRenderTarget;
 };
 }

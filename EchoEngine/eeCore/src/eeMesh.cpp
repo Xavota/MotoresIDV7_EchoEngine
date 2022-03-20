@@ -5,7 +5,7 @@
 #include <eeVertex.h>
 
 namespace eeEngineSDK {
-/*template<typename V, typename I>*/
+//template<typename V, typename I>
 Mesh/*<V,I>*/::Mesh(const Mesh& other)
 {
   if (other.m_vertexData && other.m_vertexData->isValid()
@@ -28,46 +28,46 @@ Mesh/*<V,I>*/::Mesh(const Mesh& other)
     m_indexCount = other.m_indexCount;
   }
 }
-/*template<typename V, typename I>*/
+//template<typename V, typename I>
 Mesh/*<V, I>*/::~Mesh()
 {
   MemoryManager::instance().safeRelease(m_vertexData);
   MemoryManager::instance().safeRelease(m_indexData);
 }
-/*template<typename V, typename I>*/
+//template<typename V, typename I>
 void
 Mesh/*<V, I>*/::set() const
 {
   m_vertexData->set();
   m_indexData->set();
 }
-/*template<typename V, typename I>*/
+//template<typename V, typename I>
 const SPtr<VertexBuffer>
 Mesh/*<V, I>*/::getVertexData() const
 {
   return m_vertexData;
 }
-/*template<typename V, typename I>*/
+//template<typename V, typename I>
 const SPtr<IndexBuffer> 
 Mesh/*<V, I>*/::getIndexData() const
 {
   return m_indexData;
 }
-/*template<typename V, typename I>*/
+//template<typename V, typename I>
 Mesh/*<V,I>*/ Mesh/*<V,I>*/::cube;
-/*template<typename V, typename I>*/
+//template<typename V, typename I>
 Mesh/*<V,I>*/ Mesh/*<V,I>*/::tetrahedron;
-/*template<typename V, typename I>*/
+//template<typename V, typename I>
 Mesh/*<V,I>*/ Mesh/*<V,I>*/::cone;
-/*template<typename V, typename I>*/
+//template<typename V, typename I>
 Mesh/*<V,I>*/ Mesh/*<V,I>*/::cylinder;
-/*template<typename V, typename I>*/
+//template<typename V, typename I>
 Mesh/*<V,I>*/ Mesh/*<V,I>*/::sphere;
-/*template<typename V, typename I>*/
+//template<typename V, typename I>
 Mesh/*<V,I>*/ Mesh/*<V,I>*/::capsule;
-/*template<typename V, typename I>*/
+//template<typename V, typename I>
 Mesh/*<V,I>*/ Mesh/*<V,I>*/::SAQ;
-/*template<typename V, typename I>*/
+//template<typename V, typename I>
 void
 Mesh/*<V, I>*/::initPrimitives()
 {
@@ -387,12 +387,12 @@ Mesh/*<V, I>*/::initPrimitives()
 
   SAQ.loadFromArray(vertices, indices);
 }
-
+//template<typename V, typename I>
 bool
-Mesh::getSpherePrimitive(float radius,
-                         uint32 verticalParts,
-                         uint32 horizontalParts,
-                         Mesh& outMesh)
+Mesh/*<V, I>*/::getSpherePrimitive(float radius,
+                                   uint32 verticalParts,
+                                   uint32 horizontalParts,
+                                   Mesh& outMesh)
 {
   if (radius <= 0.0f || verticalParts <= 0u || horizontalParts <= 0u) {
     return false;

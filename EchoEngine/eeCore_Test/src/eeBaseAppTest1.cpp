@@ -67,7 +67,6 @@ using eeEngineSDK::Matrix4f;
 using eeEngineSDK::Quaternion;
 using eeEngineSDK::SimplexVertex;
 using eeEngineSDK::SimpleVertex;
-using eeEngineSDK::Object;
 using eeEngineSDK::StaticMesh;
 using eeEngineSDK::Mesh;
 using eeEngineSDK::SkeletalMesh;
@@ -102,11 +101,6 @@ using eeEngineSDK::CAMERA_PROJECTION_TYPE;
 using eeEngineSDK::MemoryManager;
 using eeEngineSDK::Time;
 
-
-using eeEngineSDK::eFILTER;
-using eeEngineSDK::eTEXTURE_ADDRESS_MODE;
-using eeEngineSDK::eCOMPARISON_FUNC;
-using eeEngineSDK::ePRIMITIVE_TOPOLOGY;
 
 using eeEngineSDK::SamplerStateDesc;
 using eeEngineSDK::ViewportDesc;
@@ -763,7 +757,7 @@ BaseAppTest1::onInit()
 
 
 
-  graphicsApi.setPrimitiveTopology(ePRIMITIVE_TOPOLOGY::TRIANGLELIST);
+  graphicsApi.setPrimitiveTopology(eeEngineSDK::ePRIMITIVE_TOPOLOGY::E::kTrianglelist);
   
 
 
@@ -863,7 +857,7 @@ BaseAppTest1::onInit()
   texturesMap.clear();
   
   texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
-  resourceManager.getResourceTexture("F_MED_UproarBraids_FaceAcc_baseColor_te");
+  resourceManager.getResourceTexture("F_MED_UproarBraids_FaceAcc_baseColor_tex");
   texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
   resourceManager.getResourceTexture("F_MED_UproarBraids_FaceAcc_normal_tex");
   resourceManager.loadMaterialFromTextures(texturesMap,

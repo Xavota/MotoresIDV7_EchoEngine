@@ -222,25 +222,7 @@ class EE_CORE_EXPORT Skeletal
   Vector<Matrix4f>
   getBonesMatrices(SIZE_T meshNum);
 
-  /**
-   * @brief
-   * Sets the skeletal mesh to use.
-   *
-   * @description
-   * Sets the skeletal mesh bones data to the graphic memory.
-   *
-   * @param meshNum
-   * The mesh index to set.
-   */
-  void
-  use(SIZE_T meshNum);
-
  private:
-  /**
-   * The buffer for the bone matrices.
-   */
-  SPtr<ConstantBuffer> m_matricesBuffer;
-
   /**
    * Bone data for every mesh.
    */

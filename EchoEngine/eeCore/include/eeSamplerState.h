@@ -40,14 +40,24 @@ class EE_CORE_EXPORT SamplerState
    * @description
    * Creates the sampler stencil state with a descriptor.
    *
-   * @param desc
-   * The descriptor for the sampler state.
+   * @param filter
+   * The filter for the sampler.
+   * @param adressU
+   * The address function in horizontal axis.
+   * @param adressV
+   * The address function in vertical axis.
+   * @param adressW
+   * The address function in W axis.
    *
    * @return
    * Whether it succeeded to create or not.
    */
   virtual bool
-  create(SamplerStateDesc /*desc*/) { return true; }
+  create(eFILTER::E filter,
+         eTEXTURE_ADDRESS_MODE::E addressU = eTEXTURE_ADDRESS_MODE::kWrap,
+         eTEXTURE_ADDRESS_MODE::E addressV = eTEXTURE_ADDRESS_MODE::kWrap,
+         eTEXTURE_ADDRESS_MODE::E addressW = eTEXTURE_ADDRESS_MODE::kWrap)
+  { return true; }
 
   /**
    * @brief
