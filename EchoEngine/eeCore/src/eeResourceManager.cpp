@@ -24,10 +24,20 @@
 
 namespace eeEngineSDK
 {
+Map<uint32, SPtr<Material>>
+loadMaterialsFromAssimp(const aiScene* scene,
+                        const String& name)
+{
+  for (uint32 i = 0; i < scene->mNumMaterials; ++i) {
+    scene->mMaterials;
+  }
+  return {};
+}
+
 SPtr<StaticMesh>
 loadStaticMeshFromAssimp(const aiScene* scene,
                          const String& name,
-                         const Vector<SPtr<Material>>& textures)
+                         const Map<uint32, SPtr<Material>>& textures)
 {
   SPtr<StaticMesh> outStaticMesh = MemoryManager::instance().newPtr<StaticMesh>();
 
@@ -131,8 +141,8 @@ loadStaticMeshFromAssimp(const aiScene* scene,
       Pair<Mesh, SPtr<Material>>
       (
         Mesh(),
-        textures.size() > AssimpMesh->mMaterialIndex
-        ? textures[AssimpMesh->mMaterialIndex]
+        textures.find(AssimpMesh->mMaterialIndex) != textures.end()
+        ? (*textures.find(AssimpMesh->mMaterialIndex)).second
         : resourseManager.getResourceMaterial("Default_mat")
       )
     );
@@ -150,7 +160,7 @@ SPtr<SkeletalMesh>
 loadSkeletalMeshFromAssimp(const aiScene* scene,
                            SPtr<Skeletal> skeleton,
                            const String& name,
-                           const Vector<SPtr<Material>>& textures)
+                           const Map<uint32, SPtr<Material>>& textures)
 {
   SPtr<SkeletalMesh> outSkeletalMesh = MemoryManager::instance().newPtr<SkeletalMesh>();
 
@@ -285,8 +295,8 @@ loadSkeletalMeshFromAssimp(const aiScene* scene,
       Pair<Mesh, SPtr<Material>>
       (
         Mesh(),
-        static_cast<uint32>(textures.size()) > AssimpMesh->mMaterialIndex
-        ? textures[AssimpMesh->mMaterialIndex]
+        textures.find(AssimpMesh->mMaterialIndex) != textures.end()
+        ? (*textures.find(AssimpMesh->mMaterialIndex)).second
         : resourseManager.getResourceMaterial("Default_mat")
       )
     );
@@ -582,13 +592,13 @@ ResourceManager::importResourceFromFile(const String& fileName,
     }
 
     // Use the scene
-    Vector<SPtr<Material>> materials;
+    Map<uint32, SPtr<Material>> materials;
     if (scene->HasTextures()
     &&  importFlags == IMPORT_FLAGS::kNone
     ||  Math::hasFlag(importFlags, IMPORT_FLAGS::kImportTextures)
     || (Math::hasFlag(importFlags, IMPORT_FLAGS::kImportAll)
     &&  Math::hasFlag(importFlags, IMPORT_FLAGS::kNotImportTextures))) {
-      // Load textures
+      materials = loadMaterialsFromAssimp(scene, name);
     }
 
     if (scene->mRootNode
@@ -688,45 +698,6 @@ ResourceManager::loadMaterialFromTextures(Map<uint32, SPtr<Texture>> textures,
   return m_materials[resourceName];
 }
 SPtr<StaticMesh>
-ResourceManager::loadStaticMeshFromFile(const String& fileName,
-                                        const String resourceName,
-                                        const Vector<SPtr<Material>>& textures)
-{
-  if (m_staticMeshes.find(resourceName) != m_staticMeshes.end()) {
-    Logger::instance().ConsoleLog("Resource already with this name");
-    return nullptr;
-  }
-
-  if (fileName.empty()) {
-    Logger::instance().ConsoleLog("Empty info loading static mesh");
-    return nullptr;
-  }
-
-  auto* importer = new Assimp::Importer();
-  const aiScene* scene = importer->ReadFile
-  (
-    fileName,
-    aiProcessPreset_TargetRealtime_MaxQuality
-    | aiProcess_ConvertToLeftHanded
-  );
-
-  if (!scene) {
-    Logger::instance().ConsoleLog(importer->GetErrorString());
-    delete importer;
-    return nullptr;
-  }
-
-  SPtr<StaticMesh> stMesh =
-  loadStaticMeshFromAssimp(scene, resourceName, textures);
-  delete importer;
-  if (stMesh) {
-    m_staticMeshes.insert(Pair<String, SPtr<StaticMesh>>(resourceName, stMesh));
-    return m_staticMeshes[resourceName];
-  }
-
-  return nullptr;
-}
-SPtr<StaticMesh>
 ResourceManager::loadStaticMeshFromMeshesArray(const Vector<Mesh>& meshes,
                                                const String resourceName,
                                                const Vector3f& furtherVertexPosition,
@@ -820,59 +791,6 @@ ResourceManager::loadSkeletalFromFile(const String& fileName,
   {
     m_skeletals.insert(Pair<String, SPtr<Skeletal>>(resourceName, skeleton));
     return m_skeletals[resourceName];
-  }
-  return nullptr;
-}
-
-SPtr<SkeletalMesh>
-ResourceManager::loadSkeletalMeshFromFile(const String& fileName,
-                                          const String& resourceName,
-                                          const SPtr<Skeletal> skeleton,
-                                          const Vector<SPtr<Material>>& textures)
-{
-  if (m_skeletalMeshes.find(resourceName) != m_skeletalMeshes.end()) {
-    Logger::instance().ConsoleLog("Resource already with this name");
-    return nullptr;
-  }
-  
-  if (fileName.empty()) {
-    Logger::instance().ConsoleLog("Empty info loading skeletal mesh");
-    return nullptr;
-  }
-  
-  auto* importer = new Assimp::Importer();
-  const aiScene* scene = importer->ReadFile
-  (
-    fileName,
-    aiProcessPreset_TargetRealtime_MaxQuality
-    | aiProcess_ConvertToLeftHanded
-  );
-  
-  if (!scene) {
-    Logger::instance().ConsoleLog(importer->GetErrorString());
-    delete importer;
-    return nullptr;
-  }
-  
-  SPtr<Skeletal> skeletonBackup = nullptr;
-  if (!skeleton) {
-    skeletonBackup = loadSkeletalFromFile(fileName, resourceName + "_sk");
-  }
-  else {
-    skeletonBackup = skeleton;
-  }
-  
-  if (!skeletonBackup) {
-    delete importer;
-    return nullptr;
-  }
-  
-  SPtr<SkeletalMesh> skMesh =
-  loadSkeletalMeshFromAssimp(scene, skeleton, resourceName, textures);
-  delete importer;
-  if (skMesh) {
-    m_skeletalMeshes.insert(Pair<String, SPtr<SkeletalMesh>>(resourceName, skMesh));
-    return m_skeletalMeshes[resourceName];
   }
   return nullptr;
 }

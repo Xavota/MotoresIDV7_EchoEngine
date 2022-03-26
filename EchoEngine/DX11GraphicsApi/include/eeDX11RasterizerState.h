@@ -27,6 +27,7 @@ class EE_PLUGINDX11_EXPORT DX11RasterizerState : public RasterizerState
    * Default constructor.
    */
   DX11RasterizerState() = default;
+
   /**
    * @brief
    * Creates a rasterizer stencil state.
@@ -34,10 +35,16 @@ class EE_PLUGINDX11_EXPORT DX11RasterizerState : public RasterizerState
    * @description
    * Creates the rasterizer stencil state with a descriptor.
    *
-   * @param desc
-   * The descriptor for the rasterizer state.
+   * @param fillMode
+   * The mode for filling the triangles.
+   * @param cullMode
+   * The mode for the order of rendering of the triangles.
+   * @param frontCounterClockwise
+   * If the triangles front is in counter clock wise order of its vertices.
    */
-  DX11RasterizerState(RasteraizerDesc desc);
+  DX11RasterizerState(eFILL_MODE::E fillMode,
+                      eCULL_MODE::E cullMode,
+                      bool frontCounterClockwise);
   /**
    * @brief
    * Default destructor.
@@ -51,14 +58,20 @@ class EE_PLUGINDX11_EXPORT DX11RasterizerState : public RasterizerState
    * @description
    * Creates the rasterizer stencil state with a descriptor.
    *
-   * @param desc
-   * The descriptor for the rasterizer state.
+   * @param fillMode
+   * The mode for filling the triangles.
+   * @param cullMode
+   * The mode for the order of rendering of the triangles.
+   * @param frontCounterClockwise
+   * If the triangles front is in counter clock wise order of its vertices.
    *
    * @return
    * Whether it succeeded to create or not.
    */
   bool
-  create(RasteraizerDesc desc) override;
+  create(eFILL_MODE::E fillMode,
+         eCULL_MODE::E cullMode,
+         bool frontCounterClockwise) override;
 
   /**
    * @brief

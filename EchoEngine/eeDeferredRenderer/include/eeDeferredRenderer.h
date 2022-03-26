@@ -66,6 +66,20 @@ private:
    */
   const uint32 screenHeight = 720u;
 
+  /* Resources */
+  /**
+   * sampler state. The sampler of the texture.
+   */
+  SPtr<SamplerState> m_samplerLinear = nullptr;
+  /*
+  * A rasterizer for on world objects rendering.
+  */
+  SPtr<RasterizerState> m_solidCCWRasterizer = nullptr;
+  /*
+  * A rasterizer for on screen rendering.
+  */
+  SPtr<RasterizerState> m_rasterizer2 = nullptr;
+
   /* Buffers */
   /*
   * The buffer for the model matrix.
@@ -91,48 +105,42 @@ private:
   * The buffer for the SSAO data.
   */
   SPtr<ConstantBuffer> m_ssaoDataBuffer = nullptr;
-
-  /* Resources */
-  /**
-   * sampler state. The sampler of the texture.
-   */
-  SPtr<SamplerState> m_samplerLinear = nullptr;
   /*
-  * A rasterizer for on world objects rendering.
+  * The buffer for the SSAO data.
   */
-  SPtr<RasterizerState> m_solidCCWRasterizer = nullptr;
-  /*
-  * A rasterizer for on screen rendering.
-  */
-  SPtr<RasterizerState> m_rasterizer2 = nullptr;
+  SPtr<ConstantBuffer> m_viewportRectDataBuffer = nullptr;
 
-  /* Pases */
-  // GBuffer
+  /* Render Targets and Depth Stencils */
   /*
   * The depth stencil of the back buffer
   */
   SPtr<Texture> m_GBufferDepthStencil;
   /*
-  * The back buffer.
+  * The render target for the position texture.
   */
   SPtr<Texture> m_GBufferPositionTexture;
   /*
-  * The back buffer.
+  * The render target for the color texture.
   */
   SPtr<Texture> m_GBufferColorTexture;
   /*
-  * The back buffer.
+  * The render target for the normal texture.
   */
   SPtr<Texture> m_GBufferNormalTexture;
-  /*
-  * The back buffer.
-  */
-  SPtr<Texture> m_GBufferSSAOTexture;
 
-  /* Luces */
   /*
-  * The back buffer.
+  * The render target for the ssao texture.
   */
-  SPtr<Texture> m_copyShaderRenderTarget;
+  SPtr<Texture> m_SSAOTexture;
+
+  /*
+  * The render target for the copy pass.
+  */
+  SPtr<Texture> m_lightShaderTexture;
+
+  /*
+  * The render targets for the luminance pass.
+  */
+  SPtr<Texture> m_HDRLuminanceTexture;
 };
 }

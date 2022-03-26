@@ -15,6 +15,8 @@
 
 #include <eeLogger.h>
 
+#include <eeVertex.h>
+
 #include <eeTriangle.h>
 #include "eeVertexBuffer.h"
 #include "eeIndexBuffer.h"
@@ -213,14 +215,14 @@ class EE_CORE_EXPORT Mesh
    */
   SPtr<IndexBuffer> m_indexData;
 
-  ///**
-  // * The vertices stored.
-  // */
-  //Vector<ComplexBigAnimVertex<4>> m_vertexArray;
-  ///**
-  // * The indices stored.
-  // */
-  //Vector<uint32> m_indexArray;
+  /**
+   * The vertices stored.
+   */
+  Vector<Vector4f> m_vertexArray;
+  /**
+   * The indices stored.
+   */
+  Vector<uint32> m_indexArray;
 
   /**
    * The number of indices.
@@ -268,6 +270,10 @@ Mesh/*<V, I>*/::loadFromArray(const Vector<V>& vertices,
   //m_indexData->initData(indices.size() * sizeof(uint32),
   //                      sizeof(uint32),
   //                      reinterpret_cast<const Byte*>(indices.data()));
+
+  for (V ver : vertices) {
+    m_vertexArray.push_back(ver.position);
+  }
 
   m_indexCount = indices.size();
 

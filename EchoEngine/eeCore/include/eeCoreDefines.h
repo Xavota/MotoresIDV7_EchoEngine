@@ -97,42 +97,24 @@ enum E
 namespace eFILTER {
 enum E
 {
-  kMinMagMipPoint,
-  kMinMagPointMipLinear,
-  kMinPointMagLinearMipPoint,
-  kMinPointMagMipLinear,
-  kMinLinearMagMipPoint,
-  kMinLinearMagPointMipLinear,
-  kMIN_MAG_LINEAR_MIP_POINT,
-  kMIN_MAG_MIP_LINEAR,
-  kANISOTROPIC,
-  kCOMPARISON_MIN_MAG_MIP_POINT,
-  kCOMPARISON_MIN_MAG_POINT_MIP_LINEAR,
-  kCOMPARISON_MIN_POINT_MAG_LINEAR_MIP_POINT,
-  kCOMPARISON_MIN_POINT_MAG_MIP_LINEAR,
-  kCOMPARISON_MIN_LINEAR_MAG_MIP_POINT,
-  kCOMPARISON_MIN_LINEAR_MAG_POINT_MIP_LINEAR,
-  kCOMPARISON_MIN_MAG_LINEAR_MIP_POINT,
-  kCOMPARISON_MIN_MAG_MIP_LINEAR,
-  kCOMPARISON_ANISOTROPIC,
-  kMINIMUM_MIN_MAG_MIP_POINT,
-  kMINIMUM_MIN_MAG_POINT_MIP_LINEAR,
-  kMINIMUM_MIN_POINT_MAG_LINEAR_MIP_POINT,
-  kMINIMUM_MIN_POINT_MAG_MIP_LINEAR,
-  kMINIMUM_MIN_LINEAR_MAG_MIP_POINT,
-  kMINIMUM_MIN_LINEAR_MAG_POINT_MIP_LINEAR,
-  kMINIMUM_MIN_MAG_LINEAR_MIP_POINT,
-  kMINIMUM_MIN_MAG_MIP_LINEAR,
-  kMINIMUM_ANISOTROPIC,
-  kMAXIMUM_MIN_MAG_MIP_POINT,
-  kMAXIMUM_MIN_MAG_POINT_MIP_LINEAR,
-  kMAXIMUM_MIN_POINT_MAG_LINEAR_MIP_POINT,
-  kMAXIMUM_MIN_POINT_MAG_MIP_LINEAR,
-  kMAXIMUM_MIN_LINEAR_MAG_MIP_POINT,
-  kMAXIMUM_MIN_LINEAR_MAG_POINT_MIP_LINEAR,
-  kMAXIMUM_MIN_MAG_LINEAR_MIP_POINT,
-  kMAXIMUM_MIN_MAG_MIP_LINEAR,
-  kMAXIMUM_ANISOTROPIC
+  kMIN_MAG_MIP_POINT = 0,
+  kMIN_MAG_POINT_MIP_LINEAR = 0x1,
+  kMIN_POINT_MAG_LINEAR_MIP_POINT = 0x4,
+  kMIN_POINT_MAG_MIP_LINEAR = 0x5,
+  kMIN_LINEAR_MAG_MIP_POINT = 0x10,
+  kMIN_LINEAR_MAG_POINT_MIP_LINEAR = 0x11,
+  kMIN_MAG_LINEAR_MIP_POINT = 0x14,
+  kMIN_MAG_MIP_LINEAR = 0x15,
+  kANISOTROPIC = 0x55,
+  kCOMPARISON_MIN_MAG_MIP_POINT = 0x80,
+  kCOMPARISON_MIN_MAG_POINT_MIP_LINEAR = 0x81,
+  kCOMPARISON_MIN_POINT_MAG_LINEAR_MIP_POINT = 0x84,
+  kCOMPARISON_MIN_POINT_MAG_MIP_LINEAR = 0x85,
+  kCOMPARISON_MIN_LINEAR_MAG_MIP_POINT = 0x90,
+  kCOMPARISON_MIN_LINEAR_MAG_POINT_MIP_LINEAR = 0x91,
+  kCOMPARISON_MIN_MAG_LINEAR_MIP_POINT = 0x94,
+  kCOMPARISON_MIN_MAG_MIP_LINEAR = 0x95,
+  kCOMPARISON_ANISOTROPIC = 0xd5
 };
 }
 
@@ -143,7 +125,7 @@ enum E
 namespace eTEXTURE_ADDRESS_MODE {
 enum E
 {
-  kWrap,
+  kWrap = 1,
   kMirror,
   kClamp,
   kBorder,
@@ -191,52 +173,47 @@ enum E
 
 /**
  * @brief
- * Usage for the buffers.
- */
-enum class eUSAGE
-{
-  kDefault = 0,
-  kImmutable = 1,
-  kDynamic = 2,
-  kStaging = 3
-};
-
-/**
- * @brief
  * Fill mode for the triangles.
  */
-enum class eFILL_MODE
+namespace eFILL_MODE {
+enum E
 {
   kWireframe = 2,
   kSolid = 3
 };
+}
 
 /**
  * @brief
  * Cull mode, to render front, back or both.
  */
-enum class eCULL_MODE
+namespace eCULL_MODE {
+enum E
 {
   kNone = 1,
   kFront = 2,
   kBack = 3
 };
+}
 
 /**
  * @brief
  * Depth write mask.
  */
-enum class eDEPTH_WRITE_MASK
+namespace eDEPTH_WRITE_MASK {
+enum E
 {
   kZero,
   kAll
 };
+}
 
 /**
  * @brief
  * Stencil operations.
  */
-enum eSTENCIL_OP
+namespace eSTENCIL_OP { // TODO: Este enum no debería existir o al menos tener
+enum E                  //       menos elementos más entendibles
 {
   kKeep,
   kZero,
@@ -247,44 +224,49 @@ enum eSTENCIL_OP
   kIncr,
   kDecr
 };
+}
 
 /**
  * @brief
  * Blend info for blend state.
  */
-enum class eBLEND
+namespace eBLEND { // TODO: Este enum no debería existir o al menos tener
+enum E             //       menos elementos más entendibles
 {
-  ZERO,
-  ONE,
-  SRC_COLOR,
-  INV_SRC_COLOR,
-  SRC_ALPHA,
-  INV_SRC_ALPHA,
-  DEST_ALPHA,
-  INV_DEST_ALPHA,
-  DEST_COLOR,
-  INV_DEST_COLOR,
-  SRC_ALPHA_SAT,
-  BLEND_FACTOR,
-  INV_BLEND_FACTOR,
-  SRC1_COLOR,
-  INV_SRC1_COLOR,
-  SRC1_ALPHA,
-  INV_SRC1_ALPHA
+  kZero,
+  kOne,
+  kSrcColor,
+  kInvSrcColor,
+  kSrcAlpha,
+  kInvSrcAlpha,
+  kDestAlpha,
+  kInvDestAlpha,
+  kDestColor,
+  kIinDestColor,
+  kSrcAlphaSat,
+  kBlendFactor,
+  kInvLendFactor,
+  kSrc1Color,
+  kIinSrc1Color,
+  kSrc1Alpha,
+  kInvSrc1Alpha
 };
+}
 
 /**
  * @brief
  * Blend operation for blend state.
  */
-enum class eBLEND_OP
+namespace eBLEND_OP {
+enum E
 {
-  Add,
-  Subtract,
-  RevSubtract,
-  Min,
-  Max
+  kAdd,
+  kSubtract,
+  kRevSubtract,
+  kMin,
+  kMax
 };
+}
 
 
 
@@ -302,183 +284,30 @@ enum class eBLEND_OP
  */
 struct ViewportDesc
 {
-  float topLeftX;
-  float topLeftY;
+  ViewportDesc() = default;
+  ViewportDesc(float _width,
+               float _height,
+               float _topLeftX = 0.0f,
+               float _topLeftY = 0.0f,
+               float _minDepth = 0.0f,
+               float _maxDepth = 1.0f) :
+               width(_width),
+               height(_height),
+               topLeftX(_topLeftX),
+               topLeftY(_topLeftY),
+               minDepth(_minDepth),
+               maxDepth(_maxDepth)
+  {}
+
   float width;
   float height;
+  float topLeftX;
+  float topLeftY;
   float minDepth;
   float maxDepth;
 };
 
-/**
- * @brief
- * Descriptor for the sampler state.
- */
-struct SamplerStateDesc
-{
-  eFILTER::E               filter;
-  eTEXTURE_ADDRESS_MODE::E addressU;
-  eTEXTURE_ADDRESS_MODE::E addressV;
-  eTEXTURE_ADDRESS_MODE::E addressW;
-  float                    mipLODBias;
-  uint32                   maxAnisotropy;
-  eCOMPARISON_FUNC::E      comparisonFunc;
-  float                    borderColor[4];
-  float                    minLOD;
-  float                    maxLOD;
-};
-
-/**
- * @brief
- * Descriptor for the sample.
- */
-struct SampleDesc
-{
-  uint32 count;
-  uint32 quality;
-};
-
-/**
- * @brief
- * Buffer Shader Resource View.
- */
-struct BufferSRV
-{
-  union
-  {
-    uint32 firstElement;
-    uint32 elementOffset;
-  };
-  union
-  {
-    uint32 numElements;
-    uint32 elementWidth;
-  };
-};
-
-/**
- * @brief
- * Texture 1D Shader Resource View.
- */
-struct Tex1DSRV
-{
-  uint32 mostDetailedMip;
-  uint32 mipLevels;
-};
-
-/**
- * @brief
- * Texture 1D Array Shader Resource View.
- */
-struct Tex1dArraySRV
-{
-  uint32 mostDetailedMip;
-  uint32 mipLevels;
-  uint32 firstArraySlice;
-  uint32 arraySize;
-};
-
-/**
- * @brief
- * Texture 2D Shader Resource View.
- */
-struct Tex2DSRV
-{
-  uint32 mostDetailedMip;
-  uint32 mipLevels;
-};
-
-/**
- * @brief
- * Texture 2D Array Shader Resource View.
- */
-struct Tex2dArraySRV
-{
-  uint32 mostDetailedMip;
-  uint32 mipLevels;
-  uint32 firstArraySlice;
-  uint32 arraySize;
-};
-
-/**
- * @brief
- * Texture 2D Ms Shader Resource View.
- */
-struct Tex2DMsSRV
-{
-  uint32 unusedField_NothingToDefine;
-};
-
-/**
- * @brief
- * Texture 2D Ms Array Shader Resource View.
- */
-struct Tex2DMsArraySRV
-{
-  uint32 firstArraySlice;
-  uint32 arraySize;
-};
-
-/**
- * @brief
- * Texture 3D Shader Resource View.
- */
-struct Tex3DSRV
-{
-  uint32 mostDetailedMip;
-  uint32 mipLevels;
-};
-
-/**
- * @brief
- * Texture cube Shader Resource View.
- */
-struct TexcubeSRV
-{
-  uint32 mostDetailedMip;
-  uint32 mipLevels;
-};
-
-/**
- * @brief
- * Texture cube array Shader Resource View.
- */
-struct TexcubeArraySRV
-{
-  uint32 mostDetailedMip;
-  uint32 mipLevels;
-  uint32 first2DArrayFace;
-  uint32 numCubes;
-};
-
-/**
- * @brief
- * Buffer Ex Shader Resource View.
- */
-struct BufferExSRV
-{
-  uint32 firstElement;
-  uint32 numElements;
-  uint32 flags;
-};
-
-/**
- * @brief
- * Descriptor for a rasterizer state.
- */
-struct RasteraizerDesc
-{
-  eFILL_MODE fillMode;
-  eCULL_MODE cullMode;
-  bool       frontCounterClockwise;
-  int32      depthBias;
-  float      depthBiasClamp;
-  float      slopeScaledDepthBias;
-  bool       depthClipEnable;
-  bool       scissorEnable;
-  bool       multisampleEnable;
-  bool       antialiasedLineEnable;
-};
+// TODO: De aquí para abajo nada debería existir o al menos ser más entendibles.
 
 /**
  * @brief
@@ -486,9 +315,9 @@ struct RasteraizerDesc
  */
 struct DepthStencilOPDesc
 {
-  eSTENCIL_OP         stencilFailOp;
-  eSTENCIL_OP         stencilDepthFailOp;
-  eSTENCIL_OP         stencilPassOp;
+  eSTENCIL_OP::E         stencilFailOp;
+  eSTENCIL_OP::E         stencilDepthFailOp;
+  eSTENCIL_OP::E         stencilPassOp;
   eCOMPARISON_FUNC::E stencilFunc;
 };
 
@@ -499,7 +328,7 @@ struct DepthStencilOPDesc
 struct DepthStencilDesc
 {
   bool                depthEnable;
-  eDEPTH_WRITE_MASK   depthWriteMask;
+  eDEPTH_WRITE_MASK::E   depthWriteMask;
   eCOMPARISON_FUNC::E depthFunc;
   bool                stencilEnable;
   uint8               stencilReadMask;
@@ -514,14 +343,14 @@ struct DepthStencilDesc
  */
 struct RenderTargetBlendDesc
 {
-  bool      blendEnable;
-  eBLEND    srcBlend;
-  eBLEND    destBlend;
-  eBLEND_OP blendOp;
-  eBLEND    srcBlendAlpha;
-  eBLEND    destBlendAlpha;
-  eBLEND_OP blendOpAlpha;
-  uint8     renderTargetWriteMask;
+  bool         blendEnable;
+  eBLEND::E    srcBlend;
+  eBLEND::E    destBlend;
+  eBLEND_OP::E blendOp;
+  eBLEND::E    srcBlendAlpha;
+  eBLEND::E    destBlendAlpha;
+  eBLEND_OP::E blendOpAlpha;
+  uint8        renderTargetWriteMask;
 };
 
 /**

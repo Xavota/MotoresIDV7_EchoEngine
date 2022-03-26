@@ -350,32 +350,29 @@ Mesh/*<V, I>*/::initPrimitives()
   getSpherePrimitive(1.0f, 20u, 20u, sphere);
 
 
+  Vector<SimplexVertex> verticesx;
 
-  vertices = 
+  verticesx = 
   {
-    SimpleVertex
+    SimplexVertex
     {
       Vector4f(-1.0f,  1.0f, 0.0f, 1.0f),
-      Vector4f(0.0f,  0.0f, 0.0f, 0.0f),
       Vector4f(0.0f,  0.0f, 0.0f, 0.0f)
     },
-    SimpleVertex
+    SimplexVertex
     {
       Vector4f(1.0f,  1.0f, 0.0f, 1.0f),
-      Vector4f(1.0f,  0.0f, 0.0f, 0.0f),
-      Vector4f(0.0f,  0.0f, 0.0f, 0.0f)
+      Vector4f(1.0f,  0.0f, 0.0f, 0.0f)
     },
-    SimpleVertex
+    SimplexVertex
     {
       Vector4f(1.0f, -1.0f,  0.0f, 1.0f),
-      Vector4f(1.0f,  1.0f,  0.0f, 0.0f),
-      Vector4f(0.0f,  0.0f,  0.0f, 0.0f)
+      Vector4f(1.0f,  1.0f,  0.0f, 0.0f)
     },
-    SimpleVertex
+    SimplexVertex
     {
       Vector4f(-1.0f, -1.0f,  0.0f, 1.0f),
-      Vector4f(0.0f,  1.0f,  0.0f, 0.0f),
-      Vector4f(0.0f,  0.0f,  0.0f, 0.0f)
+      Vector4f(0.0f,  1.0f,  0.0f, 0.0f)
     }
   };
 
@@ -385,7 +382,7 @@ Mesh/*<V, I>*/::initPrimitives()
     0, 2, 3
   };
 
-  SAQ.loadFromArray(vertices, indices);
+  SAQ.loadFromArray(verticesx, indices);
 }
 //template<typename V, typename I>
 bool
@@ -399,7 +396,7 @@ Mesh/*<V, I>*/::getSpherePrimitive(float radius,
   }
 
   Vector<SimpleVertex> vertices;
-  Vector<uint16> indices;
+  Vector<uint32> indices;
 
   for (uint32 n = 0; n <= verticalParts; ++n) {
     for (uint32 m = 0; m <= horizontalParts; ++m) {

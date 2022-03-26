@@ -212,8 +212,13 @@ DX11Texture::create2D(uint32 bindFlags,
   }
   if ((m_bindFlags & eTEXTURE_BIND_FLAGS::kRenderTarget)
                   == eTEXTURE_BIND_FLAGS::kRenderTarget) {
+
+    D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
+    memset(&rtvDesc, 0, sizeof(rtvDesc));
+    rtvDesc.Format = descText.Format;
+    rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
     hr = basics->m_device->CreateRenderTargetView(m_textureResource,
-                                                  nullptr,
+                                                  &rtvDesc,
                                                   &m_renderTarget);
     if (FAILED(hr)) {
       DX11SAFE_RELEASE(m_textureResource);
@@ -313,8 +318,8 @@ DX11Texture::loadImages(Vector<SPtr<Image>> images)
     image_subresource_data.SysMemPitch = images[0]->getDataSize();
     
     hr = basics->m_device->CreateTexture2D(&image_texture_desc,
-                                                   &image_subresource_data,
-                                                   &m_textureResource);
+                                           &image_subresource_data,
+                                           &m_textureResource);
 
     if (FAILED(hr)) {
       DX11SAFE_RELEASE(m_textureResource);

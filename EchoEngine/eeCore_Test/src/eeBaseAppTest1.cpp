@@ -102,9 +102,7 @@ using eeEngineSDK::MemoryManager;
 using eeEngineSDK::Time;
 
 
-using eeEngineSDK::SamplerStateDesc;
 using eeEngineSDK::ViewportDesc;
-using eeEngineSDK::RasteraizerDesc;
 
 using eeEngineSDK::Window;
 
@@ -1005,7 +1003,7 @@ BaseAppTest1::onInit()
   
   pTempActor = pScene->addActor("AnimTest2");
   pTempActor->getTransform()->setScale(Vector3f{ 0.01f, 0.01f, 0.01f });
-  pTempActor->getTransform()->setPosition(Vector3f{ -3.0f, 0.0f, 0.0f });
+  pTempActor->getTransform()->setPosition(Vector3f{ -3.0f, 2.5f, 0.0f });
   pTempActor->addComponent<CSkeletalMesh>();
   pTempActor->getComponent<CSkeletalMesh>()->setModel
   (

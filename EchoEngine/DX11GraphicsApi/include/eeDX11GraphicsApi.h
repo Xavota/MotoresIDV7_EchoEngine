@@ -21,6 +21,7 @@
 #include "eeDX11IndexBuffer.h"
 #include "eeDX11ConstantBuffer.h"
 #include "eeDX11RasterizerState.h"
+#include "eeDX11SamplerState.h"
 #include "eeDX11Window.h"
 
 namespace eeEngineSDK {
@@ -498,6 +499,22 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
   createRasterizerStatePtr() const override
   {
     return MemoryManager::instance().newPtr<DX11RasterizerState>();
+  }
+
+  /**
+   * @brief
+   * Gets the specific sampler state pointer.
+   *
+   * @description
+   * Returns a pointer to a sampler state depending on the api.
+   *
+   * @return
+   * The pointer to a sampler state depending on the api.
+   */
+  FORCEINLINE SPtr<SamplerState>
+  createSamplerStatePtr() const override
+  {
+    return MemoryManager::instance().newPtr<DX11SamplerState>();
   }
 
   /**

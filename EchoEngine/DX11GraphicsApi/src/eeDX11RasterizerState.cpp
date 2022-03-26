@@ -2,34 +2,29 @@
 #include "eeDX11GraphicsApi.h"
 
 namespace eeEngineSDK {
-DX11RasterizerState::DX11RasterizerState(RasteraizerDesc desc)
+DX11RasterizerState::DX11RasterizerState(eFILL_MODE::E fillMode,
+                                         eCULL_MODE::E cullMode,
+                                         bool frontCounterClockwise)
 {
-  create(desc);
+  create(fillMode, cullMode, frontCounterClockwise);
 }
 DX11RasterizerState::~DX11RasterizerState()
 {
   release();
 }
 bool
-DX11RasterizerState::create(RasteraizerDesc desc)
+DX11RasterizerState::create(eFILL_MODE::E fillMode,
+                            eCULL_MODE::E cullMode,
+                            bool frontCounterClockwise)
 {
   const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
   D3D11_RASTERIZER_DESC rasDesc;
   memset(&rasDesc, 0, sizeof(rasDesc));
-  rasDesc.AntialiasedLineEnable = desc.antialiasedLineEnable;
-  rasDesc.CullMode = static_cast<D3D11_CULL_MODE>(
-                     static_cast<int32>(desc.cullMode));
-  rasDesc.DepthBias = desc.depthBias;
-  rasDesc.DepthBiasClamp = desc.depthBiasClamp;
-  rasDesc.DepthClipEnable = desc.depthClipEnable;
-  rasDesc.FillMode = static_cast<D3D11_FILL_MODE>(
-                     static_cast<int32>(desc.fillMode));
-  rasDesc.FrontCounterClockwise = desc.frontCounterClockwise;
-  rasDesc.MultisampleEnable = desc.multisampleEnable;
-  rasDesc.ScissorEnable = desc.scissorEnable;
-  rasDesc.SlopeScaledDepthBias = desc.slopeScaledDepthBias;
+  rasDesc.CullMode = static_cast<D3D11_CULL_MODE>(cullMode);
+  rasDesc.FillMode = static_cast<D3D11_FILL_MODE>(fillMode);
+  rasDesc.FrontCounterClockwise = frontCounterClockwise;
 
   HRESULT hr = basics->m_device->CreateRasterizerState(&rasDesc, &m_rasterizer);
   if (FAILED(hr)) {
@@ -37,7 +32,6 @@ DX11RasterizerState::create(RasteraizerDesc desc)
   }
   return true;
 }
-
 void
 DX11RasterizerState::use()
 {
@@ -46,7 +40,6 @@ DX11RasterizerState::use()
 
   basics->m_deviceContext->RSSetState(m_rasterizer);
 }
-
 void
 DX11RasterizerState::release()
 {

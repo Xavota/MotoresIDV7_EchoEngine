@@ -31,16 +31,12 @@ DX11SamplerState::create(eFILTER::E filter,
   sampDesc.Filter = static_cast<D3D11_FILTER>(filter);
   sampDesc.AddressU = static_cast<D3D11_TEXTURE_ADDRESS_MODE>(addressU);
   sampDesc.AddressV = static_cast<D3D11_TEXTURE_ADDRESS_MODE>(addressV);
-  sampDesc.AddressW = static_cast<D3D11_TEXTURE_ADDRESS_MODE>(addressU);
-  sampDesc.MipLODBias = 0.0f;
-  sampDesc.MaxAnisotropy = 0;
+  sampDesc.AddressW = static_cast<D3D11_TEXTURE_ADDRESS_MODE>(addressW);
   sampDesc.ComparisonFunc = D3D11_COMPARISON_FUNC::D3D11_COMPARISON_NEVER;
-  sampDesc.BorderColor[0] = 0.0f;
-  sampDesc.BorderColor[1] = 0.0f;
-  sampDesc.BorderColor[2] = 0.0f;
-  sampDesc.BorderColor[3] = 0.0f;
-  sampDesc.MinLOD = 0;
+  sampDesc.MipLODBias = 0.0f;
+  sampDesc.MinLOD = -3.402823466e+38f;
   sampDesc.MaxLOD = 3.402823466e+38f;// Math::kMAX_FLOAT;
+  sampDesc.MaxAnisotropy = 1u;
   HRESULT hr = basics->m_device->CreateSamplerState(&sampDesc, &m_sampler);
   if (FAILED(hr)) {
     return false;

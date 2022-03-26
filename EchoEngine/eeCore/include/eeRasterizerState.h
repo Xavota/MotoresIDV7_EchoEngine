@@ -40,14 +40,20 @@ class EE_CORE_EXPORT RasterizerState
    * @description
    * Creates the rasterizer stencil state with a descriptor.
    *
-   * @param desc
-   * The descriptor for the rasterizer state.
+   * @param fillMode
+   * The mode for filling the triangles.
+   * @param cullMode
+   * The mode for the order of rendering of the triangles.
+   * @param frontCounterClockwise
+   * If the triangles front is in counter clock wise order of its vertices.
    *
    * @return
    * Whether it succeeded to create or not.
    */
   virtual bool
-  create(RasteraizerDesc /*desc*/) { return true; }
+  create(eFILL_MODE::E /*fillMode*/,
+         eCULL_MODE::E /*cullMode*/,
+         bool /*frontCounterClockwise*/) { return true; }
 
   /**
    * @brief

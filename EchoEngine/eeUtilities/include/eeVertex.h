@@ -27,6 +27,10 @@ struct SimplexVertex
    * The position of the vertex.
    */
   Vector4f position = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
+  /**
+   * The texture coordinates of the vertex.
+   */
+  Vector4f uvCoord = Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
 };
 /**
  * @brief

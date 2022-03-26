@@ -179,7 +179,9 @@ DX11GraphicsApi::setRenderTargets(Vector<SPtr<Texture>> rtvs,
 void
 DX11GraphicsApi::unsetRenderTargets()
 {
-  m_basics.m_deviceContext->OMSetRenderTargets(0u, nullptr, nullptr);
+  static Vector<ID3D11RenderTargetView*> rtvs;
+  rtvs.resize(8, nullptr);
+  m_basics.m_deviceContext->OMSetRenderTargets(8u, &rtvs[0], nullptr);
 }
 void
 DX11GraphicsApi::setTextures(Vector<SPtr<Texture>> textures,
@@ -209,18 +211,18 @@ DX11GraphicsApi::setTextures(Vector<SPtr<Texture>> textures,
 void
 DX11GraphicsApi::unsetTextures(uint32 textureCount, uint32 startSlot)
 {
-  Vector<ID3D11ShaderResourceView*> dx11texs;
+  static Vector<ID3D11ShaderResourceView*> dx11texs;
   dx11texs.resize(textureCount, nullptr);
 
   m_basics.m_deviceContext->PSSetShaderResources
   (
     startSlot,
     textureCount,
-    dx11texs.data()
+    &dx11texs[0]
   );
 }
 void
-DX11GraphicsApi::setVSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
+DX11GraphicsApi::setVSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers, // TODO: Referencia constante
                                       uint32 startSlot)
 {
   auto& memoryManager = MemoryManager::instance();
@@ -374,7 +376,7 @@ DX11GraphicsApi::unsetIndexBuffer()
   basics->m_deviceContext->IASetIndexBuffer(nullptr, DXGI_FORMAT_R16_UINT, 0);
 }
 void
-DX11GraphicsApi::setViewports(Vector<ViewportDesc> descs)
+DX11GraphicsApi::setViewports(Vector<ViewportDesc> descs) // TODO
 {
   Vector<D3D11_VIEWPORT> vps;
 
@@ -392,7 +394,7 @@ DX11GraphicsApi::setViewports(Vector<ViewportDesc> descs)
   }
 
   m_basics.m_deviceContext->RSSetViewports(static_cast<UINT>(vps.size()),
-    vps.data());
+                                                             vps.data());
 }
 void
 DX11GraphicsApi::resizeWindow(Point2D newSize)

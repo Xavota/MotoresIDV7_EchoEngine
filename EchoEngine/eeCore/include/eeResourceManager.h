@@ -126,26 +126,6 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * Initializes the StaticMesh.
    *
    * @description
-   * Initializes the StaticMesh from a file and stores it with the given name.
-   *
-   * @param fileName
-   * The name of the file containing the StaticMesh.
-   * @param resourceName
-   * The name that the resource will be stored with.
-   *
-   * @return
-   * The resource initialized.
-   */
-  /*template<typename V, typename I>*/
-  SPtr<StaticMesh/*<V, I>*/>
-  loadStaticMeshFromFile(const String& fileName,
-                         const String resourceName,
-                         const Vector<SPtr<Material>>& materials = {});
-  /**
-   * @brief
-   * Initializes the StaticMesh.
-   *
-   * @description
    * Initializes the StaticMesh from an array of meshes and stores it with the given
    * name.
    *
@@ -218,27 +198,6 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
   SPtr<Skeletal> 
   loadSkeletalFromFile(const String& fileName,
                        const String& resourceName);
-  /**
-   * @brief
-   * Initializes a skeletal mesh.
-   *
-   * @description
-   * Initializes a skeletal mesh from a file and stores it with the given name.
-   *
-   * @param fileName
-   * The name of the file containing the skeletal mesh.
-   * @param resourceName
-   * The name that the resource will be stored with.
-   *
-   * @return
-   * The resource initialized.
-   */
-  /*template<typename V, typename I>*/
-  SPtr<SkeletalMesh/*<V, I>*/>
-  loadSkeletalMeshFromFile(const String& fileName,
-                           const String& resourceName,
-                           const SPtr<Skeletal> skMesh,
-                           const Vector<SPtr<Material>>& textures = {});
   /**
    * @brief
    * Initializes an animation.

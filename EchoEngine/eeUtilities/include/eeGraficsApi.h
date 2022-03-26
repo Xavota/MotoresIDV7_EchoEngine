@@ -529,6 +529,22 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
 
   /**
    * @brief
+   * Gets the specific sampler state pointer.
+   *
+   * @description
+   * Returns a pointer to a sampler state depending on the api.
+   *
+   * @return
+   * The pointer to a sampler state depending on the api.
+   */
+  virtual SPtr<SamplerState>
+  createSamplerStatePtr() const
+  {
+    return MemoryManager::instance().newPtr<SamplerState>();
+  }
+
+  /**
+   * @brief
    * Gets the specific window pointer.
    *
    * @description
