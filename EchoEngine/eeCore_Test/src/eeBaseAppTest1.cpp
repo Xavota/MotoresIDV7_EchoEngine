@@ -751,7 +751,7 @@ BaseAppTest1::onInit()
   resourceManager.getResourceTexture("DefaultNormalMap");
   resourceManager.loadMaterialFromTextures(texturesMap, "Default_mat");
 
-  StaticMesh::initPrimitives();
+  Mesh::initPrimitives();
 
 
 
@@ -768,16 +768,16 @@ BaseAppTest1::onInit()
 
 
   
-  resourceManager.loadStaticMeshFromMeshesArray({ Mesh::cube },
-                                                "Cube",
-                                                Vector3f{ 1.0f, 1.0f, 1.0f },
-                                                Vector3f{ 1.0f, 1.0f, 1.0f },
-                                                Vector3f{ -1.0f, -1.0f, -1.f });
-  resourceManager.loadStaticMeshFromMeshesArray({ Mesh::tetrahedron },
-                                                "Tetrahedron",
-                                                Vector3f{ 1.0f, -0.54f, -0.58f },
-                                                Vector3f{ 1.0f, 1.09f, 1.15f },
-                                                Vector3f{ -1.0f, -0.54f, -0.58f });
+  //resourceManager.loadStaticMeshFromMeshesArray({ Mesh::cube },
+  //                                              "Cube",
+  //                                              Vector3f{ 1.0f, 1.0f, 1.0f },
+  //                                              Vector3f{ 1.0f, 1.0f, 1.0f },
+  //                                              Vector3f{ -1.0f, -1.0f, -1.f });
+  //resourceManager.loadStaticMeshFromMeshesArray({ Mesh::tetrahedron },
+  //                                              "Tetrahedron",
+  //                                              Vector3f{ 1.0f, -0.54f, -0.58f },
+  //                                              Vector3f{ 1.0f, 1.09f, 1.15f },
+  //                                              Vector3f{ -1.0f, -0.54f, -0.58f });
 
 
 
@@ -795,27 +795,27 @@ BaseAppTest1::onInit()
   pTempActor->addComponent<CCamera>();
   pTempActor->getComponent<CCamera>()->init(camDesc);
   pTempActor->getComponent<CCamera>()->setMain(true);
-  pTempActor->addComponent<CStaticMesh>();
-  pTempActor->getComponent<CStaticMesh>()->setStaticMesh
-  (
-    resourceManager.getResourceStaticMesh("Cube")
-  );
-  pTempActor->addComponent<CBounds>();
-  pTempActor->addComponent<CRender>();
+  //pTempActor->addComponent<CStaticMesh>();
+  //pTempActor->getComponent<CStaticMesh>()->setStaticMesh
+  //(
+  //  resourceManager.getResourceStaticMesh("Cube")
+  //);
+  //pTempActor->addComponent<CBounds>();
+  //pTempActor->addComponent<CRender>();
 
 
 
-  pTempActor = pScene->addActor("AtatchToActor");
-  //pTempActor->attachTo(pScene->getActor("Player"));
-  pScene->setActorChild("Player", "AtatchToActor");
-  pTempActor->getTransform()->setPosition(Vector3f{ 0.0f, 0.0f, 30.0f });
-  pTempActor->addComponent<CStaticMesh>();
-  pTempActor->getComponent<CStaticMesh>()->setStaticMesh
-  (
-    resourceManager.getResourceStaticMesh("Tetrahedron")
-  );
-  pTempActor->addComponent<CBounds>();
-  pTempActor->addComponent<CRender>();
+  //pTempActor = pScene->addActor("AtatchToActor");
+  ////pTempActor->attachTo(pScene->getActor("Player"));
+  //pScene->setActorChild("Player", "AtatchToActor");
+  //pTempActor->getTransform()->setPosition(Vector3f{ 0.0f, 0.0f, 30.0f });
+  //pTempActor->addComponent<CStaticMesh>();
+  //pTempActor->getComponent<CStaticMesh>()->setStaticMesh
+  //(
+  //  resourceManager.getResourceStaticMesh("Tetrahedron")
+  //);
+  //pTempActor->addComponent<CBounds>();
+  //pTempActor->addComponent<CRender>();
 
 
 
@@ -824,13 +824,13 @@ BaseAppTest1::onInit()
   pTempActor->getTransform()->setScale(Vector3f{ 0.1f, 0.1f, 0.1f });
   pTempActor->addComponent<CCamera>();
   pTempActor->getComponent<CCamera>()->init(camDesc);
-  pTempActor->addComponent<CStaticMesh>();
-  pTempActor->getComponent<CStaticMesh>()->setStaticMesh
-  (
-    StaticMesh::cube
-  );
-  pTempActor->addComponent<CBounds>();
-  pTempActor->addComponent<CRender>();
+  //pTempActor->addComponent<CStaticMesh>();
+  //pTempActor->getComponent<CStaticMesh>()->setStaticMesh
+  //(
+  //  StaticMesh::cube
+  //);
+  //pTempActor->addComponent<CBounds>();
+  //pTempActor->addComponent<CRender>();
 
 
   resourceManager.importResourceFromFile("Models/arcane_jinx_sketchfab.fbx",
@@ -1016,6 +1016,10 @@ BaseAppTest1::onInit()
   );
   pTempActor->addComponent<CBounds>();
   pTempActor->addComponent<CRender>();
+
+
+
+  sceneManager.partitionScenes();
 }
 
 void

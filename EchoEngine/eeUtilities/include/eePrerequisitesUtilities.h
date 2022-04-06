@@ -56,9 +56,7 @@ struct SimpleBigAnimVertex;
 template<uint32 size = 4>
 struct ComplexBigAnimVertex;
 
-template<typename V>
-struct Triangle;
-
+class Triangle;
 class Plane;
 class Sphere;
 class BoxAAB;

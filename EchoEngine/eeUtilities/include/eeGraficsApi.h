@@ -368,6 +368,18 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    */
   virtual void
   drawMesh(const Mesh& meshToDraw);
+  /**
+   * @brief
+   * Draws a mesh.
+   *
+   * @description
+   * Draws the given mesh.
+   *
+   * @param meshToDraw
+   * The mesh to draw.
+   */
+  virtual void
+  drawMesh(const BoneMesh& meshToDraw);
 
   /**
    * @brief

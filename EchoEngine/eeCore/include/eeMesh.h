@@ -16,6 +16,7 @@
 #include <eeLogger.h>
 
 #include <eeVertex.h>
+#include <eeTriangle.h>
 
 #include <eeTriangle.h>
 #include "eeVertexBuffer.h"
@@ -40,7 +41,7 @@ class EE_CORE_EXPORT Mesh
    * @brief
    * Copy constructor
    */
-  Mesh(const Mesh& other);
+  //Mesh(const Mesh& other);
   /**
    * @brief
    * Initializes the mesh.
@@ -53,17 +54,14 @@ class EE_CORE_EXPORT Mesh
    * @param indices
    * The index data.
    */
-  template<typename V, typename I>
-  Mesh(const Vector<V>& vertices,
-       const Vector<I>& indices);
-  //Mesh(const Vector<ComplexBigAnimVertex<4>>& vertices,
-  //     const Vector<uint32>& indices);
+  Mesh(const Vector<ComplexVertex>& vertices,
+       const Vector<uint32>& indices);
   /**
    * @brief
    * Default destructor
    */
   virtual
-  ~Mesh();
+  ~Mesh() = default;
 
   /**
    * @brief
@@ -80,13 +78,24 @@ class EE_CORE_EXPORT Mesh
    * @return
    * Weather it succeed or failed to initialize.
    */
-  template<typename V, typename I>
   bool
-  loadFromArray(const Vector<V>& vertices,
-                const Vector<I>& indices);
-  //bool
-  //loadFromArray(const Vector<ComplexBigAnimVertex<4>>& vertices,
-  //              const Vector<uint32>& indices);
+  loadFromVertexArray(const Vector<ComplexVertex>& vertices,
+                      const Vector<uint32>& indices);
+  /**
+   * @brief
+   * Initializes the mesh.
+   *
+   * @description
+   * Initializes the mesh from an array of triangles.
+   *
+   * @param triangles
+   * The triangles array.
+   *
+   * @return
+   * Weather it succeed or failed to initialize.
+   */
+  bool
+  loadFromTrianglesArray(const Vector<Triangle>& triangles);
 
   /**
    * @brief
@@ -142,6 +151,22 @@ class EE_CORE_EXPORT Mesh
 
   /**
    * @brief
+   * Getter for the triangles array.
+   *
+   * @description
+   * Returns the triangles array of the mesh.
+   *
+   * @return
+   * The triangles array of the mesh.
+   */
+  FORCEINLINE Vector<Triangle>
+  getTrianglesArray() const
+  {
+    return m_vertexArray;
+  }
+
+  /**
+   * @brief
    * Initializes the primitive models.
    *
    * @description
@@ -173,6 +198,27 @@ class EE_CORE_EXPORT Mesh
                      uint32 verticalParts,
                      uint32 horizontalParts,
                      Mesh& outMesh);
+  
+  /**
+   * @brief
+   * Copies a mesh.
+   *
+   * @description
+   * Returns the given mesh but with its vertices transformed with using the
+   * given model matrix.
+   * 
+   * @param meshToCopy
+   * The mesh to copy.
+   * @param horizontalParts
+   * The transform matrix to transform the new mesh.
+   * 
+   * @return
+   * The copy of the mesh, transformed with the matrix.
+   */
+  static void
+  copyMeshTransformed(const Mesh& meshToCopy,
+                     const Matrix4f& transformMatrix,
+                     Mesh& outNewMesh);
 
 
   
@@ -218,7 +264,7 @@ class EE_CORE_EXPORT Mesh
   /**
    * The vertices stored.
    */
-  Vector<Vector4f> m_vertexArray;
+  Vector<Triangle> m_vertexArray;
   /**
    * The indices stored.
    */
@@ -229,54 +275,4 @@ class EE_CORE_EXPORT Mesh
    */
   SIZE_T m_indexCount = 0;
 };
-
-template<typename V, typename I>
-inline Mesh/*<V,I>*/::Mesh(const Vector<V>& vertices, const Vector<I>& indices)
-//inline Mesh::Mesh(const Vector<ComplexBigAnimVertex<4>>& vertices, const Vector<uint32>& indices)
-{
-  loadFromArray(vertices, indices);
-}
-
-template<typename V, typename I>
-bool 
-Mesh/*<V, I>*/::loadFromArray(const Vector<V>& vertices, 
-                          const Vector<I>& indices)
-//bool
-//Mesh::loadFromArray(const Vector<ComplexBigAnimVertex<4>>& vertices,
-//                              const Vector<uint32>& indices)
-{
-  auto& graphicsApi = GraphicsApi::instance();
-
-  if (vertices.empty() || indices.empty()) {
-    Logger::instance().ConsoleLog("Empty info loading mesh");
-    return false;
-  }
-
-  if (!m_vertexData) {
-    m_vertexData = graphicsApi.createVertexBufferPtr();
-  }
-  if (!m_indexData) {
-    m_indexData = graphicsApi.createIndexBufferPtr();
-  }
-  m_vertexData->initData(vertices.size() * sizeof(V),
-                         sizeof(V),
-                         reinterpret_cast<const Byte*>(vertices.data()));
-  m_indexData->initData(indices.size() * sizeof(I),
-                        sizeof(I),
-                        reinterpret_cast<const Byte*>(indices.data()));
-  //m_vertexData->initData(vertices.size() * sizeof(ComplexBigAnimVertex<4>),
-  //                       sizeof(ComplexBigAnimVertex<4>),
-  //                       reinterpret_cast<const Byte*>(vertices.data()));
-  //m_indexData->initData(indices.size() * sizeof(uint32),
-  //                      sizeof(uint32),
-  //                      reinterpret_cast<const Byte*>(indices.data()));
-
-  for (V ver : vertices) {
-    m_vertexArray.push_back(ver.position);
-  }
-
-  m_indexCount = indices.size();
-
-  return true;
-}
 }

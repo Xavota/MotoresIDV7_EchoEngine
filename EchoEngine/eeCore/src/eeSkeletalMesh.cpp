@@ -22,7 +22,7 @@
 
 namespace eeEngineSDK {
 /*template<typename V, typename I>*/
-SkeletalMesh/*<V, I>*/::SkeletalMesh(const Vector<Mesh/*<V, I>*/>& meshes,
+SkeletalMesh/*<V, I>*/::SkeletalMesh(const Vector<BoneMesh/*<V, I>*/>& meshes,
                                  SPtr<Skeletal> skeleton,
                                  const String& name,
                                  const Vector3f& furtherVertexPosition,
@@ -37,7 +37,7 @@ SkeletalMesh/*<V, I>*/::SkeletalMesh(const Vector<Mesh/*<V, I>*/>& meshes,
                  minCoordinate);
 }
 /*template<typename V, typename I>*/
-SkeletalMesh/*<V, I>*/::SkeletalMesh(const Vector<Pair<Mesh/*<V, I>*/, SPtr<Material>>>& meshes,
+SkeletalMesh/*<V, I>*/::SkeletalMesh(const Vector<Pair<BoneMesh/*<V, I>*/, SPtr<Material>>>& meshes,
                                  SPtr<Skeletal> skeleton,
                                  const String& name,
                                  const Vector3f& furtherVertexPosition,
@@ -53,7 +53,7 @@ SkeletalMesh/*<V, I>*/::SkeletalMesh(const Vector<Pair<Mesh/*<V, I>*/, SPtr<Mate
 }
 /*template<typename V, typename I>*/
 bool
-SkeletalMesh/*<V, I>*/::loadFromMeshes(const Vector<Mesh/*<V, I>*/>& meshes,
+SkeletalMesh/*<V, I>*/::loadFromMeshes(const Vector<BoneMesh/*<V, I>*/>& meshes,
                                        SPtr<Skeletal> skeleton,
                                        const String& name,
                                        const Vector3f& furtherVertexPosition,
@@ -72,7 +72,7 @@ SkeletalMesh/*<V, I>*/::loadFromMeshes(const Vector<Mesh/*<V, I>*/>& meshes,
   for (const auto& m : meshes) {
     m_meshes.emplace_back
     (
-      Pair<Mesh/*<V, I>*/, SPtr<Material>>
+      Pair<BoneMesh/*<V, I>*/, SPtr<Material>>
       (
         m,
         resourseManager.getResourceMaterial("Default_mat")
@@ -91,7 +91,7 @@ SkeletalMesh/*<V, I>*/::loadFromMeshes(const Vector<Mesh/*<V, I>*/>& meshes,
 }
 /*template<typename V, class I>*/
 bool
-SkeletalMesh/*<V, I>*/::loadFromMeshes(const Vector<Pair<Mesh/*<V, I>*/, SPtr<Material>>>& meshes,
+SkeletalMesh/*<V, I>*/::loadFromMeshes(const Vector<Pair<BoneMesh/*<V, I>*/, SPtr<Material>>>& meshes,
                                    SPtr<Skeletal> skeleton,
                                    const String& name,
                                    const Vector3f& furtherVertexPosition,
@@ -117,7 +117,7 @@ SkeletalMesh/*<V, I>*/::loadFromMeshes(const Vector<Pair<Mesh/*<V, I>*/, SPtr<Ma
   return true;
 }
 /*template<typename V, typename I>*/
-Vector<Pair<Mesh/*<V, I>*/, SPtr<Material>>>
+Vector<Pair<BoneMesh/*<V, I>*/, SPtr<Material>>>
 SkeletalMesh/*<V, I>*/::getMeshes()
 {
   return m_meshes;

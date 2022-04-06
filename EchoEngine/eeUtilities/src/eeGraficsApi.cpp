@@ -6,6 +6,7 @@
 #include "eeConstantBuffer.h"
 #include "eeStaticMesh.h"
 #include "eeMesh.h"
+#include "eeBoneMesh.h"
 #include "eeCTransform.h"
 #include "eeCSkeletalMesh.h"
 #include "eeSkeletalMesh.h"
@@ -56,12 +57,64 @@ GraphicsApi::initializeScreen(void* callback, uint32 witdh, uint32 height)
 void
 GraphicsApi::drawOnSAQ()
 {
-  static Mesh SAQ = Mesh::SAQ;
-  SAQ.set();
-  drawIndexed(static_cast<uint32>(SAQ.getIndexCount()));
+  static SPtr<VertexBuffer> SAQVertexBuffer = nullptr;
+  static SPtr<IndexBuffer> SAQIndexBuffer = nullptr;
+  if (!SAQVertexBuffer || !SAQIndexBuffer) {
+    SAQVertexBuffer = createVertexBufferPtr();
+    SAQIndexBuffer = createIndexBufferPtr();
+
+    Vector<SimplexVertex> vertices;
+    Vector<uint16> indices;
+
+    vertices = 
+    {
+      SimplexVertex
+      {
+        Vector4f(-1.0f,  1.0f, 0.0f, 1.0f),
+        Vector4f(0.0f,  0.0f, 0.0f, 0.0f)
+      },
+      SimplexVertex
+      {
+        Vector4f(1.0f,  1.0f, 0.0f, 1.0f),
+        Vector4f(1.0f,  0.0f, 0.0f, 0.0f)
+      },
+      SimplexVertex
+      {
+        Vector4f(1.0f, -1.0f,  0.0f, 1.0f),
+        Vector4f(1.0f,  1.0f,  0.0f, 0.0f)
+      },
+      SimplexVertex
+      {
+        Vector4f(-1.0f, -1.0f,  0.0f, 1.0f),
+        Vector4f(0.0f,  1.0f,  0.0f, 0.0f)
+      }
+    };
+    
+    indices =
+    {
+      0, 1, 2,
+      0, 2, 3
+    };
+    
+    SAQVertexBuffer->initData(vertices.size() * sizeof(SimplexVertex),
+                              sizeof(SimplexVertex),
+                              reinterpret_cast<const Byte*>(vertices.data()));
+    SAQIndexBuffer->initData(indices.size() * sizeof(uint16),
+                             sizeof(uint16),
+                             reinterpret_cast<const Byte*>(indices.data()));
+  }
+  SAQVertexBuffer->set();
+  SAQIndexBuffer->set();
+  drawIndexed(6);
   unsetVertexBuffers(1u, 0u);
 }
 void GraphicsApi::drawMesh(const Mesh& meshToDraw)
+{
+  meshToDraw.set();
+  drawIndexed(static_cast<uint32>(meshToDraw.getIndexCount()));
+  unsetVertexBuffers(1u, 0u);
+}
+void GraphicsApi::drawMesh(const BoneMesh& meshToDraw)
 {
   meshToDraw.set();
   drawIndexed(static_cast<uint32>(meshToDraw.getIndexCount()));

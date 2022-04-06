@@ -19,6 +19,17 @@
 namespace eeEngineSDK{
 /**
  * @brief
+ * The type of mobility of the mesh. This is used for optimization process.
+ */
+namespace eMOBILITY_TYPE {
+enum E : uint8 
+{
+  kDynamic,
+  kStatic
+};
+}
+/**
+ * @brief
  * The Static Mesh component.
  */
 class EE_CORE_EXPORT CStaticMesh : public Component
@@ -77,7 +88,7 @@ class EE_CORE_EXPORT CStaticMesh : public Component
    * @param staticMesh
    * The new static mesh resource.
    */
-  virtual void
+  void
   setStaticMesh(SPtr<StaticMesh> staticMesh);
 
   /**
@@ -90,13 +101,49 @@ class EE_CORE_EXPORT CStaticMesh : public Component
    * @return
    * The static mesh resource of the component.
    */
-  virtual SPtr<StaticMesh>
+  SPtr<StaticMesh>
   getStaticMesh();
+
+  /**
+   * @brief
+   * Getter for the mobility type.
+   *
+   * @description
+   * Gets the mobility type of the static mesh, to pre-compute optimizations.
+   *
+   * @return
+   * The mobility type of the component.
+   */
+  eMOBILITY_TYPE::E
+  getMobilityType()
+  {
+    return m_mobilityType;
+  }
+  /**
+   * @brief
+   * Setter for the mobility type.
+   *
+   * @description
+   * Sets the mobility type of the static mesh, to pre-compute optimizations.
+   *
+   * @param type
+   * The mobility type of the component.
+   */
+  void
+  setMobilityType(eMOBILITY_TYPE::E type)
+  {
+    m_mobilityType = type;
+  }
 
  private:
   /**
    * The static mesh resource.
    */
   SPtr<StaticMesh> m_staticMesh;
+
+  /**
+   * The number of indices.
+   */
+  eMOBILITY_TYPE::E m_mobilityType = eMOBILITY_TYPE::kStatic;
 };
 }

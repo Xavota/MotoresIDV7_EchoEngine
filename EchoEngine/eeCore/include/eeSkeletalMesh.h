@@ -15,7 +15,7 @@
 #include <eeSphere.h>
 #include <eeBox.h>
 
-#include "eeMesh.h"
+#include "eeBoneMesh.h"
 
 namespace eeEngineSDK {
 /**
@@ -55,7 +55,7 @@ class EE_CORE_EXPORT SkeletalMesh
    * @return
    * Weather it succeed or failed to initialize.
    */
-  SkeletalMesh(const Vector<Mesh/*<V, I>*/>& meshes,
+  SkeletalMesh(const Vector<BoneMesh/*<V, I>*/>& meshes,
                SPtr<Skeletal> skeleton,
                const String& name,
                const Vector3f& furtherVertexPosition,
@@ -84,7 +84,7 @@ class EE_CORE_EXPORT SkeletalMesh
    * @return
    * Weather it succeed or failed to initialize.
    */
-  SkeletalMesh(const Vector<Pair<Mesh/*<V, I>*/, SPtr<Material>>>& meshes,
+  SkeletalMesh(const Vector<Pair<BoneMesh/*<V, I>*/, SPtr<Material>>>& meshes,
                SPtr<Skeletal> skeleton,
                const String& name,
                const Vector3f& furtherVertexPosition,
@@ -120,7 +120,7 @@ class EE_CORE_EXPORT SkeletalMesh
    * Weather it succeed or failed to initialize.
    */
   virtual bool
-  loadFromMeshes(const Vector<Mesh/*<V, I>*/>& meshes,
+  loadFromMeshes(const Vector<BoneMesh/*<V, I>*/>& meshes,
                  SPtr<Skeletal> skeleton,
                  const String& name,
                  const Vector3f& furtherVertexPosition,
@@ -150,7 +150,7 @@ class EE_CORE_EXPORT SkeletalMesh
    * Weather it succeed or failed to initialize.
    */
   virtual bool
-  loadFromMeshes(const Vector<Pair<Mesh/*<V, I>*/, SPtr<Material>>>& meshes,
+  loadFromMeshes(const Vector<Pair<BoneMesh/*<V, I>*/, SPtr<Material>>>& meshes,
                  SPtr<Skeletal> skeleton,
                  const String& name,
                  const Vector3f& furtherVertexPosition,
@@ -167,7 +167,7 @@ class EE_CORE_EXPORT SkeletalMesh
    * @return
    * The vector of pairs of meshes and texture.
    */
-  virtual Vector<Pair<Mesh/*<V, I>*/, SPtr<Material>>>
+  virtual Vector<Pair<BoneMesh/*<V, I>*/, SPtr<Material>>>
   getMeshes();
   /**
    * @brief
@@ -264,7 +264,7 @@ class EE_CORE_EXPORT SkeletalMesh
   /**
    * The vector of pairs of meshes and texture indices.
    */
-  Vector<Pair<Mesh/*<V, I>*/, SPtr<Material>>> m_meshes;
+  Vector<Pair<BoneMesh/*<V, I>*/, SPtr<Material>>> m_meshes;
   /**
    * The resource name.
    */

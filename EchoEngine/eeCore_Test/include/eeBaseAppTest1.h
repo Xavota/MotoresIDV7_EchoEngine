@@ -15,7 +15,6 @@
 using eeEngineSDK::BaseApp;
 using eeEngineSDK::int32;
 using eeEngineSDK::SPtr;
-using eeEngineSDK::Object;
 using eeEngineSDK::ConstantBuffer;
 using eeEngineSDK::RasterizerState;
 using eeEngineSDK::Actor;

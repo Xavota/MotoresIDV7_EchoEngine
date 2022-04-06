@@ -178,6 +178,7 @@
     <ClCompile Include="src\eeActor.cpp" />
     <ClCompile Include="src\eeBaseApp.cpp" />
     <ClCompile Include="src\eeBlendState.cpp" />
+    <ClCompile Include="src\eeBoneMesh.cpp" />
     <ClCompile Include="src\eeBuffer.cpp" />
     <ClCompile Include="src\eeCAnimation.cpp" />
     <ClCompile Include="src\eeCBounds.cpp" />
@@ -196,6 +197,8 @@
     <ClCompile Include="src\eeInputLayout.cpp" />
     <ClCompile Include="src\eeMaterial.cpp" />
     <ClCompile Include="src\eeMesh.cpp" />
+    <ClCompile Include="src\eeOctree.cpp" />
+    <ClCompile Include="src\eeOctreeNode.cpp" />
     <ClCompile Include="src\eeRenderer.cpp" />
     <ClCompile Include="src\eeStaticMesh.cpp" />
     <ClCompile Include="src\eePixelShader.cpp" />
@@ -218,6 +221,7 @@
     <ClInclude Include="include\eeActor.h" />
     <ClInclude Include="include\eeBaseApp.h" />
     <ClInclude Include="include\eeBlendState.h" />
+    <ClInclude Include="include\eeBoneMesh.h" />
     <ClInclude Include="include\eeBuffer.h" />
     <ClInclude Include="include\eeCAnimation.h" />
     <ClInclude Include="include\eeCBounds.h" />
@@ -238,6 +242,8 @@
     <ClInclude Include="include\eeInputLayout.h" />
     <ClInclude Include="include\eeMaterial.h" />
     <ClInclude Include="include\eeMesh.h" />
+    <ClInclude Include="include\eeOctree.h" />
+    <ClInclude Include="include\eeOctreeNode.h" />
     <ClInclude Include="include\eeRenderer.h" />
     <ClInclude Include="include\eeStaticMesh.h" />
     <ClInclude Include="include\eePixelShader.h" />

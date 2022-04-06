@@ -75,9 +75,12 @@ class InputLayout;
 class GraphicsApi;
 class BaseApp;
 
+class Octree;
+class OctreeNode;
+
 class Mesh;
+class BoneMesh;
 class StaticMesh;
-class Object;
 class Texture;
 class Skeletal;
 class SkeletalMesh;

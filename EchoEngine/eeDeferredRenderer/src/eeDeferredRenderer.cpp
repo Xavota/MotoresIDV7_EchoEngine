@@ -49,41 +49,41 @@ DeferredRenderer::DeferredRenderer()
 
 
   /* Load render targets and depth stencils */
-  m_GBufferDepthStencil = GraphicsApi::instance().createTexturePtr();
+  m_GBufferDepthStencil = graphicsApi.createTexturePtr();
   m_GBufferDepthStencil->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kDepthStencil,
                                   Point2D{ screenWidth, screenHeight });
 
-  m_GBufferPositionTexture = GraphicsApi::instance().createTexturePtr();
+  m_GBufferPositionTexture = graphicsApi.createTexturePtr();
   m_GBufferPositionTexture->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kRenderTarget
                                    | eeEngineSDK::eTEXTURE_BIND_FLAGS::kShaderResource,
                                      Point2D{ screenWidth, screenHeight },
                                      eTEXTURE_FORMAT::kR16G16B16A16_Float);
 
-  m_GBufferColorTexture = GraphicsApi::instance().createTexturePtr();
+  m_GBufferColorTexture = graphicsApi.createTexturePtr();
   m_GBufferColorTexture->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kRenderTarget
                                 | eeEngineSDK::eTEXTURE_BIND_FLAGS::kShaderResource,
                                   Point2D{ screenWidth, screenHeight },
                                   eTEXTURE_FORMAT::kR8G8B8A8_Unorm);
 
-  m_GBufferNormalTexture = GraphicsApi::instance().createTexturePtr();
+  m_GBufferNormalTexture = graphicsApi.createTexturePtr();
   m_GBufferNormalTexture->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kRenderTarget
                                  | eeEngineSDK::eTEXTURE_BIND_FLAGS::kShaderResource,
                                    Point2D{ screenWidth, screenHeight },
                                    eTEXTURE_FORMAT::kR8G8B8A8_Unorm);
                                    
-  m_SSAOTexture = GraphicsApi::instance().createTexturePtr();
+  m_SSAOTexture = graphicsApi.createTexturePtr();
   m_SSAOTexture->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kRenderTarget
                         | eeEngineSDK::eTEXTURE_BIND_FLAGS::kShaderResource,
                           Point2D{ screenWidth, screenHeight },
                           eTEXTURE_FORMAT::kR16_Float);
                                  
-  m_lightShaderTexture = GraphicsApi::instance().createTexturePtr();
+  m_lightShaderTexture = graphicsApi.createTexturePtr();
   m_lightShaderTexture->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kRenderTarget
                                | eeEngineSDK::eTEXTURE_BIND_FLAGS::kShaderResource,
                                  Point2D{ screenWidth, screenHeight });
 
 
-  m_HDRLuminanceTexture = GraphicsApi::instance().createTexturePtr();
+  m_HDRLuminanceTexture = graphicsApi.createTexturePtr();
   m_HDRLuminanceTexture->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kRenderTarget
                                 | eeEngineSDK::eTEXTURE_BIND_FLAGS::kShaderResource,
                                   Point2D{ 512, 512 },
@@ -172,6 +172,7 @@ DeferredRenderer::onRender()
 
 
   Vector<Pair<Mesh, SPtr<Material>>> meshes;
+  Vector<Pair<BoneMesh, SPtr<Material>>> boneMeshes;
   SIZE_T meshesCount = 0;
 
   Color color{ 0.0f, 0.0f, 0.0f, 1.0f };
@@ -254,19 +255,18 @@ DeferredRenderer::onRender()
   Vector<SPtr<Actor>> rActors =
   sceneManager.getAllRenderableActorsInside(activeCams[0],
                                             RENDER_ACTOR_FLAGS::kSkeletalMesh);
-  SIZE_T rActorsCount = rActors.size();
 
-  for (SIZE_T i = 0; i < rActorsCount; ++i) {
-    SPtr<CSkeletalMesh> skMesh = rActors[i]->getComponent<CSkeletalMesh>();
+  for (const auto& act : rActors) {
+    SPtr<CSkeletalMesh> skMesh = act->getComponent<CSkeletalMesh>();
    
     const SPtr<SkeletalMesh> skModel = skMesh->getModel();
     if (skMesh && skModel) {
-      meshes = skModel->getMeshes();
-      meshesCount = meshes.size();
+      boneMeshes = skModel->getMeshes();
+      meshesCount = boneMeshes.size();
 
 
       // Set model buffer
-      SPtr<CTransform> transform = rActors[i]->getTransform();
+      SPtr<CTransform> transform = act->getTransform();
       Matrix4f modelMatrix = transform->getModelMatrix();
       m_modelMatrixBuff->updateData(reinterpret_cast<Byte*>(&modelMatrix));
       graphicsApi.setVSConstantBuffers({ m_modelMatrixBuff }, 0u);
@@ -277,7 +277,7 @@ DeferredRenderer::onRender()
       Map<uint32, SPtr<Texture>> texturesMap;
       const SPtr<Skeletal> skeleton = skModel->getSkeletal();
       for (SIZE_T j = 0; j < meshesCount; ++j) {
-        texturesMap = meshes[j].second->getTexturesMap();
+        texturesMap = boneMeshes[j].second->getTexturesMap();
    
         if (texturesMap.find(TEXTURE_TYPE_INDEX::kDiffuse) != texturesMap.end()) {
           texs.push_back(texturesMap.find(TEXTURE_TYPE_INDEX::kDiffuse)->second);
@@ -301,7 +301,7 @@ DeferredRenderer::onRender()
 
 
         // Draw mesh
-        graphicsApi.drawMesh(meshes[j].first);
+        graphicsApi.drawMesh(boneMeshes[j].first);
 
 
         // Unbind buffers
@@ -326,17 +326,18 @@ DeferredRenderer::onRender()
   rActors =
   sceneManager.getAllRenderableActorsInside(activeCams[0],
                                             RENDER_ACTOR_FLAGS::kStaticMesh);
-  rActorsCount = rActors.size();
 
-  for (SIZE_T i = 0; i < rActorsCount; ++i) {
-    const SPtr<CStaticMesh> staticMesh = rActors[i]->getComponent<CStaticMesh>();
-    if (staticMesh && staticMesh->getStaticMesh()) {
+  for (const auto& act : rActors) {
+    const SPtr<CStaticMesh> staticMesh = act->getComponent<CStaticMesh>();
+    if (staticMesh
+     && staticMesh->getMobilityType() != eMOBILITY_TYPE::kStatic
+     && staticMesh->getStaticMesh()) {
       meshes = staticMesh->getStaticMesh()->getMeshes();
       meshesCount = meshes.size();
 
 
       // Set model buffer
-      SPtr<CTransform> transform = rActors[i]->getTransform();
+      SPtr<CTransform> transform = act->getTransform();
       Matrix4f modelMatrix = transform->getModelMatrix();
       m_modelMatrixBuff->updateData(reinterpret_cast<Byte*>(&modelMatrix));
       graphicsApi.setVSConstantBuffers({ m_modelMatrixBuff }, 0u);
@@ -374,6 +375,52 @@ DeferredRenderer::onRender()
       // Unbind buffers
       graphicsApi.unsetVSConstantBuffers(1u, 0u);
     }
+  }
+
+  Vector<SPtr<StaticMesh>> partitionMeshes;
+  sceneManager.getPartitionedSceneMeshes(partitionMeshes);
+  
+  for (const auto& staticMesh : partitionMeshes) {
+    meshes = staticMesh->getMeshes();
+    meshesCount = meshes.size();
+  
+    // Set model buffer
+    Matrix4f modelMatrix = Matrix4f::kIDENTITY;
+    m_modelMatrixBuff->updateData(reinterpret_cast<Byte*>(&modelMatrix));
+    graphicsApi.setVSConstantBuffers({ m_modelMatrixBuff }, 0u);
+  
+  
+    // Set textures
+    Vector<SPtr<Texture>> texs;
+    Map<uint32, SPtr<Texture>> texturesMap;
+    for (SIZE_T j = 0; j < meshesCount; ++j) {
+      texturesMap = meshes[j].second->getTexturesMap();
+  
+      if (texturesMap.find(TEXTURE_TYPE_INDEX::kDiffuse) != texturesMap.end()) {
+        texs.push_back(texturesMap.find(TEXTURE_TYPE_INDEX::kDiffuse)->second);
+      }
+      else {
+        texs.push_back(resourceManager.getResourceTexture("DefaultDiffuse"));
+      }
+      if (texturesMap.find(TEXTURE_TYPE_INDEX::kNormal) != texturesMap.end()) {
+        texs.push_back(texturesMap.find(TEXTURE_TYPE_INDEX::kNormal)->second);
+      }
+      else {
+        texs.push_back(resourceManager.getResourceTexture("DefaultNormalMap"));
+      }
+      graphicsApi.setTextures(texs, 0u);
+  
+  
+      // Draw mesh
+      graphicsApi.drawMesh(meshes[j].first);
+  
+  
+      // Unbind buffers
+      graphicsApi.unsetTextures(static_cast<uint32>(texs.size()), 0u);
+      texs.clear();
+    }
+    // Unbind buffers
+    graphicsApi.unsetVSConstantBuffers(1u, 0u);
   }
   // Unbind buffers
   graphicsApi.unsetVSConstantBuffers(2u, 1u);
@@ -501,7 +548,7 @@ DeferredRenderer::onRender()
 
 
   // Set textures
-  graphicsApi.setTextures({ m_HDRLuminanceTexture },
+  graphicsApi.setTextures({ m_lightShaderTexture },
                           0u);
 
 

@@ -154,6 +154,9 @@
     <ClInclude Include="include\eeWindow.h" />
     <ClInclude Include="include\eeEvent.h" />
     <ClInclude Include="include\eeRenderer.h" />
+    <ClInclude Include="include\eeBoneMesh.h" />
+    <ClInclude Include="include\eeOctree.h" />
+    <ClInclude Include="include\eeOctreeNode.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeBaseApp.cpp">
@@ -259,5 +262,8 @@
     <ClCompile Include="src\eeWindow.cpp" />
     <ClCompile Include="src\eeEvent.cpp" />
     <ClCompile Include="src\eeRenderer.cpp" />
+    <ClCompile Include="src\eeBoneMesh.cpp" />
+    <ClCompile Include="src\eeOctree.cpp" />
+    <ClCompile Include="src\eeOctreeNode.cpp" />
   </ItemGroup>
 </Project>

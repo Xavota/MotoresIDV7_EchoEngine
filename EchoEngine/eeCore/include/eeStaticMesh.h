@@ -22,7 +22,6 @@ namespace eeEngineSDK {
  * @brief
  * The model to be rendered, contains meshes and textures.
  */
-/*template<typename V, typename I>*/
 class EE_CORE_EXPORT StaticMesh
 {
  public: 
@@ -52,8 +51,7 @@ class EE_CORE_EXPORT StaticMesh
    * @return
    * Weather it succeed or failed to initialize.
    */
-  //template<typename V, typename I>
-  StaticMesh(const Vector<Mesh/*<V,I>*/>& meshes,
+  StaticMesh(const Vector<Mesh>& meshes,
              const String& name,
              const Vector3f& furtherVertexPosition,
              const Vector3f& maxCoordinate,
@@ -79,8 +77,7 @@ class EE_CORE_EXPORT StaticMesh
    * @return
    * Weather it succeed or failed to initialize.
    */
-  //template<typename V, typename I>
-  StaticMesh(const Vector<Pair<Mesh/*<V, I>*/, SPtr<Material>>>& meshes,
+  StaticMesh(const Vector<Pair<Mesh, SPtr<Material>>>& meshes,
              const String& name,
              const Vector3f& furtherVertexPosition,
              const Vector3f& maxCoordinate,
@@ -113,9 +110,8 @@ class EE_CORE_EXPORT StaticMesh
    * @return
    * Weather it succeed or failed to initialize.
    */
-  //template<typename V, typename I>
   bool
-  loadFromMeshes(const Vector<Mesh/*<V,I>*/>& meshes,
+  loadFromMeshes(const Vector<Mesh>& meshes,
                  const String& name,
                  const Vector3f& furtherVertexPosition,
                  const Vector3f& maxCoordinate,
@@ -141,9 +137,8 @@ class EE_CORE_EXPORT StaticMesh
    * @return
    * Weather it succeed or failed to initialize.
    */
-  //template<typename V, typename I>
   bool
-  loadFromMeshes(const Vector<Pair<Mesh/*<V,I>*/, SPtr<Material>>>& meshes,
+  loadFromMeshes(const Vector<Pair<Mesh, SPtr<Material>>>& meshes,
                  const String& name,
                  const Vector3f& furtherVertexPosition,
                  const Vector3f& maxCoordinate,
@@ -159,9 +154,20 @@ class EE_CORE_EXPORT StaticMesh
    * @return
    * The vector of pairs of meshes and texture.
    */
-  //template<typename V, typename I>
-  Vector<Pair<Mesh/*<V,I>*/, SPtr<Material>>>
+  Vector<Pair<Mesh, SPtr<Material>>>
   getMeshes();
+  /**
+   * @brief
+   * Getter for the meshes data.
+   *
+   * @description
+   * Returns the vector of pairs of meshes and texture indices.
+   *
+   * @param outMeshes
+   * The vector of pairs of meshes and texture.
+   */
+  void
+  getMeshes(Vector<Pair<Mesh, SPtr<Material>>>& outMeshes);
   /**
    * @brief
    * Getter for the texture data.
@@ -239,45 +245,6 @@ class EE_CORE_EXPORT StaticMesh
    */
   const BoxAAB&
   getBoundingBox();
-
-  /**
-   * @brief
-   * Initializes the primitive models.
-   *
-   * @description
-   * Initializes the primitive pre-charged models.
-   */
-  static void
-  initPrimitives();
-
-  /**
-   * A pre-charged cube model
-   */
-  static SPtr<StaticMesh> cube;
-  /**
-   * A pre-charged tetrahedron model
-   */
-  static SPtr<StaticMesh> tetrahedron;
-  /**
-   * A pre-charged cone model
-   */
-  static SPtr<StaticMesh> cone;
-  /**
-   * A pre-charged cylinder model
-   */
-  static SPtr<StaticMesh> cylinder;
-  /**
-   * A pre-charged sphere model
-   */
-  static SPtr<StaticMesh> sphere;
-  /**
-   * A pre-charged capsule model
-   */
-  static SPtr<StaticMesh> capsule;
-  /**
-   * A pre-charged SAQ model
-   */
-  static SPtr<StaticMesh> SAQ;
 
  private:
   /**

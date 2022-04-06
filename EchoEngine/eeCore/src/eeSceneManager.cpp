@@ -4,6 +4,8 @@
 
 #include <eeMemoryManager.h>
 
+#include <eeBox.h>
+
 namespace eeEngineSDK {
 SceneManager::~SceneManager()
 {
@@ -61,5 +63,21 @@ SceneManager::getAllRenderableActorsInside(SPtr<CCamera> camera,
     }
   }
   return renderActors;
+}
+void
+SceneManager::partitionScenes()
+{
+  Vector<SPtr<Scene>> sceneArr;
+  for (const auto& s : m_scenes) {
+    sceneArr.emplace_back(s.second);
+  }
+  m_spacePartition.calculateTree(BoxAAB(Vector3f{ -100.0f, -100.0f, -100.0f },
+                                        Vector3f{ 200.0f, 200.0f, 200.0f }),
+                                 sceneArr);
+}
+void
+SceneManager::getPartitionedSceneMeshes(Vector<SPtr<StaticMesh>>& outMeshesVec)
+{
+  m_spacePartition.getMeshes(outMeshesVec);
 }
 }

@@ -34,14 +34,16 @@ loadMaterialsFromAssimp(const aiScene* scene,
   return {};
 }
 
-SPtr<StaticMesh>
+void
 loadStaticMeshFromAssimp(const aiScene* scene,
                          const String& name,
-                         const Map<uint32, SPtr<Material>>& textures)
+                         const Map<uint32, SPtr<Material>>& textures,
+                         SPtr<StaticMesh>* outStaticMesh)
 {
-  SPtr<StaticMesh> outStaticMesh = MemoryManager::instance().newPtr<StaticMesh>();
+  *outStaticMesh = MemoryManager::instance().newPtr<StaticMesh>();
 
   Vector<Pair<Mesh, SPtr<Material>>> meshes;
+  meshes.resize(scene->mNumMeshes);
 
   Vector3f maxBound(-99999.99f, -99999.99f, -99999.99f);
   Vector3f minBound( 99999.99f,  99999.99f,  99999.99f);
@@ -136,25 +138,18 @@ loadStaticMeshFromAssimp(const aiScene* scene,
 
     auto& resourseManager = ResourceManager::instance();
 
-    meshes.emplace_back
-    (
-      Pair<Mesh, SPtr<Material>>
-      (
-        Mesh(),
-        textures.find(AssimpMesh->mMaterialIndex) != textures.end()
-        ? (*textures.find(AssimpMesh->mMaterialIndex)).second
-        : resourseManager.getResourceMaterial("Default_mat")
-      )
-    );
-    meshes[meshes.size() - 1].first.loadFromArray(vertices, indices);
+    meshes[i] = Pair<Mesh, SPtr<Material>>(
+      Mesh(),
+      textures.find(AssimpMesh->mMaterialIndex) != textures.end()
+      ? (*textures.find(AssimpMesh->mMaterialIndex)).second
+      : resourseManager.getResourceMaterial("Default_mat"));
+    meshes[i].first.loadFromVertexArray(vertices, indices);
 
     indices.clear();
     vertices.clear();
   }
 
-  outStaticMesh->loadFromMeshes(meshes, name, furtherPosition, maxBound, minBound);
-
-  return outStaticMesh;
+  (*outStaticMesh)->loadFromMeshes(meshes, name, furtherPosition, maxBound, minBound);
 }
 SPtr<SkeletalMesh>
 loadSkeletalMeshFromAssimp(const aiScene* scene,
@@ -164,7 +159,7 @@ loadSkeletalMeshFromAssimp(const aiScene* scene,
 {
   SPtr<SkeletalMesh> outSkeletalMesh = MemoryManager::instance().newPtr<SkeletalMesh>();
 
-  Vector<Pair<Mesh, SPtr<Material>>> meshes;
+  Vector<Pair<BoneMesh, SPtr<Material>>> meshes;
 
   Vector3f maxBound(-99999.99f, -99999.99f, -99999.99f);
   Vector3f minBound(99999.99f, 99999.99f, 99999.99f);
@@ -292,9 +287,9 @@ loadSkeletalMeshFromAssimp(const aiScene* scene,
 
     meshes.emplace_back
     (
-      Pair<Mesh, SPtr<Material>>
+      Pair<BoneMesh, SPtr<Material>>
       (
-        Mesh(),
+        BoneMesh(),
         textures.find(AssimpMesh->mMaterialIndex) != textures.end()
         ? (*textures.find(AssimpMesh->mMaterialIndex)).second
         : resourseManager.getResourceMaterial("Default_mat")
@@ -628,8 +623,10 @@ ResourceManager::importResourceFromFile(const String& fileName,
          &&  Math::hasFlag(importFlags, IMPORT_FLAGS::kNotImportStaticMeshes))) {
       if (scene->HasMeshes()) {
         // Load static mesh
-        SPtr<StaticMesh> stMesh =
-        loadStaticMeshFromAssimp(scene, name + "_sm", materials);
+        SPtr<StaticMesh> stMesh;
+        SPtr<StaticMesh>* tempMesh = &stMesh;
+        loadStaticMeshFromAssimp(scene, name + "_sm", materials, tempMesh);
+        int32 refCount = stMesh.use_count();
         if (stMesh) {
           m_staticMeshes.insert(Pair<String, SPtr<StaticMesh>>(name + "_sm", stMesh));
         }
