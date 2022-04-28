@@ -35,7 +35,7 @@ class EE_CORE_EXPORT CCamera : public Component
    * @brief
    * The enum for identifying the component type.
    */
-  enum { CmpType = COMPONENT_TYPE::kCamera };
+  enum { CmpType = eCOMPONENT_TYPE::kCamera };
 
   /**
    * @brief

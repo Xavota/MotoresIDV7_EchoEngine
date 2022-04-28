@@ -24,7 +24,7 @@ namespace eeEngineSDK{
 namespace eMOBILITY_TYPE {
 enum E : uint8 
 {
-  kDynamic,
+  kDynamic = 0,
   kStatic
 };
 }
@@ -39,7 +39,7 @@ class EE_CORE_EXPORT CStaticMesh : public Component
    * @brief
    * The enum for identifying the component type.
    */
-  enum { CmpType = COMPONENT_TYPE::kStaticMesh };
+  enum { CmpType = eCOMPONENT_TYPE::kStaticMesh };
 
   /**
    * @brief

@@ -480,9 +480,6 @@ TEST(eeUtilities, Vector3)
   EXPECT_EQ(vu2, Point3D(1, 2, 2));
 
   // Functions
-  EXPECT_EQ(vu.dot(vu2), 20.0f);
-  EXPECT_TRUE(vu.cross(vu2) == Vector3f(-8.0f, -2.0f,  6.0f));
-
   EXPECT_EQ(vu.getDistance(vu2), 5.0f);
   EXPECT_EQ(vu2.getMagnitud(), 3.0f);
 
@@ -721,8 +718,6 @@ TEST(eeUtilities, Vector4)
   EXPECT_EQ(vu2, Point4D(5, 2, 4, 6));
 
   // Functions
-  EXPECT_EQ(vu.dot(vu2), 114.0f);
-
   EXPECT_EQ(vu.getDistance(vu2), 5.0f);
   EXPECT_EQ(vu2.getMagnitude(), 9.0f);
 

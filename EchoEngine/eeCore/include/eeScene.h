@@ -113,6 +113,23 @@ class EE_CORE_EXPORT Scene
   
   /**
    * @brief
+   * Gets all actors with the given components.
+   *
+   * @description
+   * Returns an array of actors that have at least one component on the flags
+   * list.
+   * 
+   * @param flags
+   * The component list in form of flags.
+   *
+   * @return
+   * An array of actors that have at least one component on the flags list.
+   */
+  Vector<SPtr<Actor>>
+  getAllActorsByComponentFlags(uint32 flags);
+  
+  /**
+   * @brief
    * Sets an actor child.
    *
    * @description

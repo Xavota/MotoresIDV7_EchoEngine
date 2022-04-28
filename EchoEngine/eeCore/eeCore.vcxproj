@@ -183,6 +183,7 @@
     <ClCompile Include="src\eeCAnimation.cpp" />
     <ClCompile Include="src\eeCBounds.cpp" />
     <ClCompile Include="src\eeCCamera.cpp" />
+    <ClCompile Include="src\eeCLight.cpp" />
     <ClCompile Include="src\eeCStaticMesh.cpp" />
     <ClCompile Include="src\eeComponent.cpp" />
     <ClCompile Include="src\eeConstantBuffer.cpp" />
@@ -226,6 +227,7 @@
     <ClInclude Include="include\eeCAnimation.h" />
     <ClInclude Include="include\eeCBounds.h" />
     <ClInclude Include="include\eeCCamera.h" />
+    <ClInclude Include="include\eeCLight.h" />
     <ClInclude Include="include\eeCStaticMesh.h" />
     <ClInclude Include="include\eeComponent.h" />
     <ClInclude Include="include\eeConstantBuffer.h" />

@@ -246,10 +246,6 @@ class EE_CORE_EXPORT Mesh
    * A pre-charged capsule model
    */
   static Mesh capsule;
-  /**
-   * A pre-charged SAQ model
-   */
-  static Mesh SAQ;
 
  protected:
   /**

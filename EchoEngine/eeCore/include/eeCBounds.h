@@ -25,7 +25,7 @@ class EE_CORE_EXPORT CBounds : public Component
    * @brief
    * The enum for identifying the component type.
    */
-  enum { CmpType = COMPONENT_TYPE::kBounds };
+  enum { CmpType = eCOMPONENT_TYPE::kBounds };
 
   /**
    * @brief

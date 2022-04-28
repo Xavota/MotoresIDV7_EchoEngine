@@ -227,7 +227,7 @@ FORCEINLINE void
 Actor::addComponent()
 {
   T c; // This is to disable warning "constant logic expression"
-  if (c.getType() == COMPONENT_TYPE::kTransform) {
+  if (c.getType() == eCOMPONENT_TYPE::kTransform) {
     Logger::instance().ConsoleLog("Things can't be in more than one place, kido.");
     Logger::instance().ConsoleLog("ERROR ADDING TRANSFORM COMPONENT TO ACTOR.");
     Logger::instance().ConsoleLog("CANNOT ADD A TRANSFORM COMPONENT");

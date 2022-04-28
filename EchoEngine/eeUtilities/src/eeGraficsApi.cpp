@@ -141,36 +141,4 @@ void GraphicsApi::resizeWindow(Point2D newSize)
   desc.topLeftY = 0;
   setViewports({ desc });
 }
-void
-GraphicsApi::addActorToRenderFrame(SPtr<Actor> actor)
-{
-  EE_NO_EXIST_RETURN(actor);
-  m_renderActors.push_back(actor);
-}
-Vector<SPtr<Actor>>
-GraphicsApi::getRenderFrameActors()
-{
-  return m_renderActors;
-}
-void
-GraphicsApi::clearRenderFrameActors()
-{
-  m_renderActors.clear();
-}
-void
-GraphicsApi::addActiveCamera(SPtr<CCamera> camera)
-{
-  EE_NO_EXIST_RETURN(camera);
-  m_activeCameras.push_back(camera);
-}
-Vector<SPtr<CCamera>>
-GraphicsApi::getActiveCameras()
-{
-  return m_activeCameras;
-}
-void
-GraphicsApi::clearActiveCameras()
-{
-  m_activeCameras.clear();
-}
 }

@@ -26,7 +26,7 @@ class EE_CORE_EXPORT CRender : public Component
    * @brief
    * The enum for identifying the component type.
    */
-  enum { CmpType = COMPONENT_TYPE::kRender };
+  enum { CmpType = eCOMPONENT_TYPE::kRender };
 
   /**
    * @brief
@@ -54,15 +54,5 @@ class EE_CORE_EXPORT CRender : public Component
   {
     return CmpType;
   }
-
-  /**
-   * @brief
-   * Updates the render logic.
-   *
-   * @description
-   * Adds the actor to the render actors pool.
-   */
-  void
-  update() override;
 };
 }

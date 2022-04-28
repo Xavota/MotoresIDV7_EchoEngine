@@ -126,15 +126,15 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
 
   /**
    * @brief
-   * Cleans the render targets given.
+   * Clears the active screen.
    *
    * @description
-   * Cleans the render targets with the given color.
+   * Clears the active render target with the given color.
    *
    * @param rtvs
-   * The render targets to clean.
-   * @param rgba
-   * The color to clean with in RGBA. From 0 to 1 inclusive.
+   * The list of render targets to clean.
+   * @param screenColor
+   * The color for cleaning the render target.
    */
   void
   clearRenderTargets(Vector<SPtr<Texture>> rtvs, Color screenColor) override;
@@ -147,7 +147,7 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
    * Remove all the last data from the depth stencil.
    *
    * @param dsvs
-   * The depth stencils to clean.
+   * The list of depth stencils to clean.
    */
   void
   cleanDepthStencils(Vector<SPtr<Texture>> dsvs) override;

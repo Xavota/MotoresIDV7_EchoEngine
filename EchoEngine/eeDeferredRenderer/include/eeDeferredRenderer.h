@@ -106,6 +106,10 @@ private:
   */
   SPtr<ConstantBuffer> m_ssaoDataBuffer = nullptr;
   /*
+  * The buffer for the directional light data.
+  */
+  SPtr<ConstantBuffer> m_dirLightBuffer = nullptr;
+  /*
   * The buffer for the SSAO data.
   */
   SPtr<ConstantBuffer> m_viewportRectDataBuffer = nullptr;
@@ -129,14 +133,30 @@ private:
   SPtr<Texture> m_GBufferNormalTexture;
 
   /*
-  * The render target for the ssao texture.
+  * The render target for the SSAO texture.
   */
   SPtr<Texture> m_SSAOTexture;
 
   /*
-  * The render target for the copy pass.
+  * The render target for the diffuse lights accumulation.
   */
-  SPtr<Texture> m_lightShaderTexture;
+  SPtr<Texture> m_diffLightsTexture;
+  /*
+  * The render target for the diffuse lights accumulation.
+  */
+  SPtr<Texture> m_tempDiffLightsTexture;
+  /*
+  * The render target for the specular lights accumulation.
+  */
+  SPtr<Texture> m_specLightsTexture;
+  /*
+  * The render target for the specular lights accumulation.
+  */
+  SPtr<Texture> m_tempSpecLightsTexture;
+  /*
+  * The render target for the lights texture.
+  */
+  SPtr<Texture> m_lightTexture;
 
   /*
   * The render targets for the luminance pass.

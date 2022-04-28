@@ -128,194 +128,241 @@ Mesh Mesh::cone;
 Mesh Mesh::cylinder;
 Mesh Mesh::sphere;
 Mesh Mesh::capsule;
-Mesh Mesh::SAQ;
 void
 Mesh::initPrimitives()
 {
-  //Vector<SimpleVertex> vertices;
-  //Vector<uint16> indices;
-  //
-  //vertices = 
-  //{
-  //  // Front
-  //  SimpleVertex
-  //  {
-  //    Vector4f(-0.5f,  0.5f,  0.5f, 1.0f),
-  //    Vector4f( 0.0f,  1.0f,  0.0f, 0.0f),
-  //    Vector4f( 0.0f,  0.0f,  1.0f, 0.0f)
-  //  },
-  //  SimpleVertex
-  //  {
-  //    Vector4f( 0.5f,  0.5f,  0.5f, 1.0f),
-  //    Vector4f( 1.0f,  1.0f,  0.0f, 0.0f),
-  //    Vector4f( 0.0f,  0.0f,  1.0f, 0.0f)
-  //  },
-  //  SimpleVertex
-  //  {
-  //    Vector4f( 0.5f, -0.5f,  0.5f, 1.0f),
-  //    Vector4f( 1.0f,  0.0f,  0.0f, 0.0f),
-  //    Vector4f( 0.0f,  0.0f,  1.0f, 0.0f)
-  //  },
-  //  SimpleVertex
-  //  {
-  //    Vector4f(-0.5f, -0.5f,  0.5f, 1.0f),
-  //    Vector4f( 0.0f,  0.0f,  0.0f, 0.0f),
-  //    Vector4f( 0.0f,  0.0f,  1.0f, 0.0f)
-  //  },
-  //
-  //  // Back
-  //  SimpleVertex
-  //  {
-  //    Vector4f( 0.5f,  0.5f, -0.5f, 1.0f),
-  //    Vector4f( 0.0f,  1.0f,  0.0f, 0.0f),
-  //    Vector4f( 0.0f,  0.0f, -1.0f, 0.0f)
-  //  },
-  //  SimpleVertex
-  //  {
-  //    Vector4f(-0.5f,  0.5f, -0.5f, 1.0f),
-  //    Vector4f( 1.0f,  1.0f,  0.0f, 0.0f),
-  //    Vector4f( 0.0f,  0.0f, -1.0f, 0.0f)
-  //  },
-  //  SimpleVertex
-  //  {
-  //    Vector4f(-0.5f, -0.5f, -0.5f, 1.0f),
-  //    Vector4f( 1.0f,  0.0f,  0.0f, 0.0f),
-  //    Vector4f( 0.0f,  0.0f, -1.0f, 0.0f)
-  //  },
-  //  SimpleVertex
-  //  {
-  //    Vector4f( 0.5f, -0.5f, -0.5f, 1.0f),
-  //    Vector4f( 0.0f,  0.0f,  0.0f, 0.0f),
-  //    Vector4f( 0.0f,  0.0f, -1.0f, 0.0f)
-  //  },
-  //
-  //  // Left
-  //  SimpleVertex
-  //  {
-  //    Vector4f(-0.5f,  0.5f, -0.5f, 1.0f),
-  //    Vector4f( 0.0f,  1.0f,  0.0f, 0.0f),
-  //    Vector4f(-1.0f,  0.0f,  0.0f, 0.0f)
-  //  },
-  //  SimpleVertex
-  //  {
-  //    Vector4f(-0.5f,  0.5f,  0.5f, 1.0f),
-  //    Vector4f( 1.0f,  1.0f,  0.0f, 0.0f),
-  //    Vector4f(-1.0f,  0.0f,  0.0f, 0.0f)
-  //  },
-  //  SimpleVertex
-  //  {
-  //    Vector4f(-0.5f, -0.5f,  0.5f, 1.0f),
-  //    Vector4f( 1.0f,  0.0f,  0.0f, 0.0f),
-  //    Vector4f(-1.0f,  0.0f,  0.0f, 0.0f)
-  //  },
-  //  SimpleVertex
-  //  {
-  //    Vector4f(-0.5f, -0.5f, -0.5f, 1.0f),
-  //    Vector4f( 0.0f,  0.0f,  0.0f, 0.0f),
-  //    Vector4f(-1.0f,  0.0f,  0.0f, 0.0f)
-  //  },
-  //
-  //  // Right
-  //  SimpleVertex
-  //  {
-  //    Vector4f( 0.5f,  0.5f,  0.5f, 1.0f),
-  //    Vector4f( 0.0f,  1.0f,  0.0f, 0.0f),
-  //    Vector4f( 1.0f,  0.0f,  0.0f, 0.0f)
-  //  },
-  //  SimpleVertex
-  //  {
-  //    Vector4f( 0.5f,  0.5f, -0.5f, 1.0f),
-  //    Vector4f( 1.0f,  1.0f,  0.0f, 0.0f),
-  //    Vector4f( 1.0f,  0.0f,  0.0f, 0.0f)
-  //  },
-  //  SimpleVertex
-  //  {
-  //    Vector4f( 0.5f, -0.5f, -0.5f, 1.0f),
-  //    Vector4f( 1.0f,  0.0f,  0.0f, 0.0f),
-  //    Vector4f( 1.0f,  0.0f,  0.0f, 0.0f)
-  //  },
-  //  SimpleVertex
-  //  {
-  //    Vector4f( 0.5f, -0.5f,  0.5f, 1.0f),
-  //    Vector4f( 0.0f,  0.0f,  0.0f, 0.0f),
-  //    Vector4f( 1.0f,  0.0f,  0.0f, 0.0f)
-  //  },
-  //
-  //  // Up
-  //  SimpleVertex
-  //  {
-  //    Vector4f(-0.5f,  0.5f, -0.5f, 1.0f),
-  //    Vector4f( 0.0f,  1.0f,  0.0f, 0.0f),
-  //    Vector4f( 0.0f,  1.0f,  0.0f, 0.0f)
-  //  },
-  //  SimpleVertex
-  //  {
-  //    Vector4f( 0.5f,  0.5f, -0.5f, 1.0f),
-  //    Vector4f( 1.0f,  1.0f,  0.0f, 0.0f),
-  //    Vector4f( 0.0f,  1.0f,  0.0f, 0.0f)
-  //  },
-  //  SimpleVertex
-  //  {
-  //    Vector4f( 0.5f,  0.5f,  0.5f, 1.0f),
-  //    Vector4f( 1.0f,  0.0f,  0.0f, 0.0f),
-  //    Vector4f( 0.0f,  1.0f,  0.0f, 0.0f)
-  //  },
-  //  SimpleVertex
-  //  {
-  //    Vector4f(-0.5f,  0.5f,  0.5f, 1.0f),
-  //    Vector4f( 0.0f,  0.0f,  0.0f, 0.0f),
-  //    Vector4f( 0.0f,  1.0f,  0.0f, 0.0f)
-  //  },
-  //
-  //  // Down
-  //  SimpleVertex
-  //  {
-  //    Vector4f(-0.5f, -0.5f,  0.5f, 1.0f),
-  //    Vector4f( 0.0f,  1.0f,  0.0f, 0.0f),
-  //    Vector4f( 0.0f, -1.0f,  0.0f, 0.0f)
-  //  },
-  //  SimpleVertex
-  //  {
-  //    Vector4f( 0.5f, -0.5f,  0.5f, 1.0f),
-  //    Vector4f( 1.0f,  1.0f,  0.0f, 0.0f),
-  //    Vector4f( 0.0f, -1.0f,  0.0f, 0.0f)
-  //  },
-  //  SimpleVertex
-  //  {
-  //    Vector4f( 0.5f, -0.5f, -0.5f, 1.0f),
-  //    Vector4f( 1.0f,  0.0f,  0.0f, 0.0f),
-  //    Vector4f( 0.0f, -1.0f,  0.0f, 0.0f)
-  //  },
-  //  SimpleVertex
-  //  {
-  //    Vector4f(-0.5f, -0.5f, -0.5f, 1.0f),
-  //    Vector4f( 0.0f,  0.0f,  0.0f, 0.0f),
-  //    Vector4f( 0.0f, -1.0f,  0.0f, 0.0f)
-  //  }
-  //};
-  //
-  //indices =
-  //{
-  //  0u, 2u, 1u,
-  //  0u, 3u, 2u,
-  //
-  //  4u, 6u, 5u,
-  //  4u, 7u, 6u,
-  //
-  //  8u, 10u, 9u,
-  //  8u, 11u, 10u,
-  //
-  //  12u, 14u, 13u,
-  //  12u, 15u, 14u,
-  //
-  //  16u, 18u, 17u,
-  //  16u, 19u, 18u,
-  //
-  //  20u, 22u, 21u,
-  //  20u, 23u, 22u
-  //};
-  //
-  //cube.loadFromArray(vertices, indices);
+  Vector<ComplexVertex> vertices;
+  Vector<uint32> indices;
+  
+  vertices = 
+  {
+    // Front
+    ComplexVertex
+    {
+      Vector4f(-0.5f,  0.5f,  0.5f, 1.0f),
+      Vector4f( 0.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f( 0.0f,  0.0f,  1.0f, 0.0f),
+      Vector4f( 0.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f( -1.0f,  0.0f,  0.0f, 0.0f)
+    },
+    ComplexVertex
+    {
+      Vector4f( 0.5f,  0.5f,  0.5f, 1.0f),
+      Vector4f( 1.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f(0.0f,  0.0f,  1.0f, 0.0f),
+      Vector4f(0.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f(-1.0f,  0.0f,  0.0f, 0.0f)
+    },
+    ComplexVertex
+    {
+      Vector4f( 0.5f, -0.5f,  0.5f, 1.0f),
+      Vector4f( 1.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f(0.0f,  0.0f,  1.0f, 0.0f),
+      Vector4f(0.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f(-1.0f,  0.0f,  0.0f, 0.0f)
+    },
+    ComplexVertex
+    {
+      Vector4f(-0.5f, -0.5f,  0.5f, 1.0f),
+      Vector4f( 0.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f(0.0f,  0.0f,  1.0f, 0.0f),
+      Vector4f(0.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f(-1.0f,  0.0f,  0.0f, 0.0f)
+    },
+  
+    // Back
+    ComplexVertex
+    {
+      Vector4f( 0.5f,  0.5f, -0.5f, 1.0f),
+      Vector4f( 0.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f(0.0f,  0.0f, -1.0f, 0.0f),
+      Vector4f(0.0f,  -1.0f,  0.0f, 0.0f),
+      Vector4f(1.0f,  0.0f,  0.0f, 0.0f)
+    },
+    ComplexVertex
+    {
+      Vector4f(-0.5f,  0.5f, -0.5f, 1.0f),
+      Vector4f( 1.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f(0.0f,  0.0f, -1.0f, 0.0f),
+      Vector4f(0.0f,  -1.0f,  0.0f, 0.0f),
+      Vector4f(1.0f,  0.0f,  0.0f, 0.0f)
+    },
+    ComplexVertex
+    {
+      Vector4f(-0.5f, -0.5f, -0.5f, 1.0f),
+      Vector4f( 1.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f(0.0f,  0.0f, -1.0f, 0.0f),
+      Vector4f(0.0f,  -1.0f,  0.0f, 0.0f),
+      Vector4f(1.0f,  0.0f,  0.0f, 0.0f)
+    },
+    ComplexVertex
+    {
+      Vector4f( 0.5f, -0.5f, -0.5f, 1.0f),
+      Vector4f( 0.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f(0.0f,  0.0f, -1.0f, 0.0f),
+      Vector4f(0.0f,  -1.0f,  0.0f, 0.0f),
+      Vector4f(1.0f,  0.0f,  0.0f, 0.0f)
+    },
+  
+    // Left
+    ComplexVertex
+    {
+      Vector4f(-0.5f,  0.5f, -0.5f, 1.0f),
+      Vector4f( 0.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f(-1.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f(0.0f,  0.0f,  -1.0f, 0.0f),
+      Vector4f(0.0f,  1.0f,  0.0f, 0.0f)
+    },
+    ComplexVertex
+    {
+      Vector4f(-0.5f,  0.5f,  0.5f, 1.0f),
+      Vector4f( 1.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f(-1.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f(0.0f,  0.0f,  -1.0f, 0.0f),
+      Vector4f(0.0f,  1.0f,  0.0f, 0.0f)
+    },
+    ComplexVertex
+    {
+      Vector4f(-0.5f, -0.5f,  0.5f, 1.0f),
+      Vector4f( 1.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f(-1.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f(0.0f,  0.0f,  -1.0f, 0.0f),
+      Vector4f(0.0f,  1.0f,  0.0f, 0.0f)
+    },
+    ComplexVertex
+    {
+      Vector4f(-0.5f, -0.5f, -0.5f, 1.0f),
+      Vector4f( 0.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f(-1.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f(0.0f,  0.0f,  -1.0f, 0.0f),
+      Vector4f(0.0f,  1.0f,  0.0f, 0.0f)
+    },
+  
+    // Right
+    ComplexVertex
+    {
+      Vector4f( 0.5f,  0.5f,  0.5f, 1.0f),
+      Vector4f( 0.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f(1.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f(0.0f,  0.0f,  1.0f, 0.0f),
+      Vector4f(0.0f,  -1.0f,  0.0f, 0.0f)
+    },
+    ComplexVertex
+    {
+      Vector4f( 0.5f,  0.5f, -0.5f, 1.0f),
+      Vector4f( 1.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f(1.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f(0.0f,  0.0f,  1.0f, 0.0f),
+      Vector4f(0.0f,  -1.0f,  0.0f, 0.0f)
+    },
+    ComplexVertex
+    {
+      Vector4f( 0.5f, -0.5f, -0.5f, 1.0f),
+      Vector4f( 1.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f(1.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f(0.0f,  0.0f,  1.0f, 0.0f),
+      Vector4f(0.0f,  -1.0f,  0.0f, 0.0f)
+    },
+    ComplexVertex
+    {
+      Vector4f( 0.5f, -0.5f,  0.5f, 1.0f),
+      Vector4f( 0.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f(1.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f(0.0f,  0.0f,  1.0f, 0.0f),
+      Vector4f(0.0f,  -1.0f,  0.0f, 0.0f)
+    },
+  
+    // Up
+    ComplexVertex
+    {
+      Vector4f(-0.5f,  0.5f, -0.5f, 1.0f),
+      Vector4f( 0.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f(0.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f(1.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f(0.0f,  0.0f,  -1.0f, 0.0f)
+    },
+    ComplexVertex
+    {
+      Vector4f( 0.5f,  0.5f, -0.5f, 1.0f),
+      Vector4f( 1.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f(0.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f(1.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f(0.0f,  0.0f, -1.0f, 0.0f)
+    },
+    ComplexVertex
+    {
+      Vector4f( 0.5f,  0.5f,  0.5f, 1.0f),
+      Vector4f( 1.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f(0.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f(1.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f(0.0f,  0.0f,  -1.0f, 0.0f)
+    },
+    ComplexVertex
+    {
+      Vector4f(-0.5f,  0.5f,  0.5f, 1.0f),
+      Vector4f( 0.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f(0.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f(1.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f(0.0f,  0.0f,  -1.0f, 0.0f)
+    },
+  
+    // Down
+    ComplexVertex
+    {
+      Vector4f(-0.5f, -0.5f,  0.5f, 1.0f),
+      Vector4f( 0.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f(0.0f, -1.0f,  0.0f, 0.0f),
+      Vector4f(-1.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f(0.0f,  0.0f, 1.0f, 0.0f)
+    },
+    ComplexVertex
+    {
+      Vector4f( 0.5f, -0.5f,  0.5f, 1.0f),
+      Vector4f( 1.0f,  1.0f,  0.0f, 0.0f),
+      Vector4f(0.0f, -1.0f,  0.0f, 0.0f),
+      Vector4f(-1.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f(0.0f,  0.0f, 1.0f, 0.0f)
+    },
+    ComplexVertex
+    {
+      Vector4f( 0.5f, -0.5f, -0.5f, 1.0f),
+      Vector4f( 1.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f(0.0f, -1.0f,  0.0f, 0.0f),
+      Vector4f(-1.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f(0.0f,  0.0f, 1.0f, 0.0f)
+    },
+    ComplexVertex
+    {
+      Vector4f(-0.5f, -0.5f, -0.5f, 1.0f),
+      Vector4f( 0.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f(0.0f, -1.0f,  0.0f, 0.0f),
+      Vector4f(-1.0f,  0.0f,  0.0f, 0.0f),
+      Vector4f(0.0f,  0.0f, 1.0f, 0.0f)
+    }
+  };
+  
+  indices =
+  {
+    0u, 2u, 1u,
+    0u, 3u, 2u,
+  
+    4u, 6u, 5u,
+    4u, 7u, 6u,
+  
+    8u, 10u, 9u,
+    8u, 11u, 10u,
+  
+    12u, 14u, 13u,
+    12u, 15u, 14u,
+  
+    16u, 18u, 17u,
+    16u, 19u, 18u,
+  
+    20u, 22u, 21u,
+    20u, 23u, 22u
+  };
+  
+  cube.loadFromVertexArray(vertices, indices);
   //
   //
   //
@@ -408,42 +455,7 @@ Mesh::initPrimitives()
   //
   //tetrahedron.loadFromArray(vertices, indices);
   //
-  //getSpherePrimitive(1.0f, 20u, 20u, sphere);
-  //
-  //
-  //Vector<SimplexVertex> verticesx;
-  //
-  //verticesx = 
-  //{
-  //  SimplexVertex
-  //  {
-  //    Vector4f(-1.0f,  1.0f, 0.0f, 1.0f),
-  //    Vector4f(0.0f,  0.0f, 0.0f, 0.0f)
-  //  },
-  //  SimplexVertex
-  //  {
-  //    Vector4f(1.0f,  1.0f, 0.0f, 1.0f),
-  //    Vector4f(1.0f,  0.0f, 0.0f, 0.0f)
-  //  },
-  //  SimplexVertex
-  //  {
-  //    Vector4f(1.0f, -1.0f,  0.0f, 1.0f),
-  //    Vector4f(1.0f,  1.0f,  0.0f, 0.0f)
-  //  },
-  //  SimplexVertex
-  //  {
-  //    Vector4f(-1.0f, -1.0f,  0.0f, 1.0f),
-  //    Vector4f(0.0f,  1.0f,  0.0f, 0.0f)
-  //  }
-  //};
-  //
-  //indices =
-  //{
-  //  0, 1, 2,
-  //  0, 2, 3
-  //};
-  //
-  //SAQ.loadFromArray(verticesx, indices);
+  getSpherePrimitive(1.0f, 20u, 20u, sphere);
 }
 bool
 Mesh::getSpherePrimitive(float radius,
@@ -451,57 +463,59 @@ Mesh::getSpherePrimitive(float radius,
                          uint32 horizontalParts,
                          Mesh& outMesh)
 {
-  //if (radius <= 0.0f || verticalParts <= 0u || horizontalParts <= 0u) {
-  //  return false;
-  //}
-  //
-  //Vector<SimpleVertex> vertices;
-  //Vector<uint32> indices;
-  //
-  //for (uint32 n = 0; n <= verticalParts; ++n) {
-  //  for (uint32 m = 0; m <= horizontalParts; ++m) {
-  //    Vector4f pos;
-  //    Vector4f uv;
-  //    Vector4f normal;
-  //    float a = n * Math::kPI / verticalParts;
-  //    float b = 2 * m * Math::kPI / horizontalParts;
-  //
-  //    pos.x = radius * Math::sin(b) * Math::sin(a);
-  //    pos.y = radius * Math::cos(b) * Math::sin(a);
-  //    pos.z = radius * Math::cos(a);
-  //    pos.w = 1.0f;
-  //
-  //    uv.x = m / (static_cast<float>(horizontalParts));
-  //    uv.y = n / (static_cast<float>(verticalParts));
-  //    uv.z = 0.0f;
-  //    uv.w = 0.0f;
-  //
-  //    normal.x = pos.x;
-  //    normal.y = pos.y;
-  //    normal.z = pos.z;
-  //    normal.w = 0.0f;
-  //    normal.normalize();
-  //
-  //    vertices.emplace_back(SimpleVertex{pos, uv, normal});
-  //  }
-  //}
-  //
-  //uint32 verticesCount = verticalParts * (horizontalParts + 1u);
-  //for (uint32 i = 0; i < verticesCount; ++i) {
-  //  if ((i + 1) % (horizontalParts + 1) == 0) {
-  //    continue;
-  //  }
-  //
-  //  indices.push_back(i);
-  //  indices.push_back(i + 1);
-  //  indices.push_back(i + horizontalParts + 1);
-  //
-  //  indices.push_back(i + 1);
-  //  indices.push_back(i + horizontalParts + 2);
-  //  indices.push_back(i + horizontalParts + 1);
-  //}
-  //
-  //outMesh.loadFromArray(vertices, indices);
+  if (radius <= 0.0f || verticalParts <= 0u || horizontalParts <= 0u) {
+    return false;
+  }
+  
+  Vector<ComplexVertex> vertices;
+  Vector<uint32> indices;
+  
+  for (uint32 n = 0; n <= verticalParts; ++n) {
+    for (uint32 m = 0; m <= horizontalParts; ++m) {
+      Vector4f pos;
+      Vector4f uv;
+      Vector4f normal;
+      Vector4f binormal = Vector4f{0.0f, 0.0f, 0.0f, 0.0f};
+      Vector4f tangent = Vector4f{ 0.0f, 0.0f, 0.0f, 0.0f };
+      float a = n * Math::kPI / verticalParts;
+      float b = 2 * m * Math::kPI / horizontalParts;
+  
+      pos.x = radius * Math::sin(b) * Math::sin(a);
+      pos.y = radius * Math::cos(b) * Math::sin(a);
+      pos.z = radius * Math::cos(a);
+      pos.w = 1.0f;
+  
+      uv.x = m / (static_cast<float>(horizontalParts));
+      uv.y = n / (static_cast<float>(verticalParts));
+      uv.z = 0.0f;
+      uv.w = 0.0f;
+  
+      normal.x = pos.x;
+      normal.y = pos.y;
+      normal.z = pos.z;
+      normal.w = 0.0f;
+      normal.normalize();
+  
+      vertices.emplace_back(ComplexVertex{pos, uv, normal, binormal, tangent});
+    }
+  }
+  
+  uint32 verticesCount = verticalParts * (horizontalParts + 1u);
+  for (uint32 i = 0; i < verticesCount; ++i) {
+    if ((i + 1) % (horizontalParts + 1) == 0) {
+      continue;
+    }
+  
+    indices.push_back(i);
+    indices.push_back(i + 1);
+    indices.push_back(i + horizontalParts + 1);
+  
+    indices.push_back(i + 1);
+    indices.push_back(i + horizontalParts + 2);
+    indices.push_back(i + horizontalParts + 1);
+  }
+  
+  outMesh.loadFromVertexArray(vertices, indices);
 
   return true;
 }

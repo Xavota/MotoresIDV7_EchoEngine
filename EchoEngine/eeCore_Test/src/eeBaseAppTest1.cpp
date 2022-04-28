@@ -41,13 +41,14 @@
 #include <eeMaterial.h>
 
 #include <eeActor.h>
-#include <eeCTransform.h>
-#include <eeCStaticMesh.h>
-#include <eeCRender.h>
-#include <eeCCamera.h>
-#include <eeCSkeletalMesh.h>
 #include <eeCAnimation.h>
 #include <eeCBounds.h>
+#include <eeCCamera.h>
+#include <eeCLight.h>
+#include <eeCRender.h>
+#include <eeCSkeletalMesh.h>
+#include <eeCStaticMesh.h>
+#include <eeCTransform.h>
 
 using eeEngineSDK::Logger;
 using eeEngineSDK::GraphicsApi;
@@ -86,12 +87,14 @@ using eeEngineSDK::Byte;
 using eeEngineSDK::Texture;
 using eeEngineSDK::Component;
 
-using eeEngineSDK::CTransform;
-using eeEngineSDK::CStaticMesh;
-using eeEngineSDK::CRender;
-using eeEngineSDK::CSkeletalMesh;
 using eeEngineSDK::CAnimation;
 using eeEngineSDK::CBounds;
+using eeEngineSDK::CCamera;
+using eeEngineSDK::CLight;
+using eeEngineSDK::CRender;
+using eeEngineSDK::CSkeletalMesh;
+using eeEngineSDK::CStaticMesh;
+using eeEngineSDK::CTransform;
 
 using eeEngineSDK::Input;
 using eeEngineSDK::CameraDesc;
@@ -277,6 +280,64 @@ InitImgUI()
 }
 
 void
+DrawLightCmp(SPtr<CLight> light, int32& uniqueId)
+{
+  auto lightTypeIndex = static_cast<int32>(light->getLightType());
+  Vector<const char*> lightTypeNames =
+  {
+    "Directional",
+    "Point",
+    "Spot"
+  };
+  ImGui::PushID(uniqueId++);
+  if (ImGui::Combo("Light Type",
+                   &lightTypeIndex,
+                   lightTypeNames.data(),
+                   static_cast<uint32>(lightTypeNames.size()))) {
+                   light->setLightType(
+      static_cast<eeEngineSDK::eLIGHT_TYPE::E>(lightTypeIndex));
+  }
+  ImGui::PopID();
+
+  Color color = light->getColor();
+  ImGui::PushID(uniqueId++);
+  if (ImGui::ColorPicker4("Color", (float*)&color, 0, nullptr)) {
+    light->setColor(color);
+  }
+  ImGui::PopID();
+
+  float intensity = light->getIntensity();
+  ImGui::PushID(uniqueId++);
+  if (ImGui::DragFloat("Intensity", &intensity, 0.01f, 0.0f, 100.0f)) {
+    light->setIntensity(intensity);
+  }
+  ImGui::PopID();
+
+  if (light->getLightType() == eeEngineSDK::eLIGHT_TYPE::kSpot) {
+    float innerAngle = light->getInnerAngle();
+    float outerAngle = light->getOuterAngle();
+    ImGui::PushID(uniqueId++);
+    if (ImGui::DragFloat("Inner Angle",
+                         &innerAngle,
+                         0.01f,
+                         0.0f,
+                         outerAngle)) {
+      light->setInnerAngle(innerAngle);
+    }
+    ImGui::PopID();
+    ImGui::PushID(uniqueId++);
+    if (ImGui::DragFloat("Outer Angle",
+                         &outerAngle,
+                         0.01f,
+                         innerAngle,
+                         Math::kPI - 0.001f)) {
+      light->setOuterAngle(outerAngle);
+    }
+    ImGui::PopID();
+  }
+}
+
+void
 DrawTransformCmp(SPtr<CTransform> trans, int32& uniqueId)
 {
   ImGui::PushID(uniqueId++);
@@ -368,11 +429,27 @@ DrawCameraCmp(SPtr<CCamera> cam, int32& uniqueId)
 void
 DrawStaticMeshCmp(SPtr<CStaticMesh> staticMesh, int32& uniqueId)
 {
+  auto mobTypeIndex = static_cast<int32>(staticMesh->getMobilityType());
+  Vector<const char*> mobTypeNames =
+  {
+    "Dynamic",
+    "Static"
+  };
+  ImGui::PushID(uniqueId++);
+  if (ImGui::Combo("Mobility Type",
+                   &mobTypeIndex,
+                   mobTypeNames.data(),
+                   static_cast<uint32>(mobTypeNames.size()))) {
+    staticMesh->setMobilityType(
+    static_cast<eeEngineSDK::eMOBILITY_TYPE::E>(mobTypeIndex));
+  }
+  ImGui::PopID();
+
   String staticMeshName = staticMesh->getStaticMesh()->getName();
   Map<String, SPtr<StaticMesh>> staticMeshes =
   ResourceManager::instance().getAllStaticMeshResources();
-  int staticMeshIndex = 0;
-  int tempIndex = 0;
+  int32 staticMeshIndex = 0;
+  int32 tempIndex = 0;
   Vector<const char*> names;
   for (auto& m : staticMeshes) {
     names.push_back(m.first.c_str());
@@ -452,6 +529,14 @@ showActorData(SPtr<Actor> act, int32& uniqueId)
   if (camC) {
     if (ImGui::TreeNode("Camera")) {
       DrawCameraCmp(camC, uniqueId);
+      ImGui::TreePop();
+    }
+    ImGui::Separator();
+  }
+  SPtr<CLight> lightC = act->getComponent<CLight>();
+  if (lightC) {
+    if (ImGui::TreeNode("Light")) {
+      DrawLightCmp(lightC, uniqueId);
       ImGui::TreePop();
     }
     ImGui::Separator();
@@ -768,11 +853,16 @@ BaseAppTest1::onInit()
 
 
   
-  //resourceManager.loadStaticMeshFromMeshesArray({ Mesh::cube },
-  //                                              "Cube",
-  //                                              Vector3f{ 1.0f, 1.0f, 1.0f },
-  //                                              Vector3f{ 1.0f, 1.0f, 1.0f },
-  //                                              Vector3f{ -1.0f, -1.0f, -1.f });
+  resourceManager.loadStaticMeshFromMeshesArray({ Mesh::cube },
+                                                "Cube",
+                                                Vector3f{ 1.0f, 1.0f, 1.0f },
+                                                Vector3f{ 1.0f, 1.0f, 1.0f },
+                                                Vector3f{ -1.0f, -1.0f, -1.f });
+  resourceManager.loadStaticMeshFromMeshesArray({ Mesh::sphere },
+                                                "Sphere",
+                                                Vector3f{ 0.0f, 0.0f, 1.0f },
+                                                Vector3f{ 1.0f, 1.0f, 1.0f },
+                                                Vector3f{ -1.0f, -1.0f, -1.f });
   //resourceManager.loadStaticMeshFromMeshesArray({ Mesh::tetrahedron },
   //                                              "Tetrahedron",
   //                                              Vector3f{ 1.0f, -0.54f, -0.58f },
@@ -791,31 +881,22 @@ BaseAppTest1::onInit()
 
   pTempActor = pScene->addActor("Player");
   pTempActor->getTransform()->setPosition(Vector3f{ 0.0f, 3.0f, -6.0f });
-  //actor->getTransform()->setScale({ 0.1f, 0.1f, 0.1f });
   pTempActor->addComponent<CCamera>();
   pTempActor->getComponent<CCamera>()->init(camDesc);
   pTempActor->getComponent<CCamera>()->setMain(true);
-  //pTempActor->addComponent<CStaticMesh>();
-  //pTempActor->getComponent<CStaticMesh>()->setStaticMesh
-  //(
-  //  resourceManager.getResourceStaticMesh("Cube")
-  //);
-  //pTempActor->addComponent<CBounds>();
-  //pTempActor->addComponent<CRender>();
 
 
 
-  //pTempActor = pScene->addActor("AtatchToActor");
-  ////pTempActor->attachTo(pScene->getActor("Player"));
-  //pScene->setActorChild("Player", "AtatchToActor");
-  //pTempActor->getTransform()->setPosition(Vector3f{ 0.0f, 0.0f, 30.0f });
-  //pTempActor->addComponent<CStaticMesh>();
-  //pTempActor->getComponent<CStaticMesh>()->setStaticMesh
-  //(
-  //  resourceManager.getResourceStaticMesh("Tetrahedron")
-  //);
-  //pTempActor->addComponent<CBounds>();
-  //pTempActor->addComponent<CRender>();
+  pTempActor = pScene->addActor("AtatchToActor");
+  pScene->setActorChild("Player", "AtatchToActor");
+  pTempActor->getTransform()->setPosition(Vector3f{ 0.0f, 0.0f, 30.0f });
+  pTempActor->addComponent<CStaticMesh>();
+  pTempActor->getComponent<CStaticMesh>()->setStaticMesh
+  (
+    resourceManager.getResourceStaticMesh("Cube")
+  );
+  pTempActor->addComponent<CBounds>();
+  pTempActor->addComponent<CRender>();
 
 
 
@@ -824,13 +905,6 @@ BaseAppTest1::onInit()
   pTempActor->getTransform()->setScale(Vector3f{ 0.1f, 0.1f, 0.1f });
   pTempActor->addComponent<CCamera>();
   pTempActor->getComponent<CCamera>()->init(camDesc);
-  //pTempActor->addComponent<CStaticMesh>();
-  //pTempActor->getComponent<CStaticMesh>()->setStaticMesh
-  //(
-  //  StaticMesh::cube
-  //);
-  //pTempActor->addComponent<CBounds>();
-  //pTempActor->addComponent<CRender>();
 
 
   resourceManager.importResourceFromFile("Models/arcane_jinx_sketchfab.fbx",
@@ -1017,6 +1091,47 @@ BaseAppTest1::onInit()
   pTempActor->addComponent<CBounds>();
   pTempActor->addComponent<CRender>();
 
+
+  resourceManager.importResourceFromFile("Models/simpleCube.fbx",
+                                eeEngineSDK::IMPORT_FLAGS::kImportStaticMeshes);
+
+  pTempActor = pScene->addActor("DownWall");
+  pTempActor->getTransform()->setScale(Vector3f{ 10.0f, 0.5f, 10.0f });
+  pTempActor->getTransform()->setPosition(Vector3f{ 0.0f, -1.0f, 0.0f });
+  pTempActor->addComponent<CStaticMesh>();
+  pTempActor->getComponent<CStaticMesh>()->setStaticMesh
+  (
+    resourceManager.getResourceStaticMesh("simpleCube_sm")
+  );
+  pTempActor->addComponent<CBounds>();
+  pTempActor->addComponent<CRender>();
+
+
+
+  pTempActor = pScene->addActor("DirLight");
+  pTempActor->addComponent<CLight>();
+  pTempActor->getComponent<CLight>()->setColor(Color{ 1.0f, 0.0f, 0.0f, 1.0f });
+  pTempActor->getTransform()->setRotation(Quaternion::createFromAxisAngle(Vector3f(0.0f, 1.0f, 0.0f), -Math::kPI * 0.5f));
+
+  pTempActor = pScene->addActor("DirLight2");
+  pTempActor->addComponent<CLight>();
+  pTempActor->getComponent<CLight>()->setColor(Color{ 0.0f, 1.0f, 0.0f, 1.0f });
+  pTempActor->getTransform()->setRotation(Quaternion::createFromAxisAngle(Vector3f(0.0f, 1.0f, 0.0f), Math::kPI * 0.5f));
+
+  pTempActor = pScene->addActor("PointLight1");
+  pTempActor->getTransform()->setScale(Vector3f{0.2f, 0.2f, 0.2f});
+  pTempActor->addComponent<CLight>();
+  pTempActor->getComponent<CLight>()->setLightType(eeEngineSDK::eLIGHT_TYPE::kPoint);
+  pTempActor->getComponent<CLight>()->setColor(Color{ 0.0f, 0.0f, 1.0f, 1.0f });
+  pTempActor->getComponent<CLight>()->setIntensity(1.0f);
+  pTempActor->addComponent<CStaticMesh>();
+  pTempActor->getComponent<CStaticMesh>()->setStaticMesh
+  (
+    resourceManager.getResourceStaticMesh("Sphere")
+  );
+  pTempActor->getComponent<CStaticMesh>()->setMobilityType(eeEngineSDK::eMOBILITY_TYPE::kDynamic);
+  pTempActor->addComponent<CBounds>();
+  pTempActor->addComponent<CRender>();
 
 
   sceneManager.partitionScenes();

@@ -5,11 +5,13 @@
 #include <eeMath.h>
 
 #include "eeActor.h"
-#include "eeCRender.h"
-#include "eeCStaticMesh.h"
-#include "eeCSkeletalMesh.h"
-#include "eeCCamera.h"
+#include "eeCAnimation.h"
 #include "eeCBounds.h"
+#include "eeCCamera.h"
+#include "eeCLight.h"
+#include "eeCRender.h"
+#include "eeCSkeletalMesh.h"
+#include "eeCStaticMesh.h"
 
 namespace eeEngineSDK {
 Vector<SPtr<Actor>>
@@ -99,6 +101,47 @@ Scene::getActor(String name)
     return nullptr;
   }
   return m_actors[name];
+}
+Vector<SPtr<Actor>>
+Scene::getAllActorsByComponentFlags(uint32 flags)
+{
+  Vector<SPtr<Actor>> r;
+  if (Math::hasFlag(flags, eCOMPONENT_TYPE::kTransform)) {
+    getAllActorsVector(r);
+    return r;
+  }
+
+  for (const auto& act : m_actors) {
+    if (Math::hasFlag(flags, eCOMPONENT_TYPE::kAnimation)
+     && act.second->getComponent<CAnimation>()) {
+      r.emplace_back(act.second);
+    }
+    if (Math::hasFlag(flags, eCOMPONENT_TYPE::kBounds)
+     && act.second->getComponent<CBounds>()) {
+      r.emplace_back(act.second);
+    }
+    if (Math::hasFlag(flags, eCOMPONENT_TYPE::kCamera)
+     && act.second->getComponent<CCamera>()) {
+      r.emplace_back(act.second);
+    }
+    if (Math::hasFlag(flags, eCOMPONENT_TYPE::kLight)
+     && act.second->getComponent<CLight>()) {
+      r.emplace_back(act.second);
+    }
+    if (Math::hasFlag(flags, eCOMPONENT_TYPE::kRender)
+     && act.second->getComponent<CRender>()) {
+      r.emplace_back(act.second);
+    }
+    if (Math::hasFlag(flags, eCOMPONENT_TYPE::kSkeletalMesh)
+     && act.second->getComponent<CSkeletalMesh>()) {
+      r.emplace_back(act.second);
+    }
+    if (Math::hasFlag(flags, eCOMPONENT_TYPE::kStaticMesh)
+     && act.second->getComponent<CStaticMesh>()) {
+      r.emplace_back(act.second);
+    }
+  }
+  return r;
 }
 bool
 Scene::setActorChild(String parentName, String childName)

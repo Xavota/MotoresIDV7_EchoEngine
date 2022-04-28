@@ -8,7 +8,7 @@
 #include "eeMesh.h"
 
 namespace eeEngineSDK {
-uint64 maxTrianglesCount = 15000u;
+uint64 g_maxTrianglesCount = 15000u;
 
 void
 OctreeNode::CalculateTree(const BoxAAB& space, SPtr<StaticMesh> sMesh)
@@ -24,7 +24,7 @@ OctreeNode::CalculateTree(const BoxAAB& space, SPtr<StaticMesh> sMesh)
     for (const auto& m : meshes) {
       trianglesCount += static_cast<uint64>(m.first.getIndexCount() / 3);
     }
-    if (trianglesCount <= maxTrianglesCount) {
+    if (trianglesCount <= g_maxTrianglesCount) {
       m_nodeMesh = sMesh;
       return;
     }
@@ -103,7 +103,7 @@ OctreeNode::CalculateTree(const BoxAAB& space, SPtr<StaticMesh> sMesh)
                       (i % 8) < 4 ? APoint.z : midPoint.z),
              spaceSize * 0.5f);
       m_childNodes[i]->CalculateTree(newSpace, childrenMeshes[i]);
-      childrenMeshes[i] = nullptr;
+      childrenMeshes[i].reset();
     }
   }
 }

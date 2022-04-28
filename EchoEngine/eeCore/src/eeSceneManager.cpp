@@ -64,6 +64,22 @@ SceneManager::getAllRenderableActorsInside(SPtr<CCamera> camera,
   }
   return renderActors;
 }
+Vector<SPtr<Actor>>
+SceneManager::getAllActorsByComponentFlags(uint32 flags)
+{
+  Vector<SPtr<Actor>> r;
+  Vector<SPtr<Actor>> tempR;
+
+  for (const auto& sc : m_scenes) {
+    tempR = sc.second->getAllActorsByComponentFlags(flags);
+
+    for (const auto& act : tempR) {
+      r.emplace_back(act);
+    }
+  }
+
+  return r;
+}
 void
 SceneManager::partitionScenes()
 {
@@ -72,7 +88,7 @@ SceneManager::partitionScenes()
     sceneArr.emplace_back(s.second);
   }
   m_spacePartition.calculateTree(BoxAAB(Vector3f{ -100.0f, -100.0f, -100.0f },
-                                        Vector3f{ 200.0f, 200.0f, 200.0f }),
+                                        Vector3f{  200.0f,  200.0f,  200.0f }),
                                  sceneArr);
 }
 void

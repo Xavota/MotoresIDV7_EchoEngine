@@ -37,11 +37,6 @@ CCamera::update()
   m_utilityCamera.setEyePosition(transform->getPosition());
   m_utilityCamera.setLookAtPosition(transform->getPosition() 
                                   + transform->getRotation().getFrontVector());
-
-  if (m_active) {
-    GraphicsApi::instance().addActiveCamera(
-         MemoryManager::instance().reinterpretPtr<CCamera>(shared_from_this()));
-  }
 }
 Vector3f
 CCamera::getEyePosition()

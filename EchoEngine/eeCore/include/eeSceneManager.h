@@ -15,7 +15,6 @@
 #include <eeModule.h>
 
 #include "eeScene.h"
-
 #include "eeOctree.h"
 
 namespace eeEngineSDK{
@@ -106,11 +105,27 @@ class EE_CORE_EXPORT SceneManager : public Module<SceneManager>
    * @return
    * All scenes.
    */
-  const Map<String, SPtr<Scene>>&
+  FORCEINLINE const Map<String, SPtr<Scene>>&
   getAllScenes()
   {
     return m_scenes;
   }
+  /**
+   * @brief
+   * Gets all actors with the given components.
+   *
+   * @description
+   * Returns an array of actors that have at least one component on the flags
+   * list.
+   * 
+   * @param flags
+   * The component list in form of flags.
+   *
+   * @return
+   * An array of actors that have at least one component on the flags list.
+   */
+  Vector<SPtr<Actor>>
+  getAllActorsByComponentFlags(uint32 flags);
 
   /**
    * @brief

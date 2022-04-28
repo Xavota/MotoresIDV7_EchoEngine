@@ -117,12 +117,10 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * @description
    * Clears the active render target with the given color.
    *
-   * @param r
-   * Red part of the color. From 0 to 1 inclusive.
-   * @param g
-   * Green part of the color. From 0 to 1 inclusive.
-   * @param b
-   * Blue part of the color. From 0 to 1 inclusive.
+   * @param rtvs
+   * The list of render targets to clean.
+   * @param screenColor
+   * The color for cleaning the render target.
    */
   virtual void
   clearRenderTargets(Vector<SPtr<Texture>> rtvs, Color /*screenColor*/) {};
@@ -135,7 +133,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * Remove all the last data from the depth stencil.
    *
    * @param dsvs
-   * The depth stencils to clean.
+   * The list of depth stencils to clean.
    */
   virtual void
   cleanDepthStencils(Vector<SPtr<Texture>> /*dsvs*/) {};
@@ -599,79 +597,6 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
 
   /**
    * @brief
-   * Add an actor to the render actors.
-   *
-   * @description
-   * Add an actor to the render actors for this frame.
-   *
-   * @param actor
-   * The actor to render.
-   */
-  virtual void
-  addActorToRenderFrame(SPtr<Actor> actor);
-  /**
-   * @brief
-   * Gets the render actors.
-   *
-   * @description
-   * Returns the list of render actors for this frame.
-   *
-   * @return
-   * The list of render actors for this frame.
-   */
-  virtual Vector<SPtr<Actor>>
-  getRenderFrameActors();
-  /**
-   * @brief
-   * Remove all render actors.
-   *
-   * @description
-   * Clears the list of render actors for this frame.
-   */
-  virtual void
-  clearRenderFrameActors();
-
-  /**
-   * @brief
-   * Adds a camera to the active cameras.
-   *
-   * @description
-   * Adds a camera to the active cameras for this frame.
-   *
-   * @param camera
-   * The camera to use.
-   */
-  virtual void
-  addActiveCamera(SPtr<CCamera> camera);
-  /**
-   * @brief
-   * Gets the active cameras.
-   *
-   * @description
-   * Returns the list of active cameras for this frame.
-   *
-   * @return
-   * The list of active cameras for this frame.
-   */
-  virtual Vector<SPtr<CCamera>>
-  getActiveCameras();
-  /**
-   * @brief
-   * Remove all active cameras.
-   *
-   * @description
-   * Clears the list of active cameras for this frame.
-   */
-  virtual void
-  clearActiveCameras();
-  
-  //SPtr<Texture>
-  //getBackBuffer() { return m_rtv; }
-  //SPtr<Texture>
-  //getDepthStencil() { return m_dsv; }
-
-  /**
-   * @brief
    * Returns the main window of the api.
    *
    * @description
@@ -698,25 +623,6 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   drawIndexed(uint32 /*indicesCount*/) const {}
 
 
-  ///*
-  //* The back buffer.
-  //*/
-  ////SPtr<RenderTarget> m_rtv;
-  //SPtr<Texture> m_rtv;
-  ///*
-  //* The depth stencil of the back buffer
-  //*/
-  ////SPtr<DepthStencil> m_dsv;
-  //SPtr<Texture> m_dsv;
-
-  /**
-   * All render actors for a frame.
-   */
-  Vector<SPtr<Actor>> m_renderActors;
-  /**
-   * All active cameras for a frame.
-   */
-  Vector<SPtr<CCamera>> m_activeCameras;
 
   /**
    * The main window.
