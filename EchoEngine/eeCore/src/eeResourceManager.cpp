@@ -26,7 +26,7 @@ namespace eeEngineSDK
 {
 Map<uint32, SPtr<Material>>
 loadMaterialsFromAssimp(const aiScene* scene,
-                        const String& name)
+                        const String& /*name*/)
 {
   for (uint32 i = 0; i < scene->mNumMaterials; ++i) {
     scene->mMaterials;
@@ -626,7 +626,7 @@ ResourceManager::importResourceFromFile(const String& fileName,
         SPtr<StaticMesh> stMesh;
         SPtr<StaticMesh>* tempMesh = &stMesh;
         loadStaticMeshFromAssimp(scene, name + "_sm", materials, tempMesh);
-        int32 refCount = stMesh.use_count();
+        
         if (stMesh) {
           m_staticMeshes.insert(Pair<String, SPtr<StaticMesh>>(name + "_sm", stMesh));
         }

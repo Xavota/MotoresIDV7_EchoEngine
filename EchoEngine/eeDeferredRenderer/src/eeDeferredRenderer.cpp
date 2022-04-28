@@ -28,7 +28,7 @@ DeferredRenderer::DeferredRenderer()
 {
   auto& graphicsApi = GraphicsApi::instance();
   auto& resourceManager = ResourceManager::instance();
-  auto& memoryManager = MemoryManager::instance();
+  //auto& memoryManager = MemoryManager::instance();
 
 
   /* Load resources */
@@ -814,8 +814,8 @@ DeferredRenderer::onRender()
 
   /* Copy */
 
-  vp.height = screenHeight;
-  vp.width = screenWidth;
+  vp.height = static_cast<float>(screenHeight);
+  vp.width = static_cast<float>(screenWidth);
   graphicsApi.setViewports({ vp });
 
   // Set Back Buffer
