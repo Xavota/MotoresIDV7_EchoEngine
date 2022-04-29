@@ -399,6 +399,8 @@ DX11GraphicsApi::setViewports(Vector<ViewportDesc> descs) // TODO
 void
 DX11GraphicsApi::resizeWindow(Point2D newSize)
 {
+  m_mainWindow->release();
+
   HRESULT hr =
   m_basics.m_swapChain->ResizeBuffers(1u,
                                       static_cast<uint32>(newSize.x),
@@ -409,6 +411,11 @@ DX11GraphicsApi::resizeWindow(Point2D newSize)
   if (FAILED(hr)) {
     return;
   }
+
+  m_mainWindow->initWindow(nullptr,
+                           static_cast<uint32>(newSize.x),
+                           static_cast<uint32>(newSize.y));
+  m_mainWindow->initRenders();
 
   GraphicsApi::resizeWindow(newSize);
 }

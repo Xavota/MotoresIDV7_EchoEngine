@@ -175,6 +175,16 @@ class EE_CORE_EXPORT Window
   void*
   getWindowPtr() { return m_win; }
 
+  /**
+   * @brief
+   * Releases the data.
+   *
+   * @description
+   * Deletes the memory of all data allocated.
+   */
+  void 
+  release();
+
  protected:
   /**
    * The width of the window

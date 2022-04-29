@@ -38,6 +38,14 @@ Window::resize(uint32 width, uint32 height)
   MemoryManager::instance().safeRelease<Texture>(m_dsv);
   m_dsv->create2D(eTEXTURE_BIND_FLAGS::kDepthStencil, Point2D{ width, height });
 
+  m_width = width;
+  m_height = height;
+
   return true;
+}
+void Window::release()
+{
+  MemoryManager::instance().safeRelease<Texture>(m_rtv);
+  MemoryManager::instance().safeRelease<Texture>(m_dsv);
 }
 }

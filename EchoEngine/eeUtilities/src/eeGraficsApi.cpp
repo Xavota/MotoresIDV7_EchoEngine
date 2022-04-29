@@ -129,7 +129,7 @@ void GraphicsApi::resizeWindow(Point2D newSize)
   //MemoryManager::instance().safeRelease<Texture>(m_dsv);
   //m_dsv->create2D(eTEXTURE_BIND_FLAGS::kDepthStencil,
   //                { newSize.x, newSize.y });
-  m_mainWindow->resize(newSize.x, newSize.y);
+  //m_mainWindow->resize(newSize.x, newSize.y);
 
   ViewportDesc desc;
   memset(&desc, 0, sizeof(desc));
