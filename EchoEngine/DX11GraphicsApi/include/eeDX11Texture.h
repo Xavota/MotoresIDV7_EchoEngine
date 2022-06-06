@@ -1,6 +1,6 @@
 /************************************************************************/
 /**
- * @file eeTexture.h
+ * @file eeDX11Texture.h
  * @author Diego Castellanos
  * @date 21/10/21
  * @brief
@@ -156,6 +156,16 @@ public:
    */
   void
   loadImages(Vector<SPtr<Image>> images) override;
+  
+  /**
+   * @brief
+   * Generate mipmaps.
+   *
+   * @description
+   * Generates the mipmaps of the texture automatically.
+   */
+  void
+  generateMipmaps() override;
 
   /**
    * @brief
@@ -194,7 +204,7 @@ private:
    */
   ID3D11DepthStencilView* m_depthStencilView = nullptr;
   /**
-   * The resource of the depth stencil.
+   * The resource of the texture.
    */
   ID3D11Texture2D* m_textureResource = nullptr;
 

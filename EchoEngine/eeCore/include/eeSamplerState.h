@@ -53,7 +53,7 @@ class EE_CORE_EXPORT SamplerState
    * Whether it succeeded to create or not.
    */
   virtual bool
-  create(eFILTER::E /*filter*/,
+  create(eSAMPLER_FILTER::E /*filter*/,
          eTEXTURE_ADDRESS_MODE::E /*addressU*/ = eTEXTURE_ADDRESS_MODE::kWrap,
          eTEXTURE_ADDRESS_MODE::E /*addressV*/ = eTEXTURE_ADDRESS_MODE::kWrap,
          eTEXTURE_ADDRESS_MODE::E /*addressW*/ = eTEXTURE_ADDRESS_MODE::kWrap)

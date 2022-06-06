@@ -141,7 +141,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include/;$(SolutionDir)eeCore/include;$(SolutionDir)eeUtilities/include;$(DEVLIBS)imgui;$(DEVLIBS)imgui/backends;$(SolutionDir)DX11GraphicsApi/include;$(DEVLIBS)Boost;$(DEVLIBS)Assimp/include;%(AdditionalIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;$(SolutionDir)eeCore/include;$(SolutionDir)eeUtilities/include;$(DEVLIBS)imgui;$(DEVLIBS)imgui/backends;$(SolutionDir)DX11GraphicsApi/include;$(DEVLIBS)Boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>

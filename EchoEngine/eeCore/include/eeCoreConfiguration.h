@@ -11,11 +11,11 @@
 /************************************************************************/
 
 #pragma once
-#define DX11
-
-#define DEFERRED_RENDERING
 
 #include "eePrerequisitesUtilities.h"
+
+#define OGL//*/#define DX11
+/*#define DEFERRED_RENDERING//*/#define OGL_TEST_RENDERING
 
 namespace eeEngineSDK {
 namespace eeConfigurations {
@@ -43,9 +43,9 @@ const String platformConfigPrefix;
  * The current graphics api for use.
  */
 #ifdef DX11
-const String graphicsApi = "DX11GraphicsApi";
+const String graphicsApi = "eeDX11GraphicsApi";
 #elif defined(OGL)
-const String graphicsApi = "OGLGraphicsApi";
+const String graphicsApi = "eeOGLGraphicsApi";
 #else
 const String graphicsApi;
 #endif
@@ -55,6 +55,8 @@ const String graphicsApi;
  */
 #ifdef DEFERRED_RENDERING
 const String rendererName = "eeDeferredRenderer";
+#elif defined(OGL_TEST_RENDERING)
+const String rendererName = "eeOGLTestRenderer";
 #else
 const String rendererName;
 #endif

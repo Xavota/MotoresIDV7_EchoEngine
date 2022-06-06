@@ -1,6 +1,6 @@
 /************************************************************************/
 /**
- * @file eeIndexBuffer.h
+ * @file eeDX11IndexBuffer.h
  * @author Diego Castellanos
  * @date 24/10/21
  * @brief

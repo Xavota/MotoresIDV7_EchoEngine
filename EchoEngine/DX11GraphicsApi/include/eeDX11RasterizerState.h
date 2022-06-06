@@ -1,6 +1,6 @@
 /************************************************************************/
 /**
- * @file eeDepthStencil.h
+ * @file eeDX11DepthStencil.h
  * @author Diego Castellanos
  * @date 15/10/21
  * @brief

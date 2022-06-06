@@ -27,8 +27,9 @@ File::OpenFile(const String& path, uint8 openFlags)
   if ((m_flags & OPEN_TYPE::kBinary) == OPEN_TYPE::kBinary) {
     mode |= std::ios_base::binary;
   }
+  
 
-  m_file.open(path, mode);
+  m_file.open(path);
 
   if (!m_file || m_file.fail()) {
     m_file.close();
@@ -54,6 +55,7 @@ File::GetContent()
   String content;
   while (!m_file.eof()) {
     content += GetLine();
+    content += "\n";
   }
   return content;
 }

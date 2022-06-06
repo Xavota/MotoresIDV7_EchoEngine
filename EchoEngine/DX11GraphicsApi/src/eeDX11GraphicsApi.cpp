@@ -19,9 +19,9 @@ DX11GraphicsApi::~DX11GraphicsApi()
 }
 
 bool
-DX11GraphicsApi::initialize(uint32 witdh, uint32 height)
+DX11GraphicsApi::initialize()
 {
-  if (!GraphicsApi::initialize(witdh, height)) {
+  if (!GraphicsApi::initialize()) {
     return false;
   }
   return true;
@@ -429,6 +429,13 @@ DX11GraphicsApi::setPrimitiveTopology(ePRIMITIVE_TOPOLOGY::E topology)
 {
   m_basics.m_deviceContext->IASetPrimitiveTopology(
   static_cast<D3D11_PRIMITIVE_TOPOLOGY>(topology));
+}
+void
+DX11GraphicsApi::setShaderPrograms(SPtr<VertexShader> vertexShader,
+                                   SPtr<PixelShader> pixelShader)
+{
+  vertexShader->use();
+  pixelShader->use();
 }
 void
 DX11GraphicsApi::present(uint32 syncInterval, uint32 flags)

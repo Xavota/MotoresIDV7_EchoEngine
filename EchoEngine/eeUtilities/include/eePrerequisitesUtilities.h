@@ -47,7 +47,6 @@ class Matrix4i;
 class Matrix4u;
 
 struct SimplexVertex;
-struct SimpleVertex;
 struct ComplexVertex;
 struct SimpleAnimVertex;
 struct ComplexAnimVertex;

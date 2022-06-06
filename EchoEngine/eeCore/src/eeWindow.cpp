@@ -20,14 +20,14 @@ bool
 Window::initRenders()
 {
   auto& graphicsApi = GraphicsApi::instance();
-
+  
   m_rtv = graphicsApi.createTexturePtr();
   m_rtv->createAsBackBuffer();
-
+  
   m_dsv = graphicsApi.createTexturePtr();
   m_dsv->create2D(eTEXTURE_BIND_FLAGS::kDepthStencil,
                   Point2D{ m_width, m_height });
-
+  
   return true;
 }
 bool

@@ -120,6 +120,37 @@ class EE_CORE_EXPORT Window
 
   /**
    * @brief
+   * Getter for the width of the window.
+   *
+   * @description
+   * Returns the width of the window.
+   *
+   * @return
+   * The width of the window.
+   */
+  inline uint32
+  getWidth()
+  {
+    return m_width;
+  }
+  /**
+   * @brief
+   * Getter for the height of the window.
+   *
+   * @description
+   * Returns the height of the window.
+   *
+   * @return
+   * The height of the window.
+   */
+  inline uint32
+  getHeight()
+  {
+    return m_height;
+  }
+
+  /**
+   * @brief
    * Resize the window.
    *
    * @description

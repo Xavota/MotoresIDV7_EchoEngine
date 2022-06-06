@@ -76,7 +76,7 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
    * Weather it succeed or failed to initialize.
    */
   bool
-  initialize(uint32 witdh, uint32 height) override;
+  initialize() override;
 
   /**
    * @brief
@@ -360,6 +360,22 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
 
   /**
    * @brief
+   * Set shader programs.
+   *
+   * @description
+   * Sets the shaders given to the GPU.
+   *
+   * @param vertexShader
+   * The vertex shader to set.
+   * @param pixelShader
+   * The pixel shader to set.
+   */
+  void
+  setShaderPrograms(SPtr<VertexShader> vertexShader,
+                    SPtr<PixelShader> pixelShader) override;
+
+  /**
+   * @brief
    * Shows in screen.
    *
    * @description
@@ -527,8 +543,8 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
    * @return
    * The pointer to a window depending on the api.
    */
-  FORCEINLINE virtual SPtr<Window>
-  createWindowPtr() const
+  FORCEINLINE SPtr<Window>
+  createWindowPtr() const override
   {
     return MemoryManager::instance().newPtr<DX11Window>();
   }
@@ -571,7 +587,7 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
    * The number of indices to be drawn.
    */
   void
-  drawIndexed(uint32 /*indicesCount*/) const override;
+  drawIndexed(uint32 indicesCount) const override;
 
  private:
   ///**

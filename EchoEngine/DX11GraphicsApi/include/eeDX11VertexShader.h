@@ -1,6 +1,6 @@
 /************************************************************************/
 /**
- * @file eeVertexShader.h
+ * @file eeDX11VertexShader.h
  * @author Diego Castellanos
  * @date 08/10/21
  * @brief
@@ -103,7 +103,7 @@ class EE_PLUGINDX11_EXPORT DX11VertexShader : public VertexShader
   createInputLayout(ID3DBlob* pShaderBlob);
 
   /**
-   * The DX11 pixel shader.
+   * The DX11 vertex shader.
    */
   ID3D11VertexShader* m_shader = nullptr;
   /**

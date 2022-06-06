@@ -101,4 +101,8 @@ class CSkeletalMesh;
 class CBounds;
 
 class ResourceManager;
+
+class InputManager;
+class InputDevice;
+struct InputDeviceEvent
 }

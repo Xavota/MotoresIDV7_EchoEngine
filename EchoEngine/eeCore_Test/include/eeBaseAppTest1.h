@@ -1,6 +1,6 @@
 /************************************************************************/
 /**
- * @file eePrerequisitesCore.h
+ * @file eeBaseAppTest1.h
  * @author Diego Castellanos
  * @date 10/10/21
  * @brief A derived class of BaseApp, for testing porpoise.
@@ -14,13 +14,6 @@
 
 using eeEngineSDK::BaseApp;
 using eeEngineSDK::int32;
-using eeEngineSDK::SPtr;
-using eeEngineSDK::ConstantBuffer;
-using eeEngineSDK::RasterizerState;
-using eeEngineSDK::Actor;
-using eeEngineSDK::CCamera;
-using eeEngineSDK::SamplerState;
-using eeEngineSDK::Texture;
 
 /**
 * @brief
@@ -102,45 +95,4 @@ class BaseAppTest1 : public BaseApp
 
 
  private:
-  ///*
-  //* A Screen Align Quad, used for rendering textures of a render target on
-  //* another
-  //*/
-  //SPtr<Object> m_SAQ;
-  //
-  ///*
-  //* The buffer for the view matrix.
-  //*/
-  //SPtr<ConstantBuffer> m_viewMatrixBuffer;
-  ///*
-  //* The buffer for the projection matrix.
-  //*/
-  //SPtr<ConstantBuffer> m_projectionMatrixBuffer;
-  //
-  ///*
-  //* The back buffer.
-  //*/
-  //SPtr<Texture> m_rtv;
-  ///*
-  //* The depth stencil of the back buffer
-  //*/
-  //SPtr<Texture> m_dsv;
-  ///**
-  // * sampler state. The sampler of the texture.
-  // */
-  //SPtr<SamplerState> m_sampler = nullptr;
-  //
-  ///*
-  //* A rasterizer for on world objects rendering.
-  //*/
-  //SPtr<RasterizerState> m_rasterizer;
-  ///*
-  //* A rasterizer for on screen rendering.
-  //*/
-  //SPtr<RasterizerState> m_rasterizer2;
-  //
-  //
-  //SPtr<ConstantBuffer> m_viewPosBuffer;
-  //
-  //SPtr<ConstantBuffer> m_constantBuffers;
 };

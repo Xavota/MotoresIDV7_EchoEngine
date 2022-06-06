@@ -9,10 +9,22 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\eePrerequisitesGainput.h" />
-    <ClInclude Include="include\eeGaInput.h" />
+    <ClInclude Include="include\eeGaInputManager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eePrerequisitesGainput.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeGainputKeyboardDevice.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\eeGaInput.cpp" />
+    <ClCompile Include="src\eeGaInputManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeGainputKeyboardDevice.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

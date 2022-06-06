@@ -12,8 +12,10 @@
 #include <imgui_impl_win32.h>
 #include <imgui_impl_dx11.h>
 
-#include <eeDX11GraphicsApi.h>
+#define DX11
+#define DEFERRED_RENDERING
 #include <eeCoreConfiguration.h>
+#include <eeDX11GraphicsApi.h>
 
 #include <eeMemoryManager.h>
 #include <eeResourceManager.h>
@@ -67,7 +69,6 @@ using eeEngineSDK::Material;
 using eeEngineSDK::Matrix4f;
 using eeEngineSDK::Quaternion;
 using eeEngineSDK::SimplexVertex;
-using eeEngineSDK::SimpleVertex;
 using eeEngineSDK::StaticMesh;
 using eeEngineSDK::Mesh;
 using eeEngineSDK::SkeletalMesh;
@@ -85,8 +86,12 @@ using eeEngineSDK::VertexShader;
 using eeEngineSDK::PixelShader;
 using eeEngineSDK::Byte;
 using eeEngineSDK::Texture;
-using eeEngineSDK::Component;
+using eeEngineSDK::ConstantBuffer;
+using eeEngineSDK::RasterizerState;
+using eeEngineSDK::SamplerState;
 
+using eeEngineSDK::Actor;
+using eeEngineSDK::Component;
 using eeEngineSDK::CAnimation;
 using eeEngineSDK::CBounds;
 using eeEngineSDK::CCamera;

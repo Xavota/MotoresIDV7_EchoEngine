@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{69bd148d-a1bc-45cb-81ed-c2bccd19ee80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{ede7522b-13e9-40bb-a723-c2bafadbd4a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="externals">
+      <UniqueIdentifier>{b94c3ce0-116f-4f4f-9ea3-8478d3e69c7c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\eeOGLWindow.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eePrerequisitesOGL.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeOGLGraphicsApi.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeOGLVertexBuffer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeOGLVertexShader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeOGLPixelShader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeOGLIndexBuffer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeOGLSamplerState.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeOGLTexture.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\eeOGLWindow.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeOGLGraphicsApi.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\glad.c">
+      <Filter>externals</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeOGLVertexBuffer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeOGLVertexShader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeOGLPixelShader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeOGLIndexBuffer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeOGLSamplerState.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeOGLTexture.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

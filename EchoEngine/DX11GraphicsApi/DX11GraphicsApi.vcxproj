@@ -53,6 +53,7 @@
     <ProjectGuid>{f7e825ea-18fc-43f9-931c-a5e1668cd452}</ProjectGuid>
     <RootNamespace>DX11GraphicsApi</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>eeDX11GraphicsApi</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

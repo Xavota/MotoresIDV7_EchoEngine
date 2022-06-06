@@ -19,8 +19,7 @@ Image::Image(const Image& other)
 }
 Image::Image(const String& path)
 {
-  if (loadFromFile(path))
-  {
+  if (loadFromFile(path)) {
     m_data = nullptr;
   }
 }

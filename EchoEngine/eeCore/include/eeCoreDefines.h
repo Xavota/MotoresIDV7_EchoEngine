@@ -94,27 +94,18 @@ enum E
  * @brief
  * Filter for the sampler.
  */
-namespace eFILTER {
+namespace eSAMPLER_FILTER {
 enum E
 {
-  kMIN_MAG_MIP_POINT = 0,
-  kMIN_MAG_POINT_MIP_LINEAR = 0x1,
-  kMIN_POINT_MAG_LINEAR_MIP_POINT = 0x4,
-  kMIN_POINT_MAG_MIP_LINEAR = 0x5,
-  kMIN_LINEAR_MAG_MIP_POINT = 0x10,
-  kMIN_LINEAR_MAG_POINT_MIP_LINEAR = 0x11,
-  kMIN_MAG_LINEAR_MIP_POINT = 0x14,
-  kMIN_MAG_MIP_LINEAR = 0x15,
-  kANISOTROPIC = 0x55,
-  kCOMPARISON_MIN_MAG_MIP_POINT = 0x80,
-  kCOMPARISON_MIN_MAG_POINT_MIP_LINEAR = 0x81,
-  kCOMPARISON_MIN_POINT_MAG_LINEAR_MIP_POINT = 0x84,
-  kCOMPARISON_MIN_POINT_MAG_MIP_LINEAR = 0x85,
-  kCOMPARISON_MIN_LINEAR_MAG_MIP_POINT = 0x90,
-  kCOMPARISON_MIN_LINEAR_MAG_POINT_MIP_LINEAR = 0x91,
-  kCOMPARISON_MIN_MAG_LINEAR_MIP_POINT = 0x94,
-  kCOMPARISON_MIN_MAG_MIP_LINEAR = 0x95,
-  kCOMPARISON_ANISOTROPIC = 0xd5
+  kMinMagMipPoint = 0,
+  kMinMagMipLinear,
+  kMinMagPointMipLinear,
+  kMinMagLinearMipPoint,
+  kMinPointMagMipLinear,
+  kMinLinearMagMipPoint,
+  kMinPointMagLinearMipPoint,
+  kMinLinearMagPointMipLinear,
+  kAnisotropic,
 };
 }
 
@@ -268,6 +259,179 @@ enum E
 };
 }
 
+/**
+ * @brief
+ * Keyboard keys.
+ */
+namespace eKEYBOARD_KEYS {
+enum E : int8
+{
+  kUnknown = -1,
+  kA = 0,
+  kB,
+  kC,
+  kD,
+  kE,
+  kF,
+  kG,
+  kH,
+  kI,
+  kJ,
+  kK,
+  kL,
+  kM,
+  kN,
+  kO,
+  kP,
+  kQ,
+  kR,
+  kS,
+  kT,
+  kU,
+  kV,
+  kW,
+  kX,
+  kY,
+  kZ,
+  kNum0,
+  kNum1,
+  kNum2,
+  kNum3,
+  kNum4,
+  kNum5,
+  kNum6,
+  kNum7,
+  kNum8,
+  kNum9,
+  kEscape,
+  kLControl,
+  kLShift,
+  kLAlt,
+  kLSystem,
+  kRControl,
+  kRShift,
+  kRAlt,
+  kRSystem,
+  kMenu,
+  kLBracket,
+  kRBracket,
+  kSemicolon,
+  kComma,
+  kPeriod,
+  kQuote,
+  kSlash,
+  kBackslash,
+  kTilde,
+  kEqual,
+  kHyphen,
+  kSpace,
+  kEnter,
+  kBackspace,
+  kTab,
+  kPageUp,
+  kPageDown,
+  kEnd,
+  kHome,
+  kInsert,
+  kDelete,
+  kAdd,
+  kSubtract,
+  kMultiply,
+  kDivide,
+  kLeft,
+  kRight,
+  kUp,
+  kDown,
+  kNumpad0,
+  kNumpad1,
+  kNumpad2,
+  kNumpad3,
+  kNumpad4,
+  kNumpad5,
+  kNumpad6,
+  kNumpad7,
+  kNumpad8,
+  kNumpad9,
+  kF1,
+  kF2,
+  kF3,
+  kF4,
+  kF5,
+  kF6,
+  kF7,
+  kF8,
+  kF9,
+  kF10,
+  kF11,
+  kF12,
+  kF13,
+  kF14,
+  kF15,
+  kPause,
+
+  kKeyCount,
+
+  kDash = kHyphen, // Use Hyphen instead
+};
+}
+
+/**
+ * @brief
+ * Mouse keys.
+ */
+namespace eMOUSE_KEYS {
+enum E : int8
+{
+  kUnknown = -1,
+  kLeftClick,
+  kRightClick,
+  kButton1 = kLeftClick,
+  kButton2 = kRightClick,
+  kButton3,
+  kButton4,
+  kButton5,
+  kButton6,
+  kButton7,
+  kWheel,
+  kXAxis,
+  kYAxis,
+
+  kKeyCount
+};
+}
+
+/**
+ * @brief
+ * Gamepad keys.
+ */
+namespace eGAMEPAD_KEYS {
+enum E : int8
+{
+  kUnknown = -1,
+  kA,
+  kB,
+  kX,
+  kY,
+  kDPadUp,
+  kDPadDown,
+  kDPadLeft,
+  kDPadRight,
+  kLeftJoystickXAxis,
+  kLeftJoystickYAxis,
+  kLeftJoystickButton,
+  kRightJoystickXAxis,
+  kRightJoystickYAxis,
+  kRightJoystickButton,
+  kLeftTrigger,
+  kLeftBumper,
+  kRightTrigger,
+  kRightBumper,
+  kStart,
+  kSelect,
+
+  kKeyCount
+};
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////

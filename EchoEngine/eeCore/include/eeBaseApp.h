@@ -66,6 +66,9 @@ class EE_CORE_EXPORT BaseApp
    *
    * @description
    * Updates everything in the app every frame.
+   * 
+   * @param deltaTime
+   * Time elapsed since last frame.
    */
   virtual void
   onUpdate(float /*deltaTime*/){};
@@ -106,6 +109,19 @@ class EE_CORE_EXPORT BaseApp
 
   /**
    * @brief
+   * Asks the app if it can still be running.
+   *
+   * @description
+   * Returns true if certain parameters checks, depending on the apis active.
+   *
+   * @return
+   * Weather it can still run or not.
+   */
+  virtual bool
+  appIsRunning();
+
+  /**
+   * @brief
    * Initializes everything.
    *
    * @description
@@ -130,19 +146,6 @@ class EE_CORE_EXPORT BaseApp
    */
   bool
   initSystems(void* callback);
-  /**
-   * @brief
-   * Initializes the resources needed.
-   *
-   * @description
-   * Initializes the resources that the app needs, only used for hardcoding
-   * resources for testing.
-   *
-   * @return
-   * Weather it succeed or failed to initialize.
-   */
-  bool
-  initResources(){return true;}
 
   /**
    * @brief
@@ -163,7 +166,7 @@ class EE_CORE_EXPORT BaseApp
    * Updates everything in the app every frame.
    */
   void
-  update(float deltaTime);
+  update();
 
   /**
    * @brief

@@ -1,6 +1,6 @@
 /************************************************************************/
 /**
- * @file eePrerequisitesDX11.h
+ * @file eeDX11PrerequisitesDX11.h
  * @author Diego Castellanos
  * @date 14/10/21
  * @brief
@@ -59,5 +59,16 @@
 
 
 namespace eeEngineSDK {
+class DX11BlendState;
+class DX11ConstantBuffer;
+class DX11DepthStencilState;
+class DX11GraphicsApi;
+class DX11IndexBuffer;
+class DX11PixelShader;
+class DX11RasterizerState;
+class DX11SamplerState;
+class DX11Texture;
+class DX11VertexBuffer;
+class DX11VertexShader;
 class DX11Window;
 }

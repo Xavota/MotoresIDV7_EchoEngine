@@ -61,7 +61,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * Weather it succeed or failed to initialize.
    */
   virtual bool
-  initialize(uint32 witdh, uint32 height);
+  initialize();
 
   /**
    * @brief
@@ -109,6 +109,17 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    */
   virtual bool
   initializeScreen(void* callback, uint32 witdh, uint32 height);
+
+  /**
+   * @brief
+   * Processes the events given by the system.
+   *
+   * @description
+   * Gets all the events given by the systems and interprets them to something
+   * useful.
+   */
+  virtual void
+  processEvents() {};
 
   /**
    * @brief
@@ -346,6 +357,22 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
 
   /**
    * @brief
+   * Set shader programs.
+   *
+   * @description
+   * Sets the shaders given to the GPU.
+   *
+   * @param vertexShader
+   * The vertex shader to set.
+   * @param pixelShader
+   * The pixel shader to set.
+   */
+  virtual void
+  setShaderPrograms(SPtr<VertexShader> vertexShader,
+                    SPtr<PixelShader> pixelShader) {}
+
+  /**
+   * @brief
    * Draws on a Screen Align Quad object.
    *
    * @description
@@ -402,7 +429,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * Deletes the memory of all data allocated.
    */
   virtual void
-  release();
+  release() {};
 
   /**
    * @brief

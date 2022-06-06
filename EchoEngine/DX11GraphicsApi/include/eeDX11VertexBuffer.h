@@ -1,6 +1,6 @@
 /************************************************************************/
 /**
- * @file eeVertexBuffer.h
+ * @file eeDX11VertexBuffer.h
  * @author Diego Castellanos
  * @date 24/10/21
  * @brief

@@ -21,27 +21,8 @@ GraphicsApi::~GraphicsApi()
   release();
 }
 bool
-GraphicsApi::initialize(uint32 witdh, uint32 height)
+GraphicsApi::initialize()
 {
-  ViewportDesc desc;
-  memset(&desc, 0, sizeof(desc));
-  desc.maxDepth = 1.0f;
-  desc.minDepth = 0;
-  desc.width = static_cast<float>(witdh);
-  desc.height = static_cast<float>(height);
-  desc.topLeftX = 0;
-  desc.topLeftY = 0;
-  setViewports({ desc });
-  
-  //m_rtv = createTexturePtr();
-  //m_rtv->createAsBackBuffer();
-  //
-  //m_dsv = createTexturePtr();
-  //m_dsv->create2D(eTEXTURE_BIND_FLAGS::kDepthStencil,
-  //                { witdh, height });
-
-  m_mainWindow->initRenders();
-
   return true;
 }
 bool
@@ -52,6 +33,25 @@ GraphicsApi::initializeScreen(void* callback, uint32 witdh, uint32 height)
     return false;
   }
   m_mainWindow->showWindow();
+
+
+  if (!initializeBasics()) {
+    return false;
+  }
+
+
+  ViewportDesc desc;
+  memset(&desc, 0, sizeof(desc));
+  desc.maxDepth = 1.0f;
+  desc.minDepth = 0;
+  desc.width = static_cast<float>(witdh);
+  desc.height = static_cast<float>(height);
+  desc.topLeftX = 0;
+  desc.topLeftY = 0;
+  setViewports({ desc });
+
+  m_mainWindow->initRenders();
+
   return true;
 }
 void
@@ -120,17 +120,8 @@ void GraphicsApi::drawMesh(const BoneMesh& meshToDraw)
   drawIndexed(static_cast<uint32>(meshToDraw.getIndexCount()));
   unsetVertexBuffers(1u, 0u);
 }
-void
-GraphicsApi::release() {}
 void GraphicsApi::resizeWindow(Point2D newSize)
 {
-  //MemoryManager::instance().safeRelease<Texture>(m_rtv);
-  //m_rtv->createAsBackBuffer();
-  //MemoryManager::instance().safeRelease<Texture>(m_dsv);
-  //m_dsv->create2D(eTEXTURE_BIND_FLAGS::kDepthStencil,
-  //                { newSize.x, newSize.y });
-  //m_mainWindow->resize(newSize.x, newSize.y);
-
   ViewportDesc desc;
   memset(&desc, 0, sizeof(desc));
   desc.maxDepth = 1.0f;

@@ -1,6 +1,6 @@
 /************************************************************************/
 /**
- * @file eeDepthStencil.h
+ * @file eeDX11DepthStencil.h
  * @author Diego Castellanos
  * @date 10/10/21
  * @brief
@@ -43,7 +43,7 @@ class EE_PLUGINDX11_EXPORT DX11SamplerState : public SamplerState
    * @param adressW
    * The address function in W axis.
    */
-  DX11SamplerState(eFILTER::E filter,
+  DX11SamplerState(eSAMPLER_FILTER::E filter,
               eTEXTURE_ADDRESS_MODE::E addressU = eTEXTURE_ADDRESS_MODE::kWrap,
               eTEXTURE_ADDRESS_MODE::E addressV = eTEXTURE_ADDRESS_MODE::kWrap,
               eTEXTURE_ADDRESS_MODE::E addressW = eTEXTURE_ADDRESS_MODE::kWrap);
@@ -73,7 +73,7 @@ class EE_PLUGINDX11_EXPORT DX11SamplerState : public SamplerState
    * Whether it succeeded to create or not.
    */
   bool
-  create(eFILTER::E filter,
+  create(eSAMPLER_FILTER::E filter,
          eTEXTURE_ADDRESS_MODE::E addressU = eTEXTURE_ADDRESS_MODE::kWrap,
          eTEXTURE_ADDRESS_MODE::E addressV = eTEXTURE_ADDRESS_MODE::kWrap,
          eTEXTURE_ADDRESS_MODE::E addressW = eTEXTURE_ADDRESS_MODE::kWrap) override;

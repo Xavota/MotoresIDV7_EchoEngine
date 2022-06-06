@@ -1,6 +1,6 @@
 /************************************************************************/
 /**
- * @file eePixelShader.h
+ * @file eeDX11PixelShader.h
  * @author Diego Castellanos
  * @date 22/10/21
  * @brief

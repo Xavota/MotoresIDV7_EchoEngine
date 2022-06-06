@@ -12,9 +12,13 @@
     <ClInclude Include="include\eePrerequisitesDeferredRenderer.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\eeDeferredRenderer.h" />
+    <ClInclude Include="include\eeDeferredRenderer.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\eeDeferredRenderer.cpp" />
+    <ClCompile Include="src\eeDeferredRenderer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

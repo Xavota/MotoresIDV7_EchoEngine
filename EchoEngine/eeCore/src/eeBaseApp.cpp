@@ -1,16 +1,17 @@
 #include "eeBaseApp.h"
 
 #include <eeLogger.h>
+#include <eeMemoryManager.h>
+#include <eeTime.h>
+#include <eeDLLDynamics.h>
 
 #include "eeCoreConfiguration.h"
-#include "eeDLLDynamics.h"
+
 #include "eeGraficsApi.h"
 #include "eeRenderer.h"
 #include "eeResourceManager.h"
 #include "eeInput.h"
 #include "eeSceneManager.h"
-#include <eeMemoryManager.h>
-#include <eeTime.h>
 
 namespace eeEngineSDK {
 int32
@@ -26,12 +27,11 @@ BaseApp::mainLoop(void* callback)
     return 1;
   }
 
-  auto& graphicsApi = GraphicsApi::instance();
-  auto& time = Time::instance();
-  while (graphicsApi.appIsRunning()) {
+  while (appIsRunning()) {
     processEvents();
-    time.update();
-    update(time.getDeltaTime());
+
+    update();
+
     render();
   }
 
@@ -40,13 +40,17 @@ BaseApp::mainLoop(void* callback)
   return 0;
 }
 bool
+BaseApp::appIsRunning()
+{
+  if (GraphicsApi::isStarted()) {
+    return GraphicsApi::instance().appIsRunning();
+  }
+  return true;
+}
+bool
 BaseApp::init(void* callback)
 {
   if (!initSystems(callback)) {
-    return false;
-  }
-
-  if (!initResources()) {
     return false;
   }
 
@@ -58,11 +62,11 @@ bool
 BaseApp::initSystems(void* callback)
 {
   Logger::startUp();
-  ResourceManager::startUp();
-  Input::startUp();
-  SceneManager::startUp();
-  MemoryManager::startUp();
   Time::startUp();
+  MemoryManager::startUp();
+  Input::startUp();
+  ResourceManager::startUp();
+  SceneManager::startUp();
 
   
   DLLDynamics api;
@@ -75,35 +79,25 @@ BaseApp::initSystems(void* callback)
     apiInit();
   }
 
-  if (!GraphicsApi::isStarted()) {
-    return false;
-  }
+  if (GraphicsApi::isStarted()) {
+    auto& graphicsApi = GraphicsApi::instance();
 
-  auto& graphicsApi = GraphicsApi::instance();
-
-  if (!graphicsApi.initializeScreen(callback, screenWidth, screenHeight)) {
-    return false;
-  }
-  if (!graphicsApi.initializeBasics()) {
-    return false;
-  }
-  if (!graphicsApi.initialize(screenWidth, screenHeight)) {
-    return false;
-  }
-
-
-  DLLDynamics renderer;
-  renderer.initialize(eeConfigurations::rendererName
-                    + eeConfigurations::platformConfigPrefix
-                    + eeConfigurations::dynamicLibSuffix);
-  
-  auto rendererInit = renderer.getFunction("initPlugin");
-  if (rendererInit) {
-    rendererInit();
-  }
-
-  if (!Renderer::isStarted()) {
-    return false;
+    if (!graphicsApi.initialize()) {
+      return false;
+    }
+    if (!graphicsApi.initializeScreen(callback, screenWidth, screenHeight)) {
+      return false;
+    }
+    
+    DLLDynamics renderer;
+    renderer.initialize(eeConfigurations::rendererName
+                      + eeConfigurations::platformConfigPrefix
+                      + eeConfigurations::dynamicLibSuffix);
+    
+    auto rendererInit = renderer.getFunction("initPlugin");
+    if (rendererInit) {
+      rendererInit();
+    }
   }
 
   return true;
@@ -111,36 +105,46 @@ BaseApp::initSystems(void* callback)
 void
 BaseApp::processEvents()
 {
+  if (GraphicsApi::isStarted()) {
+    GraphicsApi::instance().processEvents();
+  }
 }
 void
-BaseApp::update(float deltaTime)
+BaseApp::update()
 {
-  onUpdate(deltaTime);
+  auto& time = Time::instance();
+  time.update();
+
+  onUpdate(time.getDeltaTime());
 
   Input::instance().update();
 }
 void
 BaseApp::render()
 {
-  Renderer::instance().onRender();
+  if (GraphicsApi::isStarted()) {
+    if (Renderer::isStarted()) {
+      Renderer::instance().onRender();
+    }
 
-  onRender();
+    onRender();
 
-  auto& graphicsApi = GraphicsApi::instance();
-  graphicsApi.present(0u, 0u);
+    auto& graphicsApi = GraphicsApi::instance();
+    graphicsApi.present(0u, 0u);
+  }
 }
 void
 BaseApp::destroy()
 {
   onDestroy();
 
-  GraphicsApi::shutDown();
-  Renderer::shutDown();
-  ResourceManager::shutDown();
-  Input::shutDown();
-  SceneManager::shutDown();
-  MemoryManager::shutDown();
-  Time::shutDown();
-  Logger::shutDown();
+  if (GraphicsApi::isStarted()) GraphicsApi::shutDown();
+  if (Renderer::isStarted()) Renderer::shutDown();
+  if (ResourceManager::isStarted()) ResourceManager::shutDown();
+  if (Input::isStarted()) Input::shutDown();
+  if (SceneManager::isStarted()) SceneManager::shutDown();
+  if (MemoryManager::isStarted()) MemoryManager::shutDown();
+  if (Time::isStarted()) Time::shutDown();
+  if (Logger::isStarted()) Logger::shutDown();
 }
 }

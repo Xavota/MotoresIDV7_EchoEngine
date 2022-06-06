@@ -105,6 +105,16 @@ class EE_CORE_EXPORT Texture
    */
   virtual void
   loadImages(Vector<SPtr<Image>> images) { m_images = images; }
+  
+  /**
+   * @brief
+   * Generate mipmaps.
+   *
+   * @description
+   * Generates the mipmaps of the texture automatically.
+   */
+  virtual void
+  generateMipmaps() {}
 
   /**
    * @brief

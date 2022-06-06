@@ -37,7 +37,7 @@ Mesh::Mesh(const Vector<ComplexVertex>& vertices, const Vector<uint32>& indices)
 }
 bool 
 Mesh::loadFromVertexArray(const Vector<ComplexVertex>& vertices,
-                    const Vector<uint32>& indices)
+                          const Vector<uint32>& indices)
 {
   auto& graphicsApi = GraphicsApi::instance();
 

@@ -30,6 +30,10 @@ DX11Texture::create2D(uint32 bindFlags,
                       eTEXTURE_FORMAT::E format,
                       uint32 mipLevels)
 {
+  if (format == eTEXTURE_FORMAT::kNone) {
+    format = eTEXTURE_FORMAT::kUnknown;
+  }
+
   const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
@@ -249,7 +253,6 @@ DX11Texture::create2D(uint32 bindFlags,
 
   return false;
 }
-
 bool
 DX11Texture::createAsBackBuffer()
 {
@@ -279,7 +282,6 @@ DX11Texture::createAsBackBuffer()
 
   return true;
 }
-
 void
 DX11Texture::useAsShaderResource()
 {
@@ -290,7 +292,6 @@ DX11Texture::useAsShaderResource()
     basics->m_deviceContext->PSSetShaderResources(0, 1, &m_shaderResource);
   }
 }
-
 void
 DX11Texture::loadImages(Vector<SPtr<Image>> images)
 {
@@ -336,7 +337,11 @@ DX11Texture::loadImages(Vector<SPtr<Image>> images)
     }
   }
 }
-
+void
+DX11Texture::generateMipmaps()
+{
+  
+}
 void
 DX11Texture::clean(Color screenColor)
 {

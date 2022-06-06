@@ -57,15 +57,6 @@ class EE_DEFERRED_RENDERER_EXPORT DeferredRenderer : public Renderer
   onRender() override;
 
 private:
-  /**
-   * The width of the screen.
-   */
-  const uint32 screenWidth = 1280u;
-  /**
-   * The height of the screen.
-   */
-  const uint32 screenHeight = 720u;
-
   /* Resources */
   /**
    * sampler state. The sampler of the texture.

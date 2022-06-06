@@ -37,6 +37,18 @@
     <Filter Include="include\Externals">
       <UniqueIdentifier>{77d00bff-6a27-4c03-bef4-0f0588b2d4d6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Renderer">
+      <UniqueIdentifier>{31c28eab-df9a-4769-be2d-db993498e830}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Renderer">
+      <UniqueIdentifier>{4ea83aa9-a0d6-4f92-bd50-0e1bd41890c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Inputs">
+      <UniqueIdentifier>{b8dfd66d-4825-4768-b924-da2b4af7f227}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Inputs">
+      <UniqueIdentifier>{e838b8cb-8e4f-482f-8a60-e59e805dcdd7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\eeCoreConfiguration.h">
@@ -150,14 +162,48 @@
     <ClInclude Include="include\eeImage.h">
       <Filter>include\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="include\eeMaterial.h" />
-    <ClInclude Include="include\eeWindow.h" />
-    <ClInclude Include="include\eeEvent.h" />
-    <ClInclude Include="include\eeRenderer.h" />
-    <ClInclude Include="include\eeBoneMesh.h" />
-    <ClInclude Include="include\eeOctree.h" />
-    <ClInclude Include="include\eeOctreeNode.h" />
-    <ClInclude Include="include\eeCLight.h" />
+    <ClInclude Include="include\eeRenderer.h">
+      <Filter>include\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeBoneMesh.h">
+      <Filter>include\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeMaterial.h">
+      <Filter>include\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeCLight.h">
+      <Filter>src\SceneGraph\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeOctree.h">
+      <Filter>include\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeOctreeNode.h">
+      <Filter>include\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeEvent.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeWindow.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeInputManager.h">
+      <Filter>include\Inputs</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeMouseDevice.h">
+      <Filter>include\Inputs</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeKeyboardDevice.h">
+      <Filter>include\Inputs</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeInputDeviceEvent.h">
+      <Filter>include\Inputs</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeInputDevice.h">
+      <Filter>include\Inputs</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeGamepadDevice.h">
+      <Filter>include\Inputs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeBaseApp.cpp">
@@ -259,13 +305,47 @@
     <ClCompile Include="src\eeImage.cpp">
       <Filter>src\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="src\eeMaterial.cpp" />
-    <ClCompile Include="src\eeWindow.cpp" />
-    <ClCompile Include="src\eeEvent.cpp" />
-    <ClCompile Include="src\eeRenderer.cpp" />
-    <ClCompile Include="src\eeBoneMesh.cpp" />
-    <ClCompile Include="src\eeOctree.cpp" />
-    <ClCompile Include="src\eeOctreeNode.cpp" />
-    <ClCompile Include="src\eeCLight.cpp" />
+    <ClCompile Include="src\eeRenderer.cpp">
+      <Filter>src\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeBoneMesh.cpp">
+      <Filter>src\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeMaterial.cpp">
+      <Filter>src\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeCLight.cpp">
+      <Filter>include\SceneGraph\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeOctree.cpp">
+      <Filter>src\SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeOctreeNode.cpp">
+      <Filter>src\SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeEvent.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeWindow.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeInputManager.cpp">
+      <Filter>src\Inputs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeMouseDevice.cpp">
+      <Filter>src\Inputs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeKeyboardDevice.cpp">
+      <Filter>src\Inputs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeInputDeviceEvent.cpp">
+      <Filter>src\Inputs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeInputDevice.cpp">
+      <Filter>src\Inputs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeGamepadDevice.cpp">
+      <Filter>src\Inputs</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -2,7 +2,9 @@
 #include "eeDX11GraphicsApi.h"
 
 namespace eeEngineSDK {
-DX11VertexBuffer::DX11VertexBuffer(SIZE_T dataSize, uint32 batchSize, const Byte* data)
+DX11VertexBuffer::DX11VertexBuffer(SIZE_T dataSize,
+                                   uint32 batchSize,
+                                   const Byte* data)
 {
   initData(dataSize, batchSize, data);
 }
