@@ -26,10 +26,13 @@ GraphicsApi::initialize()
   return true;
 }
 bool
-GraphicsApi::initializeScreen(void* callback, uint32 witdh, uint32 height)
+GraphicsApi::initializeScreen(void* callback,
+                              uint32 witdh,
+                              uint32 height,
+                              const String& displayName)
 {
   m_mainWindow = createWindowPtr();
-  if (!m_mainWindow->initWindow(callback, witdh, height)) {
+  if (!m_mainWindow->initWindow(callback, witdh, height, displayName)) {
     return false;
   }
   m_mainWindow->showWindow();

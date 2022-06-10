@@ -1,6 +1,9 @@
 #include "eeGaInputManager.h"
 
 #include <eeMemoryManager.h>
+#include <eeLogger.h>
+
+#include <eeStringUtilities.h>
 
 #include <eeKeyboardDevice.h>
 #include <eeMouseDevice.h>
@@ -8,7 +11,7 @@
 
 namespace eeEngineSDK {
 void
-GaInputManager::Init(int32 displayWidth, int32 displayHeight)
+GaInputManager::init(Vector2i screenSize)
 {
   auto& memoryMan = MemoryManager::instance();
 
@@ -17,25 +20,49 @@ GaInputManager::Init(int32 displayWidth, int32 displayHeight)
   m_devices[m_manager.CreateDevice<gainput::InputDeviceMouse>()]
   = memoryMan.newPtr<MouseDevice>();
 
-  m_manager.SetDisplaySize(displayWidth, displayHeight);
+  m_inputMap = memoryMan.newPtr<gainput::InputMap>(m_manager);
+
+  m_inputMap->MapBool(0, 0, gainput::KeyReturn);
+
+  m_manager.SetDisplaySize(screenSize.x, screenSize.y);
 }
 void
-GaInputManager::Update()
+GaInputManager::update(float dt)
 {
+  m_manager.Update(static_cast<uint64>(dt) * 1000);
+
+  if (m_inputMap->GetBoolWasDown(0)) {
+    m_devices[0]->setKeyPressed(eKEYBOARD_KEYS::kEnter, true);
+  }
+  else {
+    m_devices[0]->setKeyPressed(eKEYBOARD_KEYS::kEnter, false);
+  }
+}
+void
+GaInputManager::handleSystemMessage(systemMSG sysMsg)
+{
+  m_manager.HandleMessage(*reinterpret_cast<MSG*>(&sysMsg));
 }
 uint32
 GaInputManager::getPluggedDevicesCount()
 {
-  return m_devices.size();
+  return static_cast<uint32>(m_devices.size());
 }
 SPtr<InputDevice>
 GaInputManager::getDevice(uint32 id)
 {
   return m_devices[id];
 }
-SPtr<InputDevice>
+Vector<InputDeviceEvent>
 GaInputManager::getEvents()
 {
-  return SPtr<InputDevice>();
+  return {};
+}
+
+
+EE_EXTERN EE_PLUGIN_EXPORT void
+initPlugin()
+{
+  InputManager::startUp<GaInputManager>();
 }
 }

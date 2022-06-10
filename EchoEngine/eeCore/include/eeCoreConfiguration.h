@@ -14,8 +14,9 @@
 
 #include "eePrerequisitesUtilities.h"
 
-#define OGL//*/#define DX11
-/*#define DEFERRED_RENDERING//*/#define OGL_TEST_RENDERING
+/*#define OGL//*/#define DX11
+#define DEFERRED_RENDERING//*/#define OGL_TEST_RENDERING
+#define GAINPUT
 
 namespace eeEngineSDK {
 namespace eeConfigurations {
@@ -59,6 +60,15 @@ const String rendererName = "eeDeferredRenderer";
 const String rendererName = "eeOGLTestRenderer";
 #else
 const String rendererName;
+#endif
+
+/**
+ * The current input manager pipeline.
+ */
+#ifdef GAINPUT
+const String inputManagerName = "eeGainput";
+#else
+const String inputManagerName;
 #endif
 
 /**

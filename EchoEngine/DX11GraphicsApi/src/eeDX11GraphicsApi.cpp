@@ -1,5 +1,5 @@
 #include "eeDX11GraphicsApi.h"
-#include "eeResourceManager.h"
+
 #pragma warning(push, 0)   
 #if EE_PLATFORM == EE_PLATFORM_WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -11,6 +11,9 @@
 
 //#include <eeMath.h>
 #include <eeInput.h>
+
+#include "eeResourceManager.h"
+#include "eeInputManager.h"
 
 namespace eeEngineSDK {
 DX11GraphicsApi::~DX11GraphicsApi()
@@ -86,9 +89,12 @@ DX11GraphicsApi::initializeBasics()
   return true;
 }
 bool
-DX11GraphicsApi::initializeScreen(void* callback, uint32 witdh, uint32 height)
+DX11GraphicsApi::initializeScreen(void* callback,
+                                  uint32 witdh,
+                                  uint32 height,
+                                  const String& displayName)
 {
-  if (!GraphicsApi::initializeScreen(callback, witdh, height)) {
+  if (!GraphicsApi::initializeScreen(callback, witdh, height, displayName)) {
     return false;
   }
 
@@ -130,6 +136,10 @@ DX11GraphicsApi::initializeScreen(void* callback, uint32 witdh, uint32 height)
   //ShowWindow(reinterpret_cast<HWND>(m_win), SW_SHOWNORMAL);
 
   return true;
+}
+void
+DX11GraphicsApi::processEvents()
+{
 }
 void
 DX11GraphicsApi::clearRenderTargets(Vector<SPtr<Texture>> rtvs,
@@ -414,7 +424,7 @@ DX11GraphicsApi::resizeWindow(Point2D newSize)
 
   m_mainWindow->initWindow(nullptr,
                            static_cast<uint32>(newSize.x),
-                           static_cast<uint32>(newSize.y));
+                           static_cast<uint32>(newSize.y), "");
   m_mainWindow->initRenders();
 
   GraphicsApi::resizeWindow(newSize);

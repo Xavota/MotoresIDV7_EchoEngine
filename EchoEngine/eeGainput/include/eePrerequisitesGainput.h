@@ -51,4 +51,7 @@
 
 
 namespace eeEngineSDK {
+class GaInputManager;
+
+class GaKeyboardDevice;
 }

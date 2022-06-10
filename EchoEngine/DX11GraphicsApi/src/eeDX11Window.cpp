@@ -10,14 +10,20 @@
 #include "eeDX11GraphicsApi.h"
 
 namespace eeEngineSDK {
-DX11Window::DX11Window(void* callback, uint32 width, uint32 height)
+DX11Window::DX11Window(void* callback,
+                       uint32 width,
+                       uint32 height,
+                       const String& displayName)
 {
-  initWindow(callback, width, height);
+  initWindow(callback, width, height, displayName);
 }
 bool
-DX11Window::initWindow(void* callback, uint32 width, uint32 height)
+DX11Window::initWindow(void* callback,
+                       uint32 width,
+                       uint32 height,
+                       const String& displayName)
 {
-  Window::initWindow(callback, width, height);
+  Window::initWindow(callback, width, height, displayName);
 
   // Register class
   WNDCLASSEX wcex;
@@ -40,16 +46,16 @@ DX11Window::initWindow(void* callback, uint32 width, uint32 height)
   // Create window
   RECT rc = { 0, 0, static_cast<LONG>(m_width), static_cast<LONG>(m_height) };
   AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
-  m_win = reinterpret_cast<void*>(CreateWindow("TutorialWindowClass", 
-                                               "EchoEngine", 
+  m_win = reinterpret_cast<void*>(CreateWindow("TutorialWindowClass",
+                                               displayName.c_str(),
                                                WS_OVERLAPPEDWINDOW,
-                                               CW_USEDEFAULT, 
-                                               CW_USEDEFAULT, 
+                                               CW_USEDEFAULT,
+                                               CW_USEDEFAULT,
                                                rc.right,
-                                               rc.bottom, 
-                                               nullptr, 
-                                               nullptr, 
-                                               nullptr, 
+                                               rc.bottom,
+                                               nullptr,
+                                               nullptr,
+                                               nullptr,
                                                nullptr));
   if (!m_win) {
     return false;

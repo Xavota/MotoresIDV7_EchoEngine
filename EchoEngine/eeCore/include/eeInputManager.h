@@ -13,12 +13,29 @@
 #include "eePrerequisitesCore.h"
 #include <eeModule.h>
 
+#include <eeVector2.h>
+
+#include "eeInputDeviceEvent.h"
+
 namespace eeEngineSDK {
+/**
+ * @brief
+ * The struct for system messages.
+ */
+struct systemMSG {
+  void* winPtr;
+  uint32 message;
+  SIZE_T* wParam;
+  SIZE_T* lParam;
+  uint32 time;
+  Vector2i pt;
+};
+
 /**
  * @brief
  * The input manager, for input devices managing.
  */
-class InputManager : public Module<InputManager>
+class EE_CORE_EXPORT InputManager : public Module<InputManager>
 {
  public:
   /**
@@ -33,6 +50,18 @@ class InputManager : public Module<InputManager>
   virtual
   ~InputManager() = default;
 
+  /**
+   * @brief
+   * Initializes the input manager.
+   *
+   * @description
+   * Initializes the manager with the sizes of the screen and everything inside.
+   *
+   * @param screenSize
+   * The size of the current screen.
+   */
+  virtual void
+  init(Vector2i /*screenSize*/) {}
 
   /**
    * @brief
@@ -40,9 +69,25 @@ class InputManager : public Module<InputManager>
    *
    * @description
    * Updates the events on the devices, delete old events and add new ones.
+   *
+   * @param dt
+   * Time elapsed since las frame in seconds.
    */
   virtual void
-  Update();
+  update(float /*dt*/) {}
+
+  /**
+   * @brief
+   * Handles the messages given by the system.
+   *
+   * @description
+   * Sends the messages given to the input handler, only in specific platforms.
+   *
+   * @param sysMsg
+   * The struct containing the message.
+   */
+  virtual void
+  handleSystemMessage(systemMSG /*sysMsg*/) {}
 
   /**
    * @brief
@@ -55,7 +100,7 @@ class InputManager : public Module<InputManager>
    * The number of devices plugged to the hardware.
    */
   virtual uint32
-  getPluggedDevicesCount();
+  getPluggedDevicesCount() { return 0; }
   /**
    * @brief
    * Get a device ptr.
@@ -70,23 +115,20 @@ class InputManager : public Module<InputManager>
    * The device ptr with the given id, nullptr if the id doesn't exist.
    */
   virtual SPtr<InputDevice>
-  getDevice(uint32 id);
+  getDevice(uint32 /*id*/) { return nullptr; }
 
   /**
    * @brief
-   * Get a device ptr.
+   * Get a list of events.
    *
    * @description
-   * Returns the device ptr with the given id, nullptr if the id doesn't exist.
-   *
-   * @param id
-   * The id of the device asked.
+   * Returns a list of the last events occurred on the devices.
    *
    * @return
-   * The device ptr with the given id, nullptr if the id doesn't exist.
+   * A list of the last events occurred on the devices.
    */
-  virtual SPtr<InputDevice>
-  getEvents();
+  virtual Vector<InputDeviceEvent>
+  getEvents() { return {}; }
 
  protected:
   /**

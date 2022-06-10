@@ -171,9 +171,6 @@
     <ClInclude Include="include\eeMaterial.h">
       <Filter>include\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="include\eeCLight.h">
-      <Filter>src\SceneGraph\Components</Filter>
-    </ClInclude>
     <ClInclude Include="include\eeOctree.h">
       <Filter>include\SceneGraph</Filter>
     </ClInclude>
@@ -204,6 +201,10 @@
     <ClInclude Include="include\eeGamepadDevice.h">
       <Filter>include\Inputs</Filter>
     </ClInclude>
+    <ClInclude Include="include\eeCLight.h">
+      <Filter>include\SceneGraph\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeLUAUtilities.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeBaseApp.cpp">
@@ -314,9 +315,6 @@
     <ClCompile Include="src\eeMaterial.cpp">
       <Filter>src\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="src\eeCLight.cpp">
-      <Filter>include\SceneGraph\Components</Filter>
-    </ClCompile>
     <ClCompile Include="src\eeOctree.cpp">
       <Filter>src\SceneGraph</Filter>
     </ClCompile>
@@ -347,5 +345,9 @@
     <ClCompile Include="src\eeGamepadDevice.cpp">
       <Filter>src\Inputs</Filter>
     </ClCompile>
+    <ClCompile Include="src\eeCLight.cpp">
+      <Filter>src\SceneGraph\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeLUAUtilities.cpp" />
   </ItemGroup>
 </Project>

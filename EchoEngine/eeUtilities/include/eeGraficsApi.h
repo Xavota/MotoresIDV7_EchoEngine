@@ -96,19 +96,23 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * @description
    * Initializes the screen depending on the graphics api active.
    *
-   *
    * @param callback
    * The function callback for the window events.
    * @param width
    * The width of the window.
    * @param height
    * The height of the window.
+   * @param displayName
+   * The window display name.
    *
    * @return
    * Weather it succeed or failed to initialize.
    */
   virtual bool
-  initializeScreen(void* callback, uint32 witdh, uint32 height);
+  initializeScreen(void* callback,
+                   uint32 witdh,
+                   uint32 height,
+                   const String& displayName);
 
   /**
    * @brief

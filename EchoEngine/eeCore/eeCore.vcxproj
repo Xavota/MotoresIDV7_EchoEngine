@@ -102,14 +102,14 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>EE_CORE_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;$(DEVLIBS)Boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;$(DEVLIBS)Boost;$(DEVLIBS)LUA/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Assimp/lib/$(PlatformTarget)/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>eeUtilitiesd.lib;assimp-vc142-mtd.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Assimp/lib/$(PlatformTarget)/;$(DEVLIBS)LUA/lib/$(PlatformTarget)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>eeUtilitiesd.lib;assimp-vc142-mtd.lib;LUATestd.lib</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -121,7 +121,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>EE_CORE_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;$(DEVLIBS)Boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;$(DEVLIBS)Boost;$(DEVLIBS)LUA/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
@@ -129,8 +129,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Assimp/lib/$(PlatformTarget)/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>eeUtilities.lib;assimp-vc142-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Assimp/lib/$(PlatformTarget)/;$(DEVLIBS)LUA/lib/$(PlatformTarget)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>eeUtilities.lib;assimp-vc142-mt.lib;LUATest.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -140,14 +140,14 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>EE_CORE_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;$(DEVLIBS)Boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;$(DEVLIBS)Boost;$(DEVLIBS)LUA/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Assimp/lib/$(PlatformTarget)/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>eeUtilitiesd.lib;assimp-vc142-mtd.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Assimp/lib/$(PlatformTarget)/;$(DEVLIBS)LUA/lib/$(PlatformTarget)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>eeUtilitiesd.lib;assimp-vc142-mtd.lib;LUATestd.lib</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -159,7 +159,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>EE_CORE_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;$(DEVLIBS)Boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;$(DEVLIBS)Boost;$(DEVLIBS)LUA/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
@@ -167,8 +167,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Assimp/lib/$(PlatformTarget)/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>eeUtilities.lib;assimp-vc142-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Assimp/lib/$(PlatformTarget)/;$(DEVLIBS)LUA/lib/$(PlatformTarget)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>eeUtilities.lib;assimp-vc142-mt.lib;LUATest.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -201,6 +201,7 @@
     <ClCompile Include="src\eeInputLayout.cpp" />
     <ClCompile Include="src\eeInputManager.cpp" />
     <ClCompile Include="src\eeKeyboardDevice.cpp" />
+    <ClCompile Include="src\eeLUAUtilities.cpp" />
     <ClCompile Include="src\eeMaterial.cpp" />
     <ClCompile Include="src\eeMesh.cpp" />
     <ClCompile Include="src\eeMouseDevice.cpp" />
@@ -253,6 +254,7 @@
     <ClInclude Include="include\eeInputLayout.h" />
     <ClInclude Include="include\eeInputManager.h" />
     <ClInclude Include="include\eeKeyboardDevice.h" />
+    <ClInclude Include="include\eeLUAUtilities.h" />
     <ClInclude Include="include\eeMaterial.h" />
     <ClInclude Include="include\eeMesh.h" />
     <ClInclude Include="include\eeMouseDevice.h" />

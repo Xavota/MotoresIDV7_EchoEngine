@@ -54,9 +54,12 @@ OGLGraphicsApi::initializeBasics()
   return true;
 }
 bool
-OGLGraphicsApi::initializeScreen(void* callback, uint32 witdh, uint32 height)
+OGLGraphicsApi::initializeScreen(void* callback,
+                                 uint32 witdh,
+                                 uint32 height,
+                                 const String& displayName)
 {
-  if (!GraphicsApi::initializeScreen(callback, witdh, height)) {
+  if (!GraphicsApi::initializeScreen(callback, witdh, height, displayName)) {
     return false;
   }
   return true;

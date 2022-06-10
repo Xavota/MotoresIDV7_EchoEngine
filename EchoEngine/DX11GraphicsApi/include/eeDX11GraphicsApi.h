@@ -117,12 +117,28 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
    * The width of the window.
    * @param height
    * The height of the window.
+   * @param displayName
+   * The window display name.
    *
    * @return
    * Weather it succeed or failed to initialize.
    */
   bool
-  initializeScreen(void* callback, uint32 witdh, uint32 height) override;
+  initializeScreen(void* callback,
+                   uint32 witdh,
+                   uint32 height,
+                   const String& displayName) override;
+
+  /**
+   * @brief
+   * Processes the events given by the system.
+   *
+   * @description
+   * Gets all the events given by the systems and interprets them to something
+   * useful.
+   */
+  void
+  processEvents() override;
 
   /**
    * @brief

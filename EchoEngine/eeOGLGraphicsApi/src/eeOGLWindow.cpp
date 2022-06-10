@@ -11,19 +11,25 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
   glViewport(0, 0, width, height);
 }
 namespace eeEngineSDK {
-OGLWindow::OGLWindow(void* callback, uint32 width, uint32 height)
+OGLWindow::OGLWindow(void* callback,
+                     uint32 width,
+                     uint32 height,
+                     const String& displayName)
 {
-  initWindow(callback, width, height);
+  initWindow(callback, width, height, displayName);
 }
 bool
-OGLWindow::initWindow(void* callback, uint32 width, uint32 height)
+OGLWindow::initWindow(void* callback,
+                      uint32 width,
+                      uint32 height,
+                      const String& displayName)
 {
-  Window::initWindow(callback, width, height);
+  Window::initWindow(callback, width, height, displayName);
 
   
   m_win = reinterpret_cast<void*>(glfwCreateWindow(static_cast<int32>(width),
                                                    static_cast<int32>(height),
-                                                   "TutorialWindowClass",
+                                                   displayName.c_str(),
                                                    nullptr,
                                                    nullptr));
   if (!m_win) {

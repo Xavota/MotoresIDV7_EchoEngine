@@ -24,6 +24,7 @@
 #include <eeMath.h>
 #include <eeInput.h>
 #include <eeTime.h>
+#include <eeInputManager.h>
 
 #include <eeScene.h>
 
@@ -51,6 +52,11 @@
 #include <eeCSkeletalMesh.h>
 #include <eeCStaticMesh.h>
 #include <eeCTransform.h>
+
+#include <eeInputDevice.h>
+#include <eeGamepadDevice.h>
+#include <eeKeyboardDevice.h>
+#include <eeMouseDevice.h>
 
 using eeEngineSDK::Logger;
 using eeEngineSDK::GraphicsApi;
@@ -85,6 +91,7 @@ using eeEngineSDK::Math;
 using eeEngineSDK::VertexShader;
 using eeEngineSDK::PixelShader;
 using eeEngineSDK::Byte;
+using eeEngineSDK::SIZE_T;
 using eeEngineSDK::Texture;
 using eeEngineSDK::ConstantBuffer;
 using eeEngineSDK::RasterizerState;
@@ -108,11 +115,18 @@ using eeEngineSDK::CAMERA_PROJECTION_TYPE;
 
 using eeEngineSDK::MemoryManager;
 using eeEngineSDK::Time;
+using eeEngineSDK::InputManager;
 
+using eeEngineSDK::systemMSG;
 
 using eeEngineSDK::ViewportDesc;
 
 using eeEngineSDK::Window;
+
+using eeEngineSDK::InputDevice;
+using eeEngineSDK::GamepadDevice;
+using eeEngineSDK::KeyboardDevice;
+using eeEngineSDK::MouseDevice;
 
 
 
@@ -231,6 +245,19 @@ WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
   default:
     return DefWindowProc(hWnd, message, wParam, lParam);
+  }
+
+
+  if (InputManager::isStarted()) {
+    systemMSG sysMsg;
+    memset(&sysMsg, 0, sizeof(systemMSG));
+    sysMsg.winPtr = hWnd;
+    sysMsg.message = message;
+    sysMsg.wParam = reinterpret_cast<SIZE_T*>(wParam);
+    sysMsg.lParam = reinterpret_cast<SIZE_T*>(lParam);
+    sysMsg.time = 0;
+    sysMsg.pt = Vector2i{0, 0};
+    InputManager::instance().handleSystemMessage(sysMsg);
   }
 
   return 0;
@@ -1240,6 +1267,13 @@ BaseAppTest1::onUpdate(float deltaTime)
                                     * rot2;
       trans->setRotation(rot2 * rot);
     }
+  }
+
+
+  if (InputManager::isStarted()
+   && InputManager::instance().getDevice(0)->
+   isKeyPressed(eeEngineSDK::eKEYBOARD_KEYS::kEnter)) {
+    Logger::instance().ConsoleLog("Presionado");
   }
 
 

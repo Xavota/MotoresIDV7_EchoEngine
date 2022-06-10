@@ -18,7 +18,7 @@ namespace eeEngineSDK {
  * @brief
  * The keyboard device for the inputs api.
  */
-class KeyboardDevice : public InputDevice
+class EE_CORE_EXPORT KeyboardDevice : public InputDevice
 {
  public:
   /**
@@ -31,6 +31,22 @@ class KeyboardDevice : public InputDevice
    * Default destructor
    */
   ~KeyboardDevice() = default;
+
+  /**
+   * @brief
+   * Gets the type of device.
+   *
+   * @description
+   * Returns the enum of the device type.
+   *
+   * @return
+   * The enum of the device type.
+   */
+  FORCEINLINE int8
+  getDeviceType() override
+  {
+    return eINPUT_DEVICE_TYPE::kKeyboard;
+  }
 
  private:
 };

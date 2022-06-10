@@ -13,14 +13,19 @@
 #include "eePrerequisitesGainput.h"
 #include <eeInputManager.h>
 
+#pragma warning(push)
+#pragma warning(disable: 4267)
 #include <gainput/gainput.h>
+#pragma warning(pop)
+
+#include <eeVector2.h>
 
 namespace eeEngineSDK {
 /**
  * @brief
  * The input manager, for input devices managing.
  */
-class GaInputManager : public InputManager
+class EE_GAINPUT_EXPORT GaInputManager : public InputManager
 {
  public:
   /**
@@ -35,8 +40,18 @@ class GaInputManager : public InputManager
   ~GaInputManager() = default;
 
 
+  /**
+   * @brief
+   * Initializes the input manager.
+   *
+   * @description
+   * Initializes the manager with the sizes of the screen and everything inside.
+   *
+   * @param screenSize
+   * The size of the current screen.
+   */
   void
-  Init(int32 displayWidth, int32 displayHeight);
+  init(Vector2i screenSize) override;
 
   /**
    * @brief
@@ -44,9 +59,25 @@ class GaInputManager : public InputManager
    *
    * @description
    * Updates the events on the devices, delete old events and add new ones.
+   * 
+   * @param dt
+   * Time elapsed since las frame in seconds.
    */
   void
-  Update() override;
+  update(float dt) override;
+
+  /**
+   * @brief
+   * Handles the messages given by the system.
+   *
+   * @description
+   * Sends the messages given to the input handler, only in specific platforms.
+   *
+   * @param sysMsg
+   * The struct containing the message.
+   */
+  void
+  handleSystemMessage(systemMSG sysMsg) override;
 
   /**
    * @brief
@@ -78,21 +109,19 @@ class GaInputManager : public InputManager
 
   /**
    * @brief
-   * Get a device ptr.
+   * Get a list of events.
    *
    * @description
-   * Returns the device ptr with the given id, nullptr if the id doesn't exist.
-   *
-   * @param id
-   * The id of the device asked.
+   * Returns a list of the last events occurred on the devices.
    *
    * @return
-   * The device ptr with the given id, nullptr if the id doesn't exist.
+   * A list of the last events occurred on the devices.
    */
-  SPtr<InputDevice>
+  Vector<InputDeviceEvent>
   getEvents() override;
 
  private:
   gainput::InputManager m_manager;
+  SPtr<gainput::InputMap> m_inputMap;
 };
 }

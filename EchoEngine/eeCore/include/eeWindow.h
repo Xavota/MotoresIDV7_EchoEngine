@@ -39,8 +39,13 @@ class EE_CORE_EXPORT Window
    * The width of the window.
    * @param height
    * The height of the window.
+   * @param displayName
+   * The window display name.
    */
-   Window(void* callback, uint32 width, uint32 height);
+   Window(void* callback,
+          uint32 width,
+          uint32 height,
+          const String& displayName);
   /**
    * @brief
    * Default destructor
@@ -62,12 +67,17 @@ class EE_CORE_EXPORT Window
    * The width of the window.
    * @param height
    * The height of the window.
+   * @param displayName
+   * The window display name.
    *
    * @return
    * Weather it succeed or failed to initialize.
    */
   virtual bool
-  initWindow(void* callback, uint32 width, uint32 height);
+  initWindow(void* callback,
+             uint32 width,
+             uint32 height,
+             const String& displayName);
   /**
    * @brief
    * Initializes the window.

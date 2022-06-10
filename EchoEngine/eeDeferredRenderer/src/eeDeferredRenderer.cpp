@@ -55,7 +55,8 @@ DeferredRenderer::DeferredRenderer()
   /* Load render targets and depth stencils */
   m_GBufferDepthStencil = graphicsApi.createTexturePtr();
   m_GBufferDepthStencil->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kDepthStencil,
-                                  Point2D{ screenWidth, screenHeight });
+                                  Point2D{ screenWidth, screenHeight },
+                                  eTEXTURE_FORMAT::kD24_Unorm_S8_Uint);
 
   m_GBufferPositionTexture = graphicsApi.createTexturePtr();
   m_GBufferPositionTexture->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kRenderTarget
@@ -277,13 +278,14 @@ DeferredRenderer::onRender()
   m_solidCCWRasterizer->use();
   
   // Clear and set render targets
+  SPtr<Window> mainWin = graphicsApi.getMainWindow();
   graphicsApi.clearRenderTargets({ m_GBufferNormalTexture },
                                  (colorBlack + 1.0f) * 0.5f);
-  graphicsApi.clearRenderTargets({ m_GBufferPositionTexture,
+  graphicsApi.clearRenderTargets({ mainWin->getRenderTarget(),
                                    m_GBufferColorTexture },
                                  colorBlack);
   graphicsApi.cleanDepthStencils({ m_GBufferDepthStencil });
-  graphicsApi.setRenderTargets({ m_GBufferPositionTexture,
+  graphicsApi.setRenderTargets({ mainWin->getRenderTarget(),
                                  m_GBufferColorTexture,
                                  m_GBufferNormalTexture },
                                m_GBufferDepthStencil);
@@ -479,370 +481,370 @@ DeferredRenderer::onRender()
   graphicsApi.unsetVSConstantBuffers(3u, 0u);
   
   
-  /* SSAO */
-  
-  // Clear and set render targets
-  graphicsApi.clearRenderTargets({ m_SSAOTexture }, colorBlack);
-  graphicsApi.setRenderTargets({ m_SSAOTexture }, nullptr);
-  
-   
-  // Set constant buffers
-  graphicsApi.setPSConstantBuffers
-  ({ m_ssaoDataBuffer }, 0u );
-  
-  
-  // Load shaders
-  graphicsApi.setShaderPrograms(resourceManager.getResourceVertexShader("SSAOVS"),
-                                resourceManager.getResourcePixelShader("SSAOPS"));
-  
-  
-  // Set textures
-  graphicsApi.setTextures({ m_GBufferPositionTexture,
-                            m_GBufferNormalTexture },
-                          0u);
-  
-  
-  // Draw using a SAQ
-  graphicsApi.drawOnSAQ();
-  
-  
-  // Unbind buffers
-  graphicsApi.unsetRenderTargets();
-  graphicsApi.unsetPSConstantBuffers(1u, 0u);
-  graphicsApi.unsetTextures(2u, 0u);
-  
-  
-  /* Lights */
-  
-  // Get all lights
-  Vector<SPtr<Actor>> actorLights =
-  sceneManager.getAllActorsByComponentFlags(eCOMPONENT_TYPE::kLight);
-  Vector<SPtr<CLight>> lights;
-  for (const auto& act : actorLights) {
-    lights.emplace_back(act->getComponent<CLight>());
-  }
-  Vector<float> dirLightBufferData;
-  
-  
-  SPtr<VertexShader> copyVS =
-  resourceManager.getResourceVertexShader("CopyVS");
-  SPtr<PixelShader> copyPS =
-  resourceManager.getResourcePixelShader("CopyPS");
-  
-  
-  
+  ///* SSAO */
   //
-  // Diffuse
+  //// Clear and set render targets
+  //graphicsApi.clearRenderTargets({ m_SSAOTexture }, colorBlack);
+  //graphicsApi.setRenderTargets({ m_SSAOTexture }, nullptr);
+  //
   // 
-  
-  // Store shaders
-  SPtr<VertexShader> dirDiffLightVS =
-  resourceManager.getResourceVertexShader("DirectionalDiffuseLightsVS");
-  SPtr<PixelShader> dirDiffLightPS =
-  resourceManager.getResourcePixelShader("DirectionalDiffuseLightsPS");
-  SPtr<VertexShader> pointDiffLightVS =
-  resourceManager.getResourceVertexShader("PointDiffuseLightsVS");
-  SPtr<PixelShader> pointDiffLightPS =
-  resourceManager.getResourcePixelShader("PointDiffuseLightsPS");
-  
-  
-  graphicsApi.clearRenderTargets({ m_tempDiffLightsTexture }, colorBlack);
-  for (const auto& light : lights) {
-    //
-    // Add light
-    //
-  
-    // Clear and set render targets
-    graphicsApi.clearRenderTargets({ m_diffLightsTexture }, colorBlack);
-    graphicsApi.setRenderTargets({ m_diffLightsTexture }, nullptr);
-  
-  
-    // Set textures
-    graphicsApi.setTextures({ m_GBufferPositionTexture,
-                              m_GBufferNormalTexture,
-                              m_tempDiffLightsTexture },
-                            0u);
-  
-  
-    if (light->getLightType() == eLIGHT_TYPE::kDirectional) {
-      // Load shaders
-      graphicsApi.setShaderPrograms(dirDiffLightVS, dirDiffLightPS);
-  
-  
-      // Set constant buffers
-      Vector3f lightDir = light->getDirection();
-      Color lightColor = light->getColor();
-      dirLightBufferData =
-      {
-        lightDir.x, lightDir.y, lightDir.z, light->getIntensity(),
-        lightColor.r, lightColor.g, lightColor.b, lightColor.a
-      };
-      m_dirLightBuffer->updateData(reinterpret_cast<Byte*>(dirLightBufferData.data()));
-      graphicsApi.setPSConstantBuffers({ m_dirLightBuffer }, 0u);
-    }
-    else if (light->getLightType() == eLIGHT_TYPE::kPoint) {
-      // Load shaders
-      graphicsApi.setShaderPrograms(pointDiffLightVS, pointDiffLightPS);
-  
-  
-      // Set light constant buffer
-      Vector3f lightPos = light->getPosition();
-      Color lightColor = light->getColor();
-      dirLightBufferData =
-      {
-        lightPos.x, lightPos.y, lightPos.z, light->getIntensity(),
-        lightColor.r, lightColor.g, lightColor.b, lightColor.a
-      };
-      m_dirLightBuffer->updateData(reinterpret_cast<Byte*>(dirLightBufferData.data()));
-      graphicsApi.setPSConstantBuffers({ m_dirLightBuffer }, 0u);
-    }
-    
-    
-    // Draw using a SAQ
-    graphicsApi.drawOnSAQ();
-    
-    
-    // Unbind buffers
-    graphicsApi.unsetRenderTargets();
-    graphicsApi.unsetPSConstantBuffers(1u, 0u);
-    graphicsApi.unsetTextures(3u, 0u);
-  
-  
-    //
-    // Copy
-    //
-  
-    // Clear and set render targets
-    graphicsApi.clearRenderTargets({ m_tempDiffLightsTexture }, colorBlack);
-    graphicsApi.setRenderTargets({ m_tempDiffLightsTexture }, nullptr);
-  
-  
-    // Load shaders
-    graphicsApi.setShaderPrograms(copyVS, copyPS);
-  
-  
-    // Set textures
-    graphicsApi.setTextures({ m_diffLightsTexture }, 0u);
-  
-  
-    // Draw using a SAQ
-    graphicsApi.drawOnSAQ();
-  
-  
-    // Unbind buffers
-    graphicsApi.unsetRenderTargets();
-    graphicsApi.unsetTextures(1u, 0u);
-  }
-  
-  
+  //// Set constant buffers
+  //graphicsApi.setPSConstantBuffers
+  //({ m_ssaoDataBuffer }, 0u );
   //
-  // Specular
-  // 
-  
-  // Store shaders
-  SPtr<VertexShader> dirSpecLightVS =
-  resourceManager.getResourceVertexShader("DirectionalSpecularLightsVS");
-  SPtr<PixelShader> dirSpecLightPS =
-  resourceManager.getResourcePixelShader("DirectionalSpecularLightsPS");
-  SPtr<VertexShader> pointSpecLightVS =
-  resourceManager.getResourceVertexShader("PointSpecularLightsVS");
-  SPtr<PixelShader> pointSpecLightPS =
-  resourceManager.getResourcePixelShader("PointSpecularLightsPS");
-  
-  
-  graphicsApi.clearRenderTargets({ m_tempSpecLightsTexture }, colorBlack);
-  for (const auto& light : lights) {
-    //
-    // Add light
-    //
-  
-    // Clear and set render targets
-    graphicsApi.clearRenderTargets({ m_specLightsTexture }, colorBlack);
-    graphicsApi.setRenderTargets({ m_specLightsTexture }, nullptr);
-  
-  
-    // Set view position constant buffer
-    graphicsApi.setVSConstantBuffers
-    ({ m_viewPosBuffer }, 0u);
-  
-  
-    if (light->getLightType() == eLIGHT_TYPE::kDirectional) {
-      // Load shaders
-      graphicsApi.setShaderPrograms(dirSpecLightVS, dirSpecLightPS);
-      
-  
-      // Set light constant buffer
-      Vector3f lightDir = light->getDirection();
-      Color lightColor = light->getColor();
-      dirLightBufferData =
-      {
-        lightDir.x, lightDir.y, lightDir.z, light->getIntensity(),
-        lightColor.r, lightColor.g, lightColor.b, lightColor.a
-      };
-      m_dirLightBuffer->updateData(reinterpret_cast<Byte*>(dirLightBufferData.data()));
-      graphicsApi.setPSConstantBuffers({ m_dirLightBuffer }, 0u);
-    }
-    else if (light->getLightType() == eLIGHT_TYPE::kPoint) {
-      // Load shaders
-      graphicsApi.setShaderPrograms(pointSpecLightVS, pointSpecLightPS);
-  
-  
-      // Set light constant buffer
-      Vector3f lightPos = light->getPosition();
-      Color lightColor = light->getColor();
-      dirLightBufferData =
-      {
-        lightPos.x, lightPos.y, lightPos.z, light->getIntensity(),
-        lightColor.r, lightColor.g, lightColor.b, lightColor.a
-      };
-      m_dirLightBuffer->updateData(reinterpret_cast<Byte*>(dirLightBufferData.data()));
-      graphicsApi.setPSConstantBuffers({ m_dirLightBuffer }, 0u);
-    }
-  
-  
-    // Set textures
-    graphicsApi.setTextures({ m_GBufferPositionTexture,
-                              m_GBufferNormalTexture,
-                              m_tempSpecLightsTexture },
-                            0u);
-  
-    
-    // Draw using a SAQ
-    graphicsApi.drawOnSAQ();
-    
-    
-    // Unbind buffers
-    graphicsApi.unsetRenderTargets();
-    graphicsApi.unsetVSConstantBuffers(1u, 0u);
-    graphicsApi.unsetPSConstantBuffers(1u, 0u);
-    graphicsApi.unsetTextures(3u, 0u);
-  
-  
-    //
-    // Copy
-    //
-  
-    // Clear and set render targets
-    graphicsApi.clearRenderTargets({ m_tempSpecLightsTexture }, colorBlack);
-    graphicsApi.setRenderTargets({ m_tempSpecLightsTexture }, nullptr);
-  
-  
-    // Load shaders
-    graphicsApi.setShaderPrograms(copyVS, copyPS);
-  
-  
-    // Set textures
-    graphicsApi.setTextures({ m_specLightsTexture }, 0u);
-  
-  
-    // Draw using a SAQ
-    graphicsApi.drawOnSAQ();
-  
-  
-    // Unbind buffers
-    graphicsApi.unsetRenderTargets();
-    graphicsApi.unsetTextures(1u, 0u);
-  }
-  
-  
   //
-  // Final
+  //// Load shaders
+  //graphicsApi.setShaderPrograms(resourceManager.getResourceVertexShader("SSAOVS"),
+  //                              resourceManager.getResourcePixelShader("SSAOPS"));
   //
-  
-  // Clear and set render targets
-  graphicsApi.clearRenderTargets({ m_lightTexture }, colorBlack);
-  graphicsApi.setRenderTargets({ m_lightTexture }, nullptr);
-  
-  
-  // Load shaders
-  graphicsApi.setShaderPrograms(resourceManager.getResourceVertexShader("LightsVS"),
-                                resourceManager.getResourcePixelShader("LightsPS"));
-  
-  
-  // Set textures
-  graphicsApi.setTextures({ m_GBufferPositionTexture,
-                            m_GBufferColorTexture,
-                            m_GBufferNormalTexture,
-                            m_SSAOTexture,
-                            m_diffLightsTexture,
-                            m_specLightsTexture },
-                          0u);
-  
-  
-  // Draw using a SAQ
-  graphicsApi.drawOnSAQ();
-  
-  
-  // Unbind buffers
-  graphicsApi.unsetRenderTargets();
-  graphicsApi.unsetTextures(6u, 0u);
-  
-  
-  /* HDR Luminance */
-  
-  
-  ViewportDesc vp(512.0f, 512.0f);
-  graphicsApi.setViewports({ vp });
-  
-  // Clear and set render targets
-  graphicsApi.setRenderTargets({ m_HDRLuminanceTexture }, nullptr);
-  graphicsApi.clearRenderTargets({ m_HDRLuminanceTexture }, colorBlack);
-  
-  // Set constant buffers
-  graphicsApi.setVSConstantBuffers
-  ({ m_viewportRectDataBuffer }, 0u );
-  
-  // Load shaders
-  graphicsApi.setShaderPrograms(resourceManager.getResourceVertexShader("HDRLuminanceVS"),
-                                resourceManager.getResourcePixelShader("HDRLuminancePS"));
-  
-  
-  // Set textures
-  //graphicsApi.setTextures({ resourceManager.getResourceTexture("DefaultDiffuse") },
-  graphicsApi.setTextures({ m_lightTexture },
-                          0u);
-  
-  
-  // Draw using a SAQ
-  m_samplerLinear->use();
-  graphicsApi.drawOnSAQ();
-  
-  
-  // Unbind buffers
-  graphicsApi.unsetRenderTargets();
-  graphicsApi.unsetVSConstantBuffers(1u, 0u);
-  graphicsApi.unsetTextures(1u, 0u);
-  
-  
-  /* Copy */
-  
-  vp.width = static_cast<float>(graphicsApi.getMainWindow()->getWidth());
-  vp.height = static_cast<float>(graphicsApi.getMainWindow()->getHeight());
-  graphicsApi.setViewports({ vp });
-  
-  // Set Back Buffer
-  SPtr<Window> mainWin = graphicsApi.getMainWindow();
-  graphicsApi.clearRenderTargets({ mainWin->getRenderTarget() }, colorBlack);
-  graphicsApi.setRenderTargets({ mainWin->getRenderTarget() }, nullptr);
-  
-  
-  // Load shaders
-  graphicsApi.setShaderPrograms(copyVS, copyPS);
-  
-  
-  // Set textures
-  graphicsApi.setTextures({ m_lightTexture },
-                          0u);
-  
-  
-  // Draw using a SAQ
-  m_rasterizer2->use();
-  graphicsApi.drawOnSAQ();
-  
-  
-  // Unbind buffers
-  graphicsApi.unsetRenderTargets();
-  graphicsApi.unsetTextures(1u, 0u);
+  //
+  //// Set textures
+  //graphicsApi.setTextures({ m_GBufferPositionTexture,
+  //                          m_GBufferNormalTexture },
+  //                        0u);
+  //
+  //
+  //// Draw using a SAQ
+  //graphicsApi.drawOnSAQ();
+  //
+  //
+  //// Unbind buffers
+  //graphicsApi.unsetRenderTargets();
+  //graphicsApi.unsetPSConstantBuffers(1u, 0u);
+  //graphicsApi.unsetTextures(2u, 0u);
+  //
+  //
+  ///* Lights */
+  //
+  //// Get all lights
+  //Vector<SPtr<Actor>> actorLights =
+  //sceneManager.getAllActorsByComponentFlags(eCOMPONENT_TYPE::kLight);
+  //Vector<SPtr<CLight>> lights;
+  //for (const auto& act : actorLights) {
+  //  lights.emplace_back(act->getComponent<CLight>());
+  //}
+  //Vector<float> dirLightBufferData;
+  //
+  //
+  //SPtr<VertexShader> copyVS =
+  //resourceManager.getResourceVertexShader("CopyVS");
+  //SPtr<PixelShader> copyPS =
+  //resourceManager.getResourcePixelShader("CopyPS");
+  //
+  //
+  //
+  ////
+  //// Diffuse
+  //// 
+  //
+  //// Store shaders
+  //SPtr<VertexShader> dirDiffLightVS =
+  //resourceManager.getResourceVertexShader("DirectionalDiffuseLightsVS");
+  //SPtr<PixelShader> dirDiffLightPS =
+  //resourceManager.getResourcePixelShader("DirectionalDiffuseLightsPS");
+  //SPtr<VertexShader> pointDiffLightVS =
+  //resourceManager.getResourceVertexShader("PointDiffuseLightsVS");
+  //SPtr<PixelShader> pointDiffLightPS =
+  //resourceManager.getResourcePixelShader("PointDiffuseLightsPS");
+  //
+  //
+  //graphicsApi.clearRenderTargets({ m_tempDiffLightsTexture }, colorBlack);
+  //for (const auto& light : lights) {
+  //  //
+  //  // Add light
+  //  //
+  //
+  //  // Clear and set render targets
+  //  graphicsApi.clearRenderTargets({ m_diffLightsTexture }, colorBlack);
+  //  graphicsApi.setRenderTargets({ m_diffLightsTexture }, nullptr);
+  //
+  //
+  //  // Set textures
+  //  graphicsApi.setTextures({ m_GBufferPositionTexture,
+  //                            m_GBufferNormalTexture,
+  //                            m_tempDiffLightsTexture },
+  //                          0u);
+  //
+  //
+  //  if (light->getLightType() == eLIGHT_TYPE::kDirectional) {
+  //    // Load shaders
+  //    graphicsApi.setShaderPrograms(dirDiffLightVS, dirDiffLightPS);
+  //
+  //
+  //    // Set constant buffers
+  //    Vector3f lightDir = light->getDirection();
+  //    Color lightColor = light->getColor();
+  //    dirLightBufferData =
+  //    {
+  //      lightDir.x, lightDir.y, lightDir.z, light->getIntensity(),
+  //      lightColor.r, lightColor.g, lightColor.b, lightColor.a
+  //    };
+  //    m_dirLightBuffer->updateData(reinterpret_cast<Byte*>(dirLightBufferData.data()));
+  //    graphicsApi.setPSConstantBuffers({ m_dirLightBuffer }, 0u);
+  //  }
+  //  else if (light->getLightType() == eLIGHT_TYPE::kPoint) {
+  //    // Load shaders
+  //    graphicsApi.setShaderPrograms(pointDiffLightVS, pointDiffLightPS);
+  //
+  //
+  //    // Set light constant buffer
+  //    Vector3f lightPos = light->getPosition();
+  //    Color lightColor = light->getColor();
+  //    dirLightBufferData =
+  //    {
+  //      lightPos.x, lightPos.y, lightPos.z, light->getIntensity(),
+  //      lightColor.r, lightColor.g, lightColor.b, lightColor.a
+  //    };
+  //    m_dirLightBuffer->updateData(reinterpret_cast<Byte*>(dirLightBufferData.data()));
+  //    graphicsApi.setPSConstantBuffers({ m_dirLightBuffer }, 0u);
+  //  }
+  //  
+  //  
+  //  // Draw using a SAQ
+  //  graphicsApi.drawOnSAQ();
+  //  
+  //  
+  //  // Unbind buffers
+  //  graphicsApi.unsetRenderTargets();
+  //  graphicsApi.unsetPSConstantBuffers(1u, 0u);
+  //  graphicsApi.unsetTextures(3u, 0u);
+  //
+  //
+  //  //
+  //  // Copy
+  //  //
+  //
+  //  // Clear and set render targets
+  //  graphicsApi.clearRenderTargets({ m_tempDiffLightsTexture }, colorBlack);
+  //  graphicsApi.setRenderTargets({ m_tempDiffLightsTexture }, nullptr);
+  //
+  //
+  //  // Load shaders
+  //  graphicsApi.setShaderPrograms(copyVS, copyPS);
+  //
+  //
+  //  // Set textures
+  //  graphicsApi.setTextures({ m_diffLightsTexture }, 0u);
+  //
+  //
+  //  // Draw using a SAQ
+  //  graphicsApi.drawOnSAQ();
+  //
+  //
+  //  // Unbind buffers
+  //  graphicsApi.unsetRenderTargets();
+  //  graphicsApi.unsetTextures(1u, 0u);
+  //}
+  //
+  //
+  ////
+  //// Specular
+  //// 
+  //
+  //// Store shaders
+  //SPtr<VertexShader> dirSpecLightVS =
+  //resourceManager.getResourceVertexShader("DirectionalSpecularLightsVS");
+  //SPtr<PixelShader> dirSpecLightPS =
+  //resourceManager.getResourcePixelShader("DirectionalSpecularLightsPS");
+  //SPtr<VertexShader> pointSpecLightVS =
+  //resourceManager.getResourceVertexShader("PointSpecularLightsVS");
+  //SPtr<PixelShader> pointSpecLightPS =
+  //resourceManager.getResourcePixelShader("PointSpecularLightsPS");
+  //
+  //
+  //graphicsApi.clearRenderTargets({ m_tempSpecLightsTexture }, colorBlack);
+  //for (const auto& light : lights) {
+  //  //
+  //  // Add light
+  //  //
+  //
+  //  // Clear and set render targets
+  //  graphicsApi.clearRenderTargets({ m_specLightsTexture }, colorBlack);
+  //  graphicsApi.setRenderTargets({ m_specLightsTexture }, nullptr);
+  //
+  //
+  //  // Set view position constant buffer
+  //  graphicsApi.setVSConstantBuffers
+  //  ({ m_viewPosBuffer }, 0u);
+  //
+  //
+  //  if (light->getLightType() == eLIGHT_TYPE::kDirectional) {
+  //    // Load shaders
+  //    graphicsApi.setShaderPrograms(dirSpecLightVS, dirSpecLightPS);
+  //    
+  //
+  //    // Set light constant buffer
+  //    Vector3f lightDir = light->getDirection();
+  //    Color lightColor = light->getColor();
+  //    dirLightBufferData =
+  //    {
+  //      lightDir.x, lightDir.y, lightDir.z, light->getIntensity(),
+  //      lightColor.r, lightColor.g, lightColor.b, lightColor.a
+  //    };
+  //    m_dirLightBuffer->updateData(reinterpret_cast<Byte*>(dirLightBufferData.data()));
+  //    graphicsApi.setPSConstantBuffers({ m_dirLightBuffer }, 0u);
+  //  }
+  //  else if (light->getLightType() == eLIGHT_TYPE::kPoint) {
+  //    // Load shaders
+  //    graphicsApi.setShaderPrograms(pointSpecLightVS, pointSpecLightPS);
+  //
+  //
+  //    // Set light constant buffer
+  //    Vector3f lightPos = light->getPosition();
+  //    Color lightColor = light->getColor();
+  //    dirLightBufferData =
+  //    {
+  //      lightPos.x, lightPos.y, lightPos.z, light->getIntensity(),
+  //      lightColor.r, lightColor.g, lightColor.b, lightColor.a
+  //    };
+  //    m_dirLightBuffer->updateData(reinterpret_cast<Byte*>(dirLightBufferData.data()));
+  //    graphicsApi.setPSConstantBuffers({ m_dirLightBuffer }, 0u);
+  //  }
+  //
+  //
+  //  // Set textures
+  //  graphicsApi.setTextures({ m_GBufferPositionTexture,
+  //                            m_GBufferNormalTexture,
+  //                            m_tempSpecLightsTexture },
+  //                          0u);
+  //
+  //  
+  //  // Draw using a SAQ
+  //  graphicsApi.drawOnSAQ();
+  //  
+  //  
+  //  // Unbind buffers
+  //  graphicsApi.unsetRenderTargets();
+  //  graphicsApi.unsetVSConstantBuffers(1u, 0u);
+  //  graphicsApi.unsetPSConstantBuffers(1u, 0u);
+  //  graphicsApi.unsetTextures(3u, 0u);
+  //
+  //
+  //  //
+  //  // Copy
+  //  //
+  //
+  //  // Clear and set render targets
+  //  graphicsApi.clearRenderTargets({ m_tempSpecLightsTexture }, colorBlack);
+  //  graphicsApi.setRenderTargets({ m_tempSpecLightsTexture }, nullptr);
+  //
+  //
+  //  // Load shaders
+  //  graphicsApi.setShaderPrograms(copyVS, copyPS);
+  //
+  //
+  //  // Set textures
+  //  graphicsApi.setTextures({ m_specLightsTexture }, 0u);
+  //
+  //
+  //  // Draw using a SAQ
+  //  graphicsApi.drawOnSAQ();
+  //
+  //
+  //  // Unbind buffers
+  //  graphicsApi.unsetRenderTargets();
+  //  graphicsApi.unsetTextures(1u, 0u);
+  //}
+  //
+  //
+  ////
+  //// Final
+  ////
+  //
+  //// Clear and set render targets
+  //graphicsApi.clearRenderTargets({ m_lightTexture }, colorBlack);
+  //graphicsApi.setRenderTargets({ m_lightTexture }, nullptr);
+  //
+  //
+  //// Load shaders
+  //graphicsApi.setShaderPrograms(resourceManager.getResourceVertexShader("LightsVS"),
+  //                              resourceManager.getResourcePixelShader("LightsPS"));
+  //
+  //
+  //// Set textures
+  //graphicsApi.setTextures({ m_GBufferPositionTexture,
+  //                          m_GBufferColorTexture,
+  //                          m_GBufferNormalTexture,
+  //                          m_SSAOTexture,
+  //                          m_diffLightsTexture,
+  //                          m_specLightsTexture },
+  //                        0u);
+  //
+  //
+  //// Draw using a SAQ
+  //graphicsApi.drawOnSAQ();
+  //
+  //
+  //// Unbind buffers
+  //graphicsApi.unsetRenderTargets();
+  //graphicsApi.unsetTextures(6u, 0u);
+  //
+  //
+  ///* HDR Luminance */
+  //
+  //
+  //ViewportDesc vp(512.0f, 512.0f);
+  //graphicsApi.setViewports({ vp });
+  //
+  //// Clear and set render targets
+  //graphicsApi.setRenderTargets({ m_HDRLuminanceTexture }, nullptr);
+  //graphicsApi.clearRenderTargets({ m_HDRLuminanceTexture }, colorBlack);
+  //
+  //// Set constant buffers
+  //graphicsApi.setVSConstantBuffers
+  //({ m_viewportRectDataBuffer }, 0u );
+  //
+  //// Load shaders
+  //graphicsApi.setShaderPrograms(resourceManager.getResourceVertexShader("HDRLuminanceVS"),
+  //                              resourceManager.getResourcePixelShader("HDRLuminancePS"));
+  //
+  //
+  //// Set textures
+  ////graphicsApi.setTextures({ resourceManager.getResourceTexture("DefaultDiffuse") },
+  //graphicsApi.setTextures({ m_lightTexture },
+  //                        0u);
+  //
+  //
+  //// Draw using a SAQ
+  //m_samplerLinear->use();
+  //graphicsApi.drawOnSAQ();
+  //
+  //
+  //// Unbind buffers
+  //graphicsApi.unsetRenderTargets();
+  //graphicsApi.unsetVSConstantBuffers(1u, 0u);
+  //graphicsApi.unsetTextures(1u, 0u);
+  //
+  //
+  ///* Copy */
+  //
+  //vp.width = static_cast<float>(graphicsApi.getMainWindow()->getWidth());
+  //vp.height = static_cast<float>(graphicsApi.getMainWindow()->getHeight());
+  //graphicsApi.setViewports({ vp });
+  //
+  //// Set Back Buffer
+  //SPtr<Window> mainWin = graphicsApi.getMainWindow();
+  //graphicsApi.clearRenderTargets({ mainWin->getRenderTarget() }, colorBlack);
+  //graphicsApi.setRenderTargets({ mainWin->getRenderTarget() }, nullptr);
+  //
+  //
+  //// Load shaders
+  //graphicsApi.setShaderPrograms(copyVS, copyPS);
+  //
+  //
+  //// Set textures
+  //graphicsApi.setTextures({ m_lightTexture },
+  //                        0u);
+  //
+  //
+  //// Draw using a SAQ
+  //m_rasterizer2->use();
+  //graphicsApi.drawOnSAQ();
+  //
+  //
+  //// Unbind buffers
+  //graphicsApi.unsetRenderTargets();
+  //graphicsApi.unsetTextures(1u, 0u);
 }
 
 

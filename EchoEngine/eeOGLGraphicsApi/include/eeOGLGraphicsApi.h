@@ -114,12 +114,17 @@ class EE_PLUGINOGL_EXPORT OGLGraphicsApi : public GraphicsApi
    * The width of the window.
    * @param height
    * The height of the window.
+   * @param displayName
+   * The window display name.
    *
    * @return
    * Weather it succeed or failed to initialize.
    */
   bool
-  initializeScreen(void* callback, uint32 witdh, uint32 height) override;
+  initializeScreen(void* callback,
+                   uint32 witdh,
+                   uint32 height,
+                   const String& displayName) override;
 
   /**
    * @brief

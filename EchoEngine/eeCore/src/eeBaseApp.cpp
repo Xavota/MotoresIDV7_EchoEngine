@@ -12,6 +12,9 @@
 #include "eeResourceManager.h"
 #include "eeInput.h"
 #include "eeSceneManager.h"
+#include "eeInputManager.h"
+
+#include "eeLUAUtilities.h"
 
 namespace eeEngineSDK {
 int32
@@ -68,6 +71,15 @@ BaseApp::initSystems(void* callback)
   ResourceManager::startUp();
   SceneManager::startUp();
 
+  LUAUtilities luaUt;
+  luaUt.createState("System Configs");
+
+  luaUt.doFileInState("System Configs", "LUAScritps/PlatformConfigs.lua");
+  luaUt.stackFunctionInState("System Configs", "getWindowDisplayName");
+  luaUt.callStackedFunctionInState("System Configs", 0, 1);
+
+  String winDisplayName = luaUt.getStringFromState("System Configs", 1);
+
   
   DLLDynamics api;
   api.initialize(eeConfigurations::graphicsApi
@@ -85,7 +97,10 @@ BaseApp::initSystems(void* callback)
     if (!graphicsApi.initialize()) {
       return false;
     }
-    if (!graphicsApi.initializeScreen(callback, screenWidth, screenHeight)) {
+    if (!graphicsApi.initializeScreen(callback,
+                                      screenWidth,
+                                      screenHeight,
+                                      winDisplayName)) {
       return false;
     }
     
@@ -97,6 +112,21 @@ BaseApp::initSystems(void* callback)
     auto rendererInit = renderer.getFunction("initPlugin");
     if (rendererInit) {
       rendererInit();
+    }
+
+    
+    DLLDynamics inputManager;
+    inputManager.initialize(eeConfigurations::inputManagerName
+                          + eeConfigurations::platformConfigPrefix
+                          + eeConfigurations::dynamicLibSuffix);
+    
+    auto inputManagerInit = inputManager.getFunction("initPlugin");
+    if (inputManagerInit) {
+      inputManagerInit();
+    }
+    if (InputManager::isStarted()) {
+      InputManager::instance().init(Vector2i{static_cast<int32>(screenWidth),
+                                             static_cast<int32>(screenHeight)});
     }
   }
 

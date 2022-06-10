@@ -104,5 +104,8 @@ class ResourceManager;
 
 class InputManager;
 class InputDevice;
-struct InputDeviceEvent
+class GamepadDevice;
+class KeyboardDevice;
+class MouseDevice;
+struct InputDeviceEvent;
 }

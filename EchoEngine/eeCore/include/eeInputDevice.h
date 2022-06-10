@@ -17,7 +17,19 @@ namespace eeEngineSDK {
  * @brief
  * The input device class, to store the devices data.
  */
-class InputDevice
+namespace eINPUT_DEVICE_TYPE {
+enum E : int8 {
+  kNone = -1,
+  kKeyboard,
+  kMouse,
+  kGamepad
+};
+}
+/**
+ * @brief
+ * The input device class, to store the devices data.
+ */
+class EE_CORE_EXPORT InputDevice
 {
  public:
   /**
@@ -30,6 +42,22 @@ class InputDevice
    * Default destructor
    */
   ~InputDevice() = default;
+
+  /**
+   * @brief
+   * Gets the type of device.
+   *
+   * @description
+   * Returns the enum of the device type.
+   *
+   * @return
+   * The enum of the device type.
+   */
+  FORCEINLINE virtual int8
+  getDeviceType()
+  {
+    return eINPUT_DEVICE_TYPE::kNone;
+  }
 
   /**
    * @brief
@@ -63,7 +91,7 @@ class InputDevice
   virtual float
   getKeyValue(int8 keyCode);
 
- protected:
+// protected:
   /**
    * @brief
    * Sets if a key is pressed.
@@ -103,5 +131,9 @@ class InputDevice
    * Array of values for certain keys
    */
   Map<int8, float> m_keysValues;
+  /**
+   * The type of device it is
+   */
+  eINPUT_DEVICE_TYPE::E m_deviceType;
 };
 }

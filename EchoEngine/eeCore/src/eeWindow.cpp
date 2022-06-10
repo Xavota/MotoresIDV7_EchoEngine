@@ -5,12 +5,18 @@
 #include "eeTexture.h"
 
 namespace eeEngineSDK {
-Window::Window(void* callback, uint32 width, uint32 height)
+Window::Window(void* callback,
+               uint32 width,
+               uint32 height,
+               const String& displayName)
 {
-  initWindow(callback, width, height);
+  initWindow(callback, width, height, displayName);
 }
 bool
-Window::initWindow(void* /*callback*/, uint32 width, uint32 height)
+Window::initWindow(void* /*callback*/,
+                   uint32 width,
+                   uint32 height,
+                   const String& /*displayName*/)
 {
   m_width = width;
   m_height = height;

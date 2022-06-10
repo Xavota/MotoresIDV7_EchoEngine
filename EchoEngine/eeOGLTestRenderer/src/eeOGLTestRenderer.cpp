@@ -96,7 +96,7 @@ OGLTestRenderer::OGLTestRenderer()
                                       "TestTexture");
 }
 void
-OGLTestRenderer::onUpdate(float deltaTime)
+OGLTestRenderer::onUpdate(float /*deltaTime*/)
 {
   //m_testTexture->generateMipmaps();
 }
@@ -105,7 +105,7 @@ OGLTestRenderer::onRender()
 {
   auto& graphicsApi = GraphicsApi::instance();
   auto& resourceManager = ResourceManager::instance();
-  auto& sceneManager = SceneManager::instance();
+  //auto& sceneManager = SceneManager::instance();
 
   m_samLinear->use();
 

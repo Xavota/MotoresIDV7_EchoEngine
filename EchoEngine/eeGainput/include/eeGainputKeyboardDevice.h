@@ -18,7 +18,7 @@ namespace eeEngineSDK {
  * @brief
  * The keyboard device for the inputs api.
  */
-class GainputKeyboardDevice : public KeyboardDevice
+class EE_GAINPUT_EXPORT GainputKeyboardDevice : public KeyboardDevice
 {
  public:
   /**

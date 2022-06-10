@@ -10,8 +10,7 @@
 namespace eeEngineSDK {
 DLLDynamics::DLLDynamics(const String& dllPath)
 {
-  if (initialize(dllPath))
-  {
+  if (initialize(dllPath)) {
     m_dllInstance = nullptr;
   }
 }
@@ -19,7 +18,7 @@ bool
 DLLDynamics::initialize(const String& dllPath)
 {
 #if EE_PLATFORM == EE_PLATFORM_WIN32
-  m_dllInstance = reinterpret_cast<void*>(LoadLibrary(dllPath.c_str()));
+  m_dllInstance = reinterpret_cast<void*>(LoadLibraryEx(dllPath.c_str(), nullptr, LOAD_WITH_ALTERED_SEARCH_PATH));
 
   if (!m_dllInstance) {
     Logger::instance().ConsoleLog("Could not load Dll");
@@ -41,8 +40,8 @@ functionType
 DLLDynamics::getFunction(const String& functName)
 {
 #if EE_PLATFORM == EE_PLATFORM_WIN32
-  HMODULE hGetProcIDDLL = reinterpret_cast<HMODULE>(m_dllInstance);
-  functionType function =
+  auto hGetProcIDDLL = reinterpret_cast<HMODULE>(m_dllInstance);
+  auto function =
   reinterpret_cast<functionType>(GetProcAddress(hGetProcIDDLL,
                                                 functName.c_str()));
 
@@ -51,7 +50,7 @@ DLLDynamics::getFunction(const String& functName)
     return nullptr;
   }
 #else
-  foo function = (functionType)dlsym(m_dllInstance, "initPlugin");
+  functionType function = (functionType)dlsym(m_dllInstance, "initPlugin");
   if (!function()) {
     Logger::instance().ConsoleLog("Could not load function");
     return nullptr;
