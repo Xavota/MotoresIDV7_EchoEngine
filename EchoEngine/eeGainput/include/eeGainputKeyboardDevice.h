@@ -25,7 +25,7 @@ class EE_GAINPUT_EXPORT GainputKeyboardDevice : public KeyboardDevice
    * @brief
    * Default constructor
    */
-  GainputKeyboardDevice();
+  GainputKeyboardDevice() = default;
   /**
    * @brief
    * Default destructor

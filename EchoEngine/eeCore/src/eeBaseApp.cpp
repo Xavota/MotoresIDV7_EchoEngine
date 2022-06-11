@@ -145,6 +145,8 @@ BaseApp::update()
   auto& time = Time::instance();
   time.update();
 
+  InputManager::instance().update(time.getDeltaTime());
+
   onUpdate(time.getDeltaTime());
 
   Input::instance().update();

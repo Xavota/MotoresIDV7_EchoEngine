@@ -29,7 +29,7 @@ GaInputManager::init(Vector2i screenSize)
 void
 GaInputManager::update(float dt)
 {
-  m_manager.Update(static_cast<uint64>(dt) * 1000);
+  m_manager.Update();
 
   if (m_inputMap->GetBoolWasDown(0)) {
     m_devices[0]->setKeyPressed(eKEYBOARD_KEYS::kEnter, true);
