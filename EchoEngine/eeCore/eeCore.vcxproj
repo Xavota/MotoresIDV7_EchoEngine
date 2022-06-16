@@ -102,8 +102,9 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>EE_CORE_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;$(DEVLIBS)Boost;$(DEVLIBS)LUA/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;$(DEVLIBS)Boost;$(DEVLIBS)LUA/include;$(DEVLIBS)Sol/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -123,6 +124,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;$(DEVLIBS)Boost;$(DEVLIBS)LUA/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -140,8 +142,9 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>EE_CORE_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;$(DEVLIBS)Boost;$(DEVLIBS)LUA/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;$(DEVLIBS)Boost;$(DEVLIBS)LUA/include;$(DEVLIBS)Sol/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -161,6 +164,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;$(DEVLIBS)Boost;$(DEVLIBS)LUA/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -201,7 +205,6 @@
     <ClCompile Include="src\eeInputLayout.cpp" />
     <ClCompile Include="src\eeInputManager.cpp" />
     <ClCompile Include="src\eeKeyboardDevice.cpp" />
-    <ClCompile Include="src\eeLUAUtilities.cpp" />
     <ClCompile Include="src\eeMaterial.cpp" />
     <ClCompile Include="src\eeMesh.cpp" />
     <ClCompile Include="src\eeMouseDevice.cpp" />
@@ -254,7 +257,6 @@
     <ClInclude Include="include\eeInputLayout.h" />
     <ClInclude Include="include\eeInputManager.h" />
     <ClInclude Include="include\eeKeyboardDevice.h" />
-    <ClInclude Include="include\eeLUAUtilities.h" />
     <ClInclude Include="include\eeMaterial.h" />
     <ClInclude Include="include\eeMesh.h" />
     <ClInclude Include="include\eeMouseDevice.h" />

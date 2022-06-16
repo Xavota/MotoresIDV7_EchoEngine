@@ -204,7 +204,6 @@
     <ClInclude Include="include\eeCLight.h">
       <Filter>include\SceneGraph\Components</Filter>
     </ClInclude>
-    <ClInclude Include="include\eeLUAUtilities.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeBaseApp.cpp">
@@ -348,6 +347,5 @@
     <ClCompile Include="src\eeCLight.cpp">
       <Filter>src\SceneGraph\Components</Filter>
     </ClCompile>
-    <ClCompile Include="src\eeLUAUtilities.cpp" />
   </ItemGroup>
 </Project>

@@ -14,7 +14,9 @@
 #include "eeSceneManager.h"
 #include "eeInputManager.h"
 
-#include "eeLUAUtilities.h"
+//#include "eeLUAUtilities.h"
+
+#include <sol/sol.hpp>
 
 namespace eeEngineSDK {
 int32
@@ -71,15 +73,10 @@ BaseApp::initSystems(void* callback)
   ResourceManager::startUp();
   SceneManager::startUp();
 
-  LUAUtilities luaUt;
-  luaUt.createState("System Configs");
-
-  luaUt.doFileInState("System Configs", "LUAScritps/PlatformConfigs.lua");
-  luaUt.stackFunctionInState("System Configs", "getWindowDisplayName");
-  luaUt.callStackedFunctionInState("System Configs", 0, 1);
-
-  String winDisplayName = luaUt.getStringFromState("System Configs", 1);
-
+  sol::state lua;
+  lua.open_libraries(sol::lib::base);
+  lua.do_file("LUAScritps/PlatformConfigs.lua");
+  String winDisplayName = lua["getWindowDisplayName"]();
   
   DLLDynamics api;
   api.initialize(eeConfigurations::graphicsApi

@@ -1172,7 +1172,7 @@ BaseAppTest1::onInit()
 void
 BaseAppTest1::onUpdate(float deltaTime)
 {
-  auto& inputMan = Input::instance();
+  auto& inputMan = InputManager::instance();
   auto& sceneManager = SceneManager::instance();
 
 
@@ -1180,7 +1180,7 @@ BaseAppTest1::onUpdate(float deltaTime)
   EE_NO_EXIST_RETURN(scene);
 
   static String activePlayerName = "Player";
-  if (inputMan.getKeyboardInputPressed(eeEngineSDK::KEYBOARD_INPUT::kTab)) {
+  if (inputMan.getDevice(0)->isKeyPressed(eeEngineSDK::KEYBOARD_INPUT::kTab)) {
     if (scene->getActor(activePlayerName)
      && scene->getActor(activePlayerName)->getComponent<CCamera>()) {
       scene->getActor(activePlayerName)->getComponent<CCamera>()->setMain(false);
@@ -1218,62 +1218,60 @@ BaseAppTest1::onUpdate(float deltaTime)
     rot = trans->getRotation();
 
     Vector3f cameraMovement = Vector3f{ 0.0f, 0.0f, 0.0f };
-    if (inputMan.getKeyboardInputIsPressed(eeEngineSDK::KEYBOARD_INPUT::kW)) {
+    if (inputMan.getDevice(0)->isKeyPressed(eeEngineSDK::eKEYBOARD_KEYS::kW)) {
       cameraMovement += rot.getFrontVector();
+      Logger::instance().ConsoleLog("W");
     }
-    if (inputMan.getKeyboardInputIsPressed(eeEngineSDK::KEYBOARD_INPUT::kS)) {
+    if (inputMan.getDevice(0)->isKeyPressed(eeEngineSDK::eKEYBOARD_KEYS::kS)) {
       cameraMovement -= rot.getFrontVector();
+      Logger::instance().ConsoleLog("S");
     }
-    if (inputMan.getKeyboardInputIsPressed(eeEngineSDK::KEYBOARD_INPUT::kA)) {
+    if (inputMan.getDevice(0)->isKeyPressed(eeEngineSDK::eKEYBOARD_KEYS::kA)) {
       cameraMovement -= rot.getRightVector();
+      Logger::instance().ConsoleLog("A");
     }
-    if (inputMan.getKeyboardInputIsPressed(eeEngineSDK::KEYBOARD_INPUT::kD)) {
+    if (inputMan.getDevice(0)->isKeyPressed(eeEngineSDK::eKEYBOARD_KEYS::kD)) {
       cameraMovement += rot.getRightVector();
+      Logger::instance().ConsoleLog("D");
     }
-    if (inputMan.getKeyboardInputIsPressed(eeEngineSDK::KEYBOARD_INPUT::kQ)) {
+    if (inputMan.getDevice(0)->isKeyPressed(eeEngineSDK::eKEYBOARD_KEYS::kQ)) {
       cameraMovement += rot.getUpVector();
+      Logger::instance().ConsoleLog("Q");
     }
-    if (inputMan.getKeyboardInputIsPressed(eeEngineSDK::KEYBOARD_INPUT::kE)) {
+    if (inputMan.getDevice(0)->isKeyPressed(eeEngineSDK::eKEYBOARD_KEYS::kE)) {
       cameraMovement -= rot.getUpVector();
+      Logger::instance().ConsoleLog("E");
     }
-    trans->setPosition(trans->getPosition() +
-      cameraMovement * deltaTime * 10.0f);
+    trans->setPosition(trans->getPosition() + cameraMovement * deltaTime * 10.0f);
 
-    if (inputMan.getMouseClickInputIsPressed(
-                              eeEngineSDK::MOUSE_INPUT::kRightClick)) {
-      //auto rot2 = Quaternion(rot.getEuclidean() +
-      //                       Vector3f
-      //                       (
-      //                         inputMan.getMouseMovement().y *
-      //                         timeManager.getDeltaTime() *
-      //                         1.0f,
-      //                         inputMan.getMouseMovement().x *
-      //                         timeManager.getDeltaTime() *
-      //                         1.0f,
-      //                         0.0f
-      //                       ));
-      //trans->setRotation(rot2);
-      Vector2i mouseMove = inputMan.getMouseMovement();
-      Quaternion rot2 =
-      Quaternion::createFromAxisAngle(rot.getUpVector(),
-                                      mouseMove.x
-                                    * deltaTime
-                                    * 1.0f);
-      rot2 =
-      Quaternion::createFromAxisAngle(rot.getRightVector(),
-                                      mouseMove.y
-                                    * deltaTime
-                                    * 1.0f)
-                                    * rot2;
-      trans->setRotation(rot2 * rot);
-    }
-  }
-
-
-  if (InputManager::isStarted()
-   && InputManager::instance().getDevice(0)->
-   isKeyPressed(eeEngineSDK::eKEYBOARD_KEYS::kEnter)) {
-    Logger::instance().ConsoleLog("Presionado");
+    //if (inputMan.getMouseClickInputIsPressed(
+    //                          eeEngineSDK::MOUSE_INPUT::kRightClick)) {
+    //  //auto rot2 = Quaternion(rot.getEuclidean() +
+    //  //                       Vector3f
+    //  //                       (
+    //  //                         inputMan.getMouseMovement().y *
+    //  //                         timeManager.getDeltaTime() *
+    //  //                         1.0f,
+    //  //                         inputMan.getMouseMovement().x *
+    //  //                         timeManager.getDeltaTime() *
+    //  //                         1.0f,
+    //  //                         0.0f
+    //  //                       ));
+    //  //trans->setRotation(rot2);
+    //  Vector2i mouseMove = inputMan.getMouseMovement();
+    //  Quaternion rot2 =
+    //  Quaternion::createFromAxisAngle(rot.getUpVector(),
+    //                                  mouseMove.x
+    //                                * deltaTime
+    //                                * 1.0f);
+    //  rot2 =
+    //  Quaternion::createFromAxisAngle(rot.getRightVector(),
+    //                                  mouseMove.y
+    //                                * deltaTime
+    //                                * 1.0f)
+    //                                * rot2;
+    //  trans->setRotation(rot2 * rot);
+    //}
   }
 
 

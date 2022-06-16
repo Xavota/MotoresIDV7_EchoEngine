@@ -32,8 +32,11 @@ InputDevice::setKeyPressed(int8 keyCode, bool pressed)
       auto bitIndex = static_cast<Byte>(keyCode & 7);
 
       Byte opByte = (1 << bitIndex);
-      m_keysStates[byteIndex] =
-      (m_keysStates[byteIndex] & (!opByte)) | (opByte * (pressed ? 1 : 0));
+      Byte negOpByte = ~opByte;
+      Byte orOpByte = opByte * (pressed ? 1 : 0);
+
+      m_keysStates[byteIndex] &= negOpByte;
+      m_keysStates[byteIndex] |= orOpByte;
     }
   }
 }

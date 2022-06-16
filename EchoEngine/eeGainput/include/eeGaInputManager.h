@@ -123,5 +123,8 @@ class EE_GAINPUT_EXPORT GaInputManager : public InputManager
  private:
   gainput::InputManager m_manager;
   SPtr<gainput::InputMap> m_inputMap;
+
+  Map<uint32, Map<uint8, gainput::Key>> m_boolKeysMap;
+  Map<uint32, Map<uint8, gainput::Key>> m_floatKeysMap;
 };
 }
