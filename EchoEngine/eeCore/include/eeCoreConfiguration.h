@@ -17,6 +17,7 @@
 /*#define OGL//*/#define DX11
 #define DEFERRED_RENDERING//*/#define OGL_TEST_RENDERING
 #define GAINPUT
+#define FMOD
 
 namespace eeEngineSDK {
 namespace eeConfigurations {
@@ -63,12 +64,21 @@ const String rendererName;
 #endif
 
 /**
- * The current input manager pipeline.
+ * The current input manager plugin name.
  */
 #ifdef GAINPUT
 const String inputManagerName = "eeGainput";
 #else
 const String inputManagerName;
+#endif
+
+/**
+ * The current audio manager plugin name.
+ */
+#ifdef FMOD
+const String audioManagerName = "eeFModAudioApi";
+#else
+const String audioManagerName;
 #endif
 
 /**

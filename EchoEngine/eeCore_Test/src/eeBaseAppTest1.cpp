@@ -25,6 +25,7 @@
 #include <eeInput.h>
 #include <eeTime.h>
 #include <eeInputManager.h>
+#include <eeAudioManager.h>
 
 #include <eeScene.h>
 
@@ -42,6 +43,8 @@
 #include <eeColor.h>
 #include <eeImage.h>
 #include <eeMaterial.h>
+#include <eeSound.h>
+#include <eeAudio.h>
 
 #include <eeActor.h>
 #include <eeCAnimation.h>
@@ -96,6 +99,8 @@ using eeEngineSDK::Texture;
 using eeEngineSDK::ConstantBuffer;
 using eeEngineSDK::RasterizerState;
 using eeEngineSDK::SamplerState;
+using eeEngineSDK::Sound;
+using eeEngineSDK::Audio;
 
 using eeEngineSDK::Actor;
 using eeEngineSDK::Component;
@@ -116,6 +121,7 @@ using eeEngineSDK::CAMERA_PROJECTION_TYPE;
 using eeEngineSDK::MemoryManager;
 using eeEngineSDK::Time;
 using eeEngineSDK::InputManager;
+using eeEngineSDK::AudioManager;
 
 using eeEngineSDK::systemMSG;
 
@@ -1167,6 +1173,13 @@ BaseAppTest1::onInit()
 
 
   sceneManager.partitionScenes();
+
+
+
+  auto& audioMan = AudioManager::instance();
+  audioMan.createSound("Sounds/DeactivateLeverSound.wav", testSound);
+  audioMan.createAudio("Sounds/LITTLE MISS PERFECT.wav", testAudio);
+  audioMan.playAudio(testAudio);
 }
 
 void
@@ -1174,6 +1187,7 @@ BaseAppTest1::onUpdate(float deltaTime)
 {
   auto& inputMan = InputManager::instance();
   auto& sceneManager = SceneManager::instance();
+  auto& audioMan = AudioManager::instance();
 
 
   SPtr<Scene> scene = sceneManager.getScene("Main");
@@ -1243,6 +1257,10 @@ BaseAppTest1::onUpdate(float deltaTime)
       Logger::instance().ConsoleLog("E");
     }
     trans->setPosition(trans->getPosition() + cameraMovement * deltaTime * 10.0f);
+
+    if (inputMan.getDevice(0)->isKeyPressed(eeEngineSDK::eKEYBOARD_KEYS::kEnter)) {
+      audioMan.playSound(testSound);
+    }
 
     //if (inputMan.getMouseClickInputIsPressed(
     //                          eeEngineSDK::MOUSE_INPUT::kRightClick)) {

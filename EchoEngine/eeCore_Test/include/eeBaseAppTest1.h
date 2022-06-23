@@ -14,6 +14,9 @@
 
 using eeEngineSDK::BaseApp;
 using eeEngineSDK::int32;
+using eeEngineSDK::SPtr;
+using eeEngineSDK::Sound;
+using eeEngineSDK::Audio;
 
 /**
 * @brief
@@ -95,4 +98,6 @@ class BaseAppTest1 : public BaseApp
 
 
  private:
+  SPtr<Sound> testSound;
+  SPtr<Audio> testAudio;
 };

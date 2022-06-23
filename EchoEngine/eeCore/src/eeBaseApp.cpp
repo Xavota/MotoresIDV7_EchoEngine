@@ -13,6 +13,7 @@
 #include "eeInput.h"
 #include "eeSceneManager.h"
 #include "eeInputManager.h"
+#include "eeAudioManager.h"
 
 //#include "eeLUAUtilities.h"
 
@@ -125,6 +126,20 @@ BaseApp::initSystems(void* callback)
       InputManager::instance().init(Vector2i{static_cast<int32>(screenWidth),
                                              static_cast<int32>(screenHeight)});
     }
+
+    
+    DLLDynamics audioManager;
+    audioManager.initialize(eeConfigurations::audioManagerName
+                          + eeConfigurations::platformConfigPrefix
+                          + eeConfigurations::dynamicLibSuffix);
+    
+    auto audioManagerInit = audioManager.getFunction("initPlugin");
+    if (audioManagerInit) {
+      audioManagerInit();
+    }
+    if (AudioManager::isStarted()) {
+      AudioManager::instance().init(64);
+    }
   }
 
   return true;
@@ -143,6 +158,7 @@ BaseApp::update()
   time.update();
 
   InputManager::instance().update(time.getDeltaTime());
+  AudioManager::instance().update(time.getDeltaTime());
 
   onUpdate(time.getDeltaTime());
 

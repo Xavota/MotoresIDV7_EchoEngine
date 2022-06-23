@@ -51,5 +51,7 @@
 
 
 namespace eeEngineSDK {
-  class FModAudioManager;
+class FModAudioManager;
+class Audio;
+class Sound;
 }

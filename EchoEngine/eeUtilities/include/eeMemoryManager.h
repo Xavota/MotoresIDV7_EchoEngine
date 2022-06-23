@@ -108,7 +108,7 @@ template<typename T, typename... _Types>
 FORCEINLINE SPtr<T>
 MemoryManager::newPtr(_Types&&... _Args)
 {
-  return SPtr<T>(new T(std::forward<_Types>(_Args)...));
+  return SPtr<T>(new T(forward<_Types>(_Args)...));
 }
 template<typename T, typename U>
 FORCEINLINE SPtr<T>

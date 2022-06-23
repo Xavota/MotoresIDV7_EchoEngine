@@ -1,4 +1,4 @@
-#include "../eeUtilities/include/eePrerequisitesUtilities.h"
+#include <eePrerequisitesUtilities.h>
 
 #pragma warning(push)
 #pragma warning ( disable: 4389 )

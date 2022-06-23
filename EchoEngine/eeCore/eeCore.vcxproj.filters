@@ -49,6 +49,12 @@
     <Filter Include="src\Inputs">
       <UniqueIdentifier>{e838b8cb-8e4f-482f-8a60-e59e805dcdd7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Audio">
+      <UniqueIdentifier>{5f215e82-eda8-4b02-8b8d-1ec8ec221d11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Audio">
+      <UniqueIdentifier>{e6d07bd0-0abb-481c-905b-25e2e0308b44}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\eeCoreConfiguration.h">
@@ -106,9 +112,6 @@
       <Filter>include\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="include\eeDepthStencilState.h">
-      <Filter>include\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\eeUtilities\include\eeGraficsApi.h">
       <Filter>include\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="include\eeIndexBuffer.h">
@@ -204,6 +207,18 @@
     <ClInclude Include="include\eeCLight.h">
       <Filter>include\SceneGraph\Components</Filter>
     </ClInclude>
+    <ClInclude Include="include\eeAudio.h">
+      <Filter>include\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeAudioManager.h">
+      <Filter>include\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeSound.h">
+      <Filter>include\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeGraficsApi.h">
+      <Filter>include\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeBaseApp.cpp">
@@ -252,9 +267,6 @@
       <Filter>src\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\eeDepthStencilState.cpp">
-      <Filter>src\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\eeUtilities\src\eeGraficsApi.cpp">
       <Filter>src\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\eeIndexBuffer.cpp">
@@ -346,6 +358,18 @@
     </ClCompile>
     <ClCompile Include="src\eeCLight.cpp">
       <Filter>src\SceneGraph\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeAudio.cpp">
+      <Filter>src\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeAudioManager.cpp">
+      <Filter>src\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeSound.cpp">
+      <Filter>src\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeGraficsApi.cpp">
+      <Filter>src\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

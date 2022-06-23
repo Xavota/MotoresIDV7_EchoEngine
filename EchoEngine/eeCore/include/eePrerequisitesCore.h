@@ -87,6 +87,8 @@ class SkeletalMesh;
 class Animation;
 class Image;
 class Material;
+class Audio;
+class Sound;
 
 class SceneManager;
 class Scene;

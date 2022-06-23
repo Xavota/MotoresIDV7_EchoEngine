@@ -21,6 +21,7 @@
 #include <map>
 #include <memory>
 #include <cmath>
+#include <functional>
 #elif defined(BOOST)
 #include <boost/container/vector.hpp>
 #include <boost/container/flat_map.hpp>
@@ -29,6 +30,7 @@
 #include <boost/enable_shared_from_this.hpp>
 //#include <boost/filesystem/fstream.hpp>
 //#include <boost/iostreams/>
+#include <boost/function.hpp>
 #endif
 
 #include <fstream>
@@ -45,10 +47,12 @@ using std::vector;
 using std::map;
 //using std::pair;
 using std::shared_ptr;
+using std::weak_ptr;
 using std::enable_shared_from_this;
 //using std::fstream;
 //using std::ifstream;
 //using std::ofstream;
+using std::function;
 
 /*
  * @brief Dynamic Array of objects
@@ -70,6 +74,8 @@ using Map = map<T, U>;
  */
 template<typename T>
 using SPtr = shared_ptr<T>;
+template<typename T>
+using WPtr = weak_ptr<T>;
 /*
  * @brief For parenting on smart pointer use. Enable getting a SPtr from 'this'.
  */
@@ -88,15 +94,20 @@ using EnableSPtrFromThis = enable_shared_from_this<T>;
 // * @brief Output file stream
 // */
 //using OFStream = ofstream;
+
+template<class FType>
+using Function = function<FType>;
 #elif defined(BOOST)
 using boost::container::vector;
 using boost::container::flat_map;
 //using boost::compressed_pair;
 using boost::shared_ptr;
+using boost::weak_ptr;
 using boost::enable_shared_from_this;
 //using boost::filesystem::basic_fstream;
 //using boost::filesystem::basic_ifstream;
 //using boost::filesystem::basic_ofstream;
+using boost:function;
 
 /*
  * @brief Dynamic Array of objects
@@ -118,6 +129,8 @@ using Map = flat_map<T, U>;
  */
 template<typename T>
 using SPtr = shared_ptr<T>;
+template<typename T>
+using WPtr = weak_ptr<T>;
 /*
  * @brief For parenting on smart pointer use. Enable getting a SPtr from 'this'.
  */
@@ -136,6 +149,9 @@ using EnableSPtrFromThis = enable_shared_from_this<T>;
 // * @brief Output file stream
 // */
 //using OFStream = basic_ofstream;
+
+template<class RetType, class... Args>
+using Function = function<RetType(Args)>;
 #endif
 
 using std::pair;
