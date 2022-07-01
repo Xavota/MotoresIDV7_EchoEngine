@@ -1139,6 +1139,16 @@ public:
    * 180 divided by pi.
    */
   static const float k180_OVER_PI;
+  /**
+   * @brief
+   * Pi times 2.
+   */
+  static const float k2_PI;
+  /**
+   * @brief
+   * Pi over 2.
+   */
+  static const float kPI_OVER_2;
 
   /**
    * @brief
@@ -1154,34 +1164,29 @@ public:
   static const float kFLOAT_EQUAL_SMALL_DIFFERENCE;
   /**
    * @brief
-   * A small float.
-   */
-  static const float kSMALL_FLOAT;
-  /**
-   * @brief
-   * A big float.
-   */
-  static const float kBIG_FLOAT;
-  /**
-   * @brief
    * The maximum float possible.
    */
   static const float kMAX_FLOAT;
   /**
    * @brief
+   * The minimum float possible.
+   */
+  static const float kMIN_FLOAT;
+  /**
+   * @brief
    * The minimum integer of 32 bits possible.
    */
-  static const int32 kSMALL_INT;
+  static const int32 kMIN_INT;
   /**
    * @brief
    * The maximum integer of 32 bits possible.
    */
-  static const int32 kBIG_INT;
+  static const int32 kMAX_INT;
   /**
    * @brief
    * The maximum integer of 32 bits possible.
    */
-  static const uint32 kBIG_UINT;
+  static const uint32 kMAX_UINT;
 };
 
 

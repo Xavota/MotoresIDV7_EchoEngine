@@ -84,6 +84,8 @@ FModAudioManager::update(float deltaTime)
   for (auto& dai : deleteAudiosIndices) {
     m_playingSounds.erase(m_playingSounds.begin() + dai);  
   }
+
+  m_fmodSystem->update();
 }
 
 bool
@@ -114,7 +116,7 @@ FModAudioManager::createAudio(const String& audioFilePath,
   MemoryManager::instance().reinterpretPtr<FModAudio>(outAudioPtr);
 
   FMOD_RESULT r = m_fmodSystem->createStream(audioFilePath.c_str(),
-                                             FMOD_INIT_NORMAL | FMOD_2D,
+                                             FMOD_CREATESTREAM,
                                              0,
                                              &fmodAudio->soundResource);
   FMOD_ERROR_CHECK(r);

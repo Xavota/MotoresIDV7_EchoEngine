@@ -9,6 +9,7 @@
 #include <eeMemoryManager.h>
 #include <eeMath.h>
 
+#include <eeFile.h>
 #include <eeVertex.h>
 
 #include "eeMesh.h"
@@ -1008,5 +1009,13 @@ Map<String, SPtr<PixelShader>>
 ResourceManager::getAllPixelShaderResources()
 {
   return m_pixelShaders;
+}
+
+
+bool
+ResourceManager::serializeTexture(const String& resourceName,
+                                  File& fileToSave)
+{
+  return false;
 }
 }

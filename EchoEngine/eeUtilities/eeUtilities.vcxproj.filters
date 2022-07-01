@@ -51,9 +51,6 @@
     <ClInclude Include="include\eeQuaternion.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\eeModule.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\eePlatformDefines.h">
       <Filter>include\Platform</Filter>
     </ClInclude>
@@ -69,9 +66,6 @@
     <ClInclude Include="include\eeMath.h">
       <Filter>include\Platform</Filter>
     </ClInclude>
-    <ClInclude Include="include\eePlatformMath.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\eeDLLDynamics.h">
       <Filter>include\Platform</Filter>
     </ClInclude>
@@ -82,9 +76,6 @@
       <Filter>include\Platform</Filter>
     </ClInclude>
     <ClInclude Include="include\eeColor.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\eeFile.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\eeStringUtilities.h">
@@ -99,15 +90,23 @@
     <ClInclude Include="include\eeTime.h">
       <Filter>include\Platform</Filter>
     </ClInclude>
-    <ClInclude Include="include\eeTriangle.h" />
     <ClInclude Include="include\eeVertex.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeFile.h">
+      <Filter>include\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeModule.h">
+      <Filter>include\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eePlatformMath.h">
+      <Filter>include\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeTriangle.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\eePlatformMath.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\eeVector2.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -135,9 +134,6 @@
     <ClCompile Include="src\eeBox.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\eePlatformMathIndependent.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\eeCapsule.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -159,9 +155,6 @@
     <ClCompile Include="src\eeColor.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\eeFile.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\eeStringUtilities.cpp">
       <Filter>src\Platform</Filter>
     </ClCompile>
@@ -174,6 +167,17 @@
     <ClCompile Include="src\eeTime.cpp">
       <Filter>src\Platform</Filter>
     </ClCompile>
-    <ClCompile Include="src\eeTriangle.cpp" />
+    <ClCompile Include="src\eeFile.cpp">
+      <Filter>src\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eePlatformMath.cpp">
+      <Filter>src\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eePlatformMathIndependent.cpp">
+      <Filter>src\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeTriangle.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

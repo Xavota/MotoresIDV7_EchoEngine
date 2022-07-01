@@ -102,7 +102,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>EE_CORE_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;$(DEVLIBS)Boost;$(DEVLIBS)LUA/include;$(DEVLIBS)Sol/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities/include;$(DEVLIBS)Assimp/include;$(DEVLIBS)Boost;$(DEVLIBS)LUA/include;$(DEVLIBS)Sol/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -122,7 +122,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>EE_CORE_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;$(DEVLIBS)Boost;$(DEVLIBS)LUA/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities/include;$(DEVLIBS)Assimp/include;$(DEVLIBS)Boost;$(DEVLIBS)LUA/include;$(DEVLIBS)Sol/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -142,7 +142,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>EE_CORE_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;$(DEVLIBS)Boost;$(DEVLIBS)LUA/include;$(DEVLIBS)Sol/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities/include;$(DEVLIBS)Assimp/include;$(DEVLIBS)Boost;$(DEVLIBS)LUA/include;$(DEVLIBS)Sol/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -162,7 +162,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>EE_CORE_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities\include;$(DEVLIBS)Assimp/include;$(DEVLIBS)Boost;$(DEVLIBS)LUA/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)eeUtilities/include;$(DEVLIBS)Assimp/include;$(DEVLIBS)Boost;$(DEVLIBS)LUA/include;$(DEVLIBS)Sol/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>

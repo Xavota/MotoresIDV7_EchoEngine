@@ -25,9 +25,9 @@
     <ClInclude Include="include\eePrerequisitesFMod.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\eeFModAudio.cpp" />
-    <ClCompile Include="source\eeFModAudioManager.cpp" />
-    <ClCompile Include="source\eeFModSound.cpp" />
+    <ClCompile Include="src\eeFModAudio.cpp" />
+    <ClCompile Include="src\eeFModAudioManager.cpp" />
+    <ClCompile Include="src\eeFModSound.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

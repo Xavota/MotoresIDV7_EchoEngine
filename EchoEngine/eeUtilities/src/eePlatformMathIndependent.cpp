@@ -9,19 +9,20 @@
 
 namespace eeEngineSDK
 {
-const float PlatformMath::kPI = 3.14159265f;
-const float PlatformMath::kPI_OVER_180 = 0.01745329f;
-const float PlatformMath::k180_OVER_PI = 57.29577951f;
+const float PlatformMath::kPI = atan(1.0f) * 4;
+const float PlatformMath::kPI_OVER_180 = PlatformMath::kPI / 180.0f;
+const float PlatformMath::k180_OVER_PI = 180 / PlatformMath::kPI;
+const float PlatformMath::k2_PI = PlatformMath::kPI * 2.0f;
+const float PlatformMath::kPI_OVER_2 = PlatformMath::kPI / 2.0f;
 
-const float PlatformMath::kEuler = 2.71828183f;
+const float PlatformMath::kEuler = std::expf(1);
 
 const float PlatformMath::kFLOAT_EQUAL_SMALL_DIFFERENCE = 0.001f;
-const float PlatformMath::kSMALL_FLOAT = -999999.0f;
-const float PlatformMath::kBIG_FLOAT = 999999.0f;
-const float PlatformMath::kMAX_FLOAT = 3.402823466e+38f;
-const int32 PlatformMath::kSMALL_INT = -2147483648;
-const int32 PlatformMath::kBIG_INT = 2147483647;
-const uint32 PlatformMath::kBIG_UINT = 4294967295u;
+const float PlatformMath::kMAX_FLOAT = std::numeric_limits<float>::max();
+const float PlatformMath::kMIN_FLOAT = std::numeric_limits<float>::min();
+const int32 PlatformMath::kMIN_INT = std::numeric_limits<int32>::min();
+const int32 PlatformMath::kMAX_INT = std::numeric_limits<int32>::max();
+const uint32 PlatformMath::kMAX_UINT = std::numeric_limits<uint32>::max();
 
 
 float 

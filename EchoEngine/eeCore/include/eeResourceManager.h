@@ -515,6 +515,19 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
   getAllPixelShaderResources();
 
 
+  /**
+   * @brief
+   * Gets all pixel shaders.
+   *
+   * @description
+   * Gets all stored pixel shaders.
+   *
+   * @return
+   * All stored pixel shaders.
+   */
+  bool
+  serializeTexture(const String& resourceName, File& fileToSave);
+
 
  private:
   /**

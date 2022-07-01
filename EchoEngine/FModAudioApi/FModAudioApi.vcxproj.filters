@@ -19,14 +19,22 @@
     <ClInclude Include="include\eePrerequisitesFMod.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\eeFModSound.h" />
-    <ClInclude Include="include\eeFModAudio.h" />
+    <ClInclude Include="include\eeFModAudio.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeFModSound.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\eeFModAudioManager.cpp">
+    <ClCompile Include="src\eeFModAudio.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="source\eeFModSound.cpp" />
-    <ClCompile Include="source\eeFModAudio.cpp" />
+    <ClCompile Include="src\eeFModAudioManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeFModSound.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

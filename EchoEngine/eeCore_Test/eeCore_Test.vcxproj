@@ -104,6 +104,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>./include/;$(SolutionDir)eeCore/include;$(SolutionDir)eeUtilities/include;$(DEVLIBS)imgui;$(DEVLIBS)imgui/backends;$(SolutionDir)DX11GraphicsApi/include;$(DEVLIBS)Boost;%(AdditionalIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -123,6 +124,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>./include/;$(SolutionDir)eeCore/include;$(SolutionDir)eeUtilities/include;$(DEVLIBS)imgui;$(DEVLIBS)imgui/backends;$(SolutionDir)DX11GraphicsApi/include;$(DEVLIBS)Boost;%(AdditionalIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -143,6 +145,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>./include/;$(SolutionDir)eeCore/include;$(SolutionDir)eeUtilities/include;$(DEVLIBS)imgui;$(DEVLIBS)imgui/backends;$(SolutionDir)DX11GraphicsApi/include;$(DEVLIBS)Boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -162,6 +165,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>./include/;$(SolutionDir)eeCore/include;$(SolutionDir)eeUtilities/include;$(DEVLIBS)imgui;$(DEVLIBS)imgui/backends;$(SolutionDir)DX11GraphicsApi/include;$(DEVLIBS)Boost;%(AdditionalIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
