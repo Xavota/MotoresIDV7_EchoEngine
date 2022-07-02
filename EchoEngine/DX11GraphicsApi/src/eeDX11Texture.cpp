@@ -30,10 +30,6 @@ DX11Texture::create2D(uint32 bindFlags,
                       eTEXTURE_FORMAT::E format,
                       uint32 mipLevels)
 {
-  if (format == eTEXTURE_FORMAT::kNone) {
-    format = eTEXTURE_FORMAT::kUnknown;
-  }
-
   const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 

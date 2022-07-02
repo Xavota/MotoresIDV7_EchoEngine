@@ -13,7 +13,7 @@
  /************************************************************************/
 
 #pragma once
-#include "eePrerequisitesCore.h"
+#include "eePrerequisitesFMod.h"
 #include <eeSound.h>
 
 #include <fmod.hpp>
@@ -25,7 +25,7 @@ namespace eeEngineSDK {
  * playing it.It's used by the Audio manager to play it with the other sounds
  * and audios.
  */
-class FModSound : public Sound
+class EE_FMOD_EXPORT FModSound : public Sound
 {
  public:
   /**

@@ -18,7 +18,7 @@ class FModAudio
  /************************************************************************/
 
 #pragma once
-#include "eePrerequisitesCore.h"
+#include "eePrerequisitesFMod.h"
 #include <eeAudio.h>
 
 #include <fmod.hpp>
@@ -30,7 +30,7 @@ namespace eeEngineSDK {
  * while playing in a loop. It's used by the Audio manager to play it with the
  * other sounds and audios.
  */
-class FModAudio : public Audio
+class EE_FMOD_EXPORT FModAudio : public Audio
 {
  public:
   /**

@@ -22,7 +22,7 @@ namespace eeEngineSDK {
  * while playing in a loop. It's used by the Audio manager to play it with the
  * other sounds and audios.
  */
-class Audio
+class EE_CORE_EXPORT Audio
 {
 public:
   /**
