@@ -196,9 +196,11 @@
     <ClCompile Include="src\eeCSkeletalMesh.cpp" />
     <ClCompile Include="src\eeCTransform.cpp" />
     <ClCompile Include="src\eeDepthStencilState.cpp" />
+    <ClCompile Include="src\eeDomainShader.cpp" />
     <ClCompile Include="src\eeEvent.cpp" />
     <ClCompile Include="src\eeGamepadDevice.cpp" />
     <ClCompile Include="src\eeGraficsApi.cpp" />
+    <ClCompile Include="src\eeHullShader.cpp" />
     <ClCompile Include="src\eeImage.cpp" />
     <ClCompile Include="src\eeIndexBuffer.cpp" />
     <ClCompile Include="src\eeInput.cpp" />
@@ -251,9 +253,11 @@
     <ClInclude Include="include\eeCSkeletalMesh.h" />
     <ClInclude Include="include\eeCTransform.h" />
     <ClInclude Include="include\eeDepthStencilState.h" />
+    <ClInclude Include="include\eeDomainShader.h" />
     <ClInclude Include="include\eeEvent.h" />
     <ClInclude Include="include\eeGamepadDevice.h" />
     <ClInclude Include="include\eeGraficsApi.h" />
+    <ClInclude Include="include\eeHullShader.h" />
     <ClInclude Include="include\eeImage.h" />
     <ClInclude Include="include\eeIndexBuffer.h" />
     <ClInclude Include="include\eeInput.h" />

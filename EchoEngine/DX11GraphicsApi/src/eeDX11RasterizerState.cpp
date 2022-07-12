@@ -15,7 +15,8 @@ DX11RasterizerState::~DX11RasterizerState()
 bool
 DX11RasterizerState::create(eFILL_MODE::E fillMode,
                             eCULL_MODE::E cullMode,
-                            bool frontCounterClockwise)
+                            bool frontCounterClockwise,
+                            bool depthClipEnable)
 {
   const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
@@ -25,6 +26,7 @@ DX11RasterizerState::create(eFILL_MODE::E fillMode,
   rasDesc.CullMode = static_cast<D3D11_CULL_MODE>(cullMode);
   rasDesc.FillMode = static_cast<D3D11_FILL_MODE>(fillMode);
   rasDesc.FrontCounterClockwise = frontCounterClockwise;
+  rasDesc.DepthClipEnable = depthClipEnable;
 
   HRESULT hr = basics->m_device->CreateRasterizerState(&rasDesc, &m_rasterizer);
   if (FAILED(hr)) {

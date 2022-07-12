@@ -68,8 +68,10 @@ class DepthStencilState;
 class SamplerState;
 class RasterizerState;
 
-class PixelShader;
 class VertexShader;
+class PixelShader;
+class HullShader;
+class DomainShader;
 class InputLayout;
 
 class GraphicsApi;

@@ -1,37 +1,40 @@
 /************************************************************************/
 /**
- * @file eeDX11PixelShader.h
+ * @file eeDX11HullShader.h
  * @author Diego Castellanos
- * @date 22/10/21
+ * @date 04/07/22
  * @brief
- * The pixel shader for the graphic memory to paint every pixel.
+ * The shader that creates and sends the control points from the vertex, to the
+ * domain shader.
  *
  * @bug Not bug Known.
  */
-/************************************************************************/
+ /************************************************************************/
 
 #pragma once
 #include "eePrerequisitesDX11.h"
-#include <eePixelShader.h>
+#include <eeHullShader.h>
 
 namespace eeEngineSDK {
 /**
  * @brief
- * The pixel shader for the graphic memory to paint every pixel.
+ * The shader that creates and sends the control points from the vertex, to the
+ * domain shader.
  */
-class EE_PLUGINDX11_EXPORT DX11PixelShader : public PixelShader
+class EE_PLUGINDX11_EXPORT DX11HullShader : public HullShader
 {
  public:
   /**
    * @brief
    * Default constructor
    */
-  DX11PixelShader() = default;
+  DX11HullShader() = default;
   /**
    * @brief
    * Default destructor
    */
-  ~DX11PixelShader();
+  virtual
+  ~DX11HullShader() = default;
 
   /**
    * @brief
@@ -97,10 +100,10 @@ class EE_PLUGINDX11_EXPORT DX11PixelShader : public PixelShader
   void
   release() override;
 
-private:
+ private:
   /**
-   * The DX11 pixel shader.
+   * The DX11 hull shader.
    */
-  ID3D11PixelShader* m_shader = nullptr;
+  ID3D11HullShader* m_shader = nullptr;
 };
 }

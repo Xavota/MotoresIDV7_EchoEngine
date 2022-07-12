@@ -23,6 +23,8 @@
 #include "eeTexture.h"
 #include "eeVertexShader.h"
 #include "eePixelShader.h"
+#include "eeHullShader.h"
+#include "eeDomainShader.h"
 #include "eeVertexBuffer.h"
 #include "eeIndexBuffer.h"
 #include "eeConstantBuffer.h"
@@ -274,6 +276,68 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
 
   /**
    * @brief
+   * Sets the buffers given.
+   *
+   * @description
+   * Sets several buffers for the hull shader.
+   *
+   * @param buffers
+   * The vector of buffers to set.
+   * @param startSlot
+   * The first index for the buffers indices.
+   */
+  virtual void
+  setHSConstantBuffers(Vector<SPtr<ConstantBuffer>> /*buffers*/,
+                       uint32 /*startSlot*/) {}
+
+  /**
+   * @brief
+   * Unset the buffers on the hull shader.
+   *
+   * @description
+   * Sets nullptr buffers on the hull shader.
+   *
+   * @param buffersCount
+   * The number of buffers to unset.
+   * @param startSlot
+   * The first index for the buffers indices.
+   */
+  virtual void
+  unsetHSConstantBuffers(uint32 /*buffersCount*/, uint32 /*startSlot*/) {}
+
+  /**
+   * @brief
+   * Sets the buffers given.
+   *
+   * @description
+   * Sets several buffers for the domain shader.
+   *
+   * @param buffers
+   * The vector of buffers to set.
+   * @param startSlot
+   * The first index for the buffers indices.
+   */
+  virtual void
+  setDSConstantBuffers(Vector<SPtr<ConstantBuffer>> /*buffers*/,
+                       uint32 /*startSlot*/) {}
+
+  /**
+   * @brief
+   * Unset the buffers on the domain shader.
+   *
+   * @description
+   * Sets nullptr buffers on the domain shader.
+   *
+   * @param buffersCount
+   * The number of buffers to unset.
+   * @param startSlot
+   * The first index for the buffers indices.
+   */
+  virtual void
+  unsetDSConstantBuffers(uint32 /*buffersCount*/, uint32 /*startSlot*/) {}
+
+  /**
+   * @brief
    * Sets the vertex buffers given.
    *
    * @description
@@ -368,11 +432,17 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    *
    * @param vertexShader
    * The vertex shader to set.
+   * @param hullShader
+   * The hull shader to set.
+   * @param domainShader
+   * The domain shader to set.
    * @param pixelShader
    * The pixel shader to set.
    */
   virtual void
   setShaderPrograms(SPtr<VertexShader> vertexShader,
+                    SPtr<HullShader> hullShader,
+                    SPtr<DomainShader> domainShader,
                     SPtr<PixelShader> pixelShader) {}
 
   /**
@@ -397,6 +467,18 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    */
   virtual void
   drawMesh(const Mesh& meshToDraw);
+  /**
+   * @brief
+   * Draws a mesh.
+   *
+   * @description
+   * Draws the given mesh as control points.
+   *
+   * @param meshToDraw
+   * The mesh to draw.
+   */
+  virtual void
+  drawMeshControlPoints(const Mesh& meshToDraw);
   /**
    * @brief
    * Draws a mesh.
@@ -502,6 +584,38 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
   createPixelShaderPtr() const
   {
     return MemoryManager::instance().newPtr<PixelShader>();
+  }
+
+  /**
+   * @brief
+   * Gets the specific hull shader pointer.
+   *
+   * @description
+   * Returns a pointer to a hull shader depending on the api.
+   *
+   * @return
+   * The pointer to a hull shader depending on the api.
+   */
+  FORCEINLINE virtual SPtr<HullShader>
+  createHullShaderPtr() const
+  {
+    return MemoryManager::instance().newPtr<HullShader>();
+  }
+
+  /**
+   * @brief
+   * Gets the specific hull shader pointer.
+   *
+   * @description
+   * Returns a pointer to a hull shader depending on the api.
+   *
+   * @return
+   * The pointer to a hull shader depending on the api.
+   */
+  FORCEINLINE virtual SPtr<DomainShader>
+  createDomainShaderPtr() const
+  {
+    return MemoryManager::instance().newPtr<DomainShader>();
   }
 
   /**
@@ -652,6 +766,18 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    */
   virtual void
   drawIndexed(uint32 /*indicesCount*/) const {}
+  /**
+   * @brief
+   * Does the draw call.
+   *
+   * @description
+   * Makes the draw call for the specific api.
+   *
+   * @param verticesCount
+   * The number of vertices to be drawn.
+   */
+  virtual void
+  drawNoIndexed(uint32 /*verticesCount*/) const {};
 
 
 

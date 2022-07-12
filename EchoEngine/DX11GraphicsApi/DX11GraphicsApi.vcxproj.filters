@@ -52,6 +52,8 @@
     <ClInclude Include="include\eeDX11Window.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\eeDX11DomainShader.h" />
+    <ClInclude Include="include\eeDX11HullShader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeDX11Texture.cpp">
@@ -90,5 +92,7 @@
     <ClCompile Include="src\eeDX11Window.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\eeDX11DomainShader.cpp" />
+    <ClCompile Include="src\eeDX11HullShader.cpp" />
   </ItemGroup>
 </Project>

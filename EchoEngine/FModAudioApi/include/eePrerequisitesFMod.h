@@ -21,7 +21,7 @@
 #if EE_PLATFORM == EE_PLATFORM_WIN32
 # if EE_COMPILER == EE_COMPILER_MSVC
 #   if defined( EE_STATIC_lib )
-#     define EE_PLUGINFMOD_EXPORT
+#     define EE_PLUGINFMOD_EXPORT 
 #   else
 #     if defined ( EE_FMOD_AUDIO_API_EXPORTS )
 #       define EE_FMOD_EXPORT __declspec( dllexport )

@@ -380,11 +380,17 @@ class EE_PLUGINOGL_EXPORT OGLGraphicsApi : public GraphicsApi
    *
    * @param vertexShader
    * The vertex shader to set.
+   * @param hullShader
+   * The hull shader to set.
+   * @param domainShader
+   * The domain shader to set.
    * @param pixelShader
    * The pixel shader to set.
    */
   void
   setShaderPrograms(SPtr<VertexShader> vertexShader,
+                    SPtr<HullShader> hullShader,
+                    SPtr<DomainShader> domainShader,
                     SPtr<PixelShader> pixelShader) override;
 
   /**

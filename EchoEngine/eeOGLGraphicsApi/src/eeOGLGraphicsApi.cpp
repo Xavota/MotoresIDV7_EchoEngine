@@ -172,6 +172,8 @@ OGLGraphicsApi::setPrimitiveTopology(ePRIMITIVE_TOPOLOGY::E topology)
 }
 void
 OGLGraphicsApi::setShaderPrograms(SPtr<VertexShader> vertexShader,
+                                  SPtr<HullShader> hullShader,
+                                  SPtr<DomainShader> domainShader,
                                   SPtr<PixelShader> pixelShader)
 {
   auto& memoryMan = MemoryManager::instance();

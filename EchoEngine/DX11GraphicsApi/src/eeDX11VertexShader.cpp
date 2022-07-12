@@ -14,7 +14,9 @@ DX11VertexShader::~DX11VertexShader()
 }
 
 bool 
-DX11VertexShader::compileFromFile(const String& fileName)
+DX11VertexShader::compileFromFile(const String& fileName,
+                                  const String& functionName,
+                                  const Vector<ShaderMacro>& macroDefinitions)
 {
   const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
@@ -34,10 +36,19 @@ DX11VertexShader::compileFromFile(const String& fileName)
   ID3DBlob* pVSBlob = nullptr;
   ID3DBlob* pErrorBlob = nullptr;
 
+  auto shaderMacros = new D3D_SHADER_MACRO[macroDefinitions.size() + 1];
+  int32 index = 0;
+  for (auto& macro : macroDefinitions) {
+    shaderMacros[index].Name = macro.Name.c_str();
+    shaderMacros[index].Definition = macro.Definition.c_str();
+    ++index;
+  }
+  shaderMacros[index].Name = nullptr;
+  shaderMacros[index].Definition = nullptr;
   hr = D3DX11CompileFromFile(fileName.c_str(),
+                             shaderMacros,
                              nullptr,
-                             nullptr,
-                             "main",
+                             functionName.c_str(),
                              "vs_4_0",
                              dwShaderFlags,
                              0,
@@ -84,7 +95,9 @@ DX11VertexShader::compileFromFile(const String& fileName)
 }
 
 bool 
-DX11VertexShader::compileFromString(const String& /*shaderString*/)
+DX11VertexShader::compileFromString(const String& /*shaderString*/,
+                                    const String& /*functionName*/,
+                                    const Vector<ShaderMacro>& /*macroDefinitions*/)
 {
   return false;
 }

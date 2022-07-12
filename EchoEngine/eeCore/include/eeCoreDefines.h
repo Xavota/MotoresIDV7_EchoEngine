@@ -158,7 +158,8 @@ enum E
   kLinelistADJ = 10,
   kLinestripADJ = 11,
   kTrienglelistADJ = 12,
-  kTrianglestripADJ = 13
+  kTrianglestripADJ = 13,
+  ControlPontPatchlist16 = 48,
 }; 
 }
 
@@ -263,138 +264,147 @@ enum E
  * @brief
  * Keyboard keys.
  */
-namespace eKEYBOARD_KEYS {
+namespace eBUTTONS_KEYS {
 enum E : int8
 {
   kUnknown = -1,
-  kA = 0,
-  kB,
-  kC,
-  kD,
-  kE,
-  kF,
-  kG,
-  kH,
-  kI,
-  kJ,
-  kK,
-  kL,
-  kM,
-  kN,
-  kO,
-  kP,
-  kQ,
-  kR,
-  kS,
-  kT,
-  kU,
-  kV,
-  kW,
-  kX,
-  kY,
-  kZ,
-  kNum0,
-  kNum1,
-  kNum2,
-  kNum3,
-  kNum4,
-  kNum5,
-  kNum6,
-  kNum7,
-  kNum8,
-  kNum9,
-  kEscape,
-  kLControl,
-  kLShift,
-  kLAlt,
-  kRControl,
-  kRShift,
-  kRAlt,
-  kMenu,
-  kLBracket,
-  kRBracket,
-  kSemicolon,
-  kComma,
-  kPeriod,
-  kQuote,
-  kSlash,
-  kBackslash,
-  kTilde,
-  kEqual,
-  kHyphen,
-  kSpace,
-  kEnter,
-  kBackspace,
-  kTab,
-  kPageUp,
-  kPageDown,
-  kEnd,
-  kHome,
-  kInsert,
-  kDelete,
-  kAdd,
-  kSubtract,
-  kMultiply,
-  kDivide,
-  kLeft,
-  kRight,
-  kUp,
-  kDown,
-  kNumpad0,
-  kNumpad1,
-  kNumpad2,
-  kNumpad3,
-  kNumpad4,
-  kNumpad5,
-  kNumpad6,
-  kNumpad7,
-  kNumpad8,
-  kNumpad9,
-  kF1,
-  kF2,
-  kF3,
-  kF4,
-  kF5,
-  kF6,
-  kF7,
-  kF8,
-  kF9,
-  kF10,
-  kF11,
-  kF12,
-  kF13,
-  kF14,
-  kF15,
-  kPause,
+  
+  // Keyboard Inputs
+  kKeyboardFirts = 0,
 
-  kKeyCount,
+  kKeyboardButtonA = kKeyboardFirts,
+  kKeyboardButtonB,
+  kKeyboardButtonC,
+  kKeyboardButtonD,
+  kKeyboardButtonE,
+  kKeyboardButtonF,
+  kKeyboardButtonG,
+  kKeyboardButtonH,
+  kKeyboardButtonI,
+  kKeyboardButtonJ,
+  kKeyboardButtonK,
+  kKeyboardButtonL,
+  kKeyboardButtonM,
+  kKeyboardButtonN,
+  kKeyboardButtonO,
+  kKeyboardButtonP,
+  kKeyboardButtonQ,
+  kKeyboardButtonR,
+  kKeyboardButtonS,
+  kKeyboardButtonT,
+  kKeyboardButtonU,
+  kKeyboardButtonV,
+  kKeyboardButtonW,
+  kKeyboardButtonX,
+  kKeyboardButtonY,
+  kKeyboardButtonZ,
+  kKeyboardButtonNum0,
+  kKeyboardButtonNum1,
+  kKeyboardButtonNum2,
+  kKeyboardButtonNum3,
+  kKeyboardButtonNum4,
+  kKeyboardButtonNum5,
+  kKeyboardButtonNum6,
+  kKeyboardButtonNum7,
+  kKeyboardButtonNum8,
+  kKeyboardButtonNum9,
+  kKeyboardButtonEscape,
+  kKeyboardButtonLControl,
+  kKeyboardButtonLShift,
+  kKeyboardButtonLAlt,
+  kKeyboardButtonRControl,
+  kKeyboardButtonRShift,
+  kKeyboardButtonRAlt,
+  kKeyboardButtonMenu,
+  kKeyboardButtonLBracket,
+  kKeyboardButtonRBracket,
+  kKeyboardButtonSemicolon,
+  kKeyboardButtonComma,
+  kKeyboardButtonPeriod,
+  kKeyboardButtonQuote,
+  kKeyboardButtonSlash,
+  kKeyboardButtonBackslash,
+  kKeyboardButtonTilde,
+  kKeyboardButtonEqual,
+  kKeyboardButtonHyphen,
+  kKeyboardButtonSpace,
+  kKeyboardButtonEnter,
+  kKeyboardButtonBackspace,
+  kKeyboardButtonTab,
+  kKeyboardButtonPageUp,
+  kKeyboardButtonPageDown,
+  kKeyboardButtonEnd,
+  kKeyboardButtonHome,
+  kKeyboardButtonInsert,
+  kKeyboardButtonDelete,
+  kKeyboardButtonAdd,
+  kKeyboardButtonSubtract,
+  kKeyboardButtonMultiply,
+  kKeyboardButtonDivide,
+  kKeyboardButtonLeft,
+  kKeyboardButtonRight,
+  kKeyboardButtonUp,
+  kKeyboardButtonDown,
+  kKeyboardButtonNumpad0,
+  kKeyboardButtonNumpad1,
+  kKeyboardButtonNumpad2,
+  kKeyboardButtonNumpad3,
+  kKeyboardButtonNumpad4,
+  kKeyboardButtonNumpad5,
+  kKeyboardButtonNumpad6,
+  kKeyboardButtonNumpad7,
+  kKeyboardButtonNumpad8,
+  kKeyboardButtonNumpad9,
+  kKeyboardButtonF1,
+  kKeyboardButtonF2,
+  kKeyboardButtonF3,
+  kKeyboardButtonF4,
+  kKeyboardButtonF5,
+  kKeyboardButtonF6,
+  kKeyboardButtonF7,
+  kKeyboardButtonF8,
+  kKeyboardButtonF9,
+  kKeyboardButtonF10,
+  kKeyboardButtonF11,
+  kKeyboardButtonF12,
+  kKeyboardButtonF13,
+  kKeyboardButtonF14,
+  kKeyboardButtonF15,
+  kKeyboardButtonPause,
 
-  kDash = kHyphen, // Use Hyphen instead
-};
-}
+  kKeyboardLast = kKeyboardButtonPause, // Only for internal use, not a real button.
+  kKeyboardCount = kKeyboardLast + 1, // Only for internal use, not a real button.
 
-/**
- * @brief
- * Mouse keys.
- */
-namespace eMOUSE_KEYS {
-enum E : int8
-{
-  kUnknown = -1,
-  kLeftClick,
-  kRightClick,
-  kButton1 = kLeftClick,
-  kButton2 = kRightClick,
-  kButton3,
-  kButton4,
-  kButton5,
-  kButton6,
-  kButton7,
-  kWheel,
-  kXAxis,
-  kYAxis,
+  kKeyboardButtonDash = kKeyboardButtonHyphen, // Use Hyphen instead
 
-  kKeyCount
+  // Mouse Inputs
+  kMouseFirts = kKeyboardLast + 1,
+
+  kMouseButtonLeft = kMouseFirts,
+  kMouseButtonRight,
+  kMouseButtonMiddle,
+  kMouseButton0 = kMouseButtonLeft,
+  kMouseButton1 = kMouseButtonRight,
+  kMouseButton2 = kMouseButtonMiddle,
+  kMouseButton3,
+  kMouseButton4,
+  kMouseButton5,
+  kMouseButton6,
+  kMouseButton7,
+  kMouseButton8,
+  kMouseButton9,
+  kMouseButtonWheelUp,
+  kMouseButtonWheelDown,
+  kMouseAxisPositionX,
+  kMouseAxisPositionY,
+  kMouseAxisX,
+  kMouseAxisY,
+  kMouseAxisWheel,
+
+  kMouseLast = kMouseAxisWheel, // Only for internal use, not a real button.
+  kMouseCount = kMouseLast - kKeyboardCount + 1, // Only for internal use, not a real button.
+
+  kTotalCount = kKeyboardCount + kMouseCount
 };
 }
 
@@ -524,5 +534,21 @@ struct BlendDesc
   bool                  alphaToCoverageEnable;
   bool                  independentBlendEnable;
   RenderTargetBlendDesc renderTarget[8];
+};
+
+/**
+ * @brief
+ * A macro definition for different compilations of shaders.
+ */
+struct ShaderMacro
+{
+  /**
+   * The name of the macro.
+   */
+  String Name;
+  /**
+   * The value for the macro.
+   */
+  String Definition;
 };
 }

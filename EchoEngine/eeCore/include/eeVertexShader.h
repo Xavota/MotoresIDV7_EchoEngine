@@ -42,12 +42,18 @@ class EE_CORE_EXPORT VertexShader
    *
    * @param fileName
    * The name of the file containing the shader.
+   * @param functionName
+   * The name of the function it will compile for this shader.
+   * @param macroDefinitions
+   * The macros to compile the shader with.
    *
    * @return
    * Weather it succeed or failed to initialize.
    */
   virtual bool
-  compileFromFile(const String& /*fileName*/){return true;}
+  compileFromFile(const String& /*fileName*/,
+                  const String& /*functionName*/,
+                  const Vector<ShaderMacro>& /*macroDefinitions*/){return true;}
   /**
    * @brief
    * Initializes the shader.
@@ -57,12 +63,18 @@ class EE_CORE_EXPORT VertexShader
    *
    * @param fileName
    * The string for the shader to compile.
+   * @param functionName
+   * The name of the function it will compile for this shader.
+   * @param macroDefinitions
+   * The macros to compile the shader with.
    *
    * @return
    * Weather it succeed or failed to initialize.
    */
   virtual bool
-  compileFromString(const String& /*shaderString*/){return true;}
+  compileFromString(const String& /*shaderString*/,
+                    const String& /*functionName*/,
+                    const Vector<ShaderMacro>& /*macroDefinitions*/){return true;}
 
   /**
    * @brief

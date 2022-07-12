@@ -1179,7 +1179,7 @@ BaseAppTest1::onInit()
   auto& audioMan = AudioManager::instance();
   audioMan.createSound("Sounds/DeactivateLeverSound.wav", testSound);
   audioMan.createAudio("Sounds/LITTLE MISS PERFECT.wav", testAudio);
-  audioMan.playAudio(testAudio);
+  //audioMan.playAudio(testAudio);
 }
 
 void
@@ -1194,7 +1194,7 @@ BaseAppTest1::onUpdate(float deltaTime)
   EE_NO_EXIST_RETURN(scene);
 
   static String activePlayerName = "Player";
-  if (inputMan.getDevice(0)->isKeyPressed(eeEngineSDK::KEYBOARD_INPUT::kTab)) {
+  if (inputMan.getDevice(0)->getButtonDown(eeEngineSDK::KEYBOARD_INPUT::kTab)) {
     if (scene->getActor(activePlayerName)
      && scene->getActor(activePlayerName)->getComponent<CCamera>()) {
       scene->getActor(activePlayerName)->getComponent<CCamera>()->setMain(false);
@@ -1215,7 +1215,6 @@ BaseAppTest1::onUpdate(float deltaTime)
 
 
 
-
   SPtr<Actor> actor = scene->getActor("Test");
 
 
@@ -1232,64 +1231,49 @@ BaseAppTest1::onUpdate(float deltaTime)
     rot = trans->getRotation();
 
     Vector3f cameraMovement = Vector3f{ 0.0f, 0.0f, 0.0f };
-    if (inputMan.getDevice(0)->isKeyPressed(eeEngineSDK::eKEYBOARD_KEYS::kW)) {
+    if (inputMan.getDevice(0)->getButton(eeEngineSDK::eBUTTONS_KEYS::kKeyboardButtonW)) {
       cameraMovement += rot.getFrontVector();
-      Logger::instance().ConsoleLog("W");
     }
-    if (inputMan.getDevice(0)->isKeyPressed(eeEngineSDK::eKEYBOARD_KEYS::kS)) {
+    if (inputMan.getDevice(0)->getButton(eeEngineSDK::eBUTTONS_KEYS::kKeyboardButtonS)) {
       cameraMovement -= rot.getFrontVector();
-      Logger::instance().ConsoleLog("S");
     }
-    if (inputMan.getDevice(0)->isKeyPressed(eeEngineSDK::eKEYBOARD_KEYS::kA)) {
+    if (inputMan.getDevice(0)->getButton(eeEngineSDK::eBUTTONS_KEYS::kKeyboardButtonA)) {
       cameraMovement -= rot.getRightVector();
-      Logger::instance().ConsoleLog("A");
     }
-    if (inputMan.getDevice(0)->isKeyPressed(eeEngineSDK::eKEYBOARD_KEYS::kD)) {
+    if (inputMan.getDevice(0)->getButton(eeEngineSDK::eBUTTONS_KEYS::kKeyboardButtonD)) {
       cameraMovement += rot.getRightVector();
-      Logger::instance().ConsoleLog("D");
     }
-    if (inputMan.getDevice(0)->isKeyPressed(eeEngineSDK::eKEYBOARD_KEYS::kQ)) {
+    if (inputMan.getDevice(0)->getButton(eeEngineSDK::eBUTTONS_KEYS::kKeyboardButtonQ)) {
       cameraMovement += rot.getUpVector();
-      Logger::instance().ConsoleLog("Q");
     }
-    if (inputMan.getDevice(0)->isKeyPressed(eeEngineSDK::eKEYBOARD_KEYS::kE)) {
+    if (inputMan.getDevice(0)->getButton(eeEngineSDK::eBUTTONS_KEYS::kKeyboardButtonE)) {
       cameraMovement -= rot.getUpVector();
-      Logger::instance().ConsoleLog("E");
     }
     trans->setPosition(trans->getPosition() + cameraMovement * deltaTime * 10.0f);
 
-    if (inputMan.getDevice(0)->isKeyPressed(eeEngineSDK::eKEYBOARD_KEYS::kEnter)) {
+    if (inputMan.getDevice(0)->getButtonUp(eeEngineSDK::eBUTTONS_KEYS::kKeyboardButtonEnter)) {
       audioMan.playSound(testSound);
     }
 
-    //if (inputMan.getMouseClickInputIsPressed(
-    //                          eeEngineSDK::MOUSE_INPUT::kRightClick)) {
-    //  //auto rot2 = Quaternion(rot.getEuclidean() +
-    //  //                       Vector3f
-    //  //                       (
-    //  //                         inputMan.getMouseMovement().y *
-    //  //                         timeManager.getDeltaTime() *
-    //  //                         1.0f,
-    //  //                         inputMan.getMouseMovement().x *
-    //  //                         timeManager.getDeltaTime() *
-    //  //                         1.0f,
-    //  //                         0.0f
-    //  //                       ));
-    //  //trans->setRotation(rot2);
-    //  Vector2i mouseMove = inputMan.getMouseMovement();
-    //  Quaternion rot2 =
-    //  Quaternion::createFromAxisAngle(rot.getUpVector(),
-    //                                  mouseMove.x
-    //                                * deltaTime
-    //                                * 1.0f);
-    //  rot2 =
-    //  Quaternion::createFromAxisAngle(rot.getRightVector(),
-    //                                  mouseMove.y
-    //                                * deltaTime
-    //                                * 1.0f)
-    //                                * rot2;
-    //  trans->setRotation(rot2 * rot);
-    //}
+    if (inputMan.getDevice(1)->getButton(eeEngineSDK::eBUTTONS_KEYS::kMouseButtonRight)) {
+      float mouseMoveX =
+      inputMan.getDevice(1)->getAxis(eeEngineSDK::eBUTTONS_KEYS::kMouseAxisX);
+      float mouseMoveY =
+      inputMan.getDevice(1)->getAxis(eeEngineSDK::eBUTTONS_KEYS::kMouseAxisY);
+
+      Quaternion rot2 =
+      Quaternion::createFromAxisAngle(rot.getUpVector(),
+                                      mouseMoveX
+                                    * deltaTime
+                                    * 200.0f);
+      rot2 =
+      Quaternion::createFromAxisAngle(rot.getRightVector(),
+                                      mouseMoveY
+                                    * deltaTime
+                                    * 200.0f)
+                                    * rot2;
+      trans->setRotation(rot2 * rot);
+    }
   }
 
 

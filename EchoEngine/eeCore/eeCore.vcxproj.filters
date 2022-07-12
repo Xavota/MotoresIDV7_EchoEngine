@@ -219,6 +219,8 @@
     <ClInclude Include="include\eeEvent.h">
       <Filter>include\Inputs</Filter>
     </ClInclude>
+    <ClInclude Include="include\eeDomainShader.h" />
+    <ClInclude Include="include\eeHullShader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeBaseApp.cpp">
@@ -371,5 +373,7 @@
     <ClCompile Include="src\eeEvent.cpp">
       <Filter>src\Inputs</Filter>
     </ClCompile>
+    <ClCompile Include="src\eeDomainShader.cpp" />
+    <ClCompile Include="src\eeHullShader.cpp" />
   </ItemGroup>
 </Project>

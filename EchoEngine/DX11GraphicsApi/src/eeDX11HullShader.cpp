@@ -1,4 +1,4 @@
-#include "eeDX11PixelShader.h"
+#include "eeDX11HullShader.h"
 #include "eeDX11GraphicsApi.h"
 #pragma warning(push, 0)   
 #include <d3dcompiler.h>
@@ -6,14 +6,10 @@
 #pragma warning(pop)
 
 namespace eeEngineSDK {
-DX11PixelShader::~DX11PixelShader()
-{
-  release();
-}
 bool
-DX11PixelShader::compileFromFile(const String& fileName,
-                                 const String& functionName,
-                                 const Vector<ShaderMacro>& macroDefinitions)
+DX11HullShader::compileFromFile(const String& fileName,
+                                const String& functionName,
+                                const Vector<ShaderMacro>& macroDefinitions)
 {
   const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
@@ -33,7 +29,7 @@ DX11PixelShader::compileFromFile(const String& fileName,
   // Compile the pixel shader
   ID3DBlob* pPSBlob = nullptr;
   ID3DBlob* pErrorBlob = nullptr;
-  
+
   auto shaderMacros = new D3D_SHADER_MACRO[macroDefinitions.size() + 1];
   int32 index = 0;
   for (auto& macro : macroDefinitions) {
@@ -47,7 +43,7 @@ DX11PixelShader::compileFromFile(const String& fileName,
                              shaderMacros,
                              nullptr,
                              functionName.c_str(),
-                             "ps_4_0",
+                             "hs_5_0",
                              dwShaderFlags,
                              0,
                              nullptr,
@@ -72,10 +68,10 @@ DX11PixelShader::compileFromFile(const String& fileName,
 
 
   // Create the pixel shader
-  hr = basics->m_device->CreatePixelShader(pPSBlob->GetBufferPointer(),
-                                           pPSBlob->GetBufferSize(),
-                                           nullptr,
-                                           &m_shader);
+  hr = basics->m_device->CreateHullShader(pPSBlob->GetBufferPointer(),
+                                          pPSBlob->GetBufferSize(),
+                                          nullptr,
+                                          &m_shader);
   DX11SAFE_RELEASE(pPSBlob);
   if (FAILED(hr)) {
     return false;
@@ -84,24 +80,24 @@ DX11PixelShader::compileFromFile(const String& fileName,
   return true;
 }
 bool
-DX11PixelShader::compileFromString(const String& /*shaderString*/,
-                                   const String& /*functionName*/,
-                                   const Vector<ShaderMacro>& /*macroDefinitions*/)
+DX11HullShader::compileFromString(const String& shaderString,
+                                  const String& functionName,
+                                  const Vector<ShaderMacro>& macroDefinitions)
 {
   return false;
 }
 void
-DX11PixelShader::use()
+DX11HullShader::use()
 {
   const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
-  basics->m_deviceContext->PSSetShader(m_shader, nullptr, 0);
+  basics->m_deviceContext->HSSetShader(m_shader, nullptr, 0);
 }
 void
-DX11PixelShader::release()
+DX11HullShader::release()
 {
-  PixelShader::release();
+  HullShader::release();
   DX11SAFE_RELEASE(m_shader);
 }
 }

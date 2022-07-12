@@ -46,6 +46,8 @@ class EE_CORE_EXPORT RasterizerState
    * The mode for the order of rendering of the triangles.
    * @param frontCounterClockwise
    * If the triangles front is in counter clock wise order of its vertices.
+   * @param depthClipEnable
+   * The depth clip enabled.
    *
    * @return
    * Whether it succeeded to create or not.
@@ -53,7 +55,8 @@ class EE_CORE_EXPORT RasterizerState
   virtual bool
   create(eFILL_MODE::E /*fillMode*/,
          eCULL_MODE::E /*cullMode*/,
-         bool /*frontCounterClockwise*/) { return true; }
+         bool /*frontCounterClockwise*/,
+         bool /*depthClipEnable*/ = false) { return true; }
 
   /**
    * @brief

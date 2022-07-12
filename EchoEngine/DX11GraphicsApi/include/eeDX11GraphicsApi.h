@@ -17,6 +17,8 @@
 #include "eeDX11Texture.h"
 #include "eeDX11VertexShader.h"
 #include "eeDX11PixelShader.h"
+#include "eeDX11HullShader.h"
+#include "eeDX11DomainShader.h"
 #include "eeDX11VertexBuffer.h"
 #include "eeDX11IndexBuffer.h"
 #include "eeDX11ConstantBuffer.h"
@@ -289,6 +291,68 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
 
   /**
    * @brief
+   * Sets the buffers given.
+   *
+   * @description
+   * Sets several buffers for the hull shader.
+   *
+   * @param buffers
+   * The vector of buffers to set.
+   * @param startSlot
+   * The first index for the buffers indices.
+   */
+  void
+  setHSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
+                       uint32 startSlot) override;
+
+  /**
+   * @brief
+   * Unset the buffers on the hull shader.
+   *
+   * @description
+   * Sets nullptr buffers on the hull shader.
+   *
+   * @param buffersCount
+   * The number of buffers to unset.
+   * @param startSlot
+   * The first index for the buffers indices.
+   */
+  void
+  unsetHSConstantBuffers(uint32 buffersCount, uint32 startSlot) override;
+
+  /**
+   * @brief
+   * Sets the buffers given.
+   *
+   * @description
+   * Sets several buffers for the domain shader.
+   *
+   * @param buffers
+   * The vector of buffers to set.
+   * @param startSlot
+   * The first index for the buffers indices.
+   */
+  void
+  setDSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
+                       uint32 startSlot) override;
+
+  /**
+   * @brief
+   * Unset the buffers on the domain shader.
+   *
+   * @description
+   * Sets nullptr buffers on the domain shader.
+   *
+   * @param buffersCount
+   * The number of buffers to unset.
+   * @param startSlot
+   * The first index for the buffers indices.
+   */
+  void
+  unsetDSConstantBuffers(uint32 buffersCount, uint32 startSlot) override;
+
+  /**
+   * @brief
    * Sets the vertex buffers given.
    *
    * @description
@@ -383,11 +447,17 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
    *
    * @param vertexShader
    * The vertex shader to set.
+   * @param hullShader
+   * The hull shader to set.
+   * @param domainShader
+   * The domain shader to set.
    * @param pixelShader
    * The pixel shader to set.
    */
   void
   setShaderPrograms(SPtr<VertexShader> vertexShader,
+                    SPtr<HullShader> hullShader,
+                    SPtr<DomainShader> domainShader,
                     SPtr<PixelShader> pixelShader) override;
 
   /**
@@ -467,6 +537,38 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
   createPixelShaderPtr() const override
   {
     return MemoryManager::instance().newPtr<DX11PixelShader>();
+  }
+
+  /**
+   * @brief
+   * Gets the specific hull shader pointer.
+   *
+   * @description
+   * Returns a pointer to a hull shader depending on the api.
+   *
+   * @return
+   * The pointer to a hull shader depending on the api.
+   */
+  FORCEINLINE SPtr<HullShader>
+  createHullShaderPtr() const override
+  {
+    return MemoryManager::instance().newPtr<DX11HullShader>();
+  }
+
+  /**
+   * @brief
+   * Gets the specific domain shader pointer.
+   *
+   * @description
+   * Returns a pointer to a domain shader depending on the api.
+   *
+   * @return
+   * The pointer to a domain shader depending on the api.
+   */
+  FORCEINLINE SPtr<DomainShader>
+  createDomainShaderPtr() const override
+  {
+    return MemoryManager::instance().newPtr<DX11DomainShader>();
   }
 
   /**
@@ -604,6 +706,18 @@ class EE_PLUGINDX11_EXPORT DX11GraphicsApi : public GraphicsApi
    */
   void
   drawIndexed(uint32 indicesCount) const override;
+  /**
+   * @brief
+   * Does the draw call.
+   *
+   * @description
+   * Makes the draw call for the specific api.
+   *
+   * @param verticesCount
+   * The number of vertices to be drawn.
+   */
+  void
+  drawNoIndexed(uint32 verticesCount) const override;
 
  private:
   ///**

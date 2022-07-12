@@ -111,19 +111,29 @@ GraphicsApi::drawOnSAQ()
   drawIndexed(6);
   unsetVertexBuffers(1u, 0u);
 }
-void GraphicsApi::drawMesh(const Mesh& meshToDraw)
+void
+GraphicsApi::drawMesh(const Mesh& meshToDraw)
 {
   meshToDraw.set();
   drawIndexed(static_cast<uint32>(meshToDraw.getIndexCount()));
   unsetVertexBuffers(1u, 0u);
 }
-void GraphicsApi::drawMesh(const BoneMesh& meshToDraw)
+void
+GraphicsApi::drawMesh(const BoneMesh& meshToDraw)
 {
   meshToDraw.set();
   drawIndexed(static_cast<uint32>(meshToDraw.getIndexCount()));
   unsetVertexBuffers(1u, 0u);
 }
-void GraphicsApi::resizeWindow(Point2D newSize)
+void
+GraphicsApi::drawMeshControlPoints(const Mesh& meshToDraw)
+{
+  meshToDraw.getVertexData()->set();
+  drawNoIndexed(static_cast<uint32>(meshToDraw.getControlPointsCount()));
+  unsetVertexBuffers(1u, 0u);
+}
+void
+GraphicsApi::resizeWindow(Point2D newSize)
 {
   ViewportDesc desc;
   memset(&desc, 0, sizeof(desc));

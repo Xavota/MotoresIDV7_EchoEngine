@@ -53,12 +53,37 @@ class EE_CORE_EXPORT InputDevice
    * @return
    * The enum of the device type.
    */
-  FORCEINLINE virtual int8
+  FORCEINLINE virtual uint8
   getDeviceType()
   {
     return eINPUT_DEVICE_TYPE::kNone;
   }
 
+  /**
+   * @brief
+   * Updates the device.
+   *
+   * @description
+   * Updates the internal data of the device.
+   */
+  virtual void
+  update();
+
+  /**
+   * @brief
+   * Gets if a key is just pressed.
+   *
+   * @description
+   * Returns true if that key is being pressed this frame, but not last frame.
+   *
+   * @param keyCode
+   * The code of the key for the device.
+   *
+   * @return
+   * True if that key is being pressed this frame, but not last frame.
+   */
+  virtual bool
+  getButtonDown(uint8 keyCode);
   /**
    * @brief
    * Gets if a key is pressed.
@@ -73,7 +98,23 @@ class EE_CORE_EXPORT InputDevice
    * True if that key is being pressed.
    */
   virtual bool
-  isKeyPressed(int8 keyCode);
+  getButton(uint8 keyCode);
+  /**
+   * @brief
+   * Gets if a key is just released.
+   *
+   * @description
+   * Returns true if that key is not being pressed this frame, but was pressed 
+   * last frame.
+   *
+   * @param keyCode
+   * The code of the key for the device.
+   *
+   * @return
+   * True if that key is being pressed this frame, but not last frame.
+   */
+  virtual bool
+  getButtonUp(uint8 keyCode);
 
   /**
    * @brief
@@ -89,7 +130,7 @@ class EE_CORE_EXPORT InputDevice
    * How much of the key is being used.
    */
   virtual float
-  getKeyValue(int8 keyCode);
+  getAxis(uint8 keyCode);
 
 // protected:
   /**
@@ -105,7 +146,7 @@ class EE_CORE_EXPORT InputDevice
    * The new state of the key.
    */
   virtual void
-  setKeyPressed(int8 keyCode, bool pressed);
+  setKeyPressed(uint8 keyCode, bool pressed);
   /**
    * @brief
    * Sets the current value of a key.
@@ -119,21 +160,35 @@ class EE_CORE_EXPORT InputDevice
    * How much of the key is being used.
    */
   virtual void
-  setKeyValue(int8 keyCode, float value);
+  setKeyValue(uint8 keyCode, float value);
 
 
 
+protected:
   /**
    * The states of every key
    */
   Vector<Byte> m_keysStates;
   /**
+   * The last frame states of every key
+   */
+  Vector<Byte> m_keysLastStates;
+  /**
    * Array of values for certain keys
    */
-  Map<int8, float> m_keysValues;
+  Map<uint8, float> m_keysValues;
   /**
    * The type of device it is
    */
   eINPUT_DEVICE_TYPE::E m_deviceType;
+
+  /**
+   * The minimum key code of this device.
+   */
+   uint8 m_minKeyCode = 0;
+  /**
+   * The maximum key code of this device.
+   */
+   uint8 m_maxKeyCode = eBUTTONS_KEYS::kTotalCount;
 };
 }

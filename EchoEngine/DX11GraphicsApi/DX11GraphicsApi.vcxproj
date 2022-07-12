@@ -22,7 +22,9 @@
     <ClInclude Include="include\eeDX11BlendState.h" />
     <ClInclude Include="include\eeDX11ConstantBuffer.h" />
     <ClInclude Include="include\eeDX11DepthStencilState.h" />
+    <ClInclude Include="include\eeDX11DomainShader.h" />
     <ClInclude Include="include\eeDX11GraphicsApi.h" />
+    <ClInclude Include="include\eeDX11HullShader.h" />
     <ClInclude Include="include\eeDX11IndexBuffer.h" />
     <ClInclude Include="include\eeDX11PixelShader.h" />
     <ClInclude Include="include\eeDX11RasterizerState.h" />
@@ -37,7 +39,9 @@
     <ClCompile Include="src\eeDX11BlendState.cpp" />
     <ClCompile Include="src\eeDX11ConstantBuffer.cpp" />
     <ClCompile Include="src\eeDX11DepthStencilState.cpp" />
+    <ClCompile Include="src\eeDX11DomainShader.cpp" />
     <ClCompile Include="src\eeDX11GraphicsApi.cpp" />
+    <ClCompile Include="src\eeDX11HullShader.cpp" />
     <ClCompile Include="src\eeDX11IndexBuffer.cpp" />
     <ClCompile Include="src\eeDX11PixelShader.cpp" />
     <ClCompile Include="src\eeDX11RasterizerState.cpp" />

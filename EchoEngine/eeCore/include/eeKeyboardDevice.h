@@ -42,7 +42,7 @@ class EE_CORE_EXPORT KeyboardDevice : public InputDevice
    * @return
    * The enum of the device type.
    */
-  FORCEINLINE int8
+  FORCEINLINE uint8
   getDeviceType() override
   {
     return eINPUT_DEVICE_TYPE::kKeyboard;

@@ -64,6 +64,8 @@ class EE_PLUGINDX11_EXPORT DX11RasterizerState : public RasterizerState
    * The mode for the order of rendering of the triangles.
    * @param frontCounterClockwise
    * If the triangles front is in counter clock wise order of its vertices.
+   * @param depthClipEnable
+   * The depth clip enabled.
    *
    * @return
    * Whether it succeeded to create or not.
@@ -71,7 +73,8 @@ class EE_PLUGINDX11_EXPORT DX11RasterizerState : public RasterizerState
   bool
   create(eFILL_MODE::E fillMode,
          eCULL_MODE::E cullMode,
-         bool frontCounterClockwise) override;
+         bool frontCounterClockwise,
+         bool depthClipEnable = false) override;
 
   /**
    * @brief

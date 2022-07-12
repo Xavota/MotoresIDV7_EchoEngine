@@ -153,5 +153,11 @@ private:
   * The render targets for the luminance pass.
   */
   SPtr<Texture> m_HDRLuminanceTexture;
+
+  SPtr<ConstantBuffer> m_bezierBuffer;
+  /*
+  * A rasterizer for on screen rendering.
+  */
+  SPtr<RasterizerState> m_rasterizerBezier = nullptr;
 };
 }

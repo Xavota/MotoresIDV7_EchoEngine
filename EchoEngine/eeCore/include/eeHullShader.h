@@ -1,37 +1,39 @@
 /************************************************************************/
 /**
- * @file eeDX11PixelShader.h
+ * @file eeHullShader.h
  * @author Diego Castellanos
- * @date 22/10/21
+ * @date 04/07/22
  * @brief
- * The pixel shader for the graphic memory to paint every pixel.
+ * The shader that creates and sends the control points from the vertex, to the
+ * domain shader.
  *
  * @bug Not bug Known.
  */
-/************************************************************************/
+ /************************************************************************/
 
 #pragma once
-#include "eePrerequisitesDX11.h"
-#include <eePixelShader.h>
+#include "eePrerequisitesCore.h"
 
 namespace eeEngineSDK {
 /**
  * @brief
- * The pixel shader for the graphic memory to paint every pixel.
+ * The shader that creates and sends the control points from the vertex, to the
+ * domain shader.
  */
-class EE_PLUGINDX11_EXPORT DX11PixelShader : public PixelShader
+class EE_CORE_EXPORT HullShader
 {
  public:
   /**
    * @brief
    * Default constructor
    */
-  DX11PixelShader() = default;
+  HullShader() = default;
   /**
    * @brief
    * Default destructor
    */
-  ~DX11PixelShader();
+  virtual
+  ~HullShader() = default;
 
   /**
    * @brief
@@ -50,10 +52,10 @@ class EE_PLUGINDX11_EXPORT DX11PixelShader : public PixelShader
    * @return
    * Weather it succeed or failed to initialize.
    */
-  bool
-  compileFromFile(const String& fileName,
-                  const String& functionName,
-                  const Vector<ShaderMacro>& macroDefinitions) override;
+  virtual bool
+  compileFromFile(const String& /*fileName*/,
+                  const String& /*functionName*/,
+                  const Vector<ShaderMacro>& /*macroDefinitions*/) {return true;}
   /**
    * @brief
    * Initializes the shader.
@@ -71,10 +73,10 @@ class EE_PLUGINDX11_EXPORT DX11PixelShader : public PixelShader
    * @return
    * Weather it succeed or failed to initialize.
    */
-  bool
-  compileFromString(const String& shaderString,
-                    const String& functionName,
-                    const Vector<ShaderMacro>& macroDefinitions) override;
+  virtual bool
+  compileFromString(const String& /*shaderString*/,
+                    const String& /*functionName*/,
+                    const Vector<ShaderMacro>& /*macroDefinitions*/) {return true;}
 
   /**
    * @brief
@@ -84,8 +86,8 @@ class EE_PLUGINDX11_EXPORT DX11PixelShader : public PixelShader
    * Sets the shader for the graphic memory to use, only for override in graphics
    * api specializations.
    */
-  void
-  use() override;
+  virtual void
+  use() {}
 
   /**
    * @brief
@@ -94,13 +96,13 @@ class EE_PLUGINDX11_EXPORT DX11PixelShader : public PixelShader
    * @description
    * Deletes the memory of all data allocated.
    */
-  void
-  release() override;
+  virtual void
+  release() {};
 
-private:
+ private:
   /**
-   * The DX11 pixel shader.
+   * The string of the shader, for further modifying.
    */
-  ID3D11PixelShader* m_shader = nullptr;
+  String m_shaderString;
 };
 }

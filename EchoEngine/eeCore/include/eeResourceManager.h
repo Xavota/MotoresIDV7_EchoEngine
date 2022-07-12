@@ -13,16 +13,9 @@
 
 #pragma once
 #include "eePrerequisitesCore.h"
-
-#include <eeLogger.h>
-
-#include "eeTexture.h"
-#include "eeStaticMesh.h"
-#include "eeMesh.h"
-#include "eeVertexShader.h"
-#include "eePixelShader.h"
 #include <eeModule.h>
 
+#include <eeLogger.h>
 #include <eeMemoryManager.h>
 
 namespace eeEngineSDK {
@@ -235,6 +228,8 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    */
   SPtr<VertexShader>
   loadVertexShaderFromFile(const String& fileName,
+                           const String& functionName,
+                           const Vector<ShaderMacro>& macroDefinitions,
                            const String& resourceName);
   /**
    * @brief
@@ -253,6 +248,8 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    */
   SPtr<VertexShader>
   loadVertexShaderFromString(const String& shaderString,
+                             const String& functionName,
+                             const Vector<ShaderMacro>& macroDefinitions,
                              const String& resourceName);
 
   /**
@@ -272,6 +269,8 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    */
   SPtr<PixelShader>
   loadPixelShaderFromFile(const String& fileName,
+                          const String& functionName,
+                          const Vector<ShaderMacro>& macroDefinitions,
                           const String& resourceName);
   /**
    * @brief
@@ -290,7 +289,107 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    */
   SPtr<PixelShader>
   loadPixelShaderFromString(const String& shaderString,
+                            const String& functionName,
+                            const Vector<ShaderMacro>& macroDefinitions,
                             const String& resourceName);
+
+  /**
+   * @brief
+   * Initializes the shader.
+   *
+   * @description
+   * Initializes the shader from a file and stores it with the given name.
+   *
+   * @param fileName
+   * The name of the file containing the shader.
+   * @param functionName
+   * The name of the function it will compile for this shader.
+   * @param macroDefinitions
+   * The macros to compile the shader with.
+   * @param resourceName
+   * The name that the resource will be stored with.
+   *
+   * @return
+   * The resource initialized.
+   */
+  SPtr<HullShader>
+  loadHullShaderFromFile(const String& fileName,
+                         const String& functionName,
+                         const Vector<ShaderMacro>& macroDefinitions,
+                         const String& resourceName);
+  /**
+   * @brief
+   * Initializes a shader.
+   *
+   * @description
+   * Initializes a shader from a string and stores it with the given name.
+   *
+   * @param fileName
+   * The string for the shader to compile.
+   * @param functionName
+   * The name of the function it will compile for this shader.
+   * @param macroDefinitions
+   * The macros to compile the shader with.
+   * @param resourceName
+   * The name that the resource will be stored with.
+   *
+   * @return
+   * The resource initialized.
+   */
+  SPtr<HullShader>
+  loadHullShaderFromString(const String& shaderString,
+                           const String& functionName,
+                           const Vector<ShaderMacro>& macroDefinitions,
+                           const String& resourceName);
+
+  /**
+   * @brief
+   * Initializes the shader.
+   *
+   * @description
+   * Initializes the shader from a file and stores it with the given name.
+   *
+   * @param fileName
+   * The name of the file containing the shader.
+   * @param functionName
+   * The name of the function it will compile for this shader.
+   * @param macroDefinitions
+   * The macros to compile the shader with.
+   * @param resourceName
+   * The name that the resource will be stored with.
+   *
+   * @return
+   * The resource initialized.
+   */
+  SPtr<DomainShader>
+  loadDomainShaderFromFile(const String& fileName,
+                           const String& functionName,
+                           const Vector<ShaderMacro>& macroDefinitions,
+                           const String& resourceName);
+  /**
+   * @brief
+   * Initializes a shader.
+   *
+   * @description
+   * Initializes a shader from a string and stores it with the given name.
+   *
+   * @param fileName
+   * The string for the shader to compile.
+   * @param functionName
+   * The name of the function it will compile for this shader.
+   * @param macroDefinitions
+   * The macros to compile the shader with.
+   * @param resourceName
+   * The name that the resource will be stored with.
+   *
+   * @return
+   * The resource initialized.
+   */
+  SPtr<DomainShader>
+  loadDomainShaderFromString(const String& shaderString,
+                             const String& functionName,
+                             const Vector<ShaderMacro>& macroDefinitions,
+                             const String& resourceName);
 
   /**
    * @brief
@@ -414,6 +513,36 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    */
   SPtr<PixelShader>
   getResourcePixelShader(const String& resourceName);
+  /**
+   * @brief
+   * Gets a hull shader.
+   *
+   * @description
+   * Gets a hull shader by a resource name.
+   *
+   * @param resourceName
+   * The name of the resource.
+   *
+   * @return
+   * The hull shader with that name.
+   */
+  SPtr<HullShader>
+  getResourceHullShader(const String& resourceName);
+  /**
+   * @brief
+   * Gets a domain shader.
+   *
+   * @description
+   * Gets a domain shader by a resource name.
+   *
+   * @param resourceName
+   * The name of the resource.
+   *
+   * @return
+   * The domain shader with that name.
+   */
+  SPtr<DomainShader>
+  getResourceDomainShader(const String& resourceName);
 
   /**
    * @brief
@@ -513,6 +642,30 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    */
   Map<String, SPtr<PixelShader>>
   getAllPixelShaderResources();
+  /**
+   * @brief
+   * Gets all hull shaders.
+   *
+   * @description
+   * Gets all stored hull shaders.
+   *
+   * @return
+   * All stored hull shaders.
+   */
+  Map<String, SPtr<HullShader>>
+  getAllHullShaderResources();
+  /**
+   * @brief
+   * Gets all domain shaders.
+   *
+   * @description
+   * Gets all stored domain shaders.
+   *
+   * @return
+   * All stored domain shaders.
+   */
+  Map<String, SPtr<DomainShader>>
+  getAllDomainShaderResources();
 
 
   /**
@@ -564,5 +717,13 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * The pixel shaders stored.
    */
   Map<String, SPtr<PixelShader>> m_pixelShaders;
+  /**
+   * The hull shaders stored.
+   */
+  Map<String, SPtr<HullShader>> m_hullShaders;
+  /**
+   * The hull shaders stored.
+   */
+  Map<String, SPtr<DomainShader>> m_domainShaders;
 };
 }

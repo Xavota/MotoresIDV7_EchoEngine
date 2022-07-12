@@ -13,6 +13,8 @@
 #include "eePrerequisitesCore.h"
 #include "eeInputDevice.h"
 
+#include <eeVector2.h>
+
 namespace eeEngineSDK {
 /**
  * @brief
@@ -42,12 +44,26 @@ class EE_CORE_EXPORT MouseDevice : public InputDevice
    * @return
    * The enum of the device type.
    */
-  FORCEINLINE int8
+  FORCEINLINE uint8
   getDeviceType() override
   {
     return eINPUT_DEVICE_TYPE::kMouse;
   }
 
+  /**
+   * @brief
+   * Updates the device.
+   *
+   * @description
+   * Updates the internal data of the device.
+   */
+  void
+  update() override;
+
  private:
+  /**
+   * Last mouse position in screen
+   */
+  Vector2f m_lastPosition;
 };
 }

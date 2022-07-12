@@ -12,16 +12,21 @@
 #include <eeFile.h>
 #include <eeVertex.h>
 
+#include "eeGraficsApi.h"
+
 #include "eeMesh.h"
 #include "eeTexture.h"
 #include "eeMaterial.h"
 #include "eeVertexShader.h"
 #include "eePixelShader.h"
-#include "eeGraficsApi.h"
+#include "eeHullShader.h"
+#include "eeDomainShader.h"
+#include "eeStaticMesh.h"
 #include "eeSkeletalMesh.h"
 #include "eeSkeletal.h"
 #include "eeAnimation.h"
 #include "eeImage.h"
+
 
 namespace eeEngineSDK
 {
@@ -833,6 +838,8 @@ ResourceManager::loadAnimationFromFile(const String& fileName,
 
 SPtr<VertexShader>
 ResourceManager::loadVertexShaderFromFile(const String& fileName, 
+                                          const String& functionName,
+                                          const Vector<ShaderMacro>& macroDefinitions,
                                           const String& resourceName)
 {
   if (m_vertexShaders.find(resourceName) != m_vertexShaders.end()) {
@@ -841,7 +848,7 @@ ResourceManager::loadVertexShaderFromFile(const String& fileName,
   }
 
   SPtr<VertexShader> shader = GraphicsApi::instance().createVertexShaderPtr();
-  if (!shader->compileFromFile(fileName)) {
+  if (!shader->compileFromFile(fileName, functionName, macroDefinitions)) {
     Logger::instance().ConsoleLog("Error compiling shader");
     return nullptr;
   }
@@ -852,6 +859,8 @@ ResourceManager::loadVertexShaderFromFile(const String& fileName,
 
 SPtr<VertexShader>
 ResourceManager::loadVertexShaderFromString(const String& shaderString,
+                                            const String& functionName,
+                                            const Vector<ShaderMacro>& macroDefinitions,
                                             const String& resourceName)
 {
   if (m_vertexShaders.find(resourceName) != m_vertexShaders.end()) {
@@ -860,7 +869,7 @@ ResourceManager::loadVertexShaderFromString(const String& shaderString,
   }
 
   SPtr<VertexShader> shader = GraphicsApi::instance().createVertexShaderPtr();
-  if (!shader->compileFromString(shaderString)) {
+  if (!shader->compileFromString(shaderString, functionName, macroDefinitions)) {
     Logger::instance().ConsoleLog("Error compiling shader");
     return nullptr;
   }
@@ -871,6 +880,8 @@ ResourceManager::loadVertexShaderFromString(const String& shaderString,
 
 SPtr<PixelShader>
 ResourceManager::loadPixelShaderFromFile(const String& fileName,
+                                         const String& functionName,
+                                         const Vector<ShaderMacro>& macroDefinitions,
                                          const String& resourceName)
 {
   if (m_pixelShaders.find(resourceName) != m_pixelShaders.end()) {
@@ -879,7 +890,7 @@ ResourceManager::loadPixelShaderFromFile(const String& fileName,
   }
 
   SPtr<PixelShader> shader = GraphicsApi::instance().createPixelShaderPtr();
-  if (!shader->compileFromFile(fileName)) {
+  if (!shader->compileFromFile(fileName, functionName, macroDefinitions)) {
     Logger::instance().ConsoleLog("Error compiling shader");
     return nullptr;
   }
@@ -890,6 +901,8 @@ ResourceManager::loadPixelShaderFromFile(const String& fileName,
 
 SPtr<PixelShader>
 ResourceManager::loadPixelShaderFromString(const String& shaderString,
+                                           const String& functionName,
+                                           const Vector<ShaderMacro>& macroDefinitions,
                                            const String& resourceName)
 {
   if (m_pixelShaders.find(resourceName) != m_pixelShaders.end()) {
@@ -898,13 +911,97 @@ ResourceManager::loadPixelShaderFromString(const String& shaderString,
   }
 
   SPtr<PixelShader> shader = GraphicsApi::instance().createPixelShaderPtr();
-  if (!shader->compileFromString(shaderString)) {
+  if (!shader->compileFromString(shaderString, functionName, macroDefinitions)) {
     Logger::instance().ConsoleLog("Error compiling shader");
     return nullptr;
   }
 
   m_pixelShaders.insert(Pair<String, SPtr<PixelShader>>(resourceName, shader));
   return m_pixelShaders[resourceName];
+}
+
+SPtr<HullShader>
+ResourceManager::loadHullShaderFromFile(const String& fileName,
+                                        const String& functionName,
+                                        const Vector<ShaderMacro>& macroDefinitions,
+                                        const String& resourceName)
+{
+  if (m_hullShaders.find(resourceName) != m_hullShaders.end()) {
+    Logger::instance().ConsoleLog("Resource already with this name");
+    return nullptr;
+  }
+
+  SPtr<HullShader> shader = GraphicsApi::instance().createHullShaderPtr();
+  if (!shader->compileFromFile(fileName, functionName, macroDefinitions)) {
+    Logger::instance().ConsoleLog("Error compiling shader");
+    return nullptr;
+  }
+
+  m_hullShaders.insert(Pair<String, SPtr<HullShader>>(resourceName, shader));
+  return m_hullShaders[resourceName];
+}
+
+SPtr<HullShader>
+ResourceManager::loadHullShaderFromString(const String& shaderString,
+                                          const String& functionName,
+                                          const Vector<ShaderMacro>& macroDefinitions,
+                                          const String& resourceName)
+{
+  if (m_hullShaders.find(resourceName) != m_hullShaders.end()) {
+    Logger::instance().ConsoleLog("Resource already with this name");
+    return nullptr;
+  }
+
+  SPtr<HullShader> shader = GraphicsApi::instance().createHullShaderPtr();
+  if (!shader->compileFromString(shaderString, functionName, macroDefinitions)) {
+    Logger::instance().ConsoleLog("Error compiling shader");
+    return nullptr;
+  }
+
+  m_hullShaders.insert(Pair<String, SPtr<HullShader>>(resourceName, shader));
+  return m_hullShaders[resourceName];
+}
+
+SPtr<DomainShader>
+ResourceManager::loadDomainShaderFromFile(const String& fileName,
+                                          const String& functionName,
+                                          const Vector<ShaderMacro>& macroDefinitions,
+                                          const String& resourceName)
+{
+  if (m_domainShaders.find(resourceName) != m_domainShaders.end()) {
+    Logger::instance().ConsoleLog("Resource already with this name");
+    return nullptr;
+  }
+
+  SPtr<DomainShader> shader = GraphicsApi::instance().createDomainShaderPtr();
+  if (!shader->compileFromFile(fileName, functionName, macroDefinitions)) {
+    Logger::instance().ConsoleLog("Error compiling shader");
+    return nullptr;
+  }
+
+  m_domainShaders.insert(Pair<String, SPtr<DomainShader>>(resourceName, shader));
+  return m_domainShaders[resourceName];
+}
+
+SPtr<DomainShader>
+ResourceManager::loadDomainShaderFromString(const String& shaderString,
+                                            const String& functionName,
+                                            const Vector<ShaderMacro>& macroDefinitions,
+                                            const String& resourceName)
+{
+  if (m_domainShaders.find(resourceName) != m_domainShaders.end()) {
+    Logger::instance().ConsoleLog("Resource already with this name");
+    return nullptr;
+  }
+
+  SPtr<DomainShader> shader = GraphicsApi::instance().createDomainShaderPtr();
+  if (!shader->compileFromString(shaderString, functionName, macroDefinitions)) {
+    Logger::instance().ConsoleLog("Error compiling shader");
+    return nullptr;
+  }
+
+  m_domainShaders.insert(Pair<String, SPtr<DomainShader>>(resourceName, shader));
+  return m_domainShaders[resourceName];
 }
 
 SPtr<Texture>
@@ -971,6 +1068,22 @@ ResourceManager::getResourcePixelShader(const String& resourceName)
   }
   return nullptr;
 }
+SPtr<HullShader>
+ResourceManager::getResourceHullShader(const String& resourceName)
+{
+  if (m_hullShaders.find(resourceName) != m_hullShaders.end()) {
+    return m_hullShaders[resourceName];
+  }
+  return nullptr;
+}
+SPtr<DomainShader>
+ResourceManager::getResourceDomainShader(const String& resourceName)
+{
+  if (m_domainShaders.find(resourceName) != m_domainShaders.end()) {
+    return m_domainShaders[resourceName];
+  }
+  return nullptr;
+}
 Map<String, SPtr<Texture>>
 ResourceManager::getAllTextureResources()
 {
@@ -1009,6 +1122,17 @@ Map<String, SPtr<PixelShader>>
 ResourceManager::getAllPixelShaderResources()
 {
   return m_pixelShaders;
+}
+Map<String, SPtr<HullShader>>
+ResourceManager::getAllHullShaderResources()
+{
+  return m_hullShaders;
+}
+
+Map<String, SPtr<DomainShader>>
+ResourceManager::getAllDomainShaderResources()
+{
+  return m_domainShaders;
 }
 
 

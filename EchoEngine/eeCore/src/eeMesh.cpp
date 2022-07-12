@@ -106,6 +106,19 @@ Mesh::loadFromTrianglesArray(const Vector<Triangle>& triangles)
 
   return true;
 }
+bool
+Mesh::loadFromControlPoints(const Vector<ComplexVertex>& vertices)
+{
+  auto& graphicsApi = GraphicsApi::instance();
+  m_controlPoints = vertices;
+  if (!m_vertexData) {
+    m_vertexData = graphicsApi.createVertexBufferPtr();
+  }
+  m_vertexData->initData(m_controlPoints.size() * sizeof(ComplexVertex),
+                         sizeof(ComplexVertex),
+                         reinterpret_cast<const Byte*>(m_controlPoints.data()));
+  return true;
+}
 void
 Mesh::set() const
 {

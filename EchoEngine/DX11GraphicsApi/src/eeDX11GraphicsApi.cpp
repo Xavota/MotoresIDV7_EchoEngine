@@ -310,6 +310,84 @@ DX11GraphicsApi::unsetPSConstantBuffers(uint32 buffersCount, uint32 startSlot)
   );
 }
 void
+DX11GraphicsApi::setHSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
+                                      uint32 startSlot)
+{
+  auto& memoryManager = MemoryManager::instance();
+
+  Vector<ID3D11Buffer*> dx11buffers;
+
+  for (const auto& buff : buffers) {
+    SPtr<DX11ConstantBuffer> b =
+      memoryManager.reinterpretPtr<DX11ConstantBuffer>(buff);
+
+    if (b) {
+      dx11buffers.push_back(b->getResource());
+    }
+  }
+
+  if (!dx11buffers.empty()) {
+    m_basics.m_deviceContext->HSSetConstantBuffers
+    (
+      startSlot,
+      static_cast<UINT>(dx11buffers.size()),
+      dx11buffers.data()
+    );
+  }
+}
+void
+DX11GraphicsApi::unsetHSConstantBuffers(uint32 buffersCount, uint32 startSlot)
+{
+  Vector<ID3D11Buffer*> dx11buffers;
+  dx11buffers.resize(buffersCount, nullptr);
+
+  m_basics.m_deviceContext->HSSetConstantBuffers
+  (
+    startSlot,
+    buffersCount,
+    dx11buffers.data()
+  );
+}
+void
+DX11GraphicsApi::setDSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
+                                      uint32 startSlot)
+{
+  auto& memoryManager = MemoryManager::instance();
+
+  Vector<ID3D11Buffer*> dx11buffers;
+
+  for (const auto& buff : buffers) {
+    SPtr<DX11ConstantBuffer> b =
+      memoryManager.reinterpretPtr<DX11ConstantBuffer>(buff);
+
+    if (b) {
+      dx11buffers.push_back(b->getResource());
+    }
+  }
+
+  if (!dx11buffers.empty()) {
+    m_basics.m_deviceContext->DSSetConstantBuffers
+    (
+      startSlot,
+      static_cast<UINT>(dx11buffers.size()),
+      dx11buffers.data()
+    );
+  }
+}
+void
+DX11GraphicsApi::unsetDSConstantBuffers(uint32 buffersCount, uint32 startSlot)
+{
+  Vector<ID3D11Buffer*> dx11buffers;
+  dx11buffers.resize(buffersCount, nullptr);
+
+  m_basics.m_deviceContext->DSSetConstantBuffers
+  (
+    startSlot,
+    buffersCount,
+    dx11buffers.data()
+  );
+}
+void
 DX11GraphicsApi::setVertexBuffers(Vector<SPtr<VertexBuffer>> buffers,
                                   Vector<uint32> offsets,
                                   uint32 startSlot)
@@ -435,6 +513,11 @@ DX11GraphicsApi::drawIndexed(uint32 indicesCount) const
   m_basics.m_deviceContext->DrawIndexed(indicesCount, 0u, 0u);
 }
 void
+DX11GraphicsApi::drawNoIndexed(uint32 verticesCount) const
+{
+  m_basics.m_deviceContext->Draw(verticesCount, 0u);
+}
+void
 DX11GraphicsApi::setPrimitiveTopology(ePRIMITIVE_TOPOLOGY::E topology)
 {
   m_basics.m_deviceContext->IASetPrimitiveTopology(
@@ -442,10 +525,18 @@ DX11GraphicsApi::setPrimitiveTopology(ePRIMITIVE_TOPOLOGY::E topology)
 }
 void
 DX11GraphicsApi::setShaderPrograms(SPtr<VertexShader> vertexShader,
+                                   SPtr<HullShader> hullShader,
+                                   SPtr<DomainShader> domainShader,
                                    SPtr<PixelShader> pixelShader)
 {
-  vertexShader->use();
-  pixelShader->use();
+  if (vertexShader) vertexShader->use();
+  else m_basics.m_deviceContext->VSSetShader(nullptr, nullptr, 0);
+  if (hullShader) hullShader->use();
+  else m_basics.m_deviceContext->HSSetShader(nullptr, nullptr, 0);
+  if (domainShader) domainShader->use();
+  else m_basics.m_deviceContext->DSSetShader(nullptr, nullptr, 0);
+  if (pixelShader) pixelShader->use();
+  else m_basics.m_deviceContext->PSSetShader(nullptr, nullptr, 0);
 }
 void
 DX11GraphicsApi::present(uint32 syncInterval, uint32 flags)

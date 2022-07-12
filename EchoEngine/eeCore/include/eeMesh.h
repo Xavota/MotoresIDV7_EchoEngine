@@ -96,6 +96,24 @@ class EE_CORE_EXPORT Mesh
    */
   bool
   loadFromTrianglesArray(const Vector<Triangle>& triangles);
+  
+  /**
+   * @brief
+   * Initializes the mesh.
+   *
+   * @description
+   * Initializes the mesh from an array of vertex and index.
+   *
+   * @param vertices
+   * The vertex data.
+   * @param indices
+   * The index data.
+   *
+   * @return
+   * Weather it succeed or failed to initialize.
+   */
+  bool
+  loadFromControlPoints(const Vector<ComplexVertex>& vertices);
 
   /**
    * @brief
@@ -144,9 +162,40 @@ class EE_CORE_EXPORT Mesh
    * The number of indices stored.
    */
   FORCEINLINE SIZE_T
+  getVertexCount() const
+  {
+    return m_vertexArray.size() * 3;
+  }
+  /**
+   * @brief
+   * Getter for the index count.
+   *
+   * @description
+   * Returns the number of indices stored.
+   *
+   * @return
+   * The number of indices stored.
+   */
+  FORCEINLINE SIZE_T
   getIndexCount() const
   {
     return m_indexCount;
+  }
+
+  /**
+   * @brief
+   * Getter for the control points count.
+   *
+   * @description
+   * Returns the number of control points stored.
+   *
+   * @return
+   * The number of control points stored.
+   */
+  FORCEINLINE SIZE_T
+  getControlPointsCount() const
+  {
+    return m_controlPoints.size();
   }
 
   /**
@@ -265,6 +314,11 @@ class EE_CORE_EXPORT Mesh
    * The indices stored.
    */
   Vector<uint32> m_indexArray;
+
+  /**
+   * The control points for tessellation.
+   */
+  Vector<ComplexVertex> m_controlPoints;
 
   /**
    * The number of indices.
