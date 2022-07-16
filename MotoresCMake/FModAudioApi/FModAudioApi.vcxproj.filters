@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{9c79190a-65f7-4524-9f91-968af77a3513}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{b81f27dd-4ce8-43c4-aee1-52d3cadfb776}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\eeFModAudioManager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eePrerequisitesFMod.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeFModAudio.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeFModSound.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\eeFModAudio.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeFModAudioManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeFModSound.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

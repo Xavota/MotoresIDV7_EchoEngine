@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{2a8e54a8-d381-4d06-8222-5cb6b0fe05d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{58e190e3-06dc-4379-b177-138a0e8fd072}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Platform">
+      <UniqueIdentifier>{9b12fbd1-e84a-49ff-9ab6-d05122278d9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform">
+      <UniqueIdentifier>{30cdc0f8-8f93-4396-aa8b-99323ca4176a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\eeVector2.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeVector3.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeVector4.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeMatrix2.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeMatrix3.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeMatrix4.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eePlane.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeSphere.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeBox.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeRectangle.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeCapsule.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeQuaternion.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eePlatformDefines.h">
+      <Filter>include\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eePlatformTypes.h">
+      <Filter>include\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eePrerequisitesUtilities.h">
+      <Filter>include\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeSTDHeaders.h">
+      <Filter>include\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeMath.h">
+      <Filter>include\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeDLLDynamics.h">
+      <Filter>include\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeMemoryManager.h">
+      <Filter>include\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeLogger.h">
+      <Filter>include\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeColor.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeStringUtilities.h">
+      <Filter>include\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeFrustum.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeUtilityCamera.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeTime.h">
+      <Filter>include\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeVertex.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeFile.h">
+      <Filter>include\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeModule.h">
+      <Filter>include\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eePlatformMath.h">
+      <Filter>include\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeTriangle.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\eeVector2.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeVector3.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeVector4.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeMatrix2.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeMatrix3.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeMatrix4.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eePlane.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeSphere.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeBox.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeCapsule.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeRectangle.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeQuaternion.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeDLLDynamics.cpp">
+      <Filter>src\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeMemoryManager.cpp">
+      <Filter>src\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeLogger.cpp">
+      <Filter>src\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeColor.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeStringUtilities.cpp">
+      <Filter>src\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeFrustum.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeUtilityCamera.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeTime.cpp">
+      <Filter>src\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeFile.cpp">
+      <Filter>src\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eePlatformMath.cpp">
+      <Filter>src\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eePlatformMathIndependent.cpp">
+      <Filter>src\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eeTriangle.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
