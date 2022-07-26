@@ -162,7 +162,7 @@ OGLTexture::useAsShaderResource()
 {
 }
 void
-OGLTexture::loadImages(Vector<SPtr<Image>> images)
+OGLTexture::loadImages(const Vector<SPtr<Image>>& images)
 {
   glBindTexture(GL_TEXTURE_2D, m_shaderResource);
   //for (int32 i = 0; i < 1000; ++i) {

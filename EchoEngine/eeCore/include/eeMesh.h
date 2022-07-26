@@ -136,7 +136,7 @@ class EE_CORE_EXPORT Mesh
    * @return
    * Pointer to the vertex buffer.
    */
-  virtual const SPtr<VertexBuffer>
+  virtual const WPtr<VertexBuffer>
   getVertexData() const;
   /**
    * @brief
@@ -148,7 +148,7 @@ class EE_CORE_EXPORT Mesh
    * @return
    * Pointer to the index buffer.
    */
-  virtual const SPtr<IndexBuffer>
+  virtual const WPtr<IndexBuffer>
   getIndexData() const;
 
   /**

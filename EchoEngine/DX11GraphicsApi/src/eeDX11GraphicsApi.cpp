@@ -142,38 +142,38 @@ DX11GraphicsApi::processEvents()
 {
 }
 void
-DX11GraphicsApi::clearRenderTargets(Vector<SPtr<Texture>> rtvs,
+DX11GraphicsApi::clearRenderTargets(const Vector<WPtr<Texture>>& rtvs,
                                     Color screenColor)
 {
   for (auto& r : rtvs) {
-    SPtr<DX11Texture> dx11Tex =
-    MemoryManager::instance().reinterpretPtr<DX11Texture>(r);
+    auto dx11Tex =
+    MemoryManager::instance().reinterpretPtr<DX11Texture>(r.lock());
     dx11Tex->clean(screenColor);
   }
 }
 void
-DX11GraphicsApi::cleanDepthStencils(Vector<SPtr<Texture>> dsvs)
+DX11GraphicsApi::cleanDepthStencils(const Vector<WPtr<Texture>>& dsvs)
 {
   for (auto& d : dsvs) {
-    d->clean();
+    d.lock()->clean();
   }
 }
 void
-DX11GraphicsApi::setRenderTargets(Vector<SPtr<Texture>> rtvs,
-                                  SPtr<Texture> dsv)
+DX11GraphicsApi::setRenderTargets(const Vector<WPtr<Texture>>& rtvs,
+                                  WPtr<Texture> dsv)
 {
   auto& memoryManager = MemoryManager::instance();
 
   Vector<ID3D11RenderTargetView*> dx11rts;
 
-  SPtr<DX11Texture> ds = nullptr;
-  if (dsv) {
-    ds = memoryManager.reinterpretPtr<DX11Texture>(dsv);
+  SPtr<DX11Texture> ds;
+  if (!dsv.expired()) {
+    ds = memoryManager.reinterpretPtr<DX11Texture>(dsv.lock());
   }
 
   for (const auto& r : rtvs) {
-    SPtr<DX11Texture> rt =
-    memoryManager.reinterpretPtr<DX11Texture>(r);
+    auto rt =
+    memoryManager.reinterpretPtr<DX11Texture>(r.lock());
   
     if (rt) {
       dx11rts.push_back(rt->getRenderTarget());
@@ -183,7 +183,9 @@ DX11GraphicsApi::setRenderTargets(Vector<SPtr<Texture>> rtvs,
   if (!dx11rts.empty()) {
     m_basics.m_deviceContext->OMSetRenderTargets(static_cast<UINT>(dx11rts.size()),
                                                  dx11rts.data(),
-                                                 ds ? ds->getDepthStencil() : nullptr);
+                                                 ds
+                                               ? ds->getDepthStencil()
+                                               : nullptr);
   }
 }
 void
@@ -194,7 +196,7 @@ DX11GraphicsApi::unsetRenderTargets()
   m_basics.m_deviceContext->OMSetRenderTargets(8u, &rtvs[0], nullptr);
 }
 void
-DX11GraphicsApi::setTextures(Vector<SPtr<Texture>> textures,
+DX11GraphicsApi::setTextures(const Vector<WPtr<Texture>>& textures,
                              uint32 startSlot)
 {
   auto& memoryManager = MemoryManager::instance();
@@ -202,7 +204,7 @@ DX11GraphicsApi::setTextures(Vector<SPtr<Texture>> textures,
   Vector<ID3D11ShaderResourceView*> dx11texs;
 
   for (const auto& tex : textures) {
-    SPtr<DX11Texture> t = memoryManager.reinterpretPtr<DX11Texture>(tex);
+    auto t = memoryManager.reinterpretPtr<DX11Texture>(tex.lock());
 
     if (t) {
       dx11texs.push_back(t->getShaderResource());
@@ -232,7 +234,7 @@ DX11GraphicsApi::unsetTextures(uint32 textureCount, uint32 startSlot)
   );
 }
 void
-DX11GraphicsApi::setVSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers, // TODO: Referencia constante
+DX11GraphicsApi::setVSConstantBuffers(const Vector<WPtr<ConstantBuffer>>& buffers, // TODO: Referencia constante
                                       uint32 startSlot)
 {
   auto& memoryManager = MemoryManager::instance();
@@ -240,8 +242,8 @@ DX11GraphicsApi::setVSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers, // T
   Vector<ID3D11Buffer*> dx11buffers;
 
   for (const auto& buff : buffers) {
-    SPtr<DX11ConstantBuffer> b =
-    memoryManager.reinterpretPtr<DX11ConstantBuffer>(buff);
+    auto b =
+    memoryManager.reinterpretPtr<DX11ConstantBuffer>(buff.lock());
 
     if (b) {
       dx11buffers.push_back(b->getResource());
@@ -271,7 +273,7 @@ DX11GraphicsApi::unsetVSConstantBuffers(uint32 buffersCount, uint32 startSlot)
   );
 }
 void
-DX11GraphicsApi::setPSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
+DX11GraphicsApi::setPSConstantBuffers(const Vector<WPtr<ConstantBuffer>>& buffers,
                                       uint32 startSlot)
 {
   auto& memoryManager = MemoryManager::instance();
@@ -279,8 +281,8 @@ DX11GraphicsApi::setPSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
   Vector<ID3D11Buffer*> dx11buffers;
 
   for (const auto& buff : buffers) {
-    SPtr<DX11ConstantBuffer> b =
-    memoryManager.reinterpretPtr<DX11ConstantBuffer>(buff);
+    auto b =
+    memoryManager.reinterpretPtr<DX11ConstantBuffer>(buff.lock());
 
     if (b) {
       dx11buffers.push_back(b->getResource());
@@ -310,7 +312,7 @@ DX11GraphicsApi::unsetPSConstantBuffers(uint32 buffersCount, uint32 startSlot)
   );
 }
 void
-DX11GraphicsApi::setHSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
+DX11GraphicsApi::setHSConstantBuffers(const Vector<WPtr<ConstantBuffer>>& buffers,
                                       uint32 startSlot)
 {
   auto& memoryManager = MemoryManager::instance();
@@ -318,8 +320,8 @@ DX11GraphicsApi::setHSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
   Vector<ID3D11Buffer*> dx11buffers;
 
   for (const auto& buff : buffers) {
-    SPtr<DX11ConstantBuffer> b =
-      memoryManager.reinterpretPtr<DX11ConstantBuffer>(buff);
+    auto b =
+    memoryManager.reinterpretPtr<DX11ConstantBuffer>(buff.lock());
 
     if (b) {
       dx11buffers.push_back(b->getResource());
@@ -349,7 +351,7 @@ DX11GraphicsApi::unsetHSConstantBuffers(uint32 buffersCount, uint32 startSlot)
   );
 }
 void
-DX11GraphicsApi::setDSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
+DX11GraphicsApi::setDSConstantBuffers(const Vector<WPtr<ConstantBuffer>>& buffers,
                                       uint32 startSlot)
 {
   auto& memoryManager = MemoryManager::instance();
@@ -357,8 +359,8 @@ DX11GraphicsApi::setDSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
   Vector<ID3D11Buffer*> dx11buffers;
 
   for (const auto& buff : buffers) {
-    SPtr<DX11ConstantBuffer> b =
-      memoryManager.reinterpretPtr<DX11ConstantBuffer>(buff);
+    auto b =
+    memoryManager.reinterpretPtr<DX11ConstantBuffer>(buff.lock());
 
     if (b) {
       dx11buffers.push_back(b->getResource());
@@ -388,8 +390,8 @@ DX11GraphicsApi::unsetDSConstantBuffers(uint32 buffersCount, uint32 startSlot)
   );
 }
 void
-DX11GraphicsApi::setVertexBuffers(Vector<SPtr<VertexBuffer>> buffers,
-                                  Vector<uint32> offsets,
+DX11GraphicsApi::setVertexBuffers(const Vector<WPtr<VertexBuffer>>& buffers,
+                                  const Vector<uint32>& offsets,
                                   uint32 startSlot)
 {
   auto& memoryManager = MemoryManager::instance();
@@ -398,8 +400,8 @@ DX11GraphicsApi::setVertexBuffers(Vector<SPtr<VertexBuffer>> buffers,
   Vector<uint32> strides;
 
   for (const auto& buff : buffers) {
-    SPtr<DX11VertexBuffer> b =
-    memoryManager.reinterpretPtr<DX11VertexBuffer>(buff);
+    auto b =
+    memoryManager.reinterpretPtr<DX11VertexBuffer>(buff.lock());
 
     if (b) {
       dx11Vbuffers.push_back(b->getResource());
@@ -440,18 +442,18 @@ DX11GraphicsApi::unsetVertexBuffers(uint32 buffersCount, uint32 startSlot)
   }
 }
 void
-DX11GraphicsApi::setIndexBuffer(SPtr<IndexBuffer> buffer, uint32 offset)
+DX11GraphicsApi::setIndexBuffer(WPtr<IndexBuffer> buffer, uint32 offset)
 {
   const auto* basics =
   reinterpret_cast<const DX11Basics*>(DX11GraphicsApi::instance().getBasics());
 
-  SPtr<DX11IndexBuffer> buf =
-    MemoryManager::instance().reinterpretPtr<DX11IndexBuffer>(buffer);
+  auto buf =
+  MemoryManager::instance().reinterpretPtr<DX11IndexBuffer>(buffer.lock());
 
-  if (buffer->getBatchSize() == 2) {
+  if (buffer.lock()->getBatchSize() == 2) {
     basics->m_deviceContext->IASetIndexBuffer(buf->getResource(), DXGI_FORMAT_R16_UINT, offset);
   }
-  else if (buffer->getBatchSize() == 4) {
+  else if (buffer.lock()->getBatchSize() == 4) {
     basics->m_deviceContext->IASetIndexBuffer(buf->getResource(), DXGI_FORMAT_R32_UINT, offset);
   }
 }
@@ -464,11 +466,11 @@ DX11GraphicsApi::unsetIndexBuffer()
   basics->m_deviceContext->IASetIndexBuffer(nullptr, DXGI_FORMAT_R16_UINT, 0);
 }
 void
-DX11GraphicsApi::setViewports(Vector<ViewportDesc> descs) // TODO
+DX11GraphicsApi::setViewports(const Vector<ViewportDesc>& descs) // TODO
 {
   Vector<D3D11_VIEWPORT> vps;
 
-  for (ViewportDesc& d : descs) {
+  for (auto& d : descs) {
     SIZE_T vSize = vps.size();
     vps.emplace_back(D3D11_VIEWPORT());
 
@@ -524,18 +526,18 @@ DX11GraphicsApi::setPrimitiveTopology(ePRIMITIVE_TOPOLOGY::E topology)
   static_cast<D3D11_PRIMITIVE_TOPOLOGY>(topology));
 }
 void
-DX11GraphicsApi::setShaderPrograms(SPtr<VertexShader> vertexShader,
-                                   SPtr<HullShader> hullShader,
-                                   SPtr<DomainShader> domainShader,
-                                   SPtr<PixelShader> pixelShader)
+DX11GraphicsApi::setShaderPrograms(WPtr<VertexShader> vertexShader,
+                                   WPtr<HullShader> hullShader,
+                                   WPtr<DomainShader> domainShader,
+                                   WPtr<PixelShader> pixelShader)
 {
-  if (vertexShader) vertexShader->use();
+  if (!vertexShader.expired()) vertexShader.lock()->use();
   else m_basics.m_deviceContext->VSSetShader(nullptr, nullptr, 0);
-  if (hullShader) hullShader->use();
+  if (!hullShader.expired()) hullShader.lock()->use();
   else m_basics.m_deviceContext->HSSetShader(nullptr, nullptr, 0);
-  if (domainShader) domainShader->use();
+  if (!domainShader.expired()) domainShader.lock()->use();
   else m_basics.m_deviceContext->DSSetShader(nullptr, nullptr, 0);
-  if (pixelShader) pixelShader->use();
+  if (!pixelShader.expired()) pixelShader.lock()->use();
   else m_basics.m_deviceContext->PSSetShader(nullptr, nullptr, 0);
 }
 void
@@ -551,6 +553,8 @@ DX11GraphicsApi::release()
   DX11SAFE_RELEASE(m_basics.m_deviceContext);
   DX11SAFE_RELEASE(m_basics.m_swapChain);
 }
+
+
 
 EE_EXTERN EE_PLUGIN_EXPORT void
 initPlugin()

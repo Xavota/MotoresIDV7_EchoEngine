@@ -84,7 +84,7 @@ class EE_CORE_EXPORT Actor : public EnableSPtrFromThis<Actor>
    * The pointer to the component, nullptr if it doesn't exists.
    */
   template <class T>
-  FORCEINLINE SPtr<T>
+  FORCEINLINE WPtr<T>
   getComponent();
 
   /**
@@ -133,7 +133,7 @@ class EE_CORE_EXPORT Actor : public EnableSPtrFromThis<Actor>
    * The new parent actor, nullptr if no parent.
    */
   void
-  attachTo(SPtr<Actor> pParent);
+  attachTo(const SPtr<Actor> pParent);
   /**
    * @brief
    * Gets the parent.
@@ -144,7 +144,7 @@ class EE_CORE_EXPORT Actor : public EnableSPtrFromThis<Actor>
    * @retunr
    * The actor to witch it is attached to.
    */
-  SPtr<Actor>
+  WPtr<Actor>
   getParent()
   {
     return m_pParent;
@@ -160,7 +160,7 @@ class EE_CORE_EXPORT Actor : public EnableSPtrFromThis<Actor>
    * @return
    * The transform component.
    */
-  SPtr<CTransform>
+  WPtr<CTransform>
   getTransform();
 
 
@@ -210,7 +210,7 @@ class EE_CORE_EXPORT Actor : public EnableSPtrFromThis<Actor>
   /**
    * A parent actor, if it is.
    */
-  SPtr<Actor> m_pParent = nullptr;
+  WPtr<Actor> m_pParent;
 
   /**
    * If the actor is active or not.
@@ -228,9 +228,10 @@ Actor::addComponent()
 {
   T c; // This is to disable warning "constant logic expression"
   if (c.getType() == eCOMPONENT_TYPE::kTransform) {
-    Logger::instance().ConsoleLog("Things can't be in more than one place, kido.");
-    Logger::instance().ConsoleLog("ERROR ADDING TRANSFORM COMPONENT TO ACTOR.");
-    Logger::instance().ConsoleLog("CANNOT ADD A TRANSFORM COMPONENT");
+  auto& loggerMan = Logger::instance();
+    loggerMan.consoleLog("Things can't be in more than one place, kido.");
+    loggerMan.consoleLog("ERROR ADDING TRANSFORM COMPONENT TO ACTOR.");
+    loggerMan.consoleLog("CANNOT ADD A TRANSFORM COMPONENT");
     return;
   }
   SIZE_T cmpIndex = m_pComponents.size();
@@ -238,15 +239,17 @@ Actor::addComponent()
   m_pComponents[cmpIndex]->init(shared_from_this());
 }
 template<typename T>
-inline SPtr<T> Actor::getComponent()
+FORCEINLINE WPtr<T>
+Actor::getComponent()
 {
+  auto& memoryMan = MemoryManager::instance();
   SIZE_T compCount = m_pComponents.size();
   for (uint32 i = 0; i != compCount; ++i) {
     if (m_pComponents[i]->getType() == T::CmpType) {
-      return MemoryManager::instance().reinterpretPtr<T>(m_pComponents[i]);
+      return memoryMan.reinterpretPtr<T>(m_pComponents[i]);
     }
   }
-  return nullptr;
+  return WPtr<T>();
 }
 }
 

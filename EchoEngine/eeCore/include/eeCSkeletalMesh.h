@@ -74,7 +74,7 @@ public:
    * @return
    * The skeletal mesh resource that store the bone data.
    */
-  SPtr<SkeletalMesh>
+  WPtr<SkeletalMesh>
   getModel();
   /**
    * @brief
@@ -87,12 +87,12 @@ public:
    * The new skeletal mesh resource that stores the bone data.
    */
   void
-  setModel(SPtr<SkeletalMesh> skeletal);
+  setModel(WPtr<SkeletalMesh> skeletal);
 
  private:
   /**
    * The skeletal mesh resource.
    */
-  SPtr<SkeletalMesh> m_skMesh;
+  WPtr<SkeletalMesh> m_skMesh;
 };
 }

@@ -56,7 +56,7 @@ class EE_CORE_EXPORT SkeletalMesh
    * Weather it succeed or failed to initialize.
    */
   SkeletalMesh(const Vector<BoneMesh/*<V, I>*/>& meshes,
-               SPtr<Skeletal> skeleton,
+               WPtr<Skeletal> skeleton,
                const String& name,
                const Vector3f& furtherVertexPosition,
                const Vector3f& maxCoordinate,
@@ -84,8 +84,8 @@ class EE_CORE_EXPORT SkeletalMesh
    * @return
    * Weather it succeed or failed to initialize.
    */
-  SkeletalMesh(const Vector<Pair<BoneMesh/*<V, I>*/, SPtr<Material>>>& meshes,
-               SPtr<Skeletal> skeleton,
+  SkeletalMesh(const Vector<Pair<BoneMesh/*<V, I>*/, WPtr<Material>>>& meshes,
+               WPtr<Skeletal> skeleton,
                const String& name,
                const Vector3f& furtherVertexPosition,
                const Vector3f& maxCoordinate,
@@ -121,7 +121,7 @@ class EE_CORE_EXPORT SkeletalMesh
    */
   virtual bool
   loadFromMeshes(const Vector<BoneMesh/*<V, I>*/>& meshes,
-                 SPtr<Skeletal> skeleton,
+                 WPtr<Skeletal> skeleton,
                  const String& name,
                  const Vector3f& furtherVertexPosition,
                  const Vector3f& maxCoordinate,
@@ -150,8 +150,8 @@ class EE_CORE_EXPORT SkeletalMesh
    * Weather it succeed or failed to initialize.
    */
   virtual bool
-  loadFromMeshes(const Vector<Pair<BoneMesh/*<V, I>*/, SPtr<Material>>>& meshes,
-                 SPtr<Skeletal> skeleton,
+  loadFromMeshes(const Vector<Pair<BoneMesh/*<V, I>*/, WPtr<Material>>>& meshes,
+                 WPtr<Skeletal> skeleton,
                  const String& name,
                  const Vector3f& furtherVertexPosition,
                  const Vector3f& maxCoordinate,
@@ -167,7 +167,7 @@ class EE_CORE_EXPORT SkeletalMesh
    * @return
    * The vector of pairs of meshes and texture.
    */
-  virtual Vector<Pair<BoneMesh/*<V, I>*/, SPtr<Material>>>
+  virtual Vector<Pair<BoneMesh/*<V, I>*/, WPtr<Material>>>
   getMeshes();
   /**
    * @brief
@@ -179,7 +179,7 @@ class EE_CORE_EXPORT SkeletalMesh
    * @return
    * The vector of textures.
    */
-  virtual Vector<SPtr<Material>>
+  virtual Vector<WPtr<Material>>
   getTextures();
   /**
    * @brief
@@ -194,7 +194,7 @@ class EE_CORE_EXPORT SkeletalMesh
    * The index of the texture.
    */
   virtual void
-  setTexture(SPtr<Material> texture, uint32 index);
+  setTexture(WPtr<Material> texture, uint32 index);
 
   /**
    * @brief
@@ -216,7 +216,7 @@ class EE_CORE_EXPORT SkeletalMesh
    * @return
    * The skeletal mesh resource to store the bone data.
    */
-  FORCEINLINE SPtr<Skeletal>
+  FORCEINLINE WPtr<Skeletal>
   getSkeletal()
   {
     return m_skeleton;
@@ -264,7 +264,7 @@ class EE_CORE_EXPORT SkeletalMesh
   /**
    * The vector of pairs of meshes and texture indices.
    */
-  Vector<Pair<BoneMesh/*<V, I>*/, SPtr<Material>>> m_meshes;
+  Vector<Pair<BoneMesh/*<V, I>*/, WPtr<Material>>> m_meshes;
   /**
    * The resource name.
    */
@@ -273,7 +273,7 @@ class EE_CORE_EXPORT SkeletalMesh
   /**
    * The skeletal with the bone data.
    */
-  SPtr<Skeletal> m_skeleton;
+  WPtr<Skeletal> m_skeleton;
 
   /**
    * A sphere bounding all the model.

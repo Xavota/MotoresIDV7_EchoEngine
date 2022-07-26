@@ -66,7 +66,7 @@ class EE_UTILITY_EXPORT Logger : public Module<Logger>
    * The log info.
    */
   void
-  ConsoleLog(const String& log);
+  consoleLog(const String& log);
 
   /**
    * @brief
@@ -83,6 +83,6 @@ class EE_UTILITY_EXPORT Logger : public Module<Logger>
    * The warning level of the log.
    */
   void
-  FileLog(const String& log, const WString& file, WARNING_LEVEL::E warningLvl);
+  fileLog(const String& log, const WString& file, WARNING_LEVEL::E warningLvl);
 };
 }

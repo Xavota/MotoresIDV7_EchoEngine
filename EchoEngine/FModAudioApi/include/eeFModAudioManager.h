@@ -150,10 +150,19 @@ class EE_FMOD_EXPORT FModAudioManager : public AudioManager
   playAudio(SPtr<Audio> audioPtr) override;
 
  private:
+  /**
+   * The system of the fmod library.
+   */
   FMOD::System* m_fmodSystem = nullptr;
 
+  /**
+   * The max number of channels for the entire system.
+   */
   int32 m_maxChannels = 64;
 
+  /**
+   * The sounds that are currently playing.
+   */
   Vector<PlayingAudioInstance> m_playingSounds;
 };
 }

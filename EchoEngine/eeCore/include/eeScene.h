@@ -55,8 +55,8 @@ class EE_CORE_EXPORT Scene
    * @return
    * All actors inside.
    */
-  Vector<SPtr<Actor>>
-  getAllRenderableActorsInside(SPtr<CCamera> camera,
+  Vector<WPtr<Actor>>
+  getAllRenderableActorsInside(WPtr<CCamera> camera,
                                RENDER_ACTOR_FLAGS::E flags);
   /**
    * @brief
@@ -74,10 +74,10 @@ class EE_CORE_EXPORT Scene
    * The actors that can be rendered.
    */
   void
-  getAllRenderableActorsInsideHelper(SPtr<CCamera> camera,
-                                     Vector<SPtr<Actor>> actors,
+  getAllRenderableActorsInsideHelper(WPtr<CCamera> camera,
+                                     const Vector<SPtr<Actor>>& actors,
                                      RENDER_ACTOR_FLAGS::E flags,
-                                     Vector<SPtr<Actor>>& outRenderActors);
+                                     Vector<WPtr<Actor>>& outRenderActors);
 
   /**
    * @brief
@@ -93,7 +93,7 @@ class EE_CORE_EXPORT Scene
    * @return
    * The ptr to the new actor.
    */
-  SPtr<Actor>
+  WPtr<Actor>
   addActor(const String& name);
   /**
    * @brief
@@ -108,7 +108,7 @@ class EE_CORE_EXPORT Scene
    * @return
    * The looked actor, nullptr if couldn't found it.
    */
-  SPtr<Actor>
+  WPtr<Actor>
   getActor(const String& name);
   
   /**

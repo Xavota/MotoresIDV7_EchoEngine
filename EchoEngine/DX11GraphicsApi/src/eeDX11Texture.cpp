@@ -285,7 +285,7 @@ DX11Texture::useAsShaderResource()
   }
 }
 void
-DX11Texture::loadImages(Vector<SPtr<Image>> images)
+DX11Texture::loadImages(const Vector<SPtr<Image>>& images)
 {
   Texture::loadImages(images);
 
@@ -301,8 +301,8 @@ DX11Texture::loadImages(Vector<SPtr<Image>> images)
     
     DX11SAFE_RELEASE(m_textureResource);
     
-    image_texture_desc.Width = images[0]->getWidth();
-    image_texture_desc.Height = images[0]->getHeight();
+    //image_texture_desc.Width = images[0]->getWidth();
+    //image_texture_desc.Height = images[0]->getHeight();
     image_texture_desc.MipLevels = 1;
     
     D3D11_SUBRESOURCE_DATA image_subresource_data = {};

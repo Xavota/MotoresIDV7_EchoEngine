@@ -105,7 +105,7 @@ class EE_GAINPUT_EXPORT GaInputManager : public InputManager
    * @return
    * The device ptr with the given id, nullptr if the id doesn't exist.
    */
-  SPtr<InputDevice>
+  WPtr<InputDevice>
   getDevice(uint32 id) override;
 
   /**

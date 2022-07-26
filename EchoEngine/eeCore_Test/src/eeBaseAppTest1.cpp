@@ -90,6 +90,7 @@ using eeEngineSDK::uint8;
 using eeEngineSDK::uint16;
 using eeEngineSDK::uint32;
 using eeEngineSDK::SPtr;
+using eeEngineSDK::WPtr;
 using eeEngineSDK::Math;
 using eeEngineSDK::VertexShader;
 using eeEngineSDK::PixelShader;
@@ -239,7 +240,7 @@ WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     if (!_first) {
       int width = 0, height = 0;
       RECT rc;
-      GetClientRect(reinterpret_cast<HWND>(GraphicsApi::instance().getMainWindow()->getWindowPtr()), &rc);
+      GetClientRect(reinterpret_cast<HWND>(GraphicsApi::instance().getMainWindow().lock()->getWindowPtr()), &rc);
       width = rc.right - rc.left;
       height = rc.bottom - rc.top;
       GraphicsApi::instance().resizeWindow(Point2D{ static_cast<uint32>(width),
@@ -312,15 +313,16 @@ InitImgUI()
 
   // Setup Platform/Renderer back ends
   ImGui_ImplDX11_Init(basics->m_device, basics->m_deviceContext);
-  ImGui_ImplWin32_Init(graphicsApi.getMainWindow()->getWindowPtr());
+  ImGui_ImplWin32_Init(graphicsApi.getMainWindow().lock()->getWindowPtr());
 
   return S_OK;
 }
 
 void
-DrawLightCmp(SPtr<CLight> light, int32& uniqueId)
+DrawLightCmp(WPtr<CLight> light, int32& uniqueId)
 {
-  auto lightTypeIndex = static_cast<int32>(light->getLightType());
+  auto sLight = light.lock();
+  auto lightTypeIndex = static_cast<int32>(sLight->getLightType());
   Vector<const char*> lightTypeNames =
   {
     "Directional",
@@ -329,83 +331,89 @@ DrawLightCmp(SPtr<CLight> light, int32& uniqueId)
   };
   ImGui::PushID(uniqueId++);
   if (ImGui::Combo("Light Type",
-                   &lightTypeIndex,
-                   lightTypeNames.data(),
-                   static_cast<uint32>(lightTypeNames.size()))) {
-                   light->setLightType(
+    &lightTypeIndex,
+    lightTypeNames.data(),
+    static_cast<uint32>(lightTypeNames.size()))) {
+    sLight->setLightType(
       static_cast<eeEngineSDK::eLIGHT_TYPE::E>(lightTypeIndex));
   }
   ImGui::PopID();
 
-  Color color = light->getColor();
+  Color color = sLight->getColor();
   ImGui::PushID(uniqueId++);
   if (ImGui::ColorPicker4("Color", (float*)&color, 0, nullptr)) {
-    light->setColor(color);
+    sLight->setColor(color);
   }
   ImGui::PopID();
 
-  float intensity = light->getIntensity();
+  float intensity = sLight->getIntensity();
   ImGui::PushID(uniqueId++);
   if (ImGui::DragFloat("Intensity", &intensity, 0.01f, 0.0f, 100.0f)) {
-    light->setIntensity(intensity);
+    sLight->setIntensity(intensity);
   }
   ImGui::PopID();
 
-  if (light->getLightType() == eeEngineSDK::eLIGHT_TYPE::kSpot) {
-    float innerAngle = light->getInnerAngle();
-    float outerAngle = light->getOuterAngle();
+  if (sLight->getLightType() == eeEngineSDK::eLIGHT_TYPE::kSpot) {
+    float innerAngle = sLight->getInnerAngle();
+    float outerAngle = sLight->getOuterAngle();
     ImGui::PushID(uniqueId++);
     if (ImGui::DragFloat("Inner Angle",
-                         &innerAngle,
-                         0.01f,
-                         0.0f,
-                         outerAngle)) {
-      light->setInnerAngle(innerAngle);
+      &innerAngle,
+      0.01f,
+      0.0f,
+      outerAngle)) {
+      sLight->setInnerAngle(innerAngle);
     }
     ImGui::PopID();
     ImGui::PushID(uniqueId++);
     if (ImGui::DragFloat("Outer Angle",
-                         &outerAngle,
-                         0.01f,
-                         innerAngle,
-                         Math::kPI - 0.001f)) {
-      light->setOuterAngle(outerAngle);
+      &outerAngle,
+      0.01f,
+      innerAngle,
+      Math::kPI - 0.001f)) {
+      sLight->setOuterAngle(outerAngle);
     }
     ImGui::PopID();
   }
 }
 
 void
-DrawTransformCmp(SPtr<CTransform> trans, int32& uniqueId)
+DrawTransformCmp(WPtr<CTransform> trans, int32& uniqueId)
 {
+  auto sTrans = trans.lock();
   ImGui::PushID(uniqueId++);
-  Vector3f actPos = trans->getPosition();
+  Vector3f actPos = sTrans->getPosition();
   float pos[3] = { actPos.x, actPos.y, actPos.z };
   if (ImGui::DragFloat3("Position", pos, 0.01f, -1000.0f, 1000.0f)) {
-    trans->setPosition(Vector3f(pos[0], pos[1], pos[2]));
+    sTrans->setPosition(Vector3f(pos[0], pos[1], pos[2]));
   }
   ImGui::PopID();
   ImGui::PushID(uniqueId++);
-  Vector3f actRot = trans->getRotation().getEuclidean();
+  Vector3f actRot = sTrans->getRotation().getEuclidean();
   float rot[3] = { actRot.x, actRot.y, actRot.z };
   if (ImGui::DragFloat3("Rotation", rot, 0.01f, -1000.0f, 1000.0f)) {
-    trans->setRotation(Quaternion(Vector3f(rot[0], rot[1], rot[2])));
+    sTrans->setRotation(Quaternion(Vector3f(rot[0], rot[1], rot[2])));
   }
   ImGui::PopID();
   ImGui::PushID(uniqueId++);
-  Vector3f actScale = trans->getScale();
+  Vector3f actScale = sTrans->getScale();
   float scale[3] = { actScale.x, actScale.y, actScale.z };
   if (ImGui::DragFloat3("Scale", scale, 0.01f, -1000.0f, 1000.0f)) {
-    trans->setScale(Vector3f(scale[0], scale[1], scale[2]));
+    sTrans->setScale(Vector3f(scale[0], scale[1], scale[2]));
   }
   ImGui::PopID();
 }
 
 void
-DrawAnimationCmp(SPtr<CAnimation> anim, int32& uniqueId)
+DrawAnimationCmp(WPtr<CAnimation> anim, int32& uniqueId)
 {
+  auto sAnim = anim.lock();
   ImGui::PushID(uniqueId++);
-  String animName = anim->getAnimation()->getName();
+  auto sAnimRes = sAnim->getAnimation();
+  String animName;
+  if (!sAnimRes.expired()) {
+    animName = sAnimRes.lock()->getName();
+  }
   Map<String, SPtr<Animation>> anims =
   ResourceManager::instance().getAllAnimationResources();
   int animIndex = 0;
@@ -422,52 +430,54 @@ DrawAnimationCmp(SPtr<CAnimation> anim, int32& uniqueId)
                    &animIndex,
                    names.data(),
                    static_cast<int32>(names.size()))) {
-    anim->setAnimation(ResourceManager::instance().getResourceAnimation(names[animIndex]));
+    sAnim->setAnimation(ResourceManager::instance().getResourceAnimation(names[animIndex]));
   }
   ImGui::PopID();
 }
 
 void
-DrawCameraCmp(SPtr<CCamera> cam, int32& uniqueId)
+DrawCameraCmp(WPtr<CCamera> cam, int32& uniqueId)
 {
+  auto sCam = cam.lock();
   ImGui::PushID(uniqueId++);
-  CAMERA_PROJECTION_TYPE pt = cam->getProjectionType();
+  CAMERA_PROJECTION_TYPE pt = sCam->getProjectionType();
   auto projIndex = static_cast<int>(pt);
   const char* projTypes[] = { "Orthographic", "Perspective" };
   if (ImGui::Combo("Projection Types", &projIndex, projTypes, 2)) {
-    cam->setProjectionType(static_cast<CAMERA_PROJECTION_TYPE>(projIndex));
+    sCam->setProjectionType(static_cast<CAMERA_PROJECTION_TYPE>(projIndex));
   }
   ImGui::PopID();
   ImGui::PushID(uniqueId++);
-  float fov = cam->getFovAngle() * Math::k180_OVER_PI;
+  float fov = sCam->getFovAngle() * Math::k180_OVER_PI;
   if (ImGui::DragFloat("FOV", &fov, 0.1f, 10.0f, 89.0f)) {
-    cam->setFovAngle(fov * Math::kPI_OVER_180);
+    sCam->setFovAngle(fov * Math::kPI_OVER_180);
   }
   ImGui::PopID();
   ImGui::PushID(uniqueId++);
-  float nearDist = cam->getNearPlane();
+  float nearDist = sCam->getNearPlane();
   if (ImGui::DragFloat("Near", &nearDist, 0.01f, .01f, 200.0f)) {
-    cam->setNearPlane(nearDist);
+    sCam->setNearPlane(nearDist);
   }
   ImGui::PopID();
   ImGui::PushID(uniqueId++);
-  float farDist = cam->getFarPlane();
+  float farDist = sCam->getFarPlane();
   if (ImGui::DragFloat("Far", &farDist, 0.01f, .01f, 200.0f)) {
-    cam->setFarPlane(farDist);
+    sCam->setFarPlane(farDist);
   }
   ImGui::PopID();
   ImGui::PushID(uniqueId++);
-  bool isMain = cam->isMain();
+  bool isMain = sCam->isMain();
   if (ImGui::Checkbox("Main Camera", &isMain)) {
-    cam->setMain(isMain);
+    sCam->setMain(isMain);
   }
   ImGui::PopID();
 }
 
 void
-DrawStaticMeshCmp(SPtr<CStaticMesh> staticMesh, int32& uniqueId)
+DrawStaticMeshCmp(WPtr<CStaticMesh> staticMesh, int32& uniqueId)
 {
-  auto mobTypeIndex = static_cast<int32>(staticMesh->getMobilityType());
+  auto sStaticMesh = staticMesh.lock();
+  auto mobTypeIndex = static_cast<int32>(sStaticMesh->getMobilityType());
   Vector<const char*> mobTypeNames =
   {
     "Dynamic",
@@ -478,12 +488,12 @@ DrawStaticMeshCmp(SPtr<CStaticMesh> staticMesh, int32& uniqueId)
                    &mobTypeIndex,
                    mobTypeNames.data(),
                    static_cast<uint32>(mobTypeNames.size()))) {
-    staticMesh->setMobilityType(
+    sStaticMesh->setMobilityType(
     static_cast<eeEngineSDK::eMOBILITY_TYPE::E>(mobTypeIndex));
   }
   ImGui::PopID();
 
-  String staticMeshName = staticMesh->getStaticMesh()->getName();
+  String staticMeshName = sStaticMesh->getStaticMesh().lock()->getName();
   Map<String, SPtr<StaticMesh>> staticMeshes =
   ResourceManager::instance().getAllStaticMeshResources();
   int32 staticMeshIndex = 0;
@@ -501,17 +511,18 @@ DrawStaticMeshCmp(SPtr<CStaticMesh> staticMesh, int32& uniqueId)
                    &staticMeshIndex,
                    names.data(),
                    static_cast<uint32>(names.size()))) {
-    staticMesh->setStaticMesh(
+    sStaticMesh->setStaticMesh(
     ResourceManager::instance().getResourceStaticMesh(names[staticMeshIndex]));
   }
   ImGui::PopID();
 }
 
 void
-DrawSkeletalMeshCmp(SPtr<CSkeletalMesh> skMesh, int32& uniqueId)
+DrawSkeletalMeshCmp(WPtr<CSkeletalMesh> skMesh, int32& uniqueId)
 {
+  auto sSkMesh = skMesh.lock();
   ImGui::PushID(uniqueId++);
-  String modelName = skMesh->getModel()->getName();
+  String modelName = sSkMesh->getModel().lock()->getName();
   Map<String, SPtr<SkeletalMesh>> skMeshes =
   ResourceManager::instance().getAllSkeletalMeshResources();
   int modelIndex = 0;
@@ -528,72 +539,73 @@ DrawSkeletalMeshCmp(SPtr<CSkeletalMesh> skMesh, int32& uniqueId)
                    &modelIndex,
                    names.data(),
                    static_cast<int32>(names.size()))) {
-    skMesh->setModel(ResourceManager::instance().getResourceSkeletalMesh(names[modelIndex]));
+    sSkMesh->setModel(ResourceManager::instance().getResourceSkeletalMesh(names[modelIndex]));
   }
   ImGui::PopID();
 }
 
-SPtr<Actor> g_actorAddingCmp;
+WPtr<Actor> g_actorAddingCmp;
 bool g_addingCmp = false;
 void
-showActorData(SPtr<Actor> act, int32& uniqueId)
+showActorData(WPtr<Actor> act, int32& uniqueId)
 {
+  auto sAct = act.lock();
   ImGui::PushID(uniqueId++);
-  bool actActive = act->isActive();
+  bool actActive = sAct->isActive();
   if (ImGui::Checkbox("Active", &actActive)) {
-    act->setActive(actActive);
+    sAct->setActive(actActive);
   }
   ImGui::PopID();
 
 
   ImGui::Separator();
   ImGui::Text("Transform");
-  DrawTransformCmp(act->getTransform(), uniqueId);
+  DrawTransformCmp(sAct->getTransform(), uniqueId);
   ImGui::Separator();
-  SPtr<CAnimation> animC = act->getComponent<CAnimation>();
-  if (animC) {
+  WPtr<CAnimation> animC = sAct->getComponent<CAnimation>();
+  if (!animC.expired()) {
     if (ImGui::TreeNode("Animation")) {
       DrawAnimationCmp(animC, uniqueId);
       ImGui::TreePop();
     }
     ImGui::Separator();
   }
-  SPtr<CBounds> boundsC = act->getComponent<CBounds>();
-  if (boundsC) {
+  WPtr<CBounds> boundsC = sAct->getComponent<CBounds>();
+  if (!boundsC.expired()) {
     ImGui::Text("Bounds");
     ImGui::Separator();
   }
-  SPtr<CCamera> camC = act->getComponent<CCamera>();
-  if (camC) {
+  WPtr<CCamera> camC = sAct->getComponent<CCamera>();
+  if (!camC.expired()) {
     if (ImGui::TreeNode("Camera")) {
       DrawCameraCmp(camC, uniqueId);
       ImGui::TreePop();
     }
     ImGui::Separator();
   }
-  SPtr<CLight> lightC = act->getComponent<CLight>();
-  if (lightC) {
+  WPtr<CLight> lightC = sAct->getComponent<CLight>();
+  if (!lightC.expired()) {
     if (ImGui::TreeNode("Light")) {
       DrawLightCmp(lightC, uniqueId);
       ImGui::TreePop();
     }
     ImGui::Separator();
   }
-  SPtr<CRender> renderC = act->getComponent<CRender>();
-  if (renderC) {
+  WPtr<CRender> renderC = sAct->getComponent<CRender>();
+  if (!renderC.expired()) {
     ImGui::Text("Render");
     ImGui::Separator();
   }
-  SPtr<CSkeletalMesh> skMeshC = act->getComponent<CSkeletalMesh>();
-  if (skMeshC) {
+  WPtr<CSkeletalMesh> skMeshC = sAct->getComponent<CSkeletalMesh>();
+  if (!skMeshC.expired()) {
     if (ImGui::TreeNode("Skeletal Mesh")) {
       DrawSkeletalMeshCmp(skMeshC, uniqueId);
       ImGui::TreePop();
     }
     ImGui::Separator();
   }
-  SPtr<CStaticMesh> staticMeshC = act->getComponent<CStaticMesh>();
-  if (staticMeshC) {
+  WPtr<CStaticMesh> staticMeshC = sAct->getComponent<CStaticMesh>();
+  if (!staticMeshC.expired()) {
     if (ImGui::TreeNode("Static Mesh")) {
       DrawStaticMeshCmp(staticMeshC, uniqueId);
       ImGui::TreePop();
@@ -655,21 +667,22 @@ NewActorWindow(bool& added, char* name)
 }
 
 void 
-MakeActorsTree(Vector<SPtr<Actor>> actors,
-               SPtr<Actor>& ActorOnInspector,
+MakeActorsTree(const Vector<SPtr<Actor>>& actors,
+               WPtr<Actor>& ActorOnInspector,
                int32& n,
                int32& uniqueId)
 {
   static int selected = -1;
   for (auto& act : actors) {
+    auto sAct = act;
     ImGui::PushID(uniqueId++);
-    if (ImGui::Selectable(act->getName().c_str(), selected == n)) {
+    if (ImGui::Selectable(sAct->getName().c_str(), selected == n)) {
       selected = n;
       ActorOnInspector = act;
     }
     ImGui::PopID();
 
-    Vector<SPtr<Actor>> childs = act->getChildren();
+    Vector<SPtr<Actor>> childs = sAct->getChildren();
     if (!childs.empty()) {
       if (ImGui::TreeNode("Children")) {
         MakeActorsTree(childs, ActorOnInspector, n, uniqueId);
@@ -696,7 +709,7 @@ UIRender()
   static bool AddingActor = false;
   static String AddingActorScene;
 
-  static SPtr<Actor> ActorOnInspector = nullptr;
+  static WPtr<Actor> ActorOnInspector;
 
   // Popup menus
   if (AddingScene) {
@@ -714,7 +727,7 @@ UIRender()
     static char name[255];
     if (NewSceneWindow(added, name)) {
       if (added) {
-        sceneManager.getScene(AddingActorScene)->addActor(name);
+        sceneManager.getScene(AddingActorScene).lock()->addActor(name);
       }
       AddingScene = false;
     }
@@ -772,7 +785,7 @@ UIRender()
   ImGui::End();
 
   if (ImGui::Begin("Inspector")) {
-    if (ActorOnInspector) {
+    if (!ActorOnInspector.expired()) {
       showActorData(ActorOnInspector, uniqueId);
     }
   }
@@ -789,13 +802,15 @@ UIRender()
 
 
     ImGui::Text("Animations");
-    Map<String, SPtr<Animation>> anims = resourceMan.getAllAnimationResources();
+    Map<String, SPtr<Animation>> anims =
+    resourceMan.getAllAnimationResources();
     for (auto& a : anims) {
       ImGui::Text(("  " + a.first).c_str());
     }
 
     ImGui::Text("Models");
-    Map<String, SPtr<StaticMesh>> models = resourceMan.getAllStaticMeshResources();
+    Map<String, SPtr<StaticMesh>> models =
+    resourceMan.getAllStaticMeshResources();
     for (auto& m : models) {
       ImGui::Text(("  " + m.first).c_str());
     }
@@ -815,14 +830,15 @@ UIRender()
     }
 
     ImGui::Text("Textures");
-    Map<String, SPtr<Texture>> texs = resourceMan.getAllTextureResources();
+    Map<String, SPtr<Texture>> texs =
+    resourceMan.getAllTextureResources();
     for (auto& t : texs) {
       ImGui::Text(("  " + t.first).c_str());
     }
   }
   ImGui::End();
 
-  if (g_addingCmp && g_actorAddingCmp) {
+  if (g_addingCmp && !g_actorAddingCmp.expired()) {
     if (ImGui::Begin("Add Component")) {
       static int cmpIndex = 0;
       const char* componentNames[] = { "Animation", "Camera", "Model", "Render", "Skeletal Mesh" };
@@ -862,12 +878,12 @@ BaseAppTest1::onInit()
     ImGui::DestroyContext();
   }
 
-  Map<uint32, SPtr<Texture>> texturesMap;
+  Map<uint32, WPtr<Texture>> texturesMap;
 
   resourceManager.loadTextureFromFile(L"Textures/Defaults/DefaultDiffuse.png",
-                                      "DefaultDiffuse");
+                                 eeEngineSDK::localizeString("DefaultDiffuse"));
   resourceManager.loadTextureFromFile(L"Textures/Defaults/DefaultNormalMap.jpg",
-                                      "DefaultNormalMap");
+                               eeEngineSDK::localizeString("DefaultNormalMap"));
   texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
   resourceManager.getResourceTexture("DefaultDiffuse");
   texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
@@ -882,12 +898,12 @@ BaseAppTest1::onInit()
   
 
 
-  SPtr<Scene> pScene = sceneManager.addScene("Main");
+  auto pScene = sceneManager.addScene("Main").lock();
   pScene->setActive(true);
 
 
 
-  SPtr<Actor> pTempActor;
+  WPtr<Actor> pTempActor;
 
 
   
@@ -918,31 +934,34 @@ BaseAppTest1::onInit()
   camDesc.farZ = 100.0f;
 
   pTempActor = pScene->addActor("Player");
-  pTempActor->getTransform()->setPosition(Vector3f{ 0.0f, 3.0f, -6.0f });
-  pTempActor->addComponent<CCamera>();
-  pTempActor->getComponent<CCamera>()->init(camDesc);
-  pTempActor->getComponent<CCamera>()->setMain(true);
+  auto spTempActor = pTempActor.lock();
+  spTempActor->getTransform().lock()->setPosition(Vector3f{ 0.0f, 3.0f, -6.0f });
+  spTempActor->addComponent<CCamera>();
+  spTempActor->getComponent<CCamera>().lock()->init(camDesc);
+  spTempActor->getComponent<CCamera>().lock()->setMain(true);
 
 
 
   pTempActor = pScene->addActor("AtatchToActor");
+  spTempActor = pTempActor.lock();
   pScene->setActorChild("Player", "AtatchToActor");
-  pTempActor->getTransform()->setPosition(Vector3f{ 0.0f, 0.0f, 30.0f });
-  pTempActor->addComponent<CStaticMesh>();
-  pTempActor->getComponent<CStaticMesh>()->setStaticMesh
+  spTempActor->getTransform().lock()->setPosition(Vector3f{ 0.0f, 0.0f, 30.0f });
+  spTempActor->addComponent<CStaticMesh>();
+  spTempActor->getComponent<CStaticMesh>().lock()->setStaticMesh
   (
     resourceManager.getResourceStaticMesh("Cube")
   );
-  pTempActor->addComponent<CBounds>();
-  pTempActor->addComponent<CRender>();
+  spTempActor->addComponent<CBounds>();
+  spTempActor->addComponent<CRender>();
 
 
 
   pTempActor = pScene->addActor("Player2");
-  pTempActor->getTransform()->setPosition(Vector3f{ 5.0f, 3.0f, -6.0f });
-  pTempActor->getTransform()->setScale(Vector3f{ 0.1f, 0.1f, 0.1f });
-  pTempActor->addComponent<CCamera>();
-  pTempActor->getComponent<CCamera>()->init(camDesc);
+  spTempActor = pTempActor.lock();
+  spTempActor->getTransform().lock()->setPosition(Vector3f{ 5.0f, 3.0f, -6.0f });
+  spTempActor->getTransform().lock()->setScale(Vector3f{ 0.1f, 0.1f, 0.1f });
+  spTempActor->addComponent<CCamera>();
+  spTempActor->getComponent<CCamera>().lock()->init(camDesc);
 
 
   resourceManager.importResourceFromFile(L"Models/arcane_jinx_sketchfab.fbx",
@@ -983,15 +1002,16 @@ BaseAppTest1::onInit()
                                            "FACE_-_TEST_mat");
 
   pTempActor = pScene->addActor("Test");
-  pTempActor->getTransform()->setScale(Vector3f{ 2.0f, 2.0f, 2.0f });
-  pTempActor->getTransform()->setPosition(Vector3f{ 3.0f, 0.0f, 0.0f });
-  pTempActor->getTransform()->setRotation(Quaternion(Vector3f{1.5707f, 0.0f, 0.0f} ));
-  pTempActor->addComponent<CStaticMesh>();
-  pTempActor->getComponent<CStaticMesh>()->setStaticMesh
+  spTempActor = pTempActor.lock();
+  spTempActor->getTransform().lock()->setScale(Vector3f{ 2.0f, 2.0f, 2.0f });
+  spTempActor->getTransform().lock()->setPosition(Vector3f{ 3.0f, 0.0f, 0.0f });
+  spTempActor->getTransform().lock()->setRotation(Quaternion(Vector3f{ 1.5707f, 0.0f, 0.0f }));
+  spTempActor->addComponent<CStaticMesh>();
+  spTempActor->getComponent<CStaticMesh>().lock()->setStaticMesh
   (
     resourceManager.getResourceStaticMesh("arcane_jinx_sketchfab_sm")
   );
-  pTempActor->getComponent<CStaticMesh>()->getStaticMesh()->setTexture
+  spTempActor->getComponent<CStaticMesh>().lock()->getStaticMesh().lock()->setTexture
   (
     resourceManager.getResourceMaterial
     (
@@ -999,7 +1019,7 @@ BaseAppTest1::onInit()
     ),
     0
   );
-  pTempActor->getComponent<CStaticMesh>()->getStaticMesh()->setTexture
+  spTempActor->getComponent<CStaticMesh>().lock()->getStaticMesh().lock()->setTexture
   (
     resourceManager.getResourceMaterial
     (
@@ -1007,7 +1027,7 @@ BaseAppTest1::onInit()
     ),
     1
   );
-  pTempActor->getComponent<CStaticMesh>()->getStaticMesh()->setTexture
+  spTempActor->getComponent<CStaticMesh>().lock()->getStaticMesh().lock()->setTexture
   (
     resourceManager.getResourceMaterial
     (
@@ -1015,8 +1035,8 @@ BaseAppTest1::onInit()
     ),
     2
   );
-  pTempActor->addComponent<CBounds>();
-  pTempActor->addComponent<CRender>();
+  spTempActor->addComponent<CBounds>();
+  spTempActor->addComponent<CRender>();
 
 
   resourceManager.importResourceFromFile(L"Models/boblampclean.md5mesh");
@@ -1063,113 +1083,122 @@ BaseAppTest1::onInit()
 
 
   pTempActor = pScene->addActor("AnimTest");
-  pTempActor->getTransform()->setScale(Vector3f{ 0.03f, 0.03f, 0.03f });
-  pTempActor->getTransform()->setRotation(Quaternion(Vector3f{ Math::kPI * 0.5f,
-                                                                           0.0f,
-                                                                           0.0f }));
-  pTempActor->addComponent<CSkeletalMesh>();
-  pTempActor->getComponent<CSkeletalMesh>()->setModel
+  spTempActor = pTempActor.lock();
+  spTempActor->getTransform().lock()->setScale(Vector3f{ 0.03f, 0.03f, 0.03f });
+  spTempActor->getTransform().lock()->setRotation(Quaternion(Vector3f{ Math::kPI * 0.5f,
+                                                                       0.0f,
+                                                                       0.0f }));
+  spTempActor->addComponent<CSkeletalMesh>();
+  spTempActor->getComponent<CSkeletalMesh>().lock()->setModel
   (
     resourceManager.getResourceSkeletalMesh("boblampclean_skm")
   );
-  pTempActor->getComponent<CSkeletalMesh>()->getModel()->setTexture
+  spTempActor->getComponent<CSkeletalMesh>().lock()->getModel().lock()->setTexture
   (
     resourceManager.getResourceMaterial("guard1_body_mat"),
     0
   );
-  pTempActor->getComponent<CSkeletalMesh>()->getModel()->setTexture
+  spTempActor->getComponent<CSkeletalMesh>().lock()->getModel().lock()->setTexture
   (
     resourceManager.getResourceMaterial("guard1_face_mat"),
     1
   );
-  pTempActor->getComponent<CSkeletalMesh>()->getModel()->setTexture
+  spTempActor->getComponent<CSkeletalMesh>().lock()->getModel().lock()->setTexture
   (
     resourceManager.getResourceMaterial("guard1_helmet_mat"),
     2
   );
-  pTempActor->getComponent<CSkeletalMesh>()->getModel()->setTexture
+  spTempActor->getComponent<CSkeletalMesh>().lock()->getModel().lock()->setTexture
   (
     resourceManager.getResourceMaterial("iron_grill_mat"),
     3
   );
-  pTempActor->getComponent<CSkeletalMesh>()->getModel()->setTexture
+  spTempActor->getComponent<CSkeletalMesh>().lock()->getModel().lock()->setTexture
   (
     resourceManager.getResourceMaterial("round_grill_mat"),
     4
   );
-  pTempActor->getComponent<CSkeletalMesh>()->getModel()->setTexture
+  spTempActor->getComponent<CSkeletalMesh>().lock()->getModel().lock()->setTexture
   (
     resourceManager.getResourceMaterial("guard1_body_mat"),
     5
   );
-  pTempActor->addComponent<CAnimation>();
-  pTempActor->getComponent<CAnimation>()->setAnimation
+  spTempActor->addComponent<CAnimation>();
+  spTempActor->getComponent<CAnimation>().lock()->setAnimation
   (
     resourceManager.getResourceAnimation("boblampclean_anim_")
   );
-  pTempActor->addComponent<CBounds>();
-  pTempActor->addComponent<CRender>();
+  spTempActor->addComponent<CBounds>();
+  spTempActor->addComponent<CRender>();
 
 
   resourceManager.importResourceFromFile(L"Models/Scary_Clown_Walk.fbx");
   
   pTempActor = pScene->addActor("AnimTest2");
-  pTempActor->getTransform()->setScale(Vector3f{ 0.01f, 0.01f, 0.01f });
-  pTempActor->getTransform()->setPosition(Vector3f{ -3.0f, 2.5f, 0.0f });
-  pTempActor->addComponent<CSkeletalMesh>();
-  pTempActor->getComponent<CSkeletalMesh>()->setModel
+  spTempActor = pTempActor.lock();
+  spTempActor->getTransform().lock()->setScale(Vector3f{ 0.01f, 0.01f, 0.01f });
+  spTempActor->getTransform().lock()->setPosition(Vector3f{ -3.0f, 2.5f, 0.0f });
+  spTempActor->addComponent<CSkeletalMesh>();
+  spTempActor->getComponent<CSkeletalMesh>().lock()->setModel
   (
     resourceManager.getResourceSkeletalMesh("Scary_Clown_Walk_skm")
   );
-  pTempActor->addComponent<CAnimation>();
-  pTempActor->getComponent<CAnimation>()->setAnimation
+  spTempActor->addComponent<CAnimation>();
+  spTempActor->getComponent<CAnimation>().lock()->setAnimation
   (
     resourceManager.getResourceAnimation("Scary_Clown_Walk_anim_mixamo.com")
   );
-  pTempActor->addComponent<CBounds>();
-  pTempActor->addComponent<CRender>();
+  spTempActor->addComponent<CBounds>();
+  spTempActor->addComponent<CRender>();
 
 
   resourceManager.importResourceFromFile(L"Models/simpleCube.fbx",
                                 eeEngineSDK::IMPORT_FLAGS::kImportStaticMeshes);
 
   pTempActor = pScene->addActor("DownWall");
-  pTempActor->getTransform()->setScale(Vector3f{ 10.0f, 0.5f, 10.0f });
-  pTempActor->getTransform()->setPosition(Vector3f{ 0.0f, -1.0f, 0.0f });
-  pTempActor->addComponent<CStaticMesh>();
-  pTempActor->getComponent<CStaticMesh>()->setStaticMesh
+  spTempActor = pTempActor.lock();
+  spTempActor->getTransform().lock()->setScale(Vector3f{ 10.0f, 0.5f, 10.0f });
+  spTempActor->getTransform().lock()->setPosition(Vector3f{ 0.0f, -1.0f, 0.0f });
+  spTempActor->addComponent<CStaticMesh>();
+  spTempActor->getComponent<CStaticMesh>().lock()->setStaticMesh
   (
     resourceManager.getResourceStaticMesh("simpleCube_sm")
   );
-  pTempActor->addComponent<CBounds>();
-  pTempActor->addComponent<CRender>();
+  spTempActor->addComponent<CBounds>();
+  spTempActor->addComponent<CRender>();
 
 
 
   pTempActor = pScene->addActor("DirLight");
-  pTempActor->addComponent<CLight>();
-  pTempActor->getComponent<CLight>()->setColor(Color{ 1.0f, 0.0f, 0.0f, 1.0f });
-  pTempActor->getTransform()->setRotation(Quaternion::createFromAxisAngle(Vector3f(0.0f, 1.0f, 0.0f), -Math::kPI * 0.5f));
+  spTempActor = pTempActor.lock();
+  spTempActor->addComponent<CLight>();
+  spTempActor->getComponent<CLight>().lock()->setColor(Color{ 1.0f, 0.0f, 0.0f, 1.0f });
+  spTempActor->getTransform().lock()->setRotation(
+  Quaternion::createFromAxisAngle(Vector3f(0.0f, 1.0f, 0.0f), -Math::kPI * 0.5f));
 
   pTempActor = pScene->addActor("DirLight2");
-  pTempActor->addComponent<CLight>();
-  pTempActor->getComponent<CLight>()->setColor(Color{ 0.0f, 1.0f, 0.0f, 1.0f });
-  pTempActor->getTransform()->setRotation(Quaternion::createFromAxisAngle(Vector3f(0.0f, 1.0f, 0.0f), Math::kPI * 0.5f));
+  spTempActor = pTempActor.lock();
+  spTempActor->addComponent<CLight>();
+  spTempActor->getComponent<CLight>().lock()->setColor(Color{ 0.0f, 1.0f, 0.0f, 1.0f });
+  spTempActor->getTransform().lock()->setRotation(
+  Quaternion::createFromAxisAngle(Vector3f(0.0f, 1.0f, 0.0f), Math::kPI * 0.5f));
 
   pTempActor = pScene->addActor("PointLight1");
-  pTempActor->getTransform()->setScale(Vector3f{0.2f, 0.2f, 0.2f});
-  pTempActor->addComponent<CLight>();
-  pTempActor->getComponent<CLight>()->setLightType(eeEngineSDK::eLIGHT_TYPE::kPoint);
-  pTempActor->getComponent<CLight>()->setColor(Color{ 0.0f, 0.0f, 1.0f, 1.0f });
-  pTempActor->getComponent<CLight>()->setIntensity(1.0f);
-  pTempActor->addComponent<CStaticMesh>();
-  pTempActor->getComponent<CStaticMesh>()->setStaticMesh
+  spTempActor = pTempActor.lock();
+  spTempActor->getTransform().lock()->setScale(Vector3f{ 0.2f, 0.2f, 0.2f });
+  spTempActor->addComponent<CLight>();
+  spTempActor->getComponent<CLight>().lock()->setLightType(eeEngineSDK::eLIGHT_TYPE::kPoint);
+  spTempActor->getComponent<CLight>().lock()->setColor(Color{ 0.0f, 0.0f, 1.0f, 1.0f });
+  spTempActor->getComponent<CLight>().lock()->setIntensity(1.0f);
+  spTempActor->addComponent<CStaticMesh>();
+  spTempActor->getComponent<CStaticMesh>().lock()->setStaticMesh
   (
     resourceManager.getResourceStaticMesh("Sphere")
   );
-  pTempActor->getComponent<CStaticMesh>()->setMobilityType(eeEngineSDK::eMOBILITY_TYPE::kDynamic);
-  pTempActor->addComponent<CBounds>();
-  pTempActor->addComponent<CRender>();
+  spTempActor->getComponent<CStaticMesh>().lock()->setMobilityType(
+                                         eeEngineSDK::eMOBILITY_TYPE::kDynamic);
+  spTempActor->addComponent<CBounds>();
+  spTempActor->addComponent<CRender>();
 
 
   sceneManager.partitionScenes();
@@ -1190,14 +1219,14 @@ BaseAppTest1::onUpdate(float deltaTime)
   auto& audioMan = AudioManager::instance();
 
 
-  SPtr<Scene> scene = sceneManager.getScene("Main");
+  auto scene = sceneManager.getScene("Main").lock();
   EE_NO_EXIST_RETURN(scene);
 
   static String activePlayerName = "Player";
-  if (inputMan.getDevice(0)->getButtonDown(eeEngineSDK::KEYBOARD_INPUT::kTab)) {
-    if (scene->getActor(activePlayerName)
-     && scene->getActor(activePlayerName)->getComponent<CCamera>()) {
-      scene->getActor(activePlayerName)->getComponent<CCamera>()->setMain(false);
+  if (inputMan.getDevice(0).lock()->getButtonDown(eeEngineSDK::KEYBOARD_INPUT::kTab)) {
+    if (!scene->getActor(activePlayerName).expired()
+     && !scene->getActor(activePlayerName).lock()->getComponent<CCamera>().expired()) {
+      scene->getActor(activePlayerName).lock()->getComponent<CCamera>().lock()->setMain(false);
     }
 
     if (activePlayerName == "Player") {
@@ -1207,23 +1236,23 @@ BaseAppTest1::onUpdate(float deltaTime)
       activePlayerName = "Player";
     }
 
-    if (scene->getActor(activePlayerName)
-     && scene->getActor(activePlayerName)->getComponent<CCamera>()) {
-      scene->getActor(activePlayerName)->getComponent<CCamera>()->setMain(true);
+    if (!scene->getActor(activePlayerName).expired()
+     && !scene->getActor(activePlayerName).lock()->getComponent<CCamera>().expired()) {
+      scene->getActor(activePlayerName).lock()->getComponent<CCamera>().lock()->setMain(true);
     }
   }
 
 
 
-  SPtr<Actor> actor = scene->getActor("Test");
+  auto actor = scene->getActor("Test").lock();
 
 
 
-  actor = scene->getActor(activePlayerName);
+  actor = scene->getActor(activePlayerName).lock();
 
   SPtr<CTransform> trans = nullptr;
   if (actor) {
-    trans = actor->getTransform();
+    trans = actor->getTransform().lock();
   }
 
   Quaternion rot;
@@ -1231,35 +1260,37 @@ BaseAppTest1::onUpdate(float deltaTime)
     rot = trans->getRotation();
 
     Vector3f cameraMovement = Vector3f{ 0.0f, 0.0f, 0.0f };
-    if (inputMan.getDevice(0)->getButton(eeEngineSDK::eBUTTONS_KEYS::kKeyboardButtonW)) {
+    auto keyboardDevice = inputMan.getDevice(0).lock();
+    if (keyboardDevice->getButton(eeEngineSDK::eBUTTONS_KEYS::kKeyboardButtonW)) {
       cameraMovement += rot.getFrontVector();
     }
-    if (inputMan.getDevice(0)->getButton(eeEngineSDK::eBUTTONS_KEYS::kKeyboardButtonS)) {
+    if (keyboardDevice->getButton(eeEngineSDK::eBUTTONS_KEYS::kKeyboardButtonS)) {
       cameraMovement -= rot.getFrontVector();
     }
-    if (inputMan.getDevice(0)->getButton(eeEngineSDK::eBUTTONS_KEYS::kKeyboardButtonA)) {
+    if (keyboardDevice->getButton(eeEngineSDK::eBUTTONS_KEYS::kKeyboardButtonA)) {
       cameraMovement -= rot.getRightVector();
     }
-    if (inputMan.getDevice(0)->getButton(eeEngineSDK::eBUTTONS_KEYS::kKeyboardButtonD)) {
+    if (keyboardDevice->getButton(eeEngineSDK::eBUTTONS_KEYS::kKeyboardButtonD)) {
       cameraMovement += rot.getRightVector();
     }
-    if (inputMan.getDevice(0)->getButton(eeEngineSDK::eBUTTONS_KEYS::kKeyboardButtonQ)) {
+    if (keyboardDevice->getButton(eeEngineSDK::eBUTTONS_KEYS::kKeyboardButtonQ)) {
       cameraMovement += rot.getUpVector();
     }
-    if (inputMan.getDevice(0)->getButton(eeEngineSDK::eBUTTONS_KEYS::kKeyboardButtonE)) {
+    if (keyboardDevice->getButton(eeEngineSDK::eBUTTONS_KEYS::kKeyboardButtonE)) {
       cameraMovement -= rot.getUpVector();
     }
     trans->setPosition(trans->getPosition() + cameraMovement * deltaTime * 10.0f);
 
-    if (inputMan.getDevice(0)->getButtonUp(eeEngineSDK::eBUTTONS_KEYS::kKeyboardButtonEnter)) {
+    if (inputMan.getDevice(0).lock()->getButtonUp(eeEngineSDK::eBUTTONS_KEYS::kKeyboardButtonEnter)) {
       audioMan.playSound(testSound);
     }
 
-    if (inputMan.getDevice(1)->getButton(eeEngineSDK::eBUTTONS_KEYS::kMouseButtonRight)) {
+    auto mouseDevice = inputMan.getDevice(1).lock();
+    if (mouseDevice->getButton(eeEngineSDK::eBUTTONS_KEYS::kMouseButtonRight)) {
       float mouseMoveX =
-      inputMan.getDevice(1)->getAxis(eeEngineSDK::eBUTTONS_KEYS::kMouseAxisX);
+      mouseDevice->getAxis(eeEngineSDK::eBUTTONS_KEYS::kMouseAxisX);
       float mouseMoveY =
-      inputMan.getDevice(1)->getAxis(eeEngineSDK::eBUTTONS_KEYS::kMouseAxisY);
+      mouseDevice->getAxis(eeEngineSDK::eBUTTONS_KEYS::kMouseAxisY);
 
       Quaternion rot2 =
       Quaternion::createFromAxisAngle(rot.getUpVector(),
@@ -1285,7 +1316,7 @@ BaseAppTest1::onRender()
 {
   auto& graphicsApi = GraphicsApi::instance();
 
-  SPtr<Window> mainWin = graphicsApi.getMainWindow();
+  auto mainWin = graphicsApi.getMainWindow().lock();
   graphicsApi.setRenderTargets({ mainWin->getRenderTarget() },
                                mainWin->getDepthStencil());
 

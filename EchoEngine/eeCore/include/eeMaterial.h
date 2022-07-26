@@ -42,7 +42,7 @@ class EE_CORE_EXPORT Material
    * @param texturesMap
    * The map of textures and its indices to be set on.
    */
-  Material(const Map<uint32, SPtr<Texture>>& texturesMap);
+  Material(const Map<uint32, WPtr<Texture>>& texturesMap);
   /**
    * @brief
    * Copy constructor
@@ -61,7 +61,7 @@ class EE_CORE_EXPORT Material
    * The map of textures and its indices to be set on.
    */
   void
-  createMaterial(const Map<uint32, SPtr<Texture>>& texturesMap);
+  createMaterial(const Map<uint32, WPtr<Texture>>& texturesMap);
   
   /**
    * @brief
@@ -76,7 +76,7 @@ class EE_CORE_EXPORT Material
    * The index to set it on.
    */
   void
-  setTexture(SPtr<Texture> texture, uint32 index);
+  setTexture(WPtr<Texture> texture, uint32 index);
   
   /**
    * @brief
@@ -88,12 +88,12 @@ class EE_CORE_EXPORT Material
    * @return
    * The textures map where they are stored.
    */
-  FORCEINLINE const Map<uint32, SPtr<Texture>>&
+  FORCEINLINE const Map<uint32, WPtr<Texture>>&
   getTexturesMap() { return m_texturesMap; }
 
   /**
    * The textures stored.
    */
-  Map<uint32, SPtr<Texture>> m_texturesMap;
+  Map<uint32, WPtr<Texture>> m_texturesMap;
 };
 }

@@ -38,6 +38,8 @@
 #include <string>
 #include <chrono>
 
+#include <filesystem>
+
 //#include <stringapiset.h>
 
 #include "eePlatformTypes.h"

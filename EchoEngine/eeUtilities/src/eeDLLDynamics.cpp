@@ -21,14 +21,14 @@ DLLDynamics::initialize(const String& dllPath)
   m_dllInstance = reinterpret_cast<void*>(LoadLibraryEx(dllPath.c_str(), nullptr, LOAD_WITH_ALTERED_SEARCH_PATH));
 
   if (!m_dllInstance) {
-    Logger::instance().ConsoleLog("Could not load Dll");
+    Logger::instance().consoleLog("Could not load Dll");
     return false;
   }
 
 #else
   void* hGetProcIDDLL = dlopen(dllPath.c_str(), RTLD_LAZY);
   if (!hGetProcIDDLL) {
-    Logger::instance().ConsoleLog("Could not load Dll");
+    Logger::instance().consoleLog("Could not load Dll");
     return 1;
   }
 
@@ -46,13 +46,13 @@ DLLDynamics::getFunction(const String& functName)
                                                 functName.c_str()));
 
   if (!function) {
-    Logger::instance().ConsoleLog("Could not load function");
+    Logger::instance().consoleLog("Could not load function");
     return nullptr;
   }
 #else
   functionType function = (functionType)dlsym(m_dllInstance, "initPlugin");
   if (!function()) {
-    Logger::instance().ConsoleLog("Could not load function");
+    Logger::instance().consoleLog("Could not load function");
     return nullptr;
   }
 #endif

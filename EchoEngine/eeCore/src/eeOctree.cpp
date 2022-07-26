@@ -13,26 +13,29 @@
 
 namespace eeEngineSDK {
 void
-Octree::calculateTree(const BoxAAB& space, const Vector<SPtr<Scene>>& scenes)
+Octree::calculateTree(const BoxAAB& space, const Vector<WPtr<Scene>>& scenes)
 {
-  Vector<SPtr<CStaticMesh>> staticMeshes;
+  Vector<WPtr<CStaticMesh>> staticMeshes;
   for (const auto& s : scenes) {
     Vector<SPtr<Actor>> sceneActors;
-    s->getAllActorsVector(sceneActors);
+    s.lock()->getAllActorsVector(sceneActors);
     for (const auto& sa : sceneActors) {
-      SPtr<CStaticMesh> statMesh = sa->getComponent<CStaticMesh>();
-      if (statMesh && statMesh->getMobilityType() == eMOBILITY_TYPE::kStatic) {
+      WPtr<CStaticMesh> statMesh = sa->getComponent<CStaticMesh>();
+      if (!statMesh.expired()
+       && statMesh.lock()->getMobilityType() == eMOBILITY_TYPE::kStatic) {
         staticMeshes.emplace_back(statMesh);
       }
     }
   }
 
-  Vector<Pair<Mesh, SPtr<Material>>> meshMap;
+  Vector<Pair<Mesh, WPtr<Material>>> meshMap;
 
   for (const auto& sm : staticMeshes) {
-    Vector<Pair<Mesh, SPtr<Material>>> tempMeshMap;
-    sm->getStaticMesh()->getMeshes(tempMeshMap);
-    Matrix4f transMat = sm->getActor()->getTransform()->getModelMatrix();
+    auto ssm = sm.lock();
+    Vector<Pair<Mesh, WPtr<Material>>> tempMeshMap;
+    ssm->getStaticMesh().lock()->getMeshes(tempMeshMap);
+    Matrix4f transMat =
+    ssm->getActor().lock()->getTransform().lock()->getModelMatrix();
     for (auto& m : tempMeshMap) {
       Mesh newMesh;
       Mesh::copyMeshTransformed(m.first, transMat, newMesh);
@@ -50,7 +53,7 @@ Octree::calculateTree(const BoxAAB& space, const Vector<SPtr<Scene>>& scenes)
   }
 }
 void
-Octree::getMeshes(Vector<SPtr<StaticMesh>>& outMeshesVec)
+Octree::getMeshes(Vector<WPtr<StaticMesh>>& outMeshesVec)
 {
   if (m_root) {
     m_root->getMeshes(outMeshesVec);

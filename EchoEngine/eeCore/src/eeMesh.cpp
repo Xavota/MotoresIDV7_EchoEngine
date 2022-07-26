@@ -42,7 +42,7 @@ Mesh::loadFromVertexArray(const Vector<ComplexVertex>& vertices,
   auto& graphicsApi = GraphicsApi::instance();
 
   if (vertices.empty() || indices.empty()) {
-    Logger::instance().ConsoleLog("Empty info loading mesh");
+    Logger::instance().consoleLog("Empty info loading mesh");
     return false;
   }
 
@@ -125,12 +125,12 @@ Mesh::set() const
   m_vertexData->set();
   m_indexData->set();
 }
-const SPtr<VertexBuffer>
+const WPtr<VertexBuffer>
 Mesh::getVertexData() const
 {
   return m_vertexData;
 }
-const SPtr<IndexBuffer> 
+const WPtr<IndexBuffer> 
 Mesh::getIndexData() const
 {
   return m_indexData;

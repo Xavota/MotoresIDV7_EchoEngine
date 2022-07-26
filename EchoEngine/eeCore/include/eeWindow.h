@@ -188,7 +188,7 @@ class EE_CORE_EXPORT Window
    * @return
    * The render target of the window.
    */
-  SPtr<Texture>
+  WPtr<Texture>
   getRenderTarget() const { return m_rtv; }
   /**
    * @brief
@@ -200,7 +200,7 @@ class EE_CORE_EXPORT Window
    * @return
    * The depth stencil of the window.
    */
-  SPtr<Texture>
+  WPtr<Texture>
   getDepthStencil() const { return m_dsv; }
 
   /**

@@ -47,7 +47,7 @@ class EE_CORE_EXPORT OctreeNode
    * The static mesh with all the meshes in the node.
    */
   void
-  CalculateTree(const BoxAAB& space, SPtr<StaticMesh> sMesh);
+  CalculateTree(const BoxAAB& space, WPtr<StaticMesh> sMesh);
 
   /**
    * @brief
@@ -66,7 +66,7 @@ class EE_CORE_EXPORT OctreeNode
    */
   Vector<SPtr<StaticMesh>>
   DivideMesh(const Plane& plane,
-             SPtr<StaticMesh> sMesh);
+             WPtr<StaticMesh> sMesh);
 
   /**
    * @brief
@@ -79,7 +79,7 @@ class EE_CORE_EXPORT OctreeNode
    * The output vector of meshes.
    */
   void
-  getMeshes(Vector<SPtr<StaticMesh>>& outMeshesVec);
+  getMeshes(Vector<WPtr<StaticMesh>>& outMeshesVec);
 
  private:
   /**

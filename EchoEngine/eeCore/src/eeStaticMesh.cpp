@@ -32,7 +32,7 @@ StaticMesh::StaticMesh(const Vector<Mesh>&meshes,
                  maxCoordinate,
                  minCoordinate);
 }
-StaticMesh::StaticMesh(const Vector<Pair<Mesh, SPtr<Material>>>& meshes,
+StaticMesh::StaticMesh(const Vector<Pair<Mesh, WPtr<Material>>>& meshes,
                        const String& name,
                        const Vector3f& furtherVertexPosition,
                        const Vector3f& maxCoordinate,
@@ -52,7 +52,7 @@ StaticMesh::loadFromMeshes(const Vector<Mesh>& meshes,
                            const Vector3f& minCoordinate)
 {
   if (meshes.empty()) {
-    Logger::instance().ConsoleLog("Empty info loading model");
+    Logger::instance().consoleLog("Empty info loading model");
     return false;
   }
 
@@ -63,7 +63,7 @@ StaticMesh::loadFromMeshes(const Vector<Mesh>& meshes,
   for (const auto& m : meshes) {
     m_meshes.emplace_back
     (
-      Pair<Mesh, SPtr<Material>>
+      Pair<Mesh, WPtr<Material>>
       (
         m,
         resourseManager.getResourceMaterial("Default_mat")
@@ -79,14 +79,14 @@ StaticMesh::loadFromMeshes(const Vector<Mesh>& meshes,
   return true;
 }
 bool
-StaticMesh::loadFromMeshes(const Vector<Pair<Mesh, SPtr<Material>>>& meshes,
+StaticMesh::loadFromMeshes(const Vector<Pair<Mesh, WPtr<Material>>>& meshes,
                            const String& name,
                            const Vector3f& furtherVertexPosition,
                            const Vector3f& maxCoordinate,
                            const Vector3f& minCoordinate)
 {
   if (meshes.empty()) {
-    Logger::instance().ConsoleLog("Empty info loading model");
+    Logger::instance().consoleLog("Empty info loading model");
     return false;
   }
 
@@ -96,7 +96,7 @@ StaticMesh::loadFromMeshes(const Vector<Pair<Mesh, SPtr<Material>>>& meshes,
   m_meshes.resize(meshes.size());
   for (const auto& m : meshes) {
     m_meshes[i].first = m.first;
-    m_meshes[i].second = m.second;
+    m_meshes[i].second = m.second.lock();
     ++i;
   }
 
@@ -107,13 +107,13 @@ StaticMesh::loadFromMeshes(const Vector<Pair<Mesh, SPtr<Material>>>& meshes,
   m_boundCube.setSize(maxCoordinate - minCoordinate);
   return true;
 }
-Vector<Pair<Mesh, SPtr<Material>>>
+Vector<Pair<Mesh, WPtr<Material>>>
 StaticMesh::getMeshes()
 {
   return m_meshes;
 }
 void
-StaticMesh::getMeshes(Vector<Pair<Mesh, SPtr<Material>>>& outMeshes)
+StaticMesh::getMeshes(Vector<Pair<Mesh, WPtr<Material>>>& outMeshes)
 {
   int32 i = 0;
   outMeshes.resize(m_meshes.size());
@@ -123,17 +123,17 @@ StaticMesh::getMeshes(Vector<Pair<Mesh, SPtr<Material>>>& outMeshes)
     ++i;
   }
 }
-Vector<SPtr<Material>>
+Vector<WPtr<Material>>
 StaticMesh::getTextures()
 {
-  Vector<SPtr<Material>> textures;
+  Vector<WPtr<Material>> textures;
   for (auto& m : m_meshes)  {
     textures.push_back(m.second);
   }
   return textures;
 }
 void
-StaticMesh::setTexture(SPtr<Material> texture, SIZE_T index)
+StaticMesh::setTexture(WPtr<Material> texture, SIZE_T index)
 {
   if (m_meshes.size() > index) {
     m_meshes[index].second = texture;

@@ -7,15 +7,15 @@ namespace eeEngineSDK{
 void
 CSkeletalMesh::update()
 {
-  EE_NO_EXIST_RETURN(m_actor);
+  if (!m_actor.expired()) return;
 }
-SPtr<SkeletalMesh>
+WPtr<SkeletalMesh>
 CSkeletalMesh::getModel()
 {
   return m_skMesh;
 }
 void
-CSkeletalMesh::setModel(SPtr<SkeletalMesh> skeletal)
+CSkeletalMesh::setModel(WPtr<SkeletalMesh> skeletal)
 {
   m_skMesh = skeletal;
 }

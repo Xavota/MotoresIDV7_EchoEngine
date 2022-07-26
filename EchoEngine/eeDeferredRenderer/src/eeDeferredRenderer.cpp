@@ -37,8 +37,8 @@ DeferredRenderer::DeferredRenderer()
   //auto& memoryManager = MemoryManager::instance();
 
   
-  const uint32 screenWidth = graphicsApi.getMainWindow()->getWidth();
-  const uint32 screenHeight = graphicsApi.getMainWindow()->getHeight();
+  const uint32 screenWidth = graphicsApi.getMainWindow().lock()->getWidth();
+  const uint32 screenHeight = graphicsApi.getMainWindow().lock()->getHeight();
 
   /* Load resources */
   m_samplerLinear = graphicsApi.createSamplerStatePtr();
@@ -633,8 +633,13 @@ DeferredRenderer::onRender()
   auto& sceneManager = SceneManager::instance();
 
 
-  Vector<Pair<Mesh, SPtr<Material>>> meshes;
-  Vector<Pair<BoneMesh, SPtr<Material>>> boneMeshes;
+  WPtr<Texture> nullTexturWPtr = WPtr<Texture>();
+
+
+
+
+  Vector<Pair<Mesh, WPtr<Material>>> meshes;
+  Vector<Pair<BoneMesh, WPtr<Material>>> boneMeshes;
   SIZE_T meshesCount = 0;
   
   Color colorBlack{ 0.0f, 0.0f, 0.0f, 1.0f };
@@ -643,31 +648,32 @@ DeferredRenderer::onRender()
   // Get main camera
   Vector<SPtr<Actor>> actorCameras =
   sceneManager.getAllActorsByComponentFlags(eCOMPONENT_TYPE::kCamera);
-  Vector<SPtr<CCamera>> activeCams;
+  Vector<WPtr<CCamera>> activeCams;
   for (const auto& act : actorCameras) {
     activeCams.emplace_back(act->getComponent<CCamera>());
   }
-  SPtr<CCamera> mainCam = nullptr;
+  WPtr<CCamera> mainCam;
   for (auto& cam : activeCams) {
-    if (cam->isMain()) {
+    if (cam.lock()->isMain()) {
       mainCam = cam;
     }
   }
   
   
   // Updates buffers
-  if (mainCam) {
-    Vector3f pos = mainCam->getActor()->getTransform()->getPosition();
+  auto sMainCam = mainCam.lock();
+  if (!mainCam.expired()) {
+    Vector3f pos = sMainCam->getActor().lock()->getTransform().lock()->getPosition();
     Vector4f vp = Vector4f(pos.x, pos.y, pos.z, 1.0f);
     m_viewPosBuffer->updateData(reinterpret_cast<Byte*>(&vp));
   
     // Create view/proj matrices
     Matrix4f view = Matrix4f::kIDENTITY;
-    view = mainCam->getViewMatrix().getTranspose();
+    view = sMainCam->getViewMatrix().getTranspose();
     m_viewMatrixBuffer->updateData(reinterpret_cast<Byte*>(&view));
   
     Matrix4f proj = Matrix4f::kIDENTITY;
-    proj = mainCam->getProjectionMatrix().getTranspose();
+    proj = sMainCam->getProjectionMatrix().getTranspose();
     m_projectionMatrixBuffer->updateData(reinterpret_cast<Byte*>(&proj));
   }
   else {
@@ -708,7 +714,7 @@ DeferredRenderer::onRender()
   
   // Load shaders
   graphicsApi.setShaderPrograms(resourceManager.getResourceVertexShader("GBufferVSAnim"),
-                                nullptr, nullptr,
+                                {}, {},
                                 resourceManager.getResourcePixelShader("GBufferPSAnim"));
   
   
@@ -721,35 +727,36 @@ DeferredRenderer::onRender()
   
   
   // Draw in-cam actors with skeletal mesh
-  Vector<SPtr<Actor>> rActors;
-  if (mainCam) {
+  Vector<WPtr<Actor>> rActors;
+  if (!mainCam.expired()) {
     rActors =
-    sceneManager.getAllRenderableActorsInside(mainCam,
+    sceneManager.getAllRenderableActorsInside(sMainCam,
                                               RENDER_ACTOR_FLAGS::kSkeletalMesh);
   }
   
   for (const auto& act : rActors) {
-    SPtr<CSkeletalMesh> skMesh = act->getComponent<CSkeletalMesh>();
+    auto sAct = act.lock();
+    auto skMesh = sAct->getComponent<CSkeletalMesh>().lock();
    
-    const SPtr<SkeletalMesh> skModel = skMesh->getModel();
+    const auto skModel = skMesh->getModel().lock();
     if (skMesh && skModel) {
       boneMeshes = skModel->getMeshes();
       meshesCount = boneMeshes.size();
   
   
       // Set model buffer
-      SPtr<CTransform> transform = act->getTransform();
+      auto transform = sAct->getTransform().lock();
       Matrix4f modelMatrix = transform->getModelMatrix();
       m_modelMatrixBuff->updateData(reinterpret_cast<Byte*>(&modelMatrix));
       graphicsApi.setVSConstantBuffers({ m_modelMatrixBuff }, 0u);
   
   
       // Set textures
-      Vector<SPtr<Texture>> texs;
-      Map<uint32, SPtr<Texture>> texturesMap;
-      const SPtr<Skeletal> skeleton = skModel->getSkeletal();
+      Vector<WPtr<Texture>> texs;
+      Map<uint32, WPtr<Texture>> texturesMap;
+      const auto skeleton = skModel->getSkeletal().lock();
       for (SIZE_T j = 0; j < meshesCount; ++j) {
-        texturesMap = boneMeshes[j].second->getTexturesMap();
+        texturesMap = boneMeshes[j].second.lock()->getTexturesMap();
    
         if (texturesMap.find(TEXTURE_TYPE_INDEX::kDiffuse) != texturesMap.end()) {
           texs.push_back(texturesMap.find(TEXTURE_TYPE_INDEX::kDiffuse)->second);
@@ -791,38 +798,39 @@ DeferredRenderer::onRender()
   
   // Load shaders
   graphicsApi.setShaderPrograms(resourceManager.getResourceVertexShader("GBufferVS"),
-                                nullptr, nullptr,
+                                {}, {},
                                 resourceManager.getResourcePixelShader("GBufferPS"));
   
   
   // Draw in-cam actors with static mesh
-  if (mainCam) {
+  if (!mainCam.expired()) {
     rActors =
-    sceneManager.getAllRenderableActorsInside(mainCam,
+    sceneManager.getAllRenderableActorsInside(sMainCam,
                                               RENDER_ACTOR_FLAGS::kStaticMesh);
   }
   
   for (const auto& act : rActors) {
-    const SPtr<CStaticMesh> staticMesh = act->getComponent<CStaticMesh>();
+    auto sAct = act.lock();
+    const auto staticMesh = sAct->getComponent<CStaticMesh>().lock();
     if (staticMesh
      && staticMesh->getMobilityType() != eMOBILITY_TYPE::kStatic
-     && staticMesh->getStaticMesh()) {
-      meshes = staticMesh->getStaticMesh()->getMeshes();
+     && !staticMesh->getStaticMesh().expired()) {
+      meshes = staticMesh->getStaticMesh().lock()->getMeshes();
       meshesCount = meshes.size();
   
   
       // Set model buffer
-      SPtr<CTransform> transform = act->getTransform();
+      auto transform = sAct->getTransform().lock();
       Matrix4f modelMatrix = transform->getModelMatrix();
       m_modelMatrixBuff->updateData(reinterpret_cast<Byte*>(&modelMatrix));
       graphicsApi.setVSConstantBuffers({ m_modelMatrixBuff }, 0u);
   
   
       // Set textures
-      Vector<SPtr<Texture>> texs;
-      Map<uint32, SPtr<Texture>> texturesMap;
+      Vector<WPtr<Texture>> texs;
+      Map<uint32, WPtr<Texture>> texturesMap;
       for (SIZE_T j = 0; j < meshesCount; ++j) {
-        texturesMap = meshes[j].second->getTexturesMap();
+        texturesMap = meshes[j].second.lock()->getTexturesMap();
   
         if (texturesMap.find(TEXTURE_TYPE_INDEX::kDiffuse) != texturesMap.end()) {
           texs.push_back(texturesMap.find(TEXTURE_TYPE_INDEX::kDiffuse)->second);
@@ -852,7 +860,7 @@ DeferredRenderer::onRender()
     }
   }
   
-  Vector<SPtr<StaticMesh>> partitionMeshes;
+  Vector<WPtr<StaticMesh>> partitionMeshes;
   sceneManager.getPartitionedSceneMeshes(partitionMeshes);
   
   // Set model buffer
@@ -861,14 +869,14 @@ DeferredRenderer::onRender()
   graphicsApi.setVSConstantBuffers({ m_modelMatrixBuff }, 0u);
   
   for (const auto& staticMesh : partitionMeshes) {
-    meshes = staticMesh->getMeshes();
+    meshes = staticMesh.lock()->getMeshes();
     meshesCount = meshes.size();
   
     // Set textures
-    Vector<SPtr<Texture>> texs;
-    Map<uint32, SPtr<Texture>> texturesMap;
+    Vector<WPtr<Texture>> texs;
+    Map<uint32, WPtr<Texture>> texturesMap;
     for (SIZE_T j = 0; j < meshesCount; ++j) {
-      texturesMap = meshes[j].second->getTexturesMap();
+      texturesMap = meshes[j].second.lock()->getTexturesMap();
   
       if (texturesMap.find(TEXTURE_TYPE_INDEX::kDiffuse) != texturesMap.end()) {
         texs.push_back(texturesMap.find(TEXTURE_TYPE_INDEX::kDiffuse)->second);
@@ -909,12 +917,12 @@ DeferredRenderer::onRender()
   
   
   Matrix4f view = Matrix4f::kIDENTITY;
-  view = mainCam->getViewMatrix().getTranspose();
+  view = sMainCam->getViewMatrix().getTranspose();
   Matrix4f proj = Matrix4f::kIDENTITY;
-  proj = mainCam->getProjectionMatrix().getTranspose();
+  proj = sMainCam->getProjectionMatrix().getTranspose();
   Matrix4f modl = Matrix4f::translationMatrix(Vector3f{2.0f, 0.0f, 0.0f});
   Matrix4f viewProj = proj * view;
-  Vector3f camPos = mainCam->getEyePosition();
+  Vector3f camPos = sMainCam->getEyePosition();
   
   BezierData bdata{};
   bdata.viewProj = viewProj;
@@ -940,7 +948,8 @@ DeferredRenderer::onRender()
     0u
   );
   
-  graphicsApi.drawMeshControlPoints(resourceManager.getResourceStaticMesh("MorbiusStripMesh")->getMeshes()[0].first);
+  graphicsApi.drawMeshControlPoints(
+  resourceManager.getResourceStaticMesh("MorbiusStripMesh").lock()->getMeshes()[0].first);
   
   
   graphicsApi.unsetHSConstantBuffers(1u, 0u);
@@ -957,7 +966,7 @@ DeferredRenderer::onRender()
   
   // Clear and set render targets
   graphicsApi.clearRenderTargets({ m_SSAOTexture }, colorBlack);
-  graphicsApi.setRenderTargets({ m_SSAOTexture }, nullptr);
+  graphicsApi.setRenderTargets({ m_SSAOTexture }, nullTexturWPtr);
   
    
   // Set constant buffers
@@ -967,7 +976,7 @@ DeferredRenderer::onRender()
   
   // Load shaders
   graphicsApi.setShaderPrograms(resourceManager.getResourceVertexShader("SSAOVS"),
-                                nullptr, nullptr,
+                                {}, {},
                                 resourceManager.getResourcePixelShader("SSAOPS"));
   
   
@@ -992,16 +1001,16 @@ DeferredRenderer::onRender()
   // Get all lights
   Vector<SPtr<Actor>> actorLights =
   sceneManager.getAllActorsByComponentFlags(eCOMPONENT_TYPE::kLight);
-  Vector<SPtr<CLight>> lights;
+  Vector<WPtr<CLight>> lights;
   for (const auto& act : actorLights) {
     lights.emplace_back(act->getComponent<CLight>());
   }
   Vector<float> dirLightBufferData;
   
   
-  SPtr<VertexShader> copyVS =
+  WPtr<VertexShader> copyVS =
   resourceManager.getResourceVertexShader("CopyVS");
-  SPtr<PixelShader> copyPS =
+  WPtr<PixelShader> copyPS =
   resourceManager.getResourcePixelShader("CopyPS");
   
   
@@ -1011,13 +1020,13 @@ DeferredRenderer::onRender()
   // 
   
   // Store shaders
-  SPtr<VertexShader> dirDiffLightVS =
+  WPtr<VertexShader> dirDiffLightVS =
   resourceManager.getResourceVertexShader("DirectionalDiffuseLightsVS");
-  SPtr<PixelShader> dirDiffLightPS =
+  WPtr<PixelShader> dirDiffLightPS =
   resourceManager.getResourcePixelShader("DirectionalDiffuseLightsPS");
-  SPtr<VertexShader> pointDiffLightVS =
+  WPtr<VertexShader> pointDiffLightVS =
   resourceManager.getResourceVertexShader("PointDiffuseLightsVS");
-  SPtr<PixelShader> pointDiffLightPS =
+  WPtr<PixelShader> pointDiffLightPS =
   resourceManager.getResourcePixelShader("PointDiffuseLightsPS");
   
   
@@ -1026,10 +1035,11 @@ DeferredRenderer::onRender()
     //
     // Add light
     //
+    auto sLight = light.lock();
   
     // Clear and set render targets
     graphicsApi.clearRenderTargets({ m_diffLightsTexture }, colorBlack);
-    graphicsApi.setRenderTargets({ m_diffLightsTexture }, nullptr);
+    graphicsApi.setRenderTargets({ m_diffLightsTexture }, nullTexturWPtr);
   
   
     // Set textures
@@ -1039,37 +1049,37 @@ DeferredRenderer::onRender()
                             0u);
   
   
-    if (light->getLightType() == eLIGHT_TYPE::kDirectional) {
+    if (sLight->getLightType() == eLIGHT_TYPE::kDirectional) {
       // Load shaders
       graphicsApi.setShaderPrograms(dirDiffLightVS,
-                                    nullptr, nullptr,
+                                    {}, {},
                                     dirDiffLightPS);
   
   
       // Set constant buffers
-      Vector3f lightDir = light->getDirection();
-      Color lightColor = light->getColor();
+      Vector3f lightDir = sLight->getDirection();
+      Color lightColor = sLight->getColor();
       dirLightBufferData =
       {
-        lightDir.x, lightDir.y, lightDir.z, light->getIntensity(),
+        lightDir.x, lightDir.y, lightDir.z, sLight->getIntensity(),
         lightColor.r, lightColor.g, lightColor.b, lightColor.a
       };
       m_dirLightBuffer->updateData(reinterpret_cast<Byte*>(dirLightBufferData.data()));
       graphicsApi.setPSConstantBuffers({ m_dirLightBuffer }, 0u);
     }
-    else if (light->getLightType() == eLIGHT_TYPE::kPoint) {
+    else if (sLight->getLightType() == eLIGHT_TYPE::kPoint) {
       // Load shaders
       graphicsApi.setShaderPrograms(pointDiffLightVS,
-                                    nullptr, nullptr,
+                                    {}, {},
                                     pointDiffLightPS);
   
   
       // Set light constant buffer
-      Vector3f lightPos = light->getPosition();
-      Color lightColor = light->getColor();
+      Vector3f lightPos = sLight->getPosition();
+      Color lightColor = sLight->getColor();
       dirLightBufferData =
       {
-        lightPos.x, lightPos.y, lightPos.z, light->getIntensity(),
+        lightPos.x, lightPos.y, lightPos.z, sLight->getIntensity(),
         lightColor.r, lightColor.g, lightColor.b, lightColor.a
       };
       m_dirLightBuffer->updateData(reinterpret_cast<Byte*>(dirLightBufferData.data()));
@@ -1093,11 +1103,11 @@ DeferredRenderer::onRender()
   
     // Clear and set render targets
     graphicsApi.clearRenderTargets({ m_tempDiffLightsTexture }, colorBlack);
-    graphicsApi.setRenderTargets({ m_tempDiffLightsTexture }, nullptr);
+    graphicsApi.setRenderTargets({ m_tempDiffLightsTexture }, nullTexturWPtr);
   
   
     // Load shaders
-    graphicsApi.setShaderPrograms(copyVS, nullptr, nullptr, copyPS);
+    graphicsApi.setShaderPrograms(copyVS, {}, {}, copyPS);
   
   
     // Set textures
@@ -1119,13 +1129,13 @@ DeferredRenderer::onRender()
   // 
   
   // Store shaders
-  SPtr<VertexShader> dirSpecLightVS =
+  WPtr<VertexShader> dirSpecLightVS =
   resourceManager.getResourceVertexShader("DirectionalSpecularLightsVS");
-  SPtr<PixelShader> dirSpecLightPS =
+  WPtr<PixelShader> dirSpecLightPS =
   resourceManager.getResourcePixelShader("DirectionalSpecularLightsPS");
-  SPtr<VertexShader> pointSpecLightVS =
+  WPtr<VertexShader> pointSpecLightVS =
   resourceManager.getResourceVertexShader("PointSpecularLightsVS");
-  SPtr<PixelShader> pointSpecLightPS =
+  WPtr<PixelShader> pointSpecLightPS =
   resourceManager.getResourcePixelShader("PointSpecularLightsPS");
   
   
@@ -1134,10 +1144,11 @@ DeferredRenderer::onRender()
     //
     // Add light
     //
+    auto sLight = light.lock();
   
     // Clear and set render targets
     graphicsApi.clearRenderTargets({ m_specLightsTexture }, colorBlack);
-    graphicsApi.setRenderTargets({ m_specLightsTexture }, nullptr);
+    graphicsApi.setRenderTargets({ m_specLightsTexture }, nullTexturWPtr);
   
   
     // Set view position constant buffer
@@ -1145,33 +1156,33 @@ DeferredRenderer::onRender()
     ({ m_viewPosBuffer }, 0u);
   
   
-    if (light->getLightType() == eLIGHT_TYPE::kDirectional) {
+    if (sLight->getLightType() == eLIGHT_TYPE::kDirectional) {
       // Load shaders
-      graphicsApi.setShaderPrograms(dirSpecLightVS, nullptr, nullptr, dirSpecLightPS);
+      graphicsApi.setShaderPrograms(dirSpecLightVS, {}, {}, dirSpecLightPS);
       
   
       // Set light constant buffer
-      Vector3f lightDir = light->getDirection();
-      Color lightColor = light->getColor();
+      Vector3f lightDir = sLight->getDirection();
+      Color lightColor = sLight->getColor();
       dirLightBufferData =
       {
-        lightDir.x, lightDir.y, lightDir.z, light->getIntensity(),
+        lightDir.x, lightDir.y, lightDir.z, sLight->getIntensity(),
         lightColor.r, lightColor.g, lightColor.b, lightColor.a
       };
       m_dirLightBuffer->updateData(reinterpret_cast<Byte*>(dirLightBufferData.data()));
       graphicsApi.setPSConstantBuffers({ m_dirLightBuffer }, 0u);
     }
-    else if (light->getLightType() == eLIGHT_TYPE::kPoint) {
+    else if (sLight->getLightType() == eLIGHT_TYPE::kPoint) {
       // Load shaders
-      graphicsApi.setShaderPrograms(pointSpecLightVS, nullptr, nullptr, pointSpecLightPS);
+      graphicsApi.setShaderPrograms(pointSpecLightVS, {}, {}, pointSpecLightPS);
   
   
       // Set light constant buffer
-      Vector3f lightPos = light->getPosition();
-      Color lightColor = light->getColor();
+      Vector3f lightPos = sLight->getPosition();
+      Color lightColor = sLight->getColor();
       dirLightBufferData =
       {
-        lightPos.x, lightPos.y, lightPos.z, light->getIntensity(),
+        lightPos.x, lightPos.y, lightPos.z, sLight->getIntensity(),
         lightColor.r, lightColor.g, lightColor.b, lightColor.a
       };
       m_dirLightBuffer->updateData(reinterpret_cast<Byte*>(dirLightBufferData.data()));
@@ -1203,11 +1214,11 @@ DeferredRenderer::onRender()
   
     // Clear and set render targets
     graphicsApi.clearRenderTargets({ m_tempSpecLightsTexture }, colorBlack);
-    graphicsApi.setRenderTargets({ m_tempSpecLightsTexture }, nullptr);
+    graphicsApi.setRenderTargets({ m_tempSpecLightsTexture }, nullTexturWPtr);
   
   
     // Load shaders
-    graphicsApi.setShaderPrograms(copyVS, nullptr, nullptr, copyPS);
+    graphicsApi.setShaderPrograms(copyVS, {}, {}, copyPS);
   
   
     // Set textures
@@ -1230,12 +1241,12 @@ DeferredRenderer::onRender()
   
   // Clear and set render targets
   graphicsApi.clearRenderTargets({ m_lightTexture }, colorBlack);
-  graphicsApi.setRenderTargets({ m_lightTexture }, nullptr);
+  graphicsApi.setRenderTargets({ m_lightTexture }, nullTexturWPtr);
   
   
   // Load shaders
   graphicsApi.setShaderPrograms(resourceManager.getResourceVertexShader("LightsVS"),
-                                nullptr, nullptr,
+                                {}, {},
                                 resourceManager.getResourcePixelShader("LightsPS"));
   
   
@@ -1265,7 +1276,7 @@ DeferredRenderer::onRender()
   graphicsApi.setViewports({ vp });
   
   // Clear and set render targets
-  graphicsApi.setRenderTargets({ m_HDRLuminanceTexture }, nullptr);
+  graphicsApi.setRenderTargets({ m_HDRLuminanceTexture }, nullTexturWPtr);
   graphicsApi.clearRenderTargets({ m_HDRLuminanceTexture }, colorBlack);
   
   // Set constant buffers
@@ -1274,7 +1285,7 @@ DeferredRenderer::onRender()
   
   // Load shaders
   graphicsApi.setShaderPrograms(resourceManager.getResourceVertexShader("HDRLuminanceVS"),
-                                nullptr, nullptr,
+                                {}, {},
                                 resourceManager.getResourcePixelShader("HDRLuminancePS"));
   
   
@@ -1296,19 +1307,19 @@ DeferredRenderer::onRender()
   
   
   /* Copy */
+  auto mainWin = graphicsApi.getMainWindow().lock();
   
-  vp.width = static_cast<float>(graphicsApi.getMainWindow()->getWidth());
-  vp.height = static_cast<float>(graphicsApi.getMainWindow()->getHeight());
+  vp.width = static_cast<float>(mainWin->getWidth());
+  vp.height = static_cast<float>(mainWin->getHeight());
   graphicsApi.setViewports({ vp });
   
   // Set Back Buffer
-  SPtr<Window> mainWin = graphicsApi.getMainWindow();
   graphicsApi.clearRenderTargets({ mainWin->getRenderTarget() }, colorBlack);
-  graphicsApi.setRenderTargets({ mainWin->getRenderTarget() }, nullptr);
+  graphicsApi.setRenderTargets({ mainWin->getRenderTarget() }, nullTexturWPtr);
   
   
   // Load shaders
-  graphicsApi.setShaderPrograms(copyVS, nullptr, nullptr, copyPS);
+  graphicsApi.setShaderPrograms(copyVS, {}, {}, copyPS);
   
   
   // Set textures

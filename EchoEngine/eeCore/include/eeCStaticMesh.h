@@ -89,7 +89,7 @@ class EE_CORE_EXPORT CStaticMesh : public Component
    * The new static mesh resource.
    */
   void
-  setStaticMesh(SPtr<StaticMesh> staticMesh);
+  setStaticMesh(WPtr<StaticMesh> staticMesh);
 
   /**
    * @brief
@@ -101,7 +101,7 @@ class EE_CORE_EXPORT CStaticMesh : public Component
    * @return
    * The static mesh resource of the component.
    */
-  SPtr<StaticMesh>
+  WPtr<StaticMesh>
   getStaticMesh();
 
   /**
@@ -139,7 +139,7 @@ class EE_CORE_EXPORT CStaticMesh : public Component
   /**
    * The static mesh resource.
    */
-  SPtr<StaticMesh> m_staticMesh;
+  WPtr<StaticMesh> m_staticMesh;
 
   /**
    * The number of indices.

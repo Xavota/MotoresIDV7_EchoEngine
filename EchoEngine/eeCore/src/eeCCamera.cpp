@@ -30,9 +30,9 @@ CCamera::init(CameraDesc desc)
 void
 CCamera::update()
 {
-  EE_NO_EXIST_RETURN(m_actor);
+  if (m_actor.expired()) return;
 
-  SPtr<CTransform> transform = m_actor->getTransform();
+  auto transform = m_actor.lock()->getTransform().lock();
 
   m_utilityCamera.setEyePosition(transform->getPosition());
   m_utilityCamera.setLookAtPosition(transform->getPosition() 
@@ -139,15 +139,16 @@ CCamera::setMain(bool active)
   m_main = active;
 }
 bool
-CCamera::isModelOnCamera(SPtr<CBounds> ActorBounds)
+CCamera::isModelOnCamera(WPtr<CBounds> actorBounds)
 {
-  if (!ActorBounds) {
+  if (actorBounds.expired()) {
     return false;
   }
 
-  if (m_utilityCamera.isSphereOnCamera(ActorBounds->getSphereBound()))
+  auto sActorBounds = actorBounds.lock();
+  if (m_utilityCamera.isSphereOnCamera(sActorBounds->getSphereBound()))
   {
-    return m_utilityCamera.isBoxOnCamera(ActorBounds->getBoxBound());
+    return m_utilityCamera.isBoxOnCamera(sActorBounds->getBoxBound());
   }
 
   return false;

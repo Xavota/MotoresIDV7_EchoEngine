@@ -18,7 +18,7 @@ CLight::CLight(eLIGHT_TYPE::E type,
 void
 CLight::update()
 {
-  SPtr<CTransform> trans = getActor()->getTransform();
+  auto trans = getActor().lock()->getTransform().lock();
   m_position = trans->getPosition();
   m_direction = trans->getRotation().getFrontVector();
 }

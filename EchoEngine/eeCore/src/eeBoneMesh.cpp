@@ -5,8 +5,7 @@
 #include <eeVertex.h>
 
 namespace eeEngineSDK {
-//template<typename V, typename I>
-BoneMesh/*<V,I>*/::BoneMesh(const BoneMesh& other)
+BoneMesh::BoneMesh(const BoneMesh& other)
 {
   if (other.m_vertexData && other.m_vertexData->isValid()
    && other.m_indexData  && other.m_indexData->isValid()) {
@@ -28,28 +27,24 @@ BoneMesh/*<V,I>*/::BoneMesh(const BoneMesh& other)
     m_indexCount = other.m_indexCount;
   }
 }
-//template<typename V, typename I>
-BoneMesh/*<V, I>*/::~BoneMesh()
+BoneMesh::~BoneMesh()
 {
   MemoryManager::instance().safeRelease(m_vertexData);
   MemoryManager::instance().safeRelease(m_indexData);
 }
-//template<typename V, typename I>
 void
-BoneMesh/*<V, I>*/::set() const
+BoneMesh::set() const
 {
   m_vertexData->set();
   m_indexData->set();
 }
-//template<typename V, typename I>
-const SPtr<VertexBuffer>
-BoneMesh/*<V, I>*/::getVertexData() const
+const WPtr<VertexBuffer>
+BoneMesh::getVertexData() const
 {
   return m_vertexData;
 }
-//template<typename V, typename I>
-const SPtr<IndexBuffer> 
-BoneMesh/*<V, I>*/::getIndexData() const
+const WPtr<IndexBuffer> 
+BoneMesh::getIndexData() const
 {
   return m_indexData;
 }

@@ -59,7 +59,7 @@ class EE_CORE_EXPORT SceneManager : public Module<SceneManager>
    * @return
    * The ptr to the new scene.
    */
-  SPtr<Scene>
+  WPtr<Scene>
   addScene(const String& name);
   /**
    * @brief
@@ -74,7 +74,7 @@ class EE_CORE_EXPORT SceneManager : public Module<SceneManager>
    * @return
    * The ptr to the scene, nullptr if not found.
    */
-  SPtr<Scene>
+  WPtr<Scene>
   getScene(const String& name);
 
   /**
@@ -91,8 +91,8 @@ class EE_CORE_EXPORT SceneManager : public Module<SceneManager>
    * @return
    * All actors inside.
    */
-  Vector<SPtr<Actor>>
-  getAllRenderableActorsInside(SPtr<CCamera> camera,
+  Vector<WPtr<Actor>>
+  getAllRenderableActorsInside(WPtr<CCamera> camera,
                        RENDER_ACTOR_FLAGS::E flags = RENDER_ACTOR_FLAGS::kNone);
 
   /**
@@ -148,7 +148,7 @@ class EE_CORE_EXPORT SceneManager : public Module<SceneManager>
    * The output vector of meshes.
    */
   void
-  getPartitionedSceneMeshes(Vector<SPtr<StaticMesh>>& outMeshesVec);
+  getPartitionedSceneMeshes(Vector<WPtr<StaticMesh>>& outMeshesVec);
 
 
  private:

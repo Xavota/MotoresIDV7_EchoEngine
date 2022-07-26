@@ -53,4 +53,16 @@ Image::loadFromFile(const WString& path)
   }
   return true;
 }
+void
+Image::loadFromPixelData(Byte* data, uint32 width, uint32 height)
+{
+  m_width = width;
+  m_height = height;
+  m_data = new ColorI[static_cast<SIZE_T>(m_width) * static_cast<SIZE_T>(m_height)];
+  memcpy(m_data,
+         data,
+         static_cast<SIZE_T>(m_width)
+       * static_cast<SIZE_T>(m_height)
+       * sizeof(ColorI));
+}
 }

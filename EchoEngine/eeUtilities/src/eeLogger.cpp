@@ -6,12 +6,12 @@
 
 namespace eeEngineSDK {
 void
-Logger::ConsoleLog(const String& log)
+Logger::consoleLog(const String& log)
 {
   eeOut << log << eeEndl;
 }
 void
-Logger::FileLog(const String& log, const WString& file, WARNING_LEVEL::E warningLvl)
+Logger::fileLog(const String& log, const WString& file, WARNING_LEVEL::E warningLvl)
 {
   String msg;
   if (warningLvl == WARNING_LEVEL::kDebug) {
@@ -31,9 +31,9 @@ Logger::FileLog(const String& log, const WString& file, WARNING_LEVEL::E warning
   }
 
   File f;
-  f.OpenFile(file,
+  f.openFile(file,
              OPEN_TYPE::kAppend | OPEN_TYPE::kAtTheEnd | OPEN_TYPE::kWriteOnly);
-  f.Write(msg + "\n");
-  f.Close();
+  f.write(msg + "\n");
+  f.close();
 }
 }

@@ -77,7 +77,7 @@ class EE_CORE_EXPORT StaticMesh
    * @return
    * Weather it succeed or failed to initialize.
    */
-  StaticMesh(const Vector<Pair<Mesh, SPtr<Material>>>& meshes,
+  StaticMesh(const Vector<Pair<Mesh, WPtr<Material>>>& meshes,
              const String& name,
              const Vector3f& furtherVertexPosition,
              const Vector3f& maxCoordinate,
@@ -138,7 +138,7 @@ class EE_CORE_EXPORT StaticMesh
    * Weather it succeed or failed to initialize.
    */
   bool
-  loadFromMeshes(const Vector<Pair<Mesh, SPtr<Material>>>& meshes,
+  loadFromMeshes(const Vector<Pair<Mesh, WPtr<Material>>>& meshes,
                  const String& name,
                  const Vector3f& furtherVertexPosition,
                  const Vector3f& maxCoordinate,
@@ -154,7 +154,7 @@ class EE_CORE_EXPORT StaticMesh
    * @return
    * The vector of pairs of meshes and texture.
    */
-  Vector<Pair<Mesh, SPtr<Material>>>
+  Vector<Pair<Mesh, WPtr<Material>>>
   getMeshes();
   /**
    * @brief
@@ -167,7 +167,7 @@ class EE_CORE_EXPORT StaticMesh
    * The vector of pairs of meshes and texture.
    */
   void
-  getMeshes(Vector<Pair<Mesh, SPtr<Material>>>& outMeshes);
+  getMeshes(Vector<Pair<Mesh, WPtr<Material>>>& outMeshes);
   /**
    * @brief
    * Getter for the texture data.
@@ -178,7 +178,7 @@ class EE_CORE_EXPORT StaticMesh
    * @return
    * The vector of textures.
    */
-  virtual Vector<SPtr<Material>>
+  virtual Vector<WPtr<Material>>
   getTextures();
   /**
    * @brief
@@ -193,7 +193,7 @@ class EE_CORE_EXPORT StaticMesh
    * The index of the texture.
    */
   virtual void
-  setTexture(SPtr<Material> texture, SIZE_T index);
+  setTexture(WPtr<Material> texture, SIZE_T index);
 
   /**
    * @brief
@@ -250,7 +250,7 @@ class EE_CORE_EXPORT StaticMesh
   /**
    * The vector of pairs of meshes and texture indices.
    */
-  Vector<Pair<Mesh, SPtr<Material>>> m_meshes;
+  Vector<Pair<Mesh, WPtr<Material>>> m_meshes;
   /**
    * The resource name.
    */

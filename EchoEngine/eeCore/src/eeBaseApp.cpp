@@ -140,6 +140,9 @@ BaseApp::initSystems(void* callback)
     if (AudioManager::isStarted()) {
       AudioManager::instance().init(64);
     }
+
+
+    ResourceManager::instance().loadAllSerialized();
   }
 
   return true;

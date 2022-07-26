@@ -22,38 +22,38 @@ SceneManager::update()
     }
   }
 }
-SPtr<Scene>
+WPtr<Scene>
 SceneManager::addScene(const String& name)
 {
   if (m_scenes.find(name) != m_scenes.end()) {
-    Logger::instance().ConsoleLog("ERROR TRYING TO ADD SCENE");
-    Logger::instance().ConsoleLog("Scene already with that name!");
-    return nullptr;
+    Logger::instance().consoleLog("ERROR TRYING TO ADD SCENE");
+    Logger::instance().consoleLog("Scene already with that name!");
+    return {};
   }
 
   m_scenes[name] = MemoryManager::instance().newPtr<Scene>();
   m_scenes[name]->init();
   return m_scenes[name];
 }
-SPtr<Scene>
+WPtr<Scene>
 SceneManager::getScene(const String& name)
 {
   if (m_scenes.find(name) == m_scenes.end()) {
-    Logger::instance().ConsoleLog("ERROR TRYING TO GET SCENE");
-    Logger::instance().ConsoleLog("Not a scene with that name!");
-    return nullptr;
+    Logger::instance().consoleLog("ERROR TRYING TO GET SCENE");
+    Logger::instance().consoleLog("Not a scene with that name!");
+    return {};
   }
   return m_scenes[name];
 }
-Vector<SPtr<Actor>>
-SceneManager::getAllRenderableActorsInside(SPtr<CCamera> camera,
+Vector<WPtr<Actor>>
+SceneManager::getAllRenderableActorsInside(WPtr<CCamera> camera,
                                            RENDER_ACTOR_FLAGS::E flags)
 {
-  if (!camera) { return {}; }
+  if (camera.expired()) { return {}; }
 
-  Vector<SPtr<Actor>> renderActors;
+  Vector<WPtr<Actor>> renderActors;
   for (auto& sc : m_scenes) {
-    Vector<SPtr<Actor>> tmpRenderActors;
+    Vector<WPtr<Actor>> tmpRenderActors;
     if (sc.second->isActive()) {
       tmpRenderActors = sc.second->getAllRenderableActorsInside(camera, flags);
     }
@@ -83,7 +83,7 @@ SceneManager::getAllActorsByComponentFlags(uint32 flags)
 void
 SceneManager::partitionScenes()
 {
-  Vector<SPtr<Scene>> sceneArr;
+  Vector<WPtr<Scene>> sceneArr;
   for (const auto& s : m_scenes) {
     sceneArr.emplace_back(s.second);
   }
@@ -92,7 +92,7 @@ SceneManager::partitionScenes()
                                  sceneArr);
 }
 void
-SceneManager::getPartitionedSceneMeshes(Vector<SPtr<StaticMesh>>& outMeshesVec)
+SceneManager::getPartitionedSceneMeshes(Vector<WPtr<StaticMesh>>& outMeshesVec)
 {
   m_spacePartition.getMeshes(outMeshesVec);
 }

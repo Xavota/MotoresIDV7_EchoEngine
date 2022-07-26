@@ -11,21 +11,21 @@ namespace eeEngineSDK {
 uint64 g_maxTrianglesCount = 15000u;
 
 void
-OctreeNode::CalculateTree(const BoxAAB& space, SPtr<StaticMesh> sMesh)
+OctreeNode::CalculateTree(const BoxAAB& space, WPtr<StaticMesh> sMesh)
 {
   auto& memoryManager = MemoryManager::instance();
 
   m_nodeSpace = space;
 
-  if (sMesh) {
+  if (!sMesh.expired()) {
     uint64 trianglesCount = 0u;
     
-    Vector<Pair<Mesh, SPtr<Material>>> meshes = sMesh->getMeshes();
+    Vector<Pair<Mesh, WPtr<Material>>> meshes = sMesh.lock()->getMeshes();
     for (const auto& m : meshes) {
       trianglesCount += static_cast<uint64>(m.first.getIndexCount() / 3);
     }
     if (trianglesCount <= g_maxTrianglesCount) {
-      m_nodeMesh = sMesh;
+      m_nodeMesh = sMesh.lock();
       return;
     }
     
@@ -47,13 +47,13 @@ OctreeNode::CalculateTree(const BoxAAB& space, SPtr<StaticMesh> sMesh)
       tempMeshes2 = DivideMesh(tempPlane, tempMeshes[0]);
     }
     else {
-      tempMeshes2.resize(2, nullptr);
+      tempMeshes2.resize(2, {});
     }
     if (tempMeshes[1]) {
       tempMeshes = DivideMesh(tempPlane, tempMeshes[1]);
     }
     else {
-      tempMeshes.resize(2, nullptr);
+      tempMeshes.resize(2, {});
     }
     // Third division
     tempPlane = Plane(1.0f, 0.0f, 0.0f, midPoint.x);
@@ -63,8 +63,8 @@ OctreeNode::CalculateTree(const BoxAAB& space, SPtr<StaticMesh> sMesh)
       childrenMeshes.push_back(tempMeshes3[1]);
     }
     else {
-      childrenMeshes.push_back(nullptr);
-      childrenMeshes.push_back(nullptr);
+      childrenMeshes.push_back({});
+      childrenMeshes.push_back({});
     }
     if (tempMeshes2[1]) {
       tempMeshes3 = DivideMesh(tempPlane, tempMeshes2[1]);
@@ -72,8 +72,8 @@ OctreeNode::CalculateTree(const BoxAAB& space, SPtr<StaticMesh> sMesh)
       childrenMeshes.push_back(tempMeshes3[1]);
     }
     else {
-      childrenMeshes.push_back(nullptr);
-      childrenMeshes.push_back(nullptr);
+      childrenMeshes.push_back({});
+      childrenMeshes.push_back({});
     }
     if (tempMeshes[0]) {
       tempMeshes3 = DivideMesh(tempPlane, tempMeshes[0]);
@@ -81,8 +81,8 @@ OctreeNode::CalculateTree(const BoxAAB& space, SPtr<StaticMesh> sMesh)
       childrenMeshes.push_back(tempMeshes3[1]);
     }
     else {
-      childrenMeshes.push_back(nullptr);
-      childrenMeshes.push_back(nullptr);
+      childrenMeshes.push_back({});
+      childrenMeshes.push_back({});
     }
     if (tempMeshes[1]) {
       tempMeshes3 = DivideMesh(tempPlane, tempMeshes[1]);
@@ -90,8 +90,8 @@ OctreeNode::CalculateTree(const BoxAAB& space, SPtr<StaticMesh> sMesh)
       childrenMeshes.push_back(tempMeshes3[1]);
     }
     else {
-      childrenMeshes.push_back(nullptr);
-      childrenMeshes.push_back(nullptr);
+      childrenMeshes.push_back({});
+      childrenMeshes.push_back({});
     }
     
     SIZE_T childrenCount = childrenMeshes.size();
@@ -108,13 +108,13 @@ OctreeNode::CalculateTree(const BoxAAB& space, SPtr<StaticMesh> sMesh)
   }
 }
 Vector<SPtr<StaticMesh>>
-OctreeNode::DivideMesh(const Plane& plane, SPtr<StaticMesh> sMesh)
+OctreeNode::DivideMesh(const Plane& plane, WPtr<StaticMesh> sMesh)
 {
   auto& memoryManager = MemoryManager::instance();
 
-  Vector<Pair<Mesh, SPtr<Material>>> sideAMeshes;
-  Vector<Pair<Mesh, SPtr<Material>>> sideBMeshes;
-  for (const auto& m : sMesh->getMeshes()) {
+  Vector<Pair<Mesh, WPtr<Material>>> sideAMeshes;
+  Vector<Pair<Mesh, WPtr<Material>>> sideBMeshes;
+  for (const auto& m : sMesh.lock()->getMeshes()) {
     Vector<Triangle> sideATriangles;
     Vector<Triangle> sideBTriangles;
 
@@ -156,7 +156,7 @@ OctreeNode::DivideMesh(const Plane& plane, SPtr<StaticMesh> sMesh)
   return r;
 }
 void
-OctreeNode::getMeshes(Vector<SPtr<StaticMesh>>& outMeshesVec)
+OctreeNode::getMeshes(Vector<WPtr<StaticMesh>>& outMeshesVec)
 {
   if (m_nodeMesh) {
     outMeshesVec.push_back(m_nodeMesh);

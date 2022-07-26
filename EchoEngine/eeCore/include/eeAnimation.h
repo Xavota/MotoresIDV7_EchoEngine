@@ -23,10 +23,25 @@ namespace eeEngineSDK {
  */
 struct Node
 {
+  /**
+   * The name of the node.
+   */
   String m_name;
+  /**
+   * The transformation of the node.
+   */
   Matrix4f m_transformation;
-  SPtr<Node> m_pParent = nullptr;
+  /**
+   * The parent of the node.
+   */
+  WPtr<Node> m_pParent;
+  /**
+   * The number of children of the node.
+   */
   uint32 m_childrenCount = 0;
+  /**
+   * The children of the node.
+   */
   Vector<SPtr<Node>> m_pChildren;
 };
 
@@ -36,7 +51,13 @@ struct Node
  */
 struct VectorKeyFrame
 {
+  /**
+   * The time that the key frame is on.
+   */
   float m_time = 0.0f;
+  /**
+   * The value of the key frame.
+   */
   Vector3f m_value = Vector3f(0.0f, 0.0f, 0.0f);
 };
 
@@ -46,7 +67,13 @@ struct VectorKeyFrame
  */
 struct QuatKeyFrame
 {
+  /**
+   * The time that the key frame is on.
+   */
   float m_time = 0.0f;
+  /**
+   * The value of the key frame.
+   */
   Quaternion m_value = Quaternion(0.0f, 0.0f, 0.0f, 0.0f);
 };
 
@@ -56,10 +83,22 @@ struct QuatKeyFrame
  */
 struct AnimNode
 {
+  /**
+   * The name of the node.
+   */
   String m_name;
 
+  /**
+   * The number of position keys.
+   */
   uint32 m_positionKeysCount;
+  /**
+   * The number of position keys.
+   */
   uint32 m_rotationKeysCount;
+  /**
+   * The number of position keys.
+   */
   uint32 m_scalingKeysCount;
 
   Vector<VectorKeyFrame> m_positionKeys;
@@ -156,7 +195,7 @@ class EE_CORE_EXPORT Animation
    */
   void
   boneTransform(SIZE_T meshIndex,
-                SPtr<Skeletal> pSkMesh,
+                WPtr<Skeletal> pSkMesh,
                 float time);
   /**
    * @brief
@@ -178,10 +217,10 @@ class EE_CORE_EXPORT Animation
    */
   void
   readNodeHeirarchy(float animationTime,
-                    const SPtr<Node> pNode,
+                    const WPtr<Node> pNode,
                     const Matrix4f& parentTransform,
                     SIZE_T meshIndex,
-                    SPtr<Skeletal> pSkMesh);
+                    WPtr<Skeletal> pSkMesh);
 
   /**
    * @brief
@@ -198,7 +237,7 @@ class EE_CORE_EXPORT Animation
    * The found animation node, if it is one.
    *
    * @return
-   * True if it found the anim node.
+   * True if it found the animation node.
    */
   bool
   findNodeAnim(const String& name, AnimNode& outAnimNode);

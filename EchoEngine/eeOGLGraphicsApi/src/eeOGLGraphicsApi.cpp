@@ -70,16 +70,17 @@ OGLGraphicsApi::processEvents()
   glfwPollEvents();
 }
 void
-OGLGraphicsApi::clearRenderTargets(Vector<SPtr<Texture>> /*rtvs*/,
+OGLGraphicsApi::clearRenderTargets(const Vector<WPtr<Texture>>& /*rtvs*/,
                                    Color /*screenColor*/)
 {
 }
 void
-OGLGraphicsApi::cleanDepthStencils(Vector<SPtr<Texture>> /*dsvs*/)
+OGLGraphicsApi::cleanDepthStencils(const Vector<WPtr<Texture>>& /*dsvs*/)
 {
 }
 void
-OGLGraphicsApi::setRenderTargets(Vector<SPtr<Texture>> /*rtvs*/, SPtr<Texture> /*dsv*/)
+OGLGraphicsApi::setRenderTargets(const Vector<WPtr<Texture>>& /*rtvs*/,
+                                 WPtr<Texture> /*dsv*/)
 {
 }
 void
@@ -87,15 +88,15 @@ OGLGraphicsApi::unsetRenderTargets()
 {
 }
 void
-OGLGraphicsApi::setTextures(Vector<SPtr<Texture>> textures, uint32 startSlot)
+OGLGraphicsApi::setTextures(const Vector<WPtr<Texture>>& textures, uint32 startSlot)
 {
   static uint32 startTextIndex = GL_TEXTURE0;
   
   static auto& memoryMan = MemoryManager::instance();
   
-  Vector<SPtr<OGLTexture>> texVec;
+  Vector<WPtr<OGLTexture>> texVec;
   for (auto& t : textures) {
-    SPtr<OGLTexture> tex = memoryMan.reinterpretPtr<OGLTexture>(t);
+    auto tex = memoryMan.reinterpretPtr<OGLTexture>(t.lock());
   
     if (tex) {
       texVec.push_back(tex);
@@ -105,7 +106,7 @@ OGLGraphicsApi::setTextures(Vector<SPtr<Texture>> textures, uint32 startSlot)
   auto texCount = static_cast<uint32>(texVec.size());
   for (uint32 i = 0; i < texCount; ++i) {
     glActiveTexture(GL_TEXTURE0 + startSlot + i);
-    glBindTexture(GL_TEXTURE_2D, texVec[i]->getShaderResource());
+    glBindTexture(GL_TEXTURE_2D, texVec[i].lock()->getShaderResource());
   }
 }
 void
@@ -113,17 +114,7 @@ OGLGraphicsApi::unsetTextures(uint32 /*textureCount*/, uint32 /*startSlot*/)
 {
 }
 void
-OGLGraphicsApi::setVSConstantBuffers(Vector<SPtr<ConstantBuffer>> /*buffers*/,
-                                     uint32 /*startSlot*/)
-{
-}
-void
 OGLGraphicsApi::unsetVSConstantBuffers(uint32 /*buffersCount*/, uint32 /*startSlot*/)
-{
-}
-void
-OGLGraphicsApi::setPSConstantBuffers(Vector<SPtr<ConstantBuffer>> /*buffers*/,
-                                     uint32 /*startSlot*/)
 {
 }
 void
@@ -131,13 +122,13 @@ OGLGraphicsApi::unsetPSConstantBuffers(uint32 /*buffersCount*/, uint32 /*startSl
 {
 }
 void
-OGLGraphicsApi::setVertexBuffers(Vector<SPtr<VertexBuffer>> buffers,
-                                 Vector<uint32> offsets,
+OGLGraphicsApi::setVertexBuffers(const Vector<WPtr<VertexBuffer>>& buffers,
+                                 const Vector<uint32>& /*offsets*/,
                                  uint32 /*startSlot*/)
 {
   auto& memoryMan = MemoryManager::instance();
   for (auto& b : buffers) {
-    auto oglBuffer = memoryMan.reinterpretPtr<OGLVertexBuffer>(b);
+    auto oglBuffer = memoryMan.reinterpretPtr<OGLVertexBuffer>(b.lock());
 
     if (oglBuffer) {
       glBindBuffer(GL_ARRAY_BUFFER, oglBuffer->getResource());
@@ -151,16 +142,11 @@ OGLGraphicsApi::unsetVertexBuffers(uint32 /*buffersCount*/,
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 void
-OGLGraphicsApi::setIndexBuffer(SPtr<IndexBuffer> /*buffers*/,
-                               uint32 /*offsets*/)
-{
-}
-void
 OGLGraphicsApi::unsetIndexBuffer()
 {
 }
 void
-OGLGraphicsApi::setViewports(Vector<ViewportDesc> descs)
+OGLGraphicsApi::setViewports(const Vector<ViewportDesc>& descs)
 {
   for (auto& d : descs) {
     glViewport(static_cast<GLint>(d.topLeftX),
@@ -175,14 +161,14 @@ OGLGraphicsApi::setPrimitiveTopology(ePRIMITIVE_TOPOLOGY::E /*topology*/)
 {
 }
 void
-OGLGraphicsApi::setShaderPrograms(SPtr<VertexShader> vertexShader,
-                                  SPtr<HullShader> hullShader,
-                                  SPtr<DomainShader> domainShader,
-                                  SPtr<PixelShader> pixelShader)
+OGLGraphicsApi::setShaderPrograms(WPtr<VertexShader> vertexShader,
+                                  WPtr<HullShader> hullShader,
+                                  WPtr<DomainShader> domainShader,
+                                  WPtr<PixelShader> pixelShader)
 {
   auto& memoryMan = MemoryManager::instance();
-  auto oglVShader = memoryMan.reinterpretPtr<OGLVertexShader>(vertexShader);
-  auto oglPShader = memoryMan.reinterpretPtr<OGLPixelShader>(pixelShader);
+  auto oglVShader = memoryMan.reinterpretPtr<OGLVertexShader>(vertexShader.lock());
+  auto oglPShader = memoryMan.reinterpretPtr<OGLPixelShader>(pixelShader.lock());
 
   static uint32 shaderProgram = 0;
   if (oglVShader && oglPShader)

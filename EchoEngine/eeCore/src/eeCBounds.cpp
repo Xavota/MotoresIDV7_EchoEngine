@@ -15,9 +15,12 @@ CBounds::update()
 {
   Vector3f furtherPosition = Vector3f(0.0f, 0.0f, 0.0f);
 
-  SPtr<CStaticMesh> actorModel = m_actor->getComponent<CStaticMesh>();
+  if (m_actor.expired()) return;
+
+  auto sActor = m_actor.lock();
+  auto actorModel = sActor->getComponent<CStaticMesh>().lock();
   if (actorModel) {
-    SPtr<StaticMesh> cmpModel = actorModel->getStaticMesh();
+    auto cmpModel = actorModel->getStaticMesh().lock();
     if (cmpModel) {
       m_sphereBound = cmpModel->getBoundingSphere();
       furtherPosition = cmpModel->getFurtherPosition();
@@ -28,9 +31,9 @@ CBounds::update()
     }
   }
   else {
-    SPtr<CSkeletalMesh> actorSkeletalMesh = m_actor->getComponent<CSkeletalMesh>();
+    auto actorSkeletalMesh = sActor->getComponent<CSkeletalMesh>().lock();
     if (actorSkeletalMesh) {
-      SPtr<SkeletalMesh> cmpSkeletalMesh = actorSkeletalMesh->getModel();
+      auto cmpSkeletalMesh = actorSkeletalMesh->getModel().lock();
       if (cmpSkeletalMesh) {
         m_sphereBound = cmpSkeletalMesh->getBoundingSphere();
         furtherPosition = cmpSkeletalMesh->getFurtherPosition();
@@ -45,7 +48,7 @@ CBounds::update()
     }
   }
 
-  SPtr<CTransform> trans = m_actor->getTransform();
+  auto trans = sActor->getTransform().lock();
 
   m_sphereBound =
   Sphere(trans->getGlobalPosition(), m_sphereBound.getRadious() * trans->getScale().getMagnitud());

@@ -91,9 +91,9 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * The resource initialized.
    */
-  SPtr<Texture>
+  WPtr<Texture>
   loadTextureFromFile(const WString& fileName,
-                      const String& resourceName);
+                      String& resourceName);
                       
   /**
    * @brief
@@ -110,8 +110,8 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * The resource initialized.
    */
-  SPtr<Material>
-  loadMaterialFromTextures(Map<uint32, SPtr<Texture>> textures,
+  WPtr<Material>
+  loadMaterialFromTextures(const Map<uint32, WPtr<Texture>>& textures,
                            const String& resourceName);
 
   /**
@@ -137,7 +137,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * The resource initialized.
    */
   /*template<typename V, typename I>*/
-  SPtr<StaticMesh/*<V, I>*/>
+  WPtr<StaticMesh/*<V, I>*/>
   loadStaticMeshFromMeshesArray(const Vector<Mesh/*<V,I>*/>& meshes,
                                 const String& resourceName,
                                 const Vector3f& furtherVertexPosition,
@@ -166,8 +166,8 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * The resource initialized.
    */
   /*template<typename V, typename I>*/
-  SPtr<StaticMesh/*<V, I>*/>
-  loadStaticMeshFromMeshesArray(const Vector<Pair<Mesh/*<V,I>*/, SPtr<Material>>>& meshes,
+  WPtr<StaticMesh/*<V, I>*/>
+  loadStaticMeshFromMeshesArray(const Vector<Pair<Mesh/*<V,I>*/, WPtr<Material>>>& meshes,
                                 const String& resourceName,
                                 const Vector3f& furtherVertexPosition,
                                 const Vector3f& maxCoordinate,
@@ -188,7 +188,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * The resource initialized.
    */
-  SPtr<Skeletal> 
+  WPtr<Skeletal> 
   loadSkeletalFromFile(const WString& fileName,
                        const String& resourceName);
   /**
@@ -206,7 +206,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * The resource initialized.
    */
-  SPtr<Animation> 
+  WPtr<Animation> 
   loadAnimationFromFile(const WString& fileName,
                         const String& resourceName,
                         const int32 animIndex = 0);
@@ -226,7 +226,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * The resource initialized.
    */
-  SPtr<VertexShader>
+  WPtr<VertexShader>
   loadVertexShaderFromFile(const WString& fileName,
                            const String& functionName,
                            const Vector<ShaderMacro>& macroDefinitions,
@@ -246,7 +246,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * The resource initialized.
    */
-  SPtr<VertexShader>
+  WPtr<VertexShader>
   loadVertexShaderFromString(const String& shaderString,
                              const String& functionName,
                              const Vector<ShaderMacro>& macroDefinitions,
@@ -267,7 +267,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * The resource initialized.
    */
-  SPtr<PixelShader>
+  WPtr<PixelShader>
   loadPixelShaderFromFile(const WString& fileName,
                           const String& functionName,
                           const Vector<ShaderMacro>& macroDefinitions,
@@ -287,7 +287,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * The resource initialized.
    */
-  SPtr<PixelShader>
+  WPtr<PixelShader>
   loadPixelShaderFromString(const String& shaderString,
                             const String& functionName,
                             const Vector<ShaderMacro>& macroDefinitions,
@@ -312,7 +312,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * The resource initialized.
    */
-  SPtr<HullShader>
+  WPtr<HullShader>
   loadHullShaderFromFile(const WString& fileName,
                          const String& functionName,
                          const Vector<ShaderMacro>& macroDefinitions,
@@ -336,7 +336,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * The resource initialized.
    */
-  SPtr<HullShader>
+  WPtr<HullShader>
   loadHullShaderFromString(const String& shaderString,
                            const String& functionName,
                            const Vector<ShaderMacro>& macroDefinitions,
@@ -361,7 +361,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * The resource initialized.
    */
-  SPtr<DomainShader>
+  WPtr<DomainShader>
   loadDomainShaderFromFile(const WString& fileName,
                            const String& functionName,
                            const Vector<ShaderMacro>& macroDefinitions,
@@ -385,7 +385,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * The resource initialized.
    */
-  SPtr<DomainShader>
+  WPtr<DomainShader>
   loadDomainShaderFromString(const String& shaderString,
                              const String& functionName,
                              const Vector<ShaderMacro>& macroDefinitions,
@@ -404,7 +404,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * The texture with that name.
    */
-  SPtr<Texture>
+  WPtr<Texture>
   getResourceTexture(const String& resourceName);
   /**
    * @brief
@@ -419,7 +419,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * The material with that name.
    */
-  SPtr<Material>
+  WPtr<Material>
   getResourceMaterial(const String& resourceName);
   /**
    * @brief
@@ -435,7 +435,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * The StaticMesh with that name.
    */
   /*template<typename V, typename I>*/
-  SPtr<StaticMesh/*<V, I>*/>
+  WPtr<StaticMesh/*<V, I>*/>
   getResourceStaticMesh(const String& resourceName);
   /**
    * @brief
@@ -450,7 +450,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * The skeletal with that name.
    */
-  SPtr<Skeletal>
+  WPtr<Skeletal>
   getResourceSkeletal(const String& resourceName);
   /**
    * @brief
@@ -466,7 +466,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * The skeletal mesh with that name.
    */
   /*template<typename V, typename I>*/
-  SPtr<SkeletalMesh/*<V, I>*/>
+  WPtr<SkeletalMesh/*<V, I>*/>
   getResourceSkeletalMesh(const String& resourceName);
   /**
    * @brief
@@ -481,7 +481,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * The animation with that name.
    */
-  SPtr<Animation>
+  WPtr<Animation>
   getResourceAnimation(const String& resourceName);
   /**
    * @brief
@@ -496,7 +496,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * The vertex shader with that name.
    */
-  SPtr<VertexShader>
+  WPtr<VertexShader>
   getResourceVertexShader(const String& resourceName);
   /**
    * @brief
@@ -511,7 +511,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * The pixel shader with that name.
    */
-  SPtr<PixelShader>
+  WPtr<PixelShader>
   getResourcePixelShader(const String& resourceName);
   /**
    * @brief
@@ -526,7 +526,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * The hull shader with that name.
    */
-  SPtr<HullShader>
+  WPtr<HullShader>
   getResourceHullShader(const String& resourceName);
   /**
    * @brief
@@ -541,7 +541,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * The domain shader with that name.
    */
-  SPtr<DomainShader>
+  WPtr<DomainShader>
   getResourceDomainShader(const String& resourceName);
 
   /**
@@ -670,16 +670,47 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
 
   /**
    * @brief
-   * Gets all pixel shaders.
+   * Deserialize and store all the resources files.
    *
    * @description
-   * Gets all stored pixel shaders.
+   * Deserialize and store all the resources files in the directory.
+   */
+  void
+  loadAllSerialized();
+  /**
+   * @brief
+   * Serialize and stores a texture resource.
+   *
+   * @description
+   * Serialize and stores a texture resource.
+   * 
+   * @param resourceName
+   * The name of the resources to serialize.
+   * @param fileToSave
+   * The path to the file for the serialized resource.
    *
    * @return
-   * All stored pixel shaders.
+   * Whether or not it succeeded on serializing the texture.
    */
   bool
-  serializeTexture(const String& resourceName, File& fileToSave);
+  serializeTexture(const String& resourceName, const WString& fileToSave);
+  /**
+   * @brief
+   * Deserialize and stores a texture resource.
+   *
+   * @description
+   * Deserialize and stores a texture resource.
+   *
+   * @param fileToLoad
+   * The opened file that contains the resource to load.
+   * @param resourceName
+   * The name of the resources to deserialize.
+   *
+   * @return
+   * Whether or not it succeeded on loading the texture.
+   */
+  bool
+  deserializeTexture(File& fileToLoad, const String& resourceName);
 
 
  private:
@@ -694,8 +725,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
   /**
    * The StaticMeshes stored.
    */
-  /*template<typename V, typename I>*/
-  Map<String, SPtr<StaticMesh/*<V, I>*/>> m_staticMeshes;
+  Map<String, SPtr<StaticMesh>> m_staticMeshes;
   /**
    * The skeletal meshes stored.
    */
@@ -703,8 +733,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
   /**
    * The skeletal meshes stored.
    */
-  /*template<typename V, typename I>*/
-  Map<String, SPtr<SkeletalMesh/*<V, I>*/>> m_skeletalMeshes;
+  Map<String, SPtr<SkeletalMesh>> m_skeletalMeshes;
   /**
    * The animations stored.
    */

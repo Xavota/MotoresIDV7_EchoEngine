@@ -7,14 +7,14 @@ namespace eeEngineSDK {
 void
 CStaticMesh::update()
 {
-  EE_NO_EXIST_RETURN(m_actor);
+  if (m_actor.expired()) return;
 }
 void
-CStaticMesh::setStaticMesh(SPtr<StaticMesh> staticMesh)
+CStaticMesh::setStaticMesh(WPtr<StaticMesh> staticMesh)
 {
   m_staticMesh = staticMesh;
 }
-SPtr<StaticMesh>
+WPtr<StaticMesh>
 CStaticMesh::getStaticMesh()
 {
   return m_staticMesh;

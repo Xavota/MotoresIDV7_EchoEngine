@@ -103,8 +103,20 @@ class EE_CORE_EXPORT Texture
    * @param images
    * The vector of images to use.
    */
-  virtual void
-  loadImages(Vector<SPtr<Image>> images) { m_images = images; }
+  FORCEINLINE virtual void
+  loadImages(const Vector<SPtr<Image>>& images) { m_images = images; }
+  /**
+   * @brief
+   * Loads from images.
+   *
+   * @description
+   * Loads images for the shader resources.
+   * 
+   * @param images
+   * The vector of images to use.
+   */
+  FORCEINLINE virtual Vector<SPtr<Image>>
+  getImages() { return m_images; }
   
   /**
    * @brief

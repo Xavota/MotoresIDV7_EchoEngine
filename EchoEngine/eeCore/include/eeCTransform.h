@@ -204,7 +204,7 @@ class EE_CORE_EXPORT CTransform : public Component
    * The new parent transform.
    */
   virtual void
-  attatchTo(SPtr<CTransform> transformParent);
+  attatchTo(WPtr<CTransform> transformParent);
 
  private:
   /**
@@ -228,11 +228,11 @@ class EE_CORE_EXPORT CTransform : public Component
   /**
    * The transform component children.
    */
-  Vector<SPtr<CTransform>> m_childs;
+  Vector<SPtr<CTransform>> m_children;
   /**
    * The transform component parent.
    */
-  SPtr<CTransform> m_parent;
+  WPtr<CTransform> m_parent;
   /**
    * The child index on the parent transform.
    */

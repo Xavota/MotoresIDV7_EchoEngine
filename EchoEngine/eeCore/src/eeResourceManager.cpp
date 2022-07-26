@@ -30,7 +30,7 @@
 
 namespace eeEngineSDK
 {
-Map<uint32, SPtr<Material>>
+Map<uint32, WPtr<Material>>
 loadMaterialsFromAssimp(const aiScene* scene,
                         const String& /*name*/)
 {
@@ -43,12 +43,12 @@ loadMaterialsFromAssimp(const aiScene* scene,
 void
 loadStaticMeshFromAssimp(const aiScene* scene,
                          const String& name,
-                         const Map<uint32, SPtr<Material>>& textures,
+                         const Map<uint32, WPtr<Material>>& textures,
                          SPtr<StaticMesh>* outStaticMesh)
 {
   *outStaticMesh = MemoryManager::instance().newPtr<StaticMesh>();
 
-  Vector<Pair<Mesh, SPtr<Material>>> meshes;
+  Vector<Pair<Mesh, WPtr<Material>>> meshes;
   meshes.resize(scene->mNumMeshes);
 
   Vector3f maxBound(-99999.99f, -99999.99f, -99999.99f);
@@ -144,7 +144,7 @@ loadStaticMeshFromAssimp(const aiScene* scene,
 
     auto& resourseManager = ResourceManager::instance();
 
-    meshes[i] = Pair<Mesh, SPtr<Material>>(
+    meshes[i] = Pair<Mesh, WPtr<Material>>(
       Mesh(),
       textures.find(AssimpMesh->mMaterialIndex) != textures.end()
       ? (*textures.find(AssimpMesh->mMaterialIndex)).second
@@ -159,13 +159,13 @@ loadStaticMeshFromAssimp(const aiScene* scene,
 }
 SPtr<SkeletalMesh>
 loadSkeletalMeshFromAssimp(const aiScene* scene,
-                           SPtr<Skeletal> skeleton,
+                           WPtr<Skeletal> skeleton,
                            const String& name,
-                           const Map<uint32, SPtr<Material>>& textures)
+                           const Map<uint32, WPtr<Material>>& textures)
 {
   SPtr<SkeletalMesh> outSkeletalMesh = MemoryManager::instance().newPtr<SkeletalMesh>();
 
-  Vector<Pair<BoneMesh, SPtr<Material>>> meshes;
+  Vector<Pair<BoneMesh, WPtr<Material>>> meshes;
 
   Vector3f maxBound(-99999.99f, -99999.99f, -99999.99f);
   Vector3f minBound(99999.99f, 99999.99f, 99999.99f);
@@ -250,7 +250,7 @@ loadSkeletalMeshFromAssimp(const aiScene* scene,
     }
 
     Vector<Bone> bones;
-    if (skeleton && skeleton->getBonesDataForMesh(i, bones)) {
+    if (!skeleton.expired() && skeleton.lock()->getBonesDataForMesh(i, bones)) {
       if (!bones.empty()) {
         SIZE_T bonesCount = bones.size();
         for (SIZE_T j = 0; j < bonesCount; j++) {
@@ -268,7 +268,7 @@ loadSkeletalMeshFromAssimp(const aiScene* scene,
             }
 
             if (!yes) {
-              Logger::instance().ConsoleLog("No more bone space");
+              Logger::instance().consoleLog("No more bone space");
             }
           }
         }
@@ -293,7 +293,7 @@ loadSkeletalMeshFromAssimp(const aiScene* scene,
 
     meshes.emplace_back
     (
-      Pair<BoneMesh, SPtr<Material>>
+      Pair<BoneMesh, WPtr<Material>>
       (
         BoneMesh(),
         textures.find(AssimpMesh->mMaterialIndex) != textures.end()
@@ -319,8 +319,8 @@ void
 readNodeHeirarchy(const aiNode* pNode,
                   const Matrix4f& ParentTransform,
                   int32 meshIndex,
-                  Vector<Map<String, uint32>> boneMappings,
-                  Vector<Matrix4f> globalInverseTransforms,
+                  const Vector<Map<String, uint32>>& boneMappings,
+                  const Vector<Matrix4f>& globalInverseTransforms,
                   Vector<Vector<Bone>>& outBonesPerMesh)
 {
   String NodeName(pNode->mName.data);
@@ -334,7 +334,7 @@ readNodeHeirarchy(const aiNode* pNode,
 
 
   if (boneMappings[meshIndex].find(NodeName) != boneMappings[meshIndex].end()) {
-    uint32 BoneIndex = boneMappings[meshIndex][NodeName];
+    uint32 BoneIndex = boneMappings[meshIndex].find(NodeName)->second;
 
     outBonesPerMesh[meshIndex][BoneIndex].m_finalTransformation =
                           globalInverseTransforms[meshIndex]
@@ -354,8 +354,8 @@ readNodeHeirarchy(const aiNode* pNode,
 void
 boneTransform(const aiNode* root,
               int32 meshIndex,
-              Vector<Map<String, uint32>> boneMappings,
-              Vector<Matrix4f> globalInverseTransforms,
+              const Vector<Map<String, uint32>>& boneMappings,
+              const Vector<Matrix4f>& globalInverseTransforms,
               Vector<Vector<Bone>>& outBonesPerMesh)
 {
   readNodeHeirarchy(root,
@@ -488,21 +488,22 @@ storeAnim(aiAnimation* anim, Vector<AnimNode>& channels)
   }
 }
 void
-storeNodes(aiNode* current, SPtr<Node> storage)
+storeNodes(aiNode* current, WPtr<Node> storage)
 {
   auto& memoryMan = MemoryManager::instance();
 
-  storage->m_name = current->mName.C_Str();
+  auto sstorage = storage.lock();
+  sstorage->m_name = current->mName.C_Str();
   float m[16];
   memcpy(m, &current->mTransformation.a1, 16 * sizeof(float));
-  storage->m_transformation = Matrix4f(m);
+  sstorage->m_transformation = Matrix4f(m);
 
-  storage->m_childrenCount = current->mNumChildren;
+  sstorage->m_childrenCount = current->mNumChildren;
 
-  for (uint32 i = 0; i < storage->m_childrenCount; ++i) {
-    storage->m_pChildren.push_back(memoryMan.newPtr<Node>());
-    storeNodes(current->mChildren[i], storage->m_pChildren[i]);
-    storage->m_pChildren[i]->m_pParent = storage;
+  for (uint32 i = 0; i < sstorage->m_childrenCount; ++i) {
+    sstorage->m_pChildren.push_back(memoryMan.newPtr<Node>());
+    storeNodes(current->mChildren[i], sstorage->m_pChildren[i]);
+    sstorage->m_pChildren[i]->m_pParent = sstorage;
   }
 }
 SPtr<Animation>
@@ -588,13 +589,13 @@ ResourceManager::importResourceFromFile(const WString& fileName,
     );
 
     if (!scene) {
-      Logger::instance().ConsoleLog(importer->GetErrorString());
+      Logger::instance().consoleLog(importer->GetErrorString());
       delete importer;
       return false;
     }
 
     // Use the scene
-    Map<uint32, SPtr<Material>> materials;
+    Map<uint32, WPtr<Material>> materials;
     if (scene->HasTextures()
     &&  importFlags == IMPORT_FLAGS::kNone
     ||  Math::hasFlag(importFlags, IMPORT_FLAGS::kImportTextures)
@@ -673,23 +674,23 @@ ResourceManager::importResourceFromFile(const WString& fileName,
   }
   return true;
 }
-SPtr<Texture>
+WPtr<Texture>
 ResourceManager::loadTextureFromFile(const WString& fileName,
-                                     const String& resourceName)
+                                     String& resourceName)
 {
   if (m_textures.find(resourceName) != m_textures.end()) {
-    Logger::instance().ConsoleLog("Resource already with this name");
-    return nullptr;
+    Logger::instance().consoleLog("Resource already with this name");
+    return {};
   }
 
   if (fileName.empty()) {
-    Logger::instance().ConsoleLog("Empty info loading texture");
-    return nullptr;
+    Logger::instance().consoleLog("Empty info loading texture");
+    return {};
   }
 
   SPtr<Image> tempImg = MemoryManager::instance().newPtr<Image>();
   if (!tempImg->loadFromFile(fileName)) {
-    return nullptr;
+    return {};
   }
 
   SPtr<Texture> tex = GraphicsApi::instance().createTexturePtr();
@@ -698,27 +699,30 @@ ResourceManager::loadTextureFromFile(const WString& fileName,
 
   tex->loadImages({ tempImg });
 
-  m_textures.insert(Pair<String, SPtr<Texture>>(std::move(resourceName),
+  m_textures.insert(Pair<String, SPtr<Texture>>(resourceName,
                                                 tex));
+
+  serializeTexture(resourceName, L"Assets/" + eeStringtoWString(resourceName) + L".echoasset");
+
   return m_textures[resourceName];
 }
-SPtr<Material>
-ResourceManager::loadMaterialFromTextures(Map<uint32, SPtr<Texture>> textures,
+WPtr<Material>
+ResourceManager::loadMaterialFromTextures(const Map<uint32, WPtr<Texture>>& textures,
                                           const String& resourceName)
 {
   if (m_textures.find(resourceName) != m_textures.end()) {
-    Logger::instance().ConsoleLog("Resource already with this name");
-    return nullptr;
+    Logger::instance().consoleLog("Resource already with this name");
+    return {};
   }
 
   SPtr<Material> mat =
   MemoryManager::instance().newPtr<Material>(textures);
 
-  m_materials.insert(Pair<String, SPtr<Material>>(std::move(resourceName),
+  m_materials.insert(Pair<String, SPtr<Material>>(resourceName,
                                                   mat));
   return m_materials[resourceName];
 }
-SPtr<StaticMesh>
+WPtr<StaticMesh>
 ResourceManager::loadStaticMeshFromMeshesArray(const Vector<Mesh>& meshes,
                                                const String& resourceName,
                                                const Vector3f& furtherVertexPosition,
@@ -726,13 +730,13 @@ ResourceManager::loadStaticMeshFromMeshesArray(const Vector<Mesh>& meshes,
                                                const Vector3f& minCoordinate)
 {
   if (m_staticMeshes.find(resourceName) != m_staticMeshes.end()) {
-    Logger::instance().ConsoleLog("Resource already with this name");
-    return nullptr;
+    Logger::instance().consoleLog("Resource already with this name");
+    return {};
   }
 
   if (meshes.empty()) {
-    Logger::instance().ConsoleLog("Empty info loading static mesh");
-    return nullptr;
+    Logger::instance().consoleLog("Empty info loading static mesh");
+    return {};
   }
 
   SPtr<StaticMesh> staticMesh = MemoryManager::instance().newPtr<StaticMesh>();
@@ -741,29 +745,29 @@ ResourceManager::loadStaticMeshFromMeshesArray(const Vector<Mesh>& meshes,
                                  furtherVertexPosition,
                                  maxCoordinate,
                                  minCoordinate)) {
-    return nullptr;
+    return {};
   }
 
-  m_staticMeshes.insert(Pair<String, SPtr<StaticMesh>>(std::move(resourceName),
+  m_staticMeshes.insert(Pair<String, SPtr<StaticMesh>>(resourceName,
                                                        staticMesh));
   return m_staticMeshes[resourceName];
 }
-SPtr<StaticMesh>
+WPtr<StaticMesh>
 ResourceManager::loadStaticMeshFromMeshesArray(
-                                const Vector<Pair<Mesh, SPtr<Material>>>& meshes,
+                                const Vector<Pair<Mesh, WPtr<Material>>>& meshes,
                                 const String& resourceName,
                                 const Vector3f& furtherVertexPosition,
                                 const Vector3f& maxCoordinate,
                                 const Vector3f& minCoordinate)
 {
   if (m_staticMeshes.find(resourceName) != m_staticMeshes.end()) {
-    Logger::instance().ConsoleLog("Resource already with this name");
-    return nullptr;
+    Logger::instance().consoleLog("Resource already with this name");
+    return {};
   }
 
   if (meshes.empty()) {
-    Logger::instance().ConsoleLog("Empty info loading static mesh");
-    return nullptr;
+    Logger::instance().consoleLog("Empty info loading static mesh");
+    return {};
   }
 
   SPtr<StaticMesh> staticMesh = MemoryManager::instance().newPtr<StaticMesh>();
@@ -772,26 +776,26 @@ ResourceManager::loadStaticMeshFromMeshesArray(
                                   furtherVertexPosition,
                                   maxCoordinate,
                                   minCoordinate)) {
-    return nullptr;
+    return {};
   }
   
-  m_staticMeshes.insert(Pair<String, SPtr<StaticMesh>>(std::move(resourceName),
+  m_staticMeshes.insert(Pair<String, SPtr<StaticMesh>>(resourceName,
                                                        staticMesh));
   return m_staticMeshes[resourceName];
 }
 
-SPtr<Skeletal>
+WPtr<Skeletal>
 ResourceManager::loadSkeletalFromFile(const WString& fileName,
                                       const String& resourceName)
 {
   if (m_skeletals.find(resourceName) != m_skeletals.end()) {
-    Logger::instance().ConsoleLog("Resource already with this name");
-    return nullptr;
+    Logger::instance().consoleLog("Resource already with this name");
+    return {};
   }
 
   if (fileName.empty()) {
-    Logger::instance().ConsoleLog("Empty info loading skeletal");
-    return nullptr;
+    Logger::instance().consoleLog("Empty info loading skeletal");
+    return {};
   }
 
   auto* importer = new Assimp::Importer();
@@ -803,35 +807,35 @@ ResourceManager::loadSkeletalFromFile(const WString& fileName,
   );
 
   if (!scene) {
-    Logger::instance().ConsoleLog(importer->GetErrorString());
+    Logger::instance().consoleLog(importer->GetErrorString());
     delete importer;
-    return nullptr;
+    return {};
   }
 
   SPtr<Skeletal> skeleton = loadSkeletalFromAssimp(scene, resourceName);
   delete importer;
   if (skeleton)
   {
-    m_skeletals.insert(Pair<String, SPtr<Skeletal>>(std::move(resourceName),
+    m_skeletals.insert(Pair<String, SPtr<Skeletal>>(resourceName,
                                                     skeleton));
     return m_skeletals[resourceName];
   }
-  return nullptr;
+  return {};
 }
 
-SPtr<Animation>
+WPtr<Animation>
 ResourceManager::loadAnimationFromFile(const WString& fileName,
                                        const String& resourceName,
                                        const int32 animIndex)
 {
   if (m_animations.find(resourceName) != m_animations.end()) {
-    Logger::instance().ConsoleLog("Resource already with this name");
-    return nullptr;
+    Logger::instance().consoleLog("Resource already with this name");
+    return {};
   }
 
   if (fileName.empty()) {
-    Logger::instance().ConsoleLog("Empty info loading animation");
-    return nullptr;
+    Logger::instance().consoleLog("Empty info loading animation");
+    return {};
   }
 
   auto* importer = new Assimp::Importer();
@@ -843,276 +847,276 @@ ResourceManager::loadAnimationFromFile(const WString& fileName,
   );
 
   if (!scene) {
-    Logger::instance().ConsoleLog(importer->GetErrorString());
+    Logger::instance().consoleLog(importer->GetErrorString());
     delete importer;
-    return nullptr;
+    return {};
   }
 
   SPtr<Animation> anim = loadOneAnimationFromAssimp(scene, animIndex, resourceName);
   delete importer;
   if (anim) {
-    m_animations.insert(Pair<String, SPtr<Animation>>(std::move(resourceName),
+    m_animations.insert(Pair<String, SPtr<Animation>>(resourceName,
                                                       anim));
     return m_animations[resourceName];
   }
-  return nullptr;
+  return {};
 }
 
-SPtr<VertexShader>
+WPtr<VertexShader>
 ResourceManager::loadVertexShaderFromFile(const WString& fileName, 
                                           const String& functionName,
                                           const Vector<ShaderMacro>& macroDefinitions,
                                           const String& resourceName)
 {
   if (m_vertexShaders.find(resourceName) != m_vertexShaders.end()) {
-    Logger::instance().ConsoleLog("Resource already with this name");
-    return nullptr;
+    Logger::instance().consoleLog("Resource already with this name");
+    return {};
   }
 
   SPtr<VertexShader> shader = GraphicsApi::instance().createVertexShaderPtr();
   if (!shader->compileFromFile(fileName, functionName, macroDefinitions)) {
-    Logger::instance().ConsoleLog("Error compiling shader");
-    return nullptr;
+    Logger::instance().consoleLog("Error compiling shader");
+    return {};
   }
 
-  m_vertexShaders.insert(Pair<String, SPtr<VertexShader>>(std::move(resourceName),
+  m_vertexShaders.insert(Pair<String, SPtr<VertexShader>>(resourceName,
                                                           shader));
   return m_vertexShaders[resourceName];
 }
 
-SPtr<VertexShader>
+WPtr<VertexShader>
 ResourceManager::loadVertexShaderFromString(const String& shaderString,
                                             const String& functionName,
                                             const Vector<ShaderMacro>& macroDefinitions,
                                             const String& resourceName)
 {
   if (m_vertexShaders.find(resourceName) != m_vertexShaders.end()) {
-    Logger::instance().ConsoleLog("Resource already with this name");
-    return nullptr;
+    Logger::instance().consoleLog("Resource already with this name");
+    return {};
   }
 
   SPtr<VertexShader> shader = GraphicsApi::instance().createVertexShaderPtr();
   if (!shader->compileFromString(shaderString, functionName, macroDefinitions)) {
-    Logger::instance().ConsoleLog("Error compiling shader");
-    return nullptr;
+    Logger::instance().consoleLog("Error compiling shader");
+    return {};
   }
 
-  m_vertexShaders.insert(Pair<String, SPtr<VertexShader>>(std::move(resourceName),
+  m_vertexShaders.insert(Pair<String, SPtr<VertexShader>>(resourceName,
                                                           shader));
   return m_vertexShaders[resourceName];
 }
 
-SPtr<PixelShader>
+WPtr<PixelShader>
 ResourceManager::loadPixelShaderFromFile(const WString& fileName,
                                          const String& functionName,
                                          const Vector<ShaderMacro>& macroDefinitions,
                                          const String& resourceName)
 {
   if (m_pixelShaders.find(resourceName) != m_pixelShaders.end()) {
-    Logger::instance().ConsoleLog("Resource already with this name");
-    return nullptr;
+    Logger::instance().consoleLog("Resource already with this name");
+    return {};
   }
 
   SPtr<PixelShader> shader = GraphicsApi::instance().createPixelShaderPtr();
   if (!shader->compileFromFile(fileName, functionName, macroDefinitions)) {
-    Logger::instance().ConsoleLog("Error compiling shader");
-    return nullptr;
+    Logger::instance().consoleLog("Error compiling shader");
+    return {};
   }
 
-  m_pixelShaders.insert(Pair<String, SPtr<PixelShader>>(std::move(resourceName),
+  m_pixelShaders.insert(Pair<String, SPtr<PixelShader>>(resourceName,
                                                         shader));
   return m_pixelShaders[resourceName];
 }
 
-SPtr<PixelShader>
+WPtr<PixelShader>
 ResourceManager::loadPixelShaderFromString(const String& shaderString,
                                            const String& functionName,
                                            const Vector<ShaderMacro>& macroDefinitions,
                                            const String& resourceName)
 {
   if (m_pixelShaders.find(resourceName) != m_pixelShaders.end()) {
-    Logger::instance().ConsoleLog("Resource already with this name");
-    return nullptr;
+    Logger::instance().consoleLog("Resource already with this name");
+    return {};
   }
 
   SPtr<PixelShader> shader = GraphicsApi::instance().createPixelShaderPtr();
   if (!shader->compileFromString(shaderString, functionName, macroDefinitions)) {
-    Logger::instance().ConsoleLog("Error compiling shader");
-    return nullptr;
+    Logger::instance().consoleLog("Error compiling shader");
+    return {};
   }
 
-  m_pixelShaders.insert(Pair<String, SPtr<PixelShader>>(std::move(resourceName),
+  m_pixelShaders.insert(Pair<String, SPtr<PixelShader>>(resourceName,
                                                         shader));
   return m_pixelShaders[resourceName];
 }
 
-SPtr<HullShader>
+WPtr<HullShader>
 ResourceManager::loadHullShaderFromFile(const WString& fileName,
                                         const String& functionName,
                                         const Vector<ShaderMacro>& macroDefinitions,
                                         const String& resourceName)
 {
   if (m_hullShaders.find(resourceName) != m_hullShaders.end()) {
-    Logger::instance().ConsoleLog("Resource already with this name");
-    return nullptr;
+    Logger::instance().consoleLog("Resource already with this name");
+    return {};
   }
 
   SPtr<HullShader> shader = GraphicsApi::instance().createHullShaderPtr();
   if (!shader->compileFromFile(fileName, functionName, macroDefinitions)) {
-    Logger::instance().ConsoleLog("Error compiling shader");
-    return nullptr;
+    Logger::instance().consoleLog("Error compiling shader");
+    return {};
   }
 
-  m_hullShaders.insert(Pair<String, SPtr<HullShader>>(std::move(resourceName),
+  m_hullShaders.insert(Pair<String, SPtr<HullShader>>(resourceName,
                                                       shader));
   return m_hullShaders[resourceName];
 }
 
-SPtr<HullShader>
+WPtr<HullShader>
 ResourceManager::loadHullShaderFromString(const String& shaderString,
                                           const String& functionName,
                                           const Vector<ShaderMacro>& macroDefinitions,
                                           const String& resourceName)
 {
   if (m_hullShaders.find(resourceName) != m_hullShaders.end()) {
-    Logger::instance().ConsoleLog("Resource already with this name");
-    return nullptr;
+    Logger::instance().consoleLog("Resource already with this name");
+    return {};
   }
 
   SPtr<HullShader> shader = GraphicsApi::instance().createHullShaderPtr();
   if (!shader->compileFromString(shaderString, functionName, macroDefinitions)) {
-    Logger::instance().ConsoleLog("Error compiling shader");
-    return nullptr;
+    Logger::instance().consoleLog("Error compiling shader");
+    return {};
   }
 
-  m_hullShaders.insert(Pair<String, SPtr<HullShader>>(std::move(resourceName),
+  m_hullShaders.insert(Pair<String, SPtr<HullShader>>(resourceName,
                                                       shader));
   return m_hullShaders[resourceName];
 }
 
-SPtr<DomainShader>
+WPtr<DomainShader>
 ResourceManager::loadDomainShaderFromFile(const WString& fileName,
                                           const String& functionName,
                                           const Vector<ShaderMacro>& macroDefinitions,
                                           const String& resourceName)
 {
   if (m_domainShaders.find(resourceName) != m_domainShaders.end()) {
-    Logger::instance().ConsoleLog("Resource already with this name");
-    return nullptr;
+    Logger::instance().consoleLog("Resource already with this name");
+    return {};
   }
 
   SPtr<DomainShader> shader = GraphicsApi::instance().createDomainShaderPtr();
   if (!shader->compileFromFile(fileName, functionName, macroDefinitions)) {
-    Logger::instance().ConsoleLog("Error compiling shader");
-    return nullptr;
+    Logger::instance().consoleLog("Error compiling shader");
+    return {};
   }
 
-  m_domainShaders.insert(Pair<String, SPtr<DomainShader>>(std::move(resourceName),
+  m_domainShaders.insert(Pair<String, SPtr<DomainShader>>(resourceName,
                                                           shader));
   return m_domainShaders[resourceName];
 }
 
-SPtr<DomainShader>
+WPtr<DomainShader>
 ResourceManager::loadDomainShaderFromString(const String& shaderString,
                                             const String& functionName,
                                             const Vector<ShaderMacro>& macroDefinitions,
                                             const String& resourceName)
 {
   if (m_domainShaders.find(resourceName) != m_domainShaders.end()) {
-    Logger::instance().ConsoleLog("Resource already with this name");
-    return nullptr;
+    Logger::instance().consoleLog("Resource already with this name");
+    return {};
   }
 
   SPtr<DomainShader> shader = GraphicsApi::instance().createDomainShaderPtr();
   if (!shader->compileFromString(shaderString, functionName, macroDefinitions)) {
-    Logger::instance().ConsoleLog("Error compiling shader");
-    return nullptr;
+    Logger::instance().consoleLog("Error compiling shader");
+    return {};
   }
 
-  m_domainShaders.insert(Pair<String, SPtr<DomainShader>>(std::move(resourceName),
+  m_domainShaders.insert(Pair<String, SPtr<DomainShader>>(resourceName,
                                                           shader));
   return m_domainShaders[resourceName];
 }
 
-SPtr<Texture>
+WPtr<Texture>
 ResourceManager::getResourceTexture(const String& resourceName)
 {
   if (m_textures.find(resourceName) != m_textures.end()) {
     return m_textures[resourceName];
   }
-  return nullptr;
+  return {};
 }
-SPtr<Material>
+WPtr<Material>
 ResourceManager::getResourceMaterial(const String& resourceName)
 {
   if (m_materials.find(resourceName) != m_materials.end()) {
     return m_materials[resourceName];
   }
-  return nullptr;
+  return {};
 }
-SPtr<StaticMesh>
+WPtr<StaticMesh>
 ResourceManager::getResourceStaticMesh(const String& resourceName)
 {
   if (m_staticMeshes.find(resourceName) != m_staticMeshes.end()) {
     return m_staticMeshes[resourceName];
   }
-  return nullptr;
+  return {};
 }
-SPtr<Skeletal>
+WPtr<Skeletal>
 ResourceManager::getResourceSkeletal(const String& resourceName)
 {
   if (m_skeletals.find(resourceName) != m_skeletals.end()) {
     return m_skeletals[resourceName];
   }
-  return nullptr;
+  return {};
 }
-SPtr<SkeletalMesh>
+WPtr<SkeletalMesh>
 ResourceManager::getResourceSkeletalMesh(const String& resourceName)
 {
   if (m_skeletalMeshes.find(resourceName) != m_skeletalMeshes.end()) {
     return m_skeletalMeshes[resourceName];
   }
-  return nullptr;
+  return {};
 }
-SPtr<Animation>
+WPtr<Animation>
 ResourceManager::getResourceAnimation(const String& resourceName)
 {
   if (m_animations.find(resourceName) != m_animations.end()) {
     return m_animations[resourceName];
   }
-  return nullptr;
+  return {};
 }
-SPtr<VertexShader>
+WPtr<VertexShader>
 ResourceManager::getResourceVertexShader(const String& resourceName)
 {
   if (m_vertexShaders.find(resourceName) != m_vertexShaders.end()) {
     return m_vertexShaders[resourceName];
   }
-  return nullptr;
+  return {};
 }
-SPtr<PixelShader>
+WPtr<PixelShader>
 ResourceManager::getResourcePixelShader(const String& resourceName)
 {
   if (m_pixelShaders.find(resourceName) != m_pixelShaders.end()) {
     return m_pixelShaders[resourceName];
   }
-  return nullptr;
+  return {};
 }
-SPtr<HullShader>
+WPtr<HullShader>
 ResourceManager::getResourceHullShader(const String& resourceName)
 {
   if (m_hullShaders.find(resourceName) != m_hullShaders.end()) {
     return m_hullShaders[resourceName];
   }
-  return nullptr;
+  return {};
 }
-SPtr<DomainShader>
+WPtr<DomainShader>
 ResourceManager::getResourceDomainShader(const String& resourceName)
 {
   if (m_domainShaders.find(resourceName) != m_domainShaders.end()) {
     return m_domainShaders[resourceName];
   }
-  return nullptr;
+  return {};
 }
 Map<String, SPtr<Texture>>
 ResourceManager::getAllTextureResources()
@@ -1165,11 +1169,145 @@ ResourceManager::getAllDomainShaderResources()
   return m_domainShaders;
 }
 
+namespace eRESOURCE_CODE {
+enum E : uint8 {
+  kNone = 0,
+  kTexture,
+  kMaterial,
+  kStaticMesh,
+  kSkeletal,
+  kSkeletalMesh,
+  kAnimation,
+  kCount
+};
+}
+
+void
+ResourceManager::loadAllSerialized()
+{
+  for (auto const& dir_entry : std::filesystem::directory_iterator("Assets")) {
+    std::cout << dir_entry.path() << '\n';
+
+    if (dir_entry.is_regular_file()) {
+      File loadFile;
+      WString filePath = dir_entry.path();
+      loadFile.openFile(filePath, OPEN_TYPE::kReadOnly
+                                                | OPEN_TYPE::kBinary);
+      if (loadFile.isOpen()) {
+        String resourceName;
+
+        String pathW2S = eeWStringtoString(filePath);
+        bool readingName = false;
+        int64 pathSize = static_cast<int64>(pathW2S.size());
+        for (int64 i = pathSize - 1; i >= 0; --i) {
+          if (!readingName) {
+            if (pathW2S[i] == '.') {
+              readingName = true;
+            }
+          }
+          else {
+            if (pathW2S[i] == '/' || pathW2S[i] == '\\') {
+              break;
+            }
+            //resourceName.insert(resourceName.end() - 1, pathW2S[i]);
+            resourceName = pathW2S[i] + resourceName;
+          }
+        }
+
+
+        uint8 readResourceCode = 0;
+        loadFile.readBytes(reinterpret_cast<Byte*>(&readResourceCode),
+                           sizeof(uint8));
+
+        switch (readResourceCode)
+        {
+        case eRESOURCE_CODE::kTexture:
+          deserializeTexture(loadFile, resourceName);
+          break;
+        }
+      }
+    }
+  }
+}
 
 bool
-ResourceManager::serializeTexture(const String& /*resourceName*/,
-                                  File& /*fileToSave*/)
+ResourceManager::serializeTexture(const String& resourceName,
+                                  const WString& fileToSave)
 {
+  if (m_textures.find(resourceName) != m_textures.end()) {
+    File saveFile;
+    saveFile.openFile(fileToSave, OPEN_TYPE::kWriteOnly | OPEN_TYPE::kBinary);
+    if (saveFile.isOpen()) {
+      auto tex = m_textures[resourceName];
+      uint8 resourceCode = eRESOURCE_CODE::kTexture;
+      saveFile.writeBytes(reinterpret_cast<Byte*>(&resourceCode), sizeof(uint8));
+      int8 sizeTSize = sizeof(SIZE_T);
+      saveFile.writeBytes(reinterpret_cast<Byte*>(&sizeTSize), sizeof(uint8));
+      Vector<SPtr<Image>> images = tex->getImages();
+      SIZE_T imagesCount = images.size();
+      saveFile.writeBytes(reinterpret_cast<Byte*>(&imagesCount), sizeof(SIZE_T));
+      for (auto& img : images) {
+        uint32 imgWidth = img->getWidth();
+        uint32 imgHeight = img->getHeight();
+        saveFile.writeBytes(reinterpret_cast<Byte*>(&imgWidth), sizeof(uint32));
+        saveFile.writeBytes(reinterpret_cast<Byte*>(&imgHeight), sizeof(uint32));
+        saveFile.writeBytes(reinterpret_cast<Byte*>(img->getData()),
+                            imgWidth * imgHeight * sizeof(ColorI));
+      }
+      saveFile.close();
+
+      return true;
+    }
+  }
+  return false;
+}
+bool
+ResourceManager::deserializeTexture(File& fileToLoad, const String& resourceName)
+{
+  if (m_textures.find(resourceName) != m_textures.end()) {
+    Logger::instance().consoleLog("Resource already with this name");
+    return false;
+  }
+
+  if (fileToLoad.isOpen()) {
+    uint8 readSizeTSize = 0;
+    fileToLoad.readBytes(reinterpret_cast<Byte*>(&readSizeTSize), sizeof(uint8));
+    SIZE_T readImagesCount = 0;
+    if (readSizeTSize == 4) {
+      uint32 byte4ImagesCount = 0;
+      fileToLoad.readBytes(reinterpret_cast<Byte*>(&byte4ImagesCount), sizeof(uint32));
+      readImagesCount = static_cast<SIZE_T>(byte4ImagesCount);
+    }
+    else if (readSizeTSize == 8) {
+      uint64 byte8ImagesCount = 0;
+      fileToLoad.readBytes(reinterpret_cast<Byte*>(&byte8ImagesCount), sizeof(uint64));
+      readImagesCount = static_cast<SIZE_T>(byte8ImagesCount);
+    }
+    Vector<SPtr<Image>> readImages;
+    for (SIZE_T i = 0; i < readImagesCount; ++i) {
+      readImages.push_back(MemoryManager::instance().newPtr<Image>());
+      uint32 width = 0;
+      uint32 height = 0;
+      fileToLoad.readBytes(reinterpret_cast<Byte*>(&width), sizeof(uint32));
+      fileToLoad.readBytes(reinterpret_cast<Byte*>(&height), sizeof(uint32));
+      int32 dataArraySize = width * height * sizeof(ColorI);
+      Byte* imgData = new Byte[dataArraySize];
+      memset(imgData, 0, dataArraySize);
+      fileToLoad.readBytes(imgData, dataArraySize);
+      readImages[i]->loadFromPixelData(imgData, width, height);
+      delete[] imgData;
+    }
+
+    SPtr<Texture> tex = GraphicsApi::instance().createTexturePtr();
+    tex->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kShaderResource,
+      Point2D{ readImages[0]->getWidth(), readImages[0]->getHeight() });
+
+    tex->loadImages(readImages);
+
+    m_textures.insert(Pair<String, SPtr<Texture>>(resourceName, tex));
+
+    return true;
+  }
   return false;
 }
 }

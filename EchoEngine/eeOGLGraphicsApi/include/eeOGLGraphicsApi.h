@@ -150,7 +150,7 @@ class EE_PLUGINOGL_EXPORT OGLGraphicsApi : public GraphicsApi
    * The color for cleaning the render target.
    */
   void
-  clearRenderTargets(Vector<SPtr<Texture>> rtvs, Color screenColor) override;
+  clearRenderTargets(const Vector<WPtr<Texture>>&rtvs, Color screenColor) override;
 
   /**
    * @brief
@@ -163,7 +163,7 @@ class EE_PLUGINOGL_EXPORT OGLGraphicsApi : public GraphicsApi
    * The list of depth stencils to clean.
    */
   void
-  cleanDepthStencils(Vector<SPtr<Texture>> dsvs) override;
+  cleanDepthStencils(const Vector<WPtr<Texture>>& dsvs) override;
 
   /**
    * @brief
@@ -178,8 +178,8 @@ class EE_PLUGINOGL_EXPORT OGLGraphicsApi : public GraphicsApi
    * The depth stencil for the render targets.
    */
   void
-  setRenderTargets(Vector<SPtr<Texture>> rtvs,
-                   SPtr<Texture> dsv) override;
+  setRenderTargets(const Vector<WPtr<Texture>>& rtvs,
+                   WPtr<Texture> dsv) override;
 
   /**
    * @brief
@@ -204,7 +204,7 @@ class EE_PLUGINOGL_EXPORT OGLGraphicsApi : public GraphicsApi
    * The first index for the texture indices.
    */
   void
-  setTextures(Vector<SPtr<Texture>> textures,
+  setTextures(const Vector<WPtr<Texture>>& textures,
               uint32 startSlot) override;
 
   /**
@@ -235,8 +235,8 @@ class EE_PLUGINOGL_EXPORT OGLGraphicsApi : public GraphicsApi
    * The first index for the buffers indices.
    */
   void
-  setVSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
-                       uint32 startSlot) override;
+  setVSConstantBuffers(const Vector<WPtr<ConstantBuffer>>& /*buffers*/,
+                       uint32 /*startSlot*/) override {}
 
   /**
    * @brief
@@ -266,8 +266,8 @@ class EE_PLUGINOGL_EXPORT OGLGraphicsApi : public GraphicsApi
    * The first index for the buffers indices.
    */
   void
-  setPSConstantBuffers(Vector<SPtr<ConstantBuffer>> buffers,
-                       uint32 startSlot) override;
+  setPSConstantBuffers(const Vector<WPtr<ConstantBuffer>>& /*buffers*/,
+                       uint32 /*startSlot*/) override {};
 
   /**
    * @brief
@@ -299,8 +299,8 @@ class EE_PLUGINOGL_EXPORT OGLGraphicsApi : public GraphicsApi
    * The first index for the buffers indices.
    */
   void
-  setVertexBuffers(Vector<SPtr<VertexBuffer>> buffers,
-                   Vector<uint32> offsets,
+  setVertexBuffers(const Vector<WPtr<VertexBuffer>>& buffers,
+                   const Vector<uint32>& offsets,
                    uint32 startSlot) override;
 
   /**
@@ -331,8 +331,8 @@ class EE_PLUGINOGL_EXPORT OGLGraphicsApi : public GraphicsApi
    * The offset for the starting point on the buffer.
    */
   void
-  setIndexBuffer(SPtr<IndexBuffer> buffers,
-                 uint32 offsets) override;
+  setIndexBuffer(WPtr<IndexBuffer> /*buffers*/,
+                 uint32 /*offsets*/) override {};
 
   /**
    * @brief
@@ -356,7 +356,7 @@ class EE_PLUGINOGL_EXPORT OGLGraphicsApi : public GraphicsApi
    * viewports to set.
    */
   void
-  setViewports(Vector<ViewportDesc> descs) override;
+  setViewports(const Vector<ViewportDesc>& descs) override;
 
   /**
    * @brief
@@ -388,10 +388,10 @@ class EE_PLUGINOGL_EXPORT OGLGraphicsApi : public GraphicsApi
    * The pixel shader to set.
    */
   void
-  setShaderPrograms(SPtr<VertexShader> vertexShader,
-                    SPtr<HullShader> hullShader,
-                    SPtr<DomainShader> domainShader,
-                    SPtr<PixelShader> pixelShader) override;
+  setShaderPrograms(WPtr<VertexShader> vertexShader,
+                    WPtr<HullShader> hullShader,
+                    WPtr<DomainShader> domainShader,
+                    WPtr<PixelShader> pixelShader) override;
 
   /**
    * @brief

@@ -14,8 +14,8 @@
 #include "eeCStaticMesh.h"
 
 namespace eeEngineSDK {
-Vector<SPtr<Actor>>
-Scene::getAllRenderableActorsInside(SPtr<CCamera> camera,
+Vector<WPtr<Actor>>
+Scene::getAllRenderableActorsInside(WPtr<CCamera> camera,
                                     RENDER_ACTOR_FLAGS::E flags)
 {
   Vector<SPtr<Actor>> actorsToCheck;
@@ -25,7 +25,7 @@ Scene::getAllRenderableActorsInside(SPtr<CCamera> camera,
     }
   }
 
-  Vector<SPtr<Actor>> renderActors;
+  Vector<WPtr<Actor>> renderActors;
   if (!actorsToCheck.empty()) {
     getAllRenderableActorsInsideHelper(camera,
                                        actorsToCheck,
@@ -35,37 +35,38 @@ Scene::getAllRenderableActorsInside(SPtr<CCamera> camera,
   return renderActors;
 }
 void
-Scene::getAllRenderableActorsInsideHelper(SPtr<CCamera> camera,
-                                          Vector<SPtr<Actor>> actors,
+Scene::getAllRenderableActorsInsideHelper(WPtr<CCamera> camera,
+                                          const Vector<SPtr<Actor>>& actors,
                                           RENDER_ACTOR_FLAGS::E flags,
-                                          Vector<SPtr<Actor>>& outRenderActors)
+                                          Vector<WPtr<Actor>>& outRenderActors)
 {
   Vector<SPtr<Actor>> actorsToCheck;
   for (auto& act : actors) {
-    Vector<SPtr<Actor>> childs = act->getChildren();
+    auto sAct = act;
+    Vector<SPtr<Actor>> childs = sAct->getChildren();
     for (auto& childAct : childs) {
       if (childAct->isActive()) {
         actorsToCheck.emplace_back(childAct);
       }
     }
 
-    if (act->isActive()
-     && act->getComponent<CRender>()) {
+    if (sAct->isActive()
+     && !sAct->getComponent<CRender>().expired()) {
       bool canPass = false;
       if (Math::hasFlag(flags, RENDER_ACTOR_FLAGS::kStaticMesh)
-        && act->getComponent<CStaticMesh>()) {
+        && !sAct->getComponent<CStaticMesh>().expired()) {
         canPass = true;
       }
       if (Math::hasFlag(flags, RENDER_ACTOR_FLAGS::kSkeletalMesh)
-        && act->getComponent<CSkeletalMesh>()) {
+        && !sAct->getComponent<CSkeletalMesh>().expired()) {
         canPass = true;
       }
       if (!canPass) {
         continue;
       }
 
-      SPtr<CBounds> boundC = act->getComponent<CBounds>();
-      if (boundC && camera->isModelOnCamera(boundC)) {
+      WPtr<CBounds> boundC = sAct->getComponent<CBounds>();
+      if (!boundC.expired() && camera.lock()->isModelOnCamera(boundC)) {
         outRenderActors.push_back(act);
       }
     }
@@ -79,26 +80,26 @@ Scene::getAllRenderableActorsInsideHelper(SPtr<CCamera> camera,
                                        outRenderActors);
   }
 }
-SPtr<Actor>
+WPtr<Actor>
 Scene::addActor(const String& name)
 {
   if (m_actors.find(name) != m_actors.end()) {
-    Logger::instance().ConsoleLog("ERROR TRYING TO ADD ACTOR TO SCENE");
-    Logger::instance().ConsoleLog("Actor already with that name!");
-    return nullptr;
+    Logger::instance().consoleLog("ERROR TRYING TO ADD ACTOR TO SCENE");
+    Logger::instance().consoleLog("Actor already with that name!");
+    return {};
   }
 
   m_actors[name] = MemoryManager::instance().newPtr<Actor>();
   m_actors[name]->init(name);
   return m_actors[name];
 }
-SPtr<Actor>
+WPtr<Actor>
 Scene::getActor(const String& name)
 {
   if (m_actors.find(name) == m_actors.end()) {
-    Logger::instance().ConsoleLog("ERROR TRYING TO GET ACTOR");
-    Logger::instance().ConsoleLog("Not an actor with that name!");
-    return nullptr;
+    Logger::instance().consoleLog("ERROR TRYING TO GET ACTOR");
+    Logger::instance().consoleLog("Not an actor with that name!");
+    return {};
   }
   return m_actors[name];
 }
@@ -113,31 +114,31 @@ Scene::getAllActorsByComponentFlags(uint32 flags)
 
   for (const auto& act : m_actors) {
     if (Math::hasFlag(flags, eCOMPONENT_TYPE::kAnimation)
-     && act.second->getComponent<CAnimation>()) {
+     && !act.second->getComponent<CAnimation>().expired()) {
       r.emplace_back(act.second);
     }
     if (Math::hasFlag(flags, eCOMPONENT_TYPE::kBounds)
-     && act.second->getComponent<CBounds>()) {
+     && !act.second->getComponent<CBounds>().expired()) {
       r.emplace_back(act.second);
     }
     if (Math::hasFlag(flags, eCOMPONENT_TYPE::kCamera)
-     && act.second->getComponent<CCamera>()) {
+     && !act.second->getComponent<CCamera>().expired()) {
       r.emplace_back(act.second);
     }
     if (Math::hasFlag(flags, eCOMPONENT_TYPE::kLight)
-     && act.second->getComponent<CLight>()) {
+     && !act.second->getComponent<CLight>().expired()) {
       r.emplace_back(act.second);
     }
     if (Math::hasFlag(flags, eCOMPONENT_TYPE::kRender)
-     && act.second->getComponent<CRender>()) {
+     && !act.second->getComponent<CRender>().expired()) {
       r.emplace_back(act.second);
     }
     if (Math::hasFlag(flags, eCOMPONENT_TYPE::kSkeletalMesh)
-     && act.second->getComponent<CSkeletalMesh>()) {
+     && !act.second->getComponent<CSkeletalMesh>().expired()) {
       r.emplace_back(act.second);
     }
     if (Math::hasFlag(flags, eCOMPONENT_TYPE::kStaticMesh)
-     && act.second->getComponent<CStaticMesh>()) {
+     && !act.second->getComponent<CStaticMesh>().expired()) {
       r.emplace_back(act.second);
     }
   }
@@ -148,8 +149,8 @@ Scene::setActorChild(const String& parentName, const String& childName)
 {
   if (m_actors.find(parentName) == m_actors.end()
    && m_actors.find(childName) == m_actors.end()) {
-    Logger::instance().ConsoleLog("ERROR TRYING TO PARENT ACTOR");
-    Logger::instance().ConsoleLog("Not an actor with that name!");
+    Logger::instance().consoleLog("ERROR TRYING TO PARENT ACTOR");
+    Logger::instance().consoleLog("Not an actor with that name!");
     return false;
   }
 

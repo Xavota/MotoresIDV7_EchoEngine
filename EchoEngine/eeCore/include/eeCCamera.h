@@ -369,7 +369,7 @@ class EE_CORE_EXPORT CCamera : public Component
    * True if the bounds are intersecting or inside the frustum.
    */
   bool
-  isModelOnCamera(SPtr<CBounds> ActorModel);
+  isModelOnCamera(WPtr<CBounds> ActorModel);
 
  private:
   /**

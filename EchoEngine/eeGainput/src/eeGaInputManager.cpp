@@ -187,7 +187,7 @@ GaInputManager::getPluggedDevicesCount()
 {
   return static_cast<uint32>(m_devices.size());
 }
-SPtr<InputDevice>
+WPtr<InputDevice>
 GaInputManager::getDevice(uint32 id)
 {
   return m_devices[id];

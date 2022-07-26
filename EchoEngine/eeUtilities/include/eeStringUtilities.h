@@ -15,8 +15,6 @@
 #if EE_PLATFORM == EE_PLATFORM_WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-#include <Windowsx.h>
-#include <commdlg.h>
 #undef min
 #undef max
 #endif
@@ -136,5 +134,13 @@ eeWStringtoString(const WString& _wideString)
   nstring = nullptr;
 
   return result;
+}
+
+FORCEINLINE String&
+localizeString(const char* stri)
+{
+  static String movedString;
+  movedString = stri;
+  return movedString;
 }
 }

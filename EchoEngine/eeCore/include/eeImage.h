@@ -64,6 +64,22 @@ class EE_CORE_EXPORT Image
    */
   bool
   loadFromFile(const WString& path);
+  /**
+   * @brief
+   * Loads an image from a pixel array.
+   *
+   * @description
+   * Loads an image from an array of ColorI with its width and height.
+   *
+   * @param data
+   * The pixels array.
+   * @param width
+   * The width of the image.
+   * @param hight
+   * The height of the image.
+   */
+  void
+  loadFromPixelData(Byte* data, uint32 width, uint32 height);
 
   /**
    * @brief

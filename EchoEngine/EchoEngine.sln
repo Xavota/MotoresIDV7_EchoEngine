@@ -42,8 +42,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eeGainput", "eeGainput\eeGa
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eeOGLGraphicsApi", "eeOGLGraphicsApi\eeOGLGraphicsApi.vcxproj", "{FDA09275-77EC-4DEE-839E-30C50BA2940F}"
 	ProjectSection(ProjectDependencies) = postProject
-		{D7CB7119-8467-4A94-83F7-2390D00E6569} = {D7CB7119-8467-4A94-83F7-2390D00E6569}
-		{3D0C2046-53A4-46DA-AE64-3B8AB0A0E2AD} = {3D0C2046-53A4-46DA-AE64-3B8AB0A0E2AD}
 		{4656BAF2-E8EB-46A2-B234-157A9F5B4FBB} = {4656BAF2-E8EB-46A2-B234-157A9F5B4FBB}
 	EndProjectSection
 EndProject
@@ -56,8 +54,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eeCoreOGL_UnitTest", "eeCor
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eeOGLTestRenderer", "eeOGLTestRenderer\eeOGLTestRenderer.vcxproj", "{91FF25E8-3F01-424D-A3DC-C9C6352C2B74}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4656BAF2-E8EB-46A2-B234-157A9F5B4FBB} = {4656BAF2-E8EB-46A2-B234-157A9F5B4FBB}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eeFModAudioApi", "FModAudioApi\FModAudioApi.vcxproj", "{64538B49-B012-43E5-B9CA-1940FD630F14}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4656BAF2-E8EB-46A2-B234-157A9F5B4FBB} = {4656BAF2-E8EB-46A2-B234-157A9F5B4FBB}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

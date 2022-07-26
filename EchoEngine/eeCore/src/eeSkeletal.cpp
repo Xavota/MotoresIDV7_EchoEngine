@@ -13,7 +13,7 @@
 
 namespace eeEngineSDK{
 Bone::Bone(const String& name,
-           Vector<VertexWeight> vertexWeights,
+           const Vector<VertexWeight>& vertexWeights,
            Matrix4f offsetMatrix)
  : m_name(name),
    m_vertexWeights(vertexWeights),

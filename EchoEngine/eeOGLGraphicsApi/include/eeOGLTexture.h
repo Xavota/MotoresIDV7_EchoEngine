@@ -155,7 +155,7 @@ public:
    * The vector of images to use.
    */
   void
-  loadImages(Vector<SPtr<Image>> images) override;
+  loadImages(const Vector<SPtr<Image>>& images) override;
   
   /**
    * @brief

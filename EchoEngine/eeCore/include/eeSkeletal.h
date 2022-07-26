@@ -34,7 +34,9 @@ struct VertexWeight
 struct Bone
 {
   Bone() = default;
-  Bone(const String& name, Vector<VertexWeight> vertexWeights, Matrix4f offsetMatrix);
+  Bone(const String& name,
+       const Vector<VertexWeight>& vertexWeights,
+       Matrix4f offsetMatrix);
   ~Bone() = default;
 
   void addBoneData(VertexWeight vw);

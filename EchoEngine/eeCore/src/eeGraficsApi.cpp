@@ -128,7 +128,7 @@ GraphicsApi::drawMesh(const BoneMesh& meshToDraw)
 void
 GraphicsApi::drawMeshControlPoints(const Mesh& meshToDraw)
 {
-  meshToDraw.getVertexData()->set();
+  meshToDraw.getVertexData().lock()->set();
   drawNoIndexed(static_cast<uint32>(meshToDraw.getControlPointsCount()));
   unsetVertexBuffers(1u, 0u);
 }

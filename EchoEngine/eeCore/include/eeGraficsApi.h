@@ -140,7 +140,8 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * The color for cleaning the render target.
    */
   virtual void
-  clearRenderTargets(Vector<SPtr<Texture>> rtvs, Color /*screenColor*/) {};
+  clearRenderTargets(const Vector<WPtr<Texture>>& /*rtvs*/,
+                     Color /*screenColor*/) {};
 
   /**
    * @brief
@@ -153,7 +154,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * The list of depth stencils to clean.
    */
   virtual void
-  cleanDepthStencils(Vector<SPtr<Texture>> /*dsvs*/) {};
+  cleanDepthStencils(const Vector<WPtr<Texture>>& /*dsvs*/) {};
 
   /**
    * @brief
@@ -168,8 +169,8 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * The depth stencil for the render targets.
    */
   virtual void
-  setRenderTargets(Vector<SPtr<Texture>> /*rtvs*/,
-                   SPtr<Texture> /*dsv*/) {}
+  setRenderTargets(const Vector<WPtr<Texture>>& /*rtvs*/,
+                   WPtr<Texture> /*dsv*/) {}
 
   /**
    * @brief
@@ -194,7 +195,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * The first index for the texture indices.
    */
   virtual void
-  setTextures(Vector<SPtr<Texture>> /*textures*/,
+  setTextures(const Vector<WPtr<Texture>>& /*textures*/,
               uint32 /*startSlot*/) {}
 
   /**
@@ -225,7 +226,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * The first index for the buffers indices.
    */
   virtual void
-  setVSConstantBuffers(Vector<SPtr<ConstantBuffer>> /*buffers*/,
+  setVSConstantBuffers(const Vector<WPtr<ConstantBuffer>>& /*buffers*/,
                        uint32 /*startSlot*/) {}
 
   /**
@@ -256,7 +257,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * The first index for the buffers indices.
    */
   virtual void
-  setPSConstantBuffers(Vector<SPtr<ConstantBuffer>> /*buffers*/,
+  setPSConstantBuffers(const Vector<WPtr<ConstantBuffer>>& /*buffers*/,
                        uint32 /*startSlot*/) {}
 
   /**
@@ -287,7 +288,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * The first index for the buffers indices.
    */
   virtual void
-  setHSConstantBuffers(Vector<SPtr<ConstantBuffer>> /*buffers*/,
+  setHSConstantBuffers(const Vector<WPtr<ConstantBuffer>>& /*buffers*/,
                        uint32 /*startSlot*/) {}
 
   /**
@@ -318,7 +319,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * The first index for the buffers indices.
    */
   virtual void
-  setDSConstantBuffers(Vector<SPtr<ConstantBuffer>> /*buffers*/,
+  setDSConstantBuffers(const Vector<WPtr<ConstantBuffer>>& /*buffers*/,
                        uint32 /*startSlot*/) {}
 
   /**
@@ -351,8 +352,8 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * The first index for the buffers indices.
    */
   virtual void
-  setVertexBuffers(Vector<SPtr<VertexBuffer>> /*buffers*/,
-                   Vector<uint32> /*offsets*/,
+  setVertexBuffers(const Vector<WPtr<VertexBuffer>>& /*buffers*/,
+                   const Vector<uint32>& /*offsets*/,
                    uint32 /*startSlot*/) {}
 
   /**
@@ -383,7 +384,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * The offset for the starting point on the buffer.
    */
   virtual void
-  setIndexBuffer(SPtr<IndexBuffer> /*buffers*/,
+  setIndexBuffer(WPtr<IndexBuffer> /*buffers*/,
                  uint32 /*offsets*/) {}
 
   /**
@@ -408,7 +409,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * viewports to set.
    */
   virtual void
-  setViewports(Vector<ViewportDesc> /*descs*/) {}
+  setViewports(const Vector<ViewportDesc>& /*descs*/) {}
 
   /**
    * @brief
@@ -440,10 +441,10 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * The pixel shader to set.
    */
   virtual void
-  setShaderPrograms(SPtr<VertexShader> vertexShader,
-                    SPtr<HullShader> hullShader,
-                    SPtr<DomainShader> domainShader,
-                    SPtr<PixelShader> pixelShader) {}
+  setShaderPrograms(WPtr<VertexShader> vertexShader,
+                    WPtr<HullShader> hullShader,
+                    WPtr<DomainShader> domainShader,
+                    WPtr<PixelShader> pixelShader) {}
 
   /**
    * @brief
@@ -750,7 +751,7 @@ class EE_CORE_EXPORT GraphicsApi : public Module<GraphicsApi>
    * @return
    * The main window of the api.
    */
-  SPtr<Window>
+  WPtr<Window>
   getMainWindow() { return m_mainWindow; }
 
  protected:

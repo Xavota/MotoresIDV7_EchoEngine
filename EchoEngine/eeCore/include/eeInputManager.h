@@ -114,8 +114,8 @@ class EE_CORE_EXPORT InputManager : public Module<InputManager>
    * @return
    * The device ptr with the given id, nullptr if the id doesn't exist.
    */
-  virtual SPtr<InputDevice>
-  getDevice(uint32 /*id*/) { return nullptr; }
+  virtual WPtr<InputDevice>
+  getDevice(uint32 /*id*/) { return {}; }
 
   /**
    * @brief

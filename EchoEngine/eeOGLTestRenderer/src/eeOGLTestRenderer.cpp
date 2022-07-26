@@ -97,7 +97,7 @@ OGLTestRenderer::OGLTestRenderer()
 
 
   resourceManager.loadTextureFromFile(L"D:/GitHub/MotoresIDV7_EchoEngine/EchoEngine/bin/Textures/steve.png",
-                                      "TestTexture");
+                                      eeEngineSDK::localizeString("TestTexture"));
 }
 void
 OGLTestRenderer::onUpdate(float /*deltaTime*/)
@@ -114,7 +114,7 @@ OGLTestRenderer::onRender()
   m_samLinear->use();
 
   graphicsApi.setShaderPrograms(resourceManager.getResourceVertexShader("TestVS"),
-                                nullptr, nullptr,
+                                {}, {},
                                 resourceManager.getResourcePixelShader("TestPS"));
 
   graphicsApi.setTextures({ resourceManager.getResourceTexture("TestTexture") }, 0);

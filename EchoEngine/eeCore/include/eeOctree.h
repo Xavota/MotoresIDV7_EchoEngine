@@ -47,7 +47,7 @@ class EE_CORE_EXPORT Octree
    * The scenes from where the Octree will take the meshes.
    */
   void
-  calculateTree(const BoxAAB& space, const Vector<SPtr<Scene>>& scenes);
+  calculateTree(const BoxAAB& space, const Vector<WPtr<Scene>>& scenes);
 
   /**
    * @brief
@@ -60,7 +60,7 @@ class EE_CORE_EXPORT Octree
    * The output vector of meshes.
    */
   void
-  getMeshes(Vector<SPtr<StaticMesh>>& outMeshesVec);
+  getMeshes(Vector<WPtr<StaticMesh>>& outMeshesVec);
 
  private:
   /**

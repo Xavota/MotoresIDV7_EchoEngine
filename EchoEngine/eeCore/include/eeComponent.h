@@ -124,7 +124,7 @@ public:
    * @return
    * The actor to witch the component is attached.
    */
-  FORCEINLINE virtual SPtr<Actor>
+  FORCEINLINE virtual WPtr<Actor>
   getActor()
   {
     return m_actor;
@@ -134,7 +134,7 @@ public:
   /**
    * The actor to witch it's attached.
    */
-  SPtr<Actor> m_actor;
+  WPtr<Actor> m_actor;
 
   /**
    * If the actor can update and do stuff.
@@ -155,7 +155,7 @@ public:
    * The actor attached to.
    */
   void
-  init(SPtr<Actor> act)
+  init(WPtr<Actor> act)
   {
     m_actor = act;
   }

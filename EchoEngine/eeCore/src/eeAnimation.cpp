@@ -42,7 +42,7 @@ Animation::loadFromData(float ticksPerSecond,
 }
 void
 Animation::boneTransform(SIZE_T meshIndex,
-                         SPtr<Skeletal> pSkMesh,
+                         WPtr<Skeletal> pSkMesh,
                          float time)
 {
   float TimeInTicks = time * m_ticksPerSecond;
@@ -56,15 +56,18 @@ Animation::boneTransform(SIZE_T meshIndex,
 }
 void
 Animation::readNodeHeirarchy(float animationTime,
-                             const SPtr<Node> pNode,
+                             const WPtr<Node> pNode,
                              const Matrix4f& parentTransform,
                              SIZE_T meshIndex,
-                             SPtr<Skeletal> pSkMesh)
+                             WPtr<Skeletal> pSkMesh)
 {
-  String NodeName(pNode->m_name);
+  auto spNode = pNode.lock();
+  auto spSkMesh = pSkMesh.lock();
+
+  String NodeName(spNode->m_name);
 
   //trans
-  Matrix4f NodeTransformation = pNode->m_transformation;
+  Matrix4f NodeTransformation = spNode->m_transformation;
 
   AnimNode animNode;
   bool existsNode = findNodeAnim(NodeName, animNode);
@@ -93,10 +96,10 @@ Animation::readNodeHeirarchy(float animationTime,
 
   Matrix4f GlobalTransformation = parentTransform * NodeTransformation;
 
-  Vector<Vector<Bone>>& bonesPerMesh = pSkMesh->getBonesData();
-  Vector<Map<String, uint32>>& boneMappings = pSkMesh->getBoneMapping();
+  Vector<Vector<Bone>>& bonesPerMesh = spSkMesh->getBonesData();
+  Vector<Map<String, uint32>>& boneMappings = spSkMesh->getBoneMapping();
   const Vector<Matrix4f>& globalInverseTransforms =
-                                           pSkMesh->getGlobalInverseTransforms();
+                                         spSkMesh->getGlobalInverseTransforms();
 
   if (boneMappings[meshIndex].find(NodeName) != boneMappings[meshIndex].end()) {
     uint32 BoneIndex = boneMappings[meshIndex][NodeName];
@@ -106,9 +109,9 @@ Animation::readNodeHeirarchy(float animationTime,
                             * bonesPerMesh[meshIndex][BoneIndex].m_offsetMatrix;
   }
 
-  for (uint32 i = 0; i < pNode->m_childrenCount; ++i) {
+  for (uint32 i = 0; i < spNode->m_childrenCount; ++i) {
     readNodeHeirarchy(animationTime,
-                      pNode->m_pChildren[i],
+                      spNode->m_pChildren[i],
                       GlobalTransformation,
                       meshIndex,
                       pSkMesh);

@@ -10,30 +10,30 @@ namespace eeEngineSDK{
 void
 CAnimation::update()
 {
-  EE_NO_EXIST_RETURN(m_actor);
-  EE_NO_EXIST_RETURN(m_anim);
+  if (m_actor.expired()) return;
+  if (m_anim.expired()) return;
 
-  SPtr<CSkeletalMesh> skMesh = m_actor->getComponent<CSkeletalMesh>();
-  EE_NO_EXIST_RETURN(skMesh);
-  EE_NO_EXIST_RETURN(skMesh->getModel());
-  SPtr<Skeletal> skeleton = skMesh->getModel()->getSkeletal();
-  EE_NO_EXIST_RETURN(skeleton);
+  auto skMesh = m_actor.lock()->getComponent<CSkeletalMesh>().lock();
+  if (!skMesh) return;
+  if (skMesh->getModel().expired()) return;
+  auto skeleton = skMesh->getModel().lock()->getSkeletal().lock();
+  if (!skeleton) return;
 
   SIZE_T bonesPerMesh = skeleton->getBonesData().size();
   m_animTime += Time::instance().getDeltaTime();
   for (SIZE_T i = 0; i < bonesPerMesh; ++i) {
-    m_anim->boneTransform(i, skeleton, m_animTime);
+    m_anim.lock()->boneTransform(i, skeleton, m_animTime);
   }
 }
-SPtr<Animation>
+WPtr<Animation>
 CAnimation::getAnimation()
 {
   return m_anim;
 }
 void
-CAnimation::setAnimation(SPtr<Animation> anim)
+CAnimation::setAnimation(WPtr<Animation> anim)
 {
-  EE_NO_EXIST_RETURN(anim);
+  if (anim.expired()) return;
   m_anim = anim;
 }
 }

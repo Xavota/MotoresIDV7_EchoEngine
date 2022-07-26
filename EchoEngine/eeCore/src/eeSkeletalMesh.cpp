@@ -21,13 +21,12 @@
 #include "eeMaterial.h"
 
 namespace eeEngineSDK {
-/*template<typename V, typename I>*/
-SkeletalMesh/*<V, I>*/::SkeletalMesh(const Vector<BoneMesh/*<V, I>*/>& meshes,
-                                 SPtr<Skeletal> skeleton,
-                                 const String& name,
-                                 const Vector3f& furtherVertexPosition,
-                                 const Vector3f& maxCoordinate,
-                                 const Vector3f& minCoordinate)
+SkeletalMesh::SkeletalMesh(const Vector<BoneMesh>& meshes,
+                           WPtr<Skeletal> skeleton,
+                           const String& name,
+                           const Vector3f& furtherVertexPosition,
+                           const Vector3f& maxCoordinate,
+                           const Vector3f& minCoordinate)
 {
   loadFromMeshes(meshes,
                  skeleton,
@@ -36,13 +35,12 @@ SkeletalMesh/*<V, I>*/::SkeletalMesh(const Vector<BoneMesh/*<V, I>*/>& meshes,
                  maxCoordinate,
                  minCoordinate);
 }
-/*template<typename V, typename I>*/
-SkeletalMesh/*<V, I>*/::SkeletalMesh(const Vector<Pair<BoneMesh/*<V, I>*/, SPtr<Material>>>& meshes,
-                                 SPtr<Skeletal> skeleton,
-                                 const String& name,
-                                 const Vector3f& furtherVertexPosition,
-                                 const Vector3f& maxCoordinate,
-                                 const Vector3f& minCoordinate)
+SkeletalMesh::SkeletalMesh(const Vector<Pair<BoneMesh, WPtr<Material>>>& meshes,
+                           WPtr<Skeletal> skeleton,
+                           const String& name,
+                           const Vector3f& furtherVertexPosition,
+                           const Vector3f& maxCoordinate,
+                           const Vector3f& minCoordinate)
 {
   loadFromMeshes(meshes,
                  skeleton,
@@ -51,17 +49,16 @@ SkeletalMesh/*<V, I>*/::SkeletalMesh(const Vector<Pair<BoneMesh/*<V, I>*/, SPtr<
                  maxCoordinate,
                  minCoordinate);
 }
-/*template<typename V, typename I>*/
 bool
-SkeletalMesh/*<V, I>*/::loadFromMeshes(const Vector<BoneMesh/*<V, I>*/>& meshes,
-                                       SPtr<Skeletal> skeleton,
-                                       const String& name,
-                                       const Vector3f& furtherVertexPosition,
-                                       const Vector3f& maxCoordinate,
-                                       const Vector3f& minCoordinate)
+SkeletalMesh::loadFromMeshes(const Vector<BoneMesh>& meshes,
+                             WPtr<Skeletal> skeleton,
+                             const String& name,
+                             const Vector3f& furtherVertexPosition,
+                             const Vector3f& maxCoordinate,
+                             const Vector3f& minCoordinate)
 {
   if (meshes.empty()) {
-    Logger::instance().ConsoleLog("Empty info loading model");
+    Logger::instance().consoleLog("Empty info loading model");
     return false;
   }
 
@@ -72,7 +69,7 @@ SkeletalMesh/*<V, I>*/::loadFromMeshes(const Vector<BoneMesh/*<V, I>*/>& meshes,
   for (const auto& m : meshes) {
     m_meshes.emplace_back
     (
-      Pair<BoneMesh/*<V, I>*/, SPtr<Material>>
+      Pair<BoneMesh/*<V, I>*/, WPtr<Material>>
       (
         m,
         resourseManager.getResourceMaterial("Default_mat")
@@ -89,17 +86,16 @@ SkeletalMesh/*<V, I>*/::loadFromMeshes(const Vector<BoneMesh/*<V, I>*/>& meshes,
   m_boundCube.setSize(maxCoordinate - minCoordinate);
   return true;
 }
-/*template<typename V, class I>*/
 bool
-SkeletalMesh/*<V, I>*/::loadFromMeshes(const Vector<Pair<BoneMesh/*<V, I>*/, SPtr<Material>>>& meshes,
-                                   SPtr<Skeletal> skeleton,
-                                   const String& name,
-                                   const Vector3f& furtherVertexPosition,
-                                   const Vector3f& maxCoordinate,
-                                   const Vector3f& minCoordinate)
+SkeletalMesh::loadFromMeshes(const Vector<Pair<BoneMesh, WPtr<Material>>>& meshes,
+                             WPtr<Skeletal> skeleton,
+                             const String& name,
+                             const Vector3f& furtherVertexPosition,
+                             const Vector3f& maxCoordinate,
+                             const Vector3f& minCoordinate)
 {
   if (meshes.empty()) {
-    Logger::instance().ConsoleLog("Empty info loading model");
+    Logger::instance().consoleLog("Empty info loading model");
     return false;
   }
 
@@ -116,52 +112,45 @@ SkeletalMesh/*<V, I>*/::loadFromMeshes(const Vector<Pair<BoneMesh/*<V, I>*/, SPt
   m_boundCube.setSize(maxCoordinate - minCoordinate);
   return true;
 }
-/*template<typename V, typename I>*/
-Vector<Pair<BoneMesh/*<V, I>*/, SPtr<Material>>>
-SkeletalMesh/*<V, I>*/::getMeshes()
+Vector<Pair<BoneMesh, WPtr<Material>>>
+SkeletalMesh::getMeshes()
 {
   return m_meshes;
 }
-/*template<typename V, typename I>*/
-Vector<SPtr<Material>>
-SkeletalMesh/*<V, I>*/::getTextures()
+Vector<WPtr<Material>>
+SkeletalMesh::getTextures()
 {
-  Vector<SPtr<Material>> textures;
+  Vector<WPtr<Material>> textures;
   for (auto& m : m_meshes) {
     textures.push_back(m.second);
   }
   return textures;
 }
-/*template<typename V, typename I>*/
 void
-SkeletalMesh/*<V, I>*/::setTexture(SPtr<Material> texture, uint32 index)
+SkeletalMesh::setTexture(WPtr<Material> texture, uint32 index)
 {
   if (static_cast<uint32>(m_meshes.size()) > index) {
     m_meshes[index].second = texture;
   }
 }
-/*template<typename V, typename I>*/
 String
-SkeletalMesh/*<V, I>*/::getName()
+SkeletalMesh::getName()
 {
   return m_name;
 }
-/*template<typename V, typename I>*/
 const Sphere&
-SkeletalMesh/*<V, I>*/::getBoundingSphere()
+SkeletalMesh::getBoundingSphere()
 {
   return m_boundSphere;
 }
 
-/*template<typename V, typename I>*/
 const Vector3f&
-SkeletalMesh/*<V, I>*/::getFurtherPosition()
+SkeletalMesh::getFurtherPosition()
 {
   return m_furtherPosition;
 }
-/*template<typename V, typename I>*/
 const BoxAAB&
-SkeletalMesh/*<V, I>*/::getBoundingBox()
+SkeletalMesh::getBoundingBox()
 {
   return m_boundCube;
 }

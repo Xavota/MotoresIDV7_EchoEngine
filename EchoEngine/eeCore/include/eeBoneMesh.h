@@ -105,7 +105,7 @@ class EE_CORE_EXPORT BoneMesh
    * @return
    * Pointer to the vertex buffer.
    */
-  virtual const SPtr<VertexBuffer>
+  virtual const WPtr<VertexBuffer>
   getVertexData() const;
   /**
    * @brief
@@ -117,7 +117,7 @@ class EE_CORE_EXPORT BoneMesh
    * @return
    * Pointer to the index buffer.
    */
-  virtual const SPtr<IndexBuffer>
+  virtual const WPtr<IndexBuffer>
   getIndexData() const;
 
   /**
@@ -175,7 +175,7 @@ BoneMesh::loadFromArray(const Vector<V>& vertices,
   auto& graphicsApi = GraphicsApi::instance();
 
   if (vertices.empty() || indices.empty()) {
-    Logger::instance().ConsoleLog("Empty info loading mesh");
+    Logger::instance().consoleLog("Empty info loading mesh");
     return false;
   }
 

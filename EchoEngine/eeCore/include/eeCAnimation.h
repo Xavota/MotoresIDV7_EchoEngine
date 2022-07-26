@@ -73,7 +73,7 @@ class EE_CORE_EXPORT CAnimation : public Component
    * @return
    * The animation resource, nullptr if it is.
    */
-  SPtr<Animation>
+  WPtr<Animation>
   getAnimation();
   /**
    * @brief
@@ -86,14 +86,14 @@ class EE_CORE_EXPORT CAnimation : public Component
    * The new animation resource.
    */
   void
-  setAnimation(SPtr<Animation> anim); // TODO: CHANGE IT TO ADMIT ANIMATION 
+  setAnimation(WPtr<Animation> anim); // TODO: CHANGE IT TO ADMIT ANIMATION 
                                       // STATE MACHINE.
 
  private:
   /**
    * The animation resource.
    */
-  SPtr<Animation> m_anim;
+  WPtr<Animation> m_anim;
   /**
    * The animation time.
    */
