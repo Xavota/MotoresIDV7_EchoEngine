@@ -40,6 +40,8 @@ public:
    * The bindings for the texture.
    * @param texSize
    * The size of the texture.
+   * @param name
+   * The name of the texture resource.
    * @param format
    * The format for the texture.
    * @param mipLevels
@@ -66,6 +68,8 @@ public:
    * The bindings for the texture.
    * @param texSize
    * The size of the texture.
+   * @param name
+   * The name of the texture resource.
    * @param format
    * The format for the texture.
    * @param mipLevels

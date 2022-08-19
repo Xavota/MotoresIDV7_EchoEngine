@@ -215,6 +215,7 @@
     <ClCompile Include="src\eeOctree.cpp" />
     <ClCompile Include="src\eeOctreeNode.cpp" />
     <ClCompile Include="src\eeRenderer.cpp" />
+    <ClCompile Include="src\eeResource.cpp" />
     <ClCompile Include="src\eeSound.cpp" />
     <ClCompile Include="src\eeStaticMesh.cpp" />
     <ClCompile Include="src\eePixelShader.cpp" />
@@ -272,6 +273,7 @@
     <ClInclude Include="include\eeOctree.h" />
     <ClInclude Include="include\eeOctreeNode.h" />
     <ClInclude Include="include\eeRenderer.h" />
+    <ClInclude Include="include\eeResource.h" />
     <ClInclude Include="include\eeSound.h" />
     <ClInclude Include="include\eeStaticMesh.h" />
     <ClInclude Include="include\eePixelShader.h" />

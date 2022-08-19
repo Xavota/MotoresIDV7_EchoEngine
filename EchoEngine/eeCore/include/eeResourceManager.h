@@ -126,8 +126,8 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * The array of meshes.
    * @param resourceName
    * The name that the resource will be stored with.
-   * @param furtherVertexPosition
-   * The position of the vertex most far away from the origin.
+   * @param furtherDist
+   * The distance to the vertex most far away from the origin.
    * @param maxCoordinate
    * The max coordinate of all vertex positions.
    * @param minCoordinate
@@ -136,11 +136,10 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * The resource initialized.
    */
-  /*template<typename V, typename I>*/
-  WPtr<StaticMesh/*<V, I>*/>
-  loadStaticMeshFromMeshesArray(const Vector<Mesh/*<V,I>*/>& meshes,
+  WPtr<StaticMesh>
+  loadStaticMeshFromMeshesArray(const Vector<Mesh>& meshes,
                                 const String& resourceName,
-                                const Vector3f& furtherVertexPosition,
+                                float furtherDist,
                                 const Vector3f& maxCoordinate,
                                 const Vector3f& minCoordinate);
   /**
@@ -155,8 +154,8 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * The array of pair of meshes and textures.
    * @param resourceName
    * The name that the resource will be stored with.
-   * @param furtherVertexPosition
-   * The position of the vertex most far away from the origin.
+   * @param furtherDist
+   * The distance to the vertex most far away from the origin.
    * @param maxCoordinate
    * The max coordinate of all vertex positions.
    * @param minCoordinate
@@ -165,11 +164,10 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * @return
    * The resource initialized.
    */
-  /*template<typename V, typename I>*/
-  WPtr<StaticMesh/*<V, I>*/>
-  loadStaticMeshFromMeshesArray(const Vector<Pair<Mesh/*<V,I>*/, WPtr<Material>>>& meshes,
+  WPtr<StaticMesh>
+  loadStaticMeshFromMeshesArray(const Vector<Pair<Mesh, WPtr<Material>>>& meshes,
                                 const String& resourceName,
-                                const Vector3f& furtherVertexPosition,
+                                float furtherDist,
                                 const Vector3f& maxCoordinate,
                                 const Vector3f& minCoordinate);
 
@@ -696,21 +694,234 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
   serializeTexture(const String& resourceName, const WString& fileToSave);
   /**
    * @brief
-   * Deserialize and stores a texture resource.
+   * Serialize and stores a material resource.
    *
    * @description
-   * Deserialize and stores a texture resource.
+   * Serialize and stores a material resource.
+   * 
+   * @param resourceName
+   * The name of the resources to serialize.
+   * @param fileToSave
+   * The path to the file for the serialized resource.
+   *
+   * @return
+   * Whether or not it succeeded on serializing the material.
+   */
+  bool
+  serializeMaterial(const String& resourceName, const WString& fileToSave);
+  /**
+   * @brief
+   * Serialize and stores a static mesh resource.
+   *
+   * @description
+   * Serialize and stores a static mesh resource.
+   * 
+   * @param resourceName
+   * The name of the resources to serialize.
+   * @param fileToSave
+   * The path to the file for the serialized resource.
+   *
+   * @return
+   * Whether or not it succeeded on serializing the static mesh.
+   */
+  bool
+  serializeStaticMesh(const String& resourceName, const WString& fileToSave);
+  /**
+   * @brief
+   * Serialize and stores a skeleton resource.
+   *
+   * @description
+   * Serialize and stores a skeleton resource.
+   * 
+   * @param resourceName
+   * The name of the resources to serialize.
+   * @param fileToSave
+   * The path to the file for the serialized resource.
+   *
+   * @return
+   * Whether or not it succeeded on serializing the skeleton.
+   */
+  bool
+  serializeSkeleton(const String& resourceName, const WString& fileToSave);
+  /**
+   * @brief
+   * Serialize and stores a skeletal mesh resource.
+   *
+   * @description
+   * Serialize and stores a skeletal mesh resource.
+   * 
+   * @param resourceName
+   * The name of the resources to serialize.
+   * @param fileToSave
+   * The path to the file for the serialized resource.
+   *
+   * @return
+   * Whether or not it succeeded on serializing the skeletal mesh.
+   */
+  bool
+  serializeSkeletalMesh(const String& resourceName, const WString& fileToSave);
+  /**
+   * @brief
+   * Serialize and stores a animation resource.
+   *
+   * @description
+   * Serialize and stores a animation resource.
+   * 
+   * @param resourceName
+   * The name of the resources to serialize.
+   * @param fileToSave
+   * The path to the file for the serialized resource.
+   *
+   * @return
+   * Whether or not it succeeded on serializing the animation.
+   */
+  bool
+  serializeAnimation(const String& resourceName, const WString& fileToSave);
+
+  /**
+   * @brief
+   * Loads and stores a serialized texture resource.
+   *
+   * @description
+   * Loads and stores a serialized texture resource.
    *
    * @param fileToLoad
    * The opened file that contains the resource to load.
    * @param resourceName
-   * The name of the resources to deserialize.
+   * The name of the resources to load.
+   * @param versionNum
+   * The number of the version of the archive.
+   * @param sizeTSize
+   * The size of the SIZE_T when the resource was saved.
    *
    * @return
    * Whether or not it succeeded on loading the texture.
    */
   bool
-  deserializeTexture(File& fileToLoad, const String& resourceName);
+  loadSerializedTexture(File& fileToLoad,
+                        const String& resourceName,
+                        uint8 versionNum,
+                        uint8 sizeTSize);
+  /**
+   * @brief
+   * Loads and stores a serialized material resource.
+   *
+   * @description
+   * Loads and stores a serialized material resource.
+   *
+   * @param fileToLoad
+   * The opened file that contains the resource to load.
+   * @param resourceName
+   * The name of the resources to load.
+   * @param versionNum
+   * The number of the version of the archive.
+   * @param sizeTSize
+   * The size of the SIZE_T when the resource was saved.
+   *
+   * @return
+   * Whether or not it succeeded on loading the material.
+   */
+  bool
+  loadSerializedMaterial(File& fileToLoad,
+                         const String& resourceName,
+                         uint8 versionNum,
+                         uint8 sizeTSize);
+  /**
+   * @brief
+   * Loads and stores a serialized static mesh resource.
+   *
+   * @description
+   * Loads and stores a serialized static mesh resource.
+   *
+   * @param fileToLoad
+   * The opened file that contains the resource to load.
+   * @param resourceName
+   * The name of the resources to load.
+   * @param versionNum
+   * The number of the version of the archive.
+   * @param sizeTSize
+   * The size of the SIZE_T when the resource was saved.
+   *
+   * @return
+   * Whether or not it succeeded on loading the static mesh.
+   */
+  bool
+  loadSerializedStaticMesh(File& fileToLoad,
+                           const String& resourceName,
+                           uint8 versionNum,
+                           uint8 sizeTSize);
+  /**
+   * @brief
+   * Loads and stores a serialized skeletons resource.
+   *
+   * @description
+   * Loads and stores a serialized skeletons resource.
+   *
+   * @param fileToLoad
+   * The opened file that contains the resource to load.
+   * @param resourceName
+   * The name of the resources to load.
+   * @param versionNum
+   * The number of the version of the archive.
+   * @param sizeTSize
+   * The size of the SIZE_T when the resource was saved.
+   *
+   * @return
+   * Whether or not it succeeded on loading the skeletons.
+   */
+  bool
+  loadSerializedSkeleton(File& fileToLoad,
+                         const String& resourceName,
+                         uint8 versionNum,
+                         uint8 sizeTSize);
+  /**
+   * @brief
+   * Loads and stores a serialized skeletal mesh resource.
+   *
+   * @description
+   * Loads and stores a serialized skeletal mesh resource.
+   *
+   * @param fileToLoad
+   * The opened file that contains the resource to load.
+   * @param resourceName
+   * The name of the resources to load.
+   * @param versionNum
+   * The number of the version of the archive.
+   * @param sizeTSize
+   * The size of the SIZE_T when the resource was saved.
+   *
+   * @return
+   * Whether or not it succeeded on loading the skeletal mesh.
+   */
+  bool
+  loadSerializedSkeletalMesh(File& fileToLoad,
+                             const String& resourceName,
+                             uint8 versionNum,
+                             uint8 sizeTSize);
+  /**
+   * @brief
+   * Loads and stores a serialized animation resource.
+   *
+   * @description
+   * Loads and stores a serialized animation resource.
+   *
+   * @param fileToLoad
+   * The opened file that contains the resource to load.
+   * @param resourceName
+   * The name of the resources to load.
+   * @param versionNum
+   * The number of the version of the archive.
+   * @param sizeTSize
+   * The size of the SIZE_T when the resource was saved.
+   *
+   * @return
+   * Whether or not it succeeded on loading the animation.
+   */
+  bool
+  loadSerializedAnimation(File& fileToLoad,
+                          const String& resourceName,
+                          uint8 versionNum,
+                          uint8 sizeTSize);
 
 
  private:
@@ -738,6 +949,7 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
    * The animations stored.
    */
   Map<String, SPtr<Animation>> m_animations;
+
   /**
    * The vertex shaders stored.
    */

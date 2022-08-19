@@ -225,6 +225,7 @@
     <ClInclude Include="include\eeHullShader.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\eeResource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeBaseApp.cpp">
@@ -383,5 +384,6 @@
     <ClCompile Include="src\eeHullShader.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\eeResource.cpp" />
   </ItemGroup>
 </Project>

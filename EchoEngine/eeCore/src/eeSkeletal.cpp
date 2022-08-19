@@ -28,61 +28,23 @@ Bone::addBoneData(VertexWeight vw)
 Skeletal::Skeletal(const Vector<Vector<Bone>>& bonesPerMesh,
                    const Vector<Matrix4f>& globalInverseTransforms,
                    const Vector<Map<String, uint32>>& boneMappings,
-                   const Vector<uint32>& numsBones,
-                   const String& name)
+                   const Vector<uint32>& numsBones)
 {
   loadFromData(bonesPerMesh,
                globalInverseTransforms,
                boneMappings,
-               numsBones,
-               name);
-}
-void
-Skeletal::boneTransform(const aiNode* root, uint32 meshIndex)
-{
-  readNodeHeirarchy(root, Matrix4f::kIDENTITY, meshIndex);
-}
-void
-Skeletal::readNodeHeirarchy(const aiNode* pNode,
-                            const Matrix4f& ParentTransform,
-                            SIZE_T meshIndex)
-{
-  String NodeName(pNode->mName.data);
-
-  //trans
-  float m[16];
-  memcpy(m, &pNode->mTransformation.a1, 16 * sizeof(float));
-  Matrix4f NodeTransformation = Matrix4f(m);
-
-  Matrix4f GlobalTransformation = ParentTransform * NodeTransformation;
-
-
-  if (m_boneMappings[meshIndex].find(NodeName) != m_boneMappings[meshIndex].end()) {
-    uint32 BoneIndex = m_boneMappings[meshIndex][NodeName];
-
-    m_bonesPerMesh[meshIndex][BoneIndex].m_finalTransformation =
-                          m_globalInverseTransforms[meshIndex]
-                        * GlobalTransformation
-                        * m_bonesPerMesh[meshIndex][BoneIndex].m_offsetMatrix;
-  }
-
-  for (uint32 i = 0; i < pNode->mNumChildren; i++) {
-    readNodeHeirarchy(pNode->mChildren[i], GlobalTransformation, meshIndex);
-  }
+               numsBones);
 }
 bool
 Skeletal::loadFromData(const Vector<Vector<Bone>>& bonesPerMesh,
                        const Vector<Matrix4f>& globalInverseTransforms,
                        const Vector<Map<String, uint32>>& boneMappings,
-                       const Vector<uint32>& numsBones,
-                       const String& name)
+                       const Vector<uint32>& numsBones)
 {
   m_bonesPerMesh = bonesPerMesh;
   m_globalInverseTransforms = globalInverseTransforms;
   m_boneMappings = boneMappings;
   m_numsBones = numsBones;
-
-  m_name = name;
 
   return true;
 }

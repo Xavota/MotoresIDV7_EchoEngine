@@ -23,37 +23,32 @@
 namespace eeEngineSDK {
 SkeletalMesh::SkeletalMesh(const Vector<BoneMesh>& meshes,
                            WPtr<Skeletal> skeleton,
-                           const String& name,
-                           const Vector3f& furtherVertexPosition,
+                           float furtherDist,
                            const Vector3f& maxCoordinate,
                            const Vector3f& minCoordinate)
 {
   loadFromMeshes(meshes,
                  skeleton,
-                 name,
-                 furtherVertexPosition,
+                 furtherDist,
                  maxCoordinate,
                  minCoordinate);
 }
 SkeletalMesh::SkeletalMesh(const Vector<Pair<BoneMesh, WPtr<Material>>>& meshes,
                            WPtr<Skeletal> skeleton,
-                           const String& name,
-                           const Vector3f& furtherVertexPosition,
+                           float furtherDist,
                            const Vector3f& maxCoordinate,
                            const Vector3f& minCoordinate)
 {
   loadFromMeshes(meshes,
                  skeleton,
-                 name,
-                 furtherVertexPosition,
+                 furtherDist,
                  maxCoordinate,
                  minCoordinate);
 }
 bool
 SkeletalMesh::loadFromMeshes(const Vector<BoneMesh>& meshes,
                              WPtr<Skeletal> skeleton,
-                             const String& name,
-                             const Vector3f& furtherVertexPosition,
+                             float furtherDist,
                              const Vector3f& maxCoordinate,
                              const Vector3f& minCoordinate)
 {
@@ -61,8 +56,6 @@ SkeletalMesh::loadFromMeshes(const Vector<BoneMesh>& meshes,
     Logger::instance().consoleLog("Empty info loading model");
     return false;
   }
-
-  m_name = name;
 
   auto& resourseManager = ResourceManager::instance();
 
@@ -80,7 +73,7 @@ SkeletalMesh::loadFromMeshes(const Vector<BoneMesh>& meshes,
   m_skeleton = skeleton;
 
   m_boundSphere.setCenter(Vector3f(0.0f, 0.0f, 0.0f));
-  m_boundSphere.setRadious(furtherVertexPosition.getMagnitud());
+  m_boundSphere.setRadious(furtherDist);
 
   m_boundCube.setA(minCoordinate);
   m_boundCube.setSize(maxCoordinate - minCoordinate);
@@ -89,8 +82,7 @@ SkeletalMesh::loadFromMeshes(const Vector<BoneMesh>& meshes,
 bool
 SkeletalMesh::loadFromMeshes(const Vector<Pair<BoneMesh, WPtr<Material>>>& meshes,
                              WPtr<Skeletal> skeleton,
-                             const String& name,
-                             const Vector3f& furtherVertexPosition,
+                             float furtherDist,
                              const Vector3f& maxCoordinate,
                              const Vector3f& minCoordinate)
 {
@@ -99,14 +91,12 @@ SkeletalMesh::loadFromMeshes(const Vector<Pair<BoneMesh, WPtr<Material>>>& meshe
     return false;
   }
 
-  m_name = name;
-
   m_meshes = meshes;
 
   m_skeleton = skeleton;
 
   m_boundSphere.setCenter(Vector3f(0.0f, 0.0f, 0.0f));
-  m_boundSphere.setRadious(furtherVertexPosition.getMagnitud());
+  m_boundSphere.setRadious(furtherDist);
 
   m_boundCube.setA(minCoordinate);
   m_boundCube.setSize(maxCoordinate - minCoordinate);
@@ -132,11 +122,6 @@ SkeletalMesh::setTexture(WPtr<Material> texture, uint32 index)
   if (static_cast<uint32>(m_meshes.size()) > index) {
     m_meshes[index].second = texture;
   }
-}
-String
-SkeletalMesh::getName()
-{
-  return m_name;
 }
 const Sphere&
 SkeletalMesh::getBoundingSphere()

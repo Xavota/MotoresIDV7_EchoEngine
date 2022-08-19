@@ -47,7 +47,7 @@ Octree::calculateTree(const BoxAAB& space, const Vector<WPtr<Scene>>& scenes)
   auto& memoryManager = MemoryManager::instance();
   if (!meshMap.empty()) {
     SPtr<StaticMesh> holeMesh = memoryManager.newPtr<StaticMesh>();
-    holeMesh->loadFromMeshes(meshMap, "", {}, {}, {});
+    holeMesh->loadFromMeshes(meshMap, {}, {}, {});
     m_root = memoryManager.newPtr<OctreeNode>();
     m_root->CalculateTree(space, holeMesh);
   }

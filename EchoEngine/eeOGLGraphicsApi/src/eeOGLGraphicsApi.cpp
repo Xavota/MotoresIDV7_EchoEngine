@@ -187,7 +187,7 @@ OGLGraphicsApi::setShaderPrograms(WPtr<VertexShader> vertexShader,
     if (!success) {
       glGetProgramInfoLog(shaderProgram, 512, nullptr, infoLog);
       String infoLogStr = infoLog;
-      Logger::instance().FileLog("Shaders failed to link: " + infoLogStr, L"Logs/Genera_Log.txt", WARNING_LEVEL::kError);
+      Logger::instance().fileLog("Shaders failed to link: " + infoLogStr, L"Logs/Genera_Log.txt", WARNING_LEVEL::kError);
     }
     else {
       glUseProgram(shaderProgram);

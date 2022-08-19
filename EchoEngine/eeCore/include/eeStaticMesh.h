@@ -17,12 +17,14 @@
 
 #include "eeMesh.h"
 
+#include "eeResource.h"
+
 namespace eeEngineSDK {
 /**
  * @brief
  * The model to be rendered, contains meshes and textures.
  */
-class EE_CORE_EXPORT StaticMesh
+class EE_CORE_EXPORT StaticMesh : public Resource
 {
  public: 
   /**
@@ -39,10 +41,8 @@ class EE_CORE_EXPORT StaticMesh
    *
    * @param meshes
    * The array of meshes.
-   * @param name
-   * The name of the staticMesh resource.
-   * @param furtherVertexPosition
-   * The position of the vertex most far away from the origin.
+   * @param furtherDist
+   * The distance to the vertex most far away from the origin.
    * @param maxCoordinate
    * The max coordinate of all vertex positions.
    * @param minCoordinate
@@ -52,8 +52,7 @@ class EE_CORE_EXPORT StaticMesh
    * Weather it succeed or failed to initialize.
    */
   StaticMesh(const Vector<Mesh>& meshes,
-             const String& name,
-             const Vector3f& furtherVertexPosition,
+             float furtherDist,
              const Vector3f& maxCoordinate,
              const Vector3f& minCoordinate);
   /**
@@ -65,10 +64,8 @@ class EE_CORE_EXPORT StaticMesh
    *
    * @param meshes
    * The array of pair of meshes and textures.
-   * @param name
-   * The name of the staticMesh resource.
-   * @param furtherVertexPosition
-   * The position of the vertex most far away from the origin.
+   * @param furtherDist
+   * The distance to the vertex most far away from the origin.
    * @param maxCoordinate
    * The max coordinate of all vertex positions.
    * @param minCoordinate
@@ -78,8 +75,7 @@ class EE_CORE_EXPORT StaticMesh
    * Weather it succeed or failed to initialize.
    */
   StaticMesh(const Vector<Pair<Mesh, WPtr<Material>>>& meshes,
-             const String& name,
-             const Vector3f& furtherVertexPosition,
+             float furtherDist,
              const Vector3f& maxCoordinate,
              const Vector3f& minCoordinate);
   /**
@@ -98,10 +94,8 @@ class EE_CORE_EXPORT StaticMesh
    *
    * @param meshes
    * The array of meshes.
-   * @param name
-   * The name of the staticMesh resource.
-   * @param furtherVertexPosition
-   * The position of the vertex most far away from the origin.
+   * @param furtherDist
+   * The distance to the vertex most far away from the origin.
    * @param maxCoordinate
    * The max coordinate of all vertex positions.
    * @param minCoordinate
@@ -112,8 +106,7 @@ class EE_CORE_EXPORT StaticMesh
    */
   bool
   loadFromMeshes(const Vector<Mesh>& meshes,
-                 const String& name,
-                 const Vector3f& furtherVertexPosition,
+                 float furtherDist,
                  const Vector3f& maxCoordinate,
                  const Vector3f& minCoordinate);
   /**
@@ -125,10 +118,8 @@ class EE_CORE_EXPORT StaticMesh
    *
    * @param meshes
    * The array of pair of meshes and textures.
-   * @param name
-   * The name of the staticMesh resource.
-   * @param furtherVertexPosition
-   * The position of the vertex most far away from the origin.
+   * @param furtherDist
+   * The distance to the vertex most far away from the origin.
    * @param maxCoordinate
    * The max coordinate of all vertex positions.
    * @param minCoordinate
@@ -139,8 +130,7 @@ class EE_CORE_EXPORT StaticMesh
    */
   bool
   loadFromMeshes(const Vector<Pair<Mesh, WPtr<Material>>>& meshes,
-                 const String& name,
-                 const Vector3f& furtherVertexPosition,
+                 float furtherDist,
                  const Vector3f& maxCoordinate,
                  const Vector3f& minCoordinate);
 
@@ -197,19 +187,6 @@ class EE_CORE_EXPORT StaticMesh
 
   /**
    * @brief
-   * Getter for the resource name.
-   *
-   * @description
-   * Returns the resource name.
-   *
-   * @return
-   * The resource name.
-   */
-  virtual String
-  getName();
-
-  /**
-   * @brief
    * Gets the bounding sphere for the model.
    *
    * @description
@@ -221,18 +198,6 @@ class EE_CORE_EXPORT StaticMesh
    */
   const Sphere&
   getBoundingSphere();
-  /**
-   * @brief
-   * Gets the bound sphere distance in space for the model.
-   *
-   * @description
-   * Returns the furthest distance to the origin of the model.
-   *
-   * @return
-   * The furthest distance to the origin of the model.
-   */
-  const Vector3f&
-  getFurtherPosition();
   /**
    * @brief
    * Gets the bounding box for the model.
@@ -251,19 +216,11 @@ class EE_CORE_EXPORT StaticMesh
    * The vector of pairs of meshes and texture indices.
    */
   Vector<Pair<Mesh, WPtr<Material>>> m_meshes;
-  /**
-   * The resource name.
-   */
-  String m_name;
 
   /**
    * A sphere bounding all the model.
    */
   Sphere m_boundSphere;
-  /**
-   * The bound sphere distance in space.
-   */
-  Vector3f m_furtherPosition = Vector3f(0.0f, 0.0f, 0.0f);
   /**
    * A cube bounding all the model.
    */

@@ -601,7 +601,7 @@ DeferredRenderer::DeferredRenderer()
   Mesh morbStrip;
   morbStrip.loadFromControlPoints(morbiusStripVertices);
 
-  resourceManager.loadStaticMeshFromMeshesArray({ morbStrip }, "MorbiusStripMesh", furtherPos, maxCoord, minCoord);
+  resourceManager.loadStaticMeshFromMeshesArray({ morbStrip }, "MorbiusStripMesh", maxDistance, maxCoord, minCoord);
 
   BezierData bdata{};
   bdata.viewProj = Matrix4f::kIDENTITY;

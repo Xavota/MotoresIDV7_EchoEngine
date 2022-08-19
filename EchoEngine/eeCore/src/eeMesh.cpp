@@ -75,17 +75,25 @@ Mesh::loadFromVertexArray(const Vector<ComplexVertex>& vertices,
 
   m_indexCount = m_indexArray.size();
 
+  m_vertexType = eVertexType::kComplex;
+
   return true;
 }
 bool
-Mesh::loadFromTrianglesArray(const Vector<Triangle>& triangles)
+Mesh::loadFromTrianglesArray(const Vector<Triangle>& triangles,
+                             const Vector<uint32>& indices)
 {
   auto& graphicsApi = GraphicsApi::instance();
 
   m_vertexArray = triangles;
-  SIZE_T indicesSize = m_vertexArray.size() * 3;
-  for (SIZE_T i = 0; i < indicesSize; ++i) {
-    m_indexArray.push_back(static_cast<uint32>(i));
+  if (!indices.empty()) {
+    m_indexArray = indices;
+  }
+  else {
+    SIZE_T indicesSize = m_vertexArray.size() * 3;
+    for (SIZE_T i = 0; i < indicesSize; ++i) {
+      m_indexArray.push_back(static_cast<uint32>(i));
+    }
   }
 
   if (!m_vertexData) {
@@ -104,6 +112,8 @@ Mesh::loadFromTrianglesArray(const Vector<Triangle>& triangles)
 
   m_indexCount = m_indexArray.size();
 
+  m_vertexType = eVertexType::kComplex;
+
   return true;
 }
 bool
@@ -117,6 +127,9 @@ Mesh::loadFromControlPoints(const Vector<ComplexVertex>& vertices)
   m_vertexData->initData(m_controlPoints.size() * sizeof(ComplexVertex),
                          sizeof(ComplexVertex),
                          reinterpret_cast<const Byte*>(m_controlPoints.data()));
+
+  m_vertexType = eVertexType::kControlPoints;
+
   return true;
 }
 void

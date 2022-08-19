@@ -19,11 +19,11 @@ OGLPixelShader::compileFromFile(const WString& fileName,
                                 const Vector<ShaderMacro>& macroDefinitions)
 {
   File shaderFile;
-  shaderFile.OpenFile(fileName, OPEN_TYPE::kReadOnly);
+  shaderFile.openFile(fileName, OPEN_TYPE::kReadOnly);
   String shaderString;
-  shaderString = shaderFile.GetContent();
+  shaderString = shaderFile.getContent();
   bool r = compileFromString(shaderString, functionName, macroDefinitions);
-  shaderFile.Close();
+  shaderFile.close();
   return r;
 }
 bool
@@ -43,7 +43,7 @@ OGLPixelShader::compileFromString(const String& shaderString,
   {
     glGetShaderInfoLog(m_shader, 512, nullptr, infoLog);
     String infoLogStr = infoLog;
-    Logger::instance().FileLog("Pixel Shader failed to compile: " + infoLogStr, L"Logs/Genera_Log.txt", WARNING_LEVEL::kError);
+    Logger::instance().fileLog("Pixel Shader failed to compile: " + infoLogStr, L"Logs/Genera_Log.txt", WARNING_LEVEL::kError);
     return false;
   }
   return true;

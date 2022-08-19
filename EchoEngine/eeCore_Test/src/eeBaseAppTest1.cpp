@@ -412,7 +412,7 @@ DrawAnimationCmp(WPtr<CAnimation> anim, int32& uniqueId)
   auto sAnimRes = sAnim->getAnimation();
   String animName;
   if (!sAnimRes.expired()) {
-    animName = sAnimRes.lock()->getName();
+    animName = sAnimRes.lock()->getResourceName();
   }
   Map<String, SPtr<Animation>> anims =
   ResourceManager::instance().getAllAnimationResources();
@@ -493,7 +493,7 @@ DrawStaticMeshCmp(WPtr<CStaticMesh> staticMesh, int32& uniqueId)
   }
   ImGui::PopID();
 
-  String staticMeshName = sStaticMesh->getStaticMesh().lock()->getName();
+  String staticMeshName = sStaticMesh->getStaticMesh().lock()->getResourceName();
   Map<String, SPtr<StaticMesh>> staticMeshes =
   ResourceManager::instance().getAllStaticMeshResources();
   int32 staticMeshIndex = 0;
@@ -522,7 +522,7 @@ DrawSkeletalMeshCmp(WPtr<CSkeletalMesh> skMesh, int32& uniqueId)
 {
   auto sSkMesh = skMesh.lock();
   ImGui::PushID(uniqueId++);
-  String modelName = sSkMesh->getModel().lock()->getName();
+  String modelName = sSkMesh->getModel().lock()->getResourceName();
   Map<String, SPtr<SkeletalMesh>> skMeshes =
   ResourceManager::instance().getAllSkeletalMeshResources();
   int modelIndex = 0;
@@ -909,12 +909,12 @@ BaseAppTest1::onInit()
   
   resourceManager.loadStaticMeshFromMeshesArray({ Mesh::cube },
                                                 "Cube",
-                                                Vector3f{ 1.0f, 1.0f, 1.0f },
+                                                Math::sqrt(3),
                                                 Vector3f{ 1.0f, 1.0f, 1.0f },
                                                 Vector3f{ -1.0f, -1.0f, -1.f });
   resourceManager.loadStaticMeshFromMeshesArray({ Mesh::sphere },
                                                 "Sphere",
-                                                Vector3f{ 0.0f, 0.0f, 1.0f },
+                                                1.0f,
                                                 Vector3f{ 1.0f, 1.0f, 1.0f },
                                                 Vector3f{ -1.0f, -1.0f, -1.f });
   //resourceManager.loadStaticMeshFromMeshesArray({ Mesh::tetrahedron },

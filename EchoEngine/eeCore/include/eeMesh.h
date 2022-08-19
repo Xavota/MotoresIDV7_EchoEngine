@@ -28,7 +28,19 @@ namespace eeEngineSDK {
  * @brief
  * The meshes to be rendered, described by vertices and indices. 
  */
-//template<typename V, typename I>
+namespace eVertexType {
+enum E : uint8
+{
+  kNone = 0,
+  kSimple,
+  kComplex,
+  kControlPoints
+};
+}
+/**
+ * @brief
+ * The meshes to be rendered, described by vertices and indices. 
+ */
 class EE_CORE_EXPORT Mesh
 {
  public:
@@ -37,11 +49,6 @@ class EE_CORE_EXPORT Mesh
    * Default constructor
    */
   Mesh() = default;
-  /**
-   * @brief
-   * Copy constructor
-   */
-  //Mesh(const Mesh& other);
   /**
    * @brief
    * Initializes the mesh.
@@ -95,7 +102,8 @@ class EE_CORE_EXPORT Mesh
    * Weather it succeed or failed to initialize.
    */
   bool
-  loadFromTrianglesArray(const Vector<Triangle>& triangles);
+  loadFromTrianglesArray(const Vector<Triangle>& triangles,
+                         const Vector<uint32>& indices = {});
   
   /**
    * @brief
@@ -114,17 +122,6 @@ class EE_CORE_EXPORT Mesh
    */
   bool
   loadFromControlPoints(const Vector<ComplexVertex>& vertices);
-
-  /**
-   * @brief
-   * Set to graphics api.
-   *
-   * @description
-   * Sets the mesh for the graphic memory to use, only for override in graphics
-   * api specializations.
-   */
-  virtual void
-  set() const;
 
   /**
    * @brief
@@ -150,38 +147,37 @@ class EE_CORE_EXPORT Mesh
    */
   virtual const WPtr<IndexBuffer>
   getIndexData() const;
-
+  
   /**
    * @brief
-   * Getter for the index count.
+   * Getter for the vertex type.
    *
    * @description
-   * Returns the number of indices stored.
+   * Returns the type of vertices that are stored.
    *
    * @return
-   * The number of indices stored.
+   * The type of vertices that are stored.
+   */
+  FORCEINLINE eVertexType::E
+  getVertexType() const
+  {
+    return m_vertexType;
+  }
+  /**
+   * @brief
+   * Getter for the vertex count.
+   *
+   * @description
+   * Returns the number of vertices stored.
+   *
+   * @return
+   * The number of vertices stored.
    */
   FORCEINLINE SIZE_T
   getVertexCount() const
   {
     return m_vertexArray.size() * 3;
   }
-  /**
-   * @brief
-   * Getter for the index count.
-   *
-   * @description
-   * Returns the number of indices stored.
-   *
-   * @return
-   * The number of indices stored.
-   */
-  FORCEINLINE SIZE_T
-  getIndexCount() const
-  {
-    return m_indexCount;
-  }
-
   /**
    * @brief
    * Getter for the control points count.
@@ -200,6 +196,22 @@ class EE_CORE_EXPORT Mesh
 
   /**
    * @brief
+   * Getter for the index count.
+   *
+   * @description
+   * Returns the number of indices stored.
+   *
+   * @return
+   * The number of indices stored.
+   */
+  FORCEINLINE SIZE_T
+  getIndexCount() const
+  {
+    return m_indexCount;
+  }
+
+  /**
+   * @brief
    * Getter for the triangles array.
    *
    * @description
@@ -213,6 +225,49 @@ class EE_CORE_EXPORT Mesh
   {
     return m_vertexArray;
   }
+  /**
+   * @brief
+   * Getter for the control points array.
+   *
+   * @description
+   * Returns the control points array of the mesh.
+   *
+   * @return
+   * The control points array of the mesh.
+   */
+  FORCEINLINE Vector<ComplexVertex>
+  getControlPointsArray() const
+  {
+    return m_controlPoints;
+  }
+
+  /**
+   * @brief
+   * Getter for the indices array.
+   *
+   * @description
+   * Returns the indices array of the mesh.
+   *
+   * @return
+   * The indices array of the mesh.
+   */
+  FORCEINLINE Vector<uint32>
+  getIndicesArray() const
+  {
+    return m_indexArray;
+  }
+
+  /**
+   * @brief
+   * Set to graphics api.
+   *
+   * @description
+   * Sets the mesh for the graphic memory to use, only for override in graphics
+   * api specializations.
+   */
+  virtual void
+  set() const;
+
 
   /**
    * @brief
@@ -307,19 +362,22 @@ class EE_CORE_EXPORT Mesh
   SPtr<IndexBuffer> m_indexData;
 
   /**
+   * The vertex type.
+   */
+  eVertexType::E m_vertexType = eVertexType::kNone;
+  /**
    * The vertices stored.
    */
   Vector<Triangle> m_vertexArray;
-  /**
-   * The indices stored.
-   */
-  Vector<uint32> m_indexArray;
-
   /**
    * The control points for tessellation.
    */
   Vector<ComplexVertex> m_controlPoints;
 
+  /**
+   * The indices stored.
+   */
+  Vector<uint32> m_indexArray;
   /**
    * The number of indices.
    */

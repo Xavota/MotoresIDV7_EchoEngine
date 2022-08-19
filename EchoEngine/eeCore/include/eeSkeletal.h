@@ -14,6 +14,8 @@
 #include "eePrerequisitesCore.h"
 #include <eeMatrix4.h>
 
+#include "eeResource.h"
+
 struct aiNode;
 
 namespace eeEngineSDK {
@@ -51,7 +53,7 @@ struct Bone
  * @brief
  * The skeleton info for the skeletal mesh.
  */
-class EE_CORE_EXPORT Skeletal
+class EE_CORE_EXPORT Skeletal : public Resource
 {
  public:
   /**
@@ -74,8 +76,6 @@ class EE_CORE_EXPORT Skeletal
    * The mappings of the bones, with names and indices, for every mesh.
    * @param numsBones
    * The numbers of bones array for every mesh.
-   * @param name
-   * The name of the resource.
    *
    * @return
    * Whether it succeeded to load or not.
@@ -83,8 +83,7 @@ class EE_CORE_EXPORT Skeletal
    Skeletal(const Vector<Vector<Bone>>& bonesPerMesh,
             const Vector<Matrix4f>& globalInverseTransforms,
             const Vector<Map<String, uint32>>& boneMappings,
-            const Vector<uint32>& numsBones,
-            const String& name);
+            const Vector<uint32>& numsBones);
   /**
    * @brief
    * Default destructor.
@@ -106,8 +105,6 @@ class EE_CORE_EXPORT Skeletal
    * The mappings of the bones, with names and indices, for every mesh.
    * @param numsBones
    * The numbers of bones array for every mesh.
-   * @param name
-   * The name of the resource.
    *
    * @return
    * Whether it succeeded to load or not.
@@ -116,8 +113,7 @@ class EE_CORE_EXPORT Skeletal
   loadFromData(const Vector<Vector<Bone>>& bonesPerMesh,
                const Vector<Matrix4f>& globalInverseTransforms,
                const Vector<Map<String, uint32>>& boneMappings,
-               const Vector<uint32>& numsBones,
-               const String& name);
+               const Vector<uint32>& numsBones);
 
   /**
    * @brief
@@ -174,42 +170,6 @@ class EE_CORE_EXPORT Skeletal
 
   /**
    * @brief
-   * Updates the bones data.
-   *
-   * @description
-   * Updates the bones matrices to the original pose of the skeleton.
-   *
-   * @param root
-   * The root node of the skeleton.
-   * @param meshIndex
-   * The mesh index that is being modified.
-   */
-  void
-  boneTransform(const aiNode* root, uint32 meshIndex);
-  /**
-   * @brief
-   * Updates the bones data.
-   *
-   * @description
-   * Updates the bones matrices to the original pose of the skeleton.
-   *
-   * @param pNode
-   * The parent node on the skeleton graph.
-   * @param parentTransform
-   * The transform of the parent node.
-   * @param meshIndex
-   * The mesh index that is being modified.
-   * 
-   * @param meshIndex
-   * 
-   */
-  void
-  readNodeHeirarchy(const aiNode* pNode,
-                    const Matrix4f& parentTransform,
-                    SIZE_T meshIndex);
-
-  /**
-   * @brief
    * Gets the matrices of the bones.
    *
    * @description
@@ -223,6 +183,22 @@ class EE_CORE_EXPORT Skeletal
    */
   Vector<Matrix4f>
   getBonesMatrices(SIZE_T meshNum);
+
+  /**
+   * @brief
+   * Getter of the number of bones per mesh.
+   *
+   * @description
+   * Returns the array containing number of bones per mesh.
+   *
+   * @return
+   * The marray containing number of bones per mesh.
+   */
+  FORCEINLINE Vector<uint32>
+  getNumBones()
+  {
+    return m_numsBones;
+  }
 
  private:
   /**
@@ -242,10 +218,5 @@ class EE_CORE_EXPORT Skeletal
    * Bones count for every mesh.
    */
   Vector<uint32> m_numsBones;
-
-  /**
-   * The name of the skeleton resource.
-   */
-  String m_name;
 };
 }

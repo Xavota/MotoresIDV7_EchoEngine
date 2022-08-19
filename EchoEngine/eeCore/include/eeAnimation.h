@@ -16,12 +16,14 @@
 #include <eeVector3.h>
 #include <eeQuaternion.h>
 
+#include "eeResource.h"
+
 namespace eeEngineSDK {
 /**
  * @brief
  * A node for the animation graph.
  */
-struct Node
+struct Node 
 {
   /**
    * The name of the node.
@@ -101,8 +103,17 @@ struct AnimNode
    */
   uint32 m_scalingKeysCount;
 
+  /**
+   * The position key frames.
+   */
   Vector<VectorKeyFrame> m_positionKeys;
+  /**
+   * The rotation key frames.
+   */
   Vector<QuatKeyFrame> m_rotationKeys;
+  /**
+   * The scaling key frames.
+   */
   Vector<VectorKeyFrame> m_scalingKeys;
 };
 
@@ -110,7 +121,7 @@ struct AnimNode
  * @brief
  * The animation resource. Contains the bones transformations.
  */
-class EE_CORE_EXPORT Animation
+class EE_CORE_EXPORT Animation : public Resource
 {
  public:
   /**
@@ -134,8 +145,6 @@ class EE_CORE_EXPORT Animation
    * The key frames of all the nodes on the animation.
    * @param rootNode
    * The root of the nodes tree of the animation.
-   * @param name
-   * The name of the animation resource.
    *
    * @return
    * If it succeeded to load.
@@ -143,8 +152,7 @@ class EE_CORE_EXPORT Animation
   Animation(float ticksPerSecond,
             float duration,
             const Vector<AnimNode>& channels,
-            SPtr<Node> pRootNode,
-            const String& name);
+            SPtr<Node> pRootNode);
   /**
    * @brief
    * Default destructor.
@@ -167,8 +175,6 @@ class EE_CORE_EXPORT Animation
    * The key frames of all the nodes on the animation.
    * @param rootNode
    * The root of the nodes tree of the animation.
-   * @param name
-   * The name of the animation resource.
    *
    * @return
    * If it succeeded to load.
@@ -177,8 +183,7 @@ class EE_CORE_EXPORT Animation
   loadFromData(float ticksPerSecond,
                float duration,
                const Vector<AnimNode>& channels,
-               SPtr<Node> pRootNode,
-               const String& name);
+               SPtr<Node> pRootNode);
 
   /**
    * @brief
@@ -354,18 +359,67 @@ class EE_CORE_EXPORT Animation
   uint32
   findPosition(float animationTime, const AnimNode& pNodeAnim);
 
+  
   /**
    * @brief
-   * Getter for the animation name.
+   * Getter for the ticks per second.
    *
    * @description
-   * Returns the animation name.
+   * Returns the value of ticks per second of the animation.
    *
    * @return
-   * The animation name.
+   * The value of ticks per second of the animation.
    */
-  String
-  getName();
+  FORCEINLINE float
+  getTicksPerSecond() const
+  {
+    return m_ticksPerSecond;
+  }
+  /**
+   * @brief
+   * Getter for the duration.
+   *
+   * @description
+   * Returns the value of the duration of the animation.
+   *
+   * @return
+   * The value of the duration of the animation.
+   */
+  FORCEINLINE float
+  getDuration() const
+  {
+    return m_duration;
+  }
+  /**
+   * @brief
+   * Getter for the channels.
+   *
+   * @description
+   * Returns the channels of the animation.
+   *
+   * @return
+   * The channels of the animation.
+   */
+  FORCEINLINE const Vector<AnimNode>&
+  getChannels() const
+  {
+    return m_channels;
+  }
+  /**
+   * @brief
+   * Getter for the root node.
+   *
+   * @description
+   * Returns the root node of the animation.
+   *
+   * @return
+   * The root node of the animation.
+   */
+  FORCEINLINE SPtr<Node>
+  getRootNode() const
+  {
+    return m_pRootNode;
+  }
 
  private:
   /**
@@ -376,20 +430,19 @@ class EE_CORE_EXPORT Animation
    * Total duration in time of the animation.
    */
   float m_duration = 0.0f;
-  /**
-   * The animation name.
-   */
-  String m_name;
 
   /**
    * The number of animation channels.
    */
   SIZE_T m_channelsCount = 0u;
   /**
-   * The animation channels
+   * The animation channels.
    */
   Vector<AnimNode> m_channels;
 
+  /**
+   * The root node of the animation.
+   */
   SPtr<Node> m_pRootNode = nullptr;
 };
 }

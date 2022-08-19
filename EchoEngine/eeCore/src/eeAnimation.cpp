@@ -19,24 +19,21 @@ namespace eeEngineSDK {
 Animation::Animation(float ticksPerSecond,
                      float duration,
                      const Vector<AnimNode>& channels,
-                     SPtr<Node> pRootNode,
-                     const String& name)
+                     SPtr<Node> pRootNode)
 {
-  loadFromData(ticksPerSecond , duration, channels, pRootNode, name);
+  loadFromData(ticksPerSecond , duration, channels, pRootNode);
 }
 bool
 Animation::loadFromData(float ticksPerSecond,
                         float duration,
                         const Vector<AnimNode>& channels,
-                        SPtr<Node> pRootNode,
-                        const String& name)
+                        SPtr<Node> pRootNode)
 {
   m_ticksPerSecond = ticksPerSecond;
   m_duration = duration;
   m_channels = channels;
   m_channelsCount = m_channels.size();
   m_pRootNode = pRootNode;
-  m_name = name;
 
   return true;
 }
@@ -252,10 +249,5 @@ Animation::findPosition(float animationTime, const AnimNode& pNodeAnim)
 
   //assert(0);
   return 0;
-}
-String
-Animation::getName()
-{
-  return m_name;
 }
 }

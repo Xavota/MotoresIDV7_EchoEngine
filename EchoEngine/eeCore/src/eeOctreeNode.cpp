@@ -141,14 +141,14 @@ OctreeNode::DivideMesh(const Plane& plane, WPtr<StaticMesh> sMesh)
   Vector<SPtr<StaticMesh>> r;
   if (!sideAMeshes.empty()) {
     r.emplace_back(memoryManager.newPtr<StaticMesh>());
-    r[0]->loadFromMeshes(sideAMeshes, "", {}, {}, {});
+    r[0]->loadFromMeshes(sideAMeshes, {}, {}, {});
   }
   else {
     r.emplace_back(nullptr);
   }
   if (!sideBMeshes.empty()) {
     r.emplace_back(memoryManager.newPtr<StaticMesh>());
-    r[1]->loadFromMeshes(sideBMeshes, "", {}, {}, {});
+    r[1]->loadFromMeshes(sideBMeshes, {}, {}, {});
   }
   else {
     r.emplace_back(nullptr);

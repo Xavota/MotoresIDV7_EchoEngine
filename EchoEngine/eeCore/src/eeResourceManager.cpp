@@ -42,7 +42,6 @@ loadMaterialsFromAssimp(const aiScene* scene,
 
 void
 loadStaticMeshFromAssimp(const aiScene* scene,
-                         const String& name,
                          const Map<uint32, WPtr<Material>>& textures,
                          SPtr<StaticMesh>* outStaticMesh)
 {
@@ -53,7 +52,7 @@ loadStaticMeshFromAssimp(const aiScene* scene,
 
   Vector3f maxBound(-99999.99f, -99999.99f, -99999.99f);
   Vector3f minBound( 99999.99f,  99999.99f,  99999.99f);
-  Vector3f furtherPosition(0.0f, 0.0f, 0.0f);
+  float furtherDistance = 0.0f;
       //----Vertices----
   for (uint32 i = 0; i < scene->mNumMeshes; ++i) {
     Vector<ComplexVertex> vertices;
@@ -79,9 +78,9 @@ loadStaticMeshFromAssimp(const aiScene* scene,
                                  + Math::pow(v.position.y, 2.0f)
                                  + Math::pow(v.position.z, 2.0f), 0.5f);
 
-        if (distance > furtherPosition.getMagnitud())
+        if (distance > furtherDistance)
         {
-          furtherPosition = Vector3f(v.position.x, v.position.y, v.position.z);
+          furtherDistance = distance;
         }
       }
       else {
@@ -155,12 +154,11 @@ loadStaticMeshFromAssimp(const aiScene* scene,
     vertices.clear();
   }
 
-  (*outStaticMesh)->loadFromMeshes(meshes, name, furtherPosition, maxBound, minBound);
+  (*outStaticMesh)->loadFromMeshes(meshes, furtherDistance, maxBound, minBound);
 }
 SPtr<SkeletalMesh>
 loadSkeletalMeshFromAssimp(const aiScene* scene,
                            WPtr<Skeletal> skeleton,
-                           const String& name,
                            const Map<uint32, WPtr<Material>>& textures)
 {
   SPtr<SkeletalMesh> outSkeletalMesh = MemoryManager::instance().newPtr<SkeletalMesh>();
@@ -169,14 +167,15 @@ loadSkeletalMeshFromAssimp(const aiScene* scene,
 
   Vector3f maxBound(-99999.99f, -99999.99f, -99999.99f);
   Vector3f minBound(99999.99f, 99999.99f, 99999.99f);
-  Vector3f furtherPosition = Vector3f(0.0f, 0.0f, 0.0f);
+  float furtherDist = 0.0f;
+  meshes.resize(scene->mNumMeshes);
   for (uint32 i = 0; i < scene->mNumMeshes; ++i) {
-    Vector<ComplexBigAnimVertex<5>> vertices;
+    Vector<ComplexBigAnimVertex<4>> vertices;
     aiMesh* AssimpMesh = scene->mMeshes[i];
 
     for (uint32 j = 0; j < AssimpMesh->mNumVertices; ++j) {
-      ComplexBigAnimVertex<5> v;
-      memset(&v, 0, sizeof(ComplexBigAnimVertex<5>));
+      ComplexBigAnimVertex<4> v;
+      memset(&v, 0, sizeof(ComplexBigAnimVertex<4>));
       // Positions
       if (AssimpMesh->HasPositions()) {
         const aiVector3D& vertex = AssimpMesh->mVertices[j];
@@ -195,9 +194,9 @@ loadSkeletalMeshFromAssimp(const aiScene* scene,
                                  + Math::pow(v.position.y, 2.0f)
                                  + Math::pow(v.position.z, 2.0f), 0.5f);
 
-        if (distance > furtherPosition.getMagnitud())
+        if (distance > furtherDist)
         {
-          furtherPosition = Vector3f(v.position.x, v.position.y, v.position.z);
+          furtherDist = distance;
         }
       }
       else {
@@ -258,7 +257,7 @@ loadSkeletalMeshFromAssimp(const aiScene* scene,
           bool yes = false;
           for (auto vw : bone.m_vertexWeights) {
             yes = false;
-            for (uint32 l = 0; l < 16; l++) {
+            for (uint32 l = 0; l < 4; l++) {
               if (vertices[vw.m_vertexID].boneWeights[l] == 0.0f) {
                 vertices[vw.m_vertexID].boneIndices[l] = static_cast<int32>(j);
                 vertices[vw.m_vertexID].boneWeights[l] = vw.m_weight;
@@ -290,18 +289,13 @@ loadSkeletalMeshFromAssimp(const aiScene* scene,
 
     auto& resourseManager = ResourceManager::instance();
 
-
-    meshes.emplace_back
-    (
-      Pair<BoneMesh, WPtr<Material>>
-      (
-        BoneMesh(),
-        textures.find(AssimpMesh->mMaterialIndex) != textures.end()
-        ? (*textures.find(AssimpMesh->mMaterialIndex)).second
-        : resourseManager.getResourceMaterial("Default_mat")
-      )
-    );
-    meshes[meshes.size() - 1].first.loadFromArray(vertices, indices);
+    
+    meshes[i] = Pair<BoneMesh, WPtr<Material>>(
+      BoneMesh(),
+      textures.find(AssimpMesh->mMaterialIndex) != textures.end()
+      ? (*textures.find(AssimpMesh->mMaterialIndex)).second
+      : resourseManager.getResourceMaterial("Default_mat"));
+    meshes[i].first.loadFromArray(vertices, indices);
 
     vertices.clear();
     indices.clear();
@@ -309,8 +303,7 @@ loadSkeletalMeshFromAssimp(const aiScene* scene,
 
   outSkeletalMesh->loadFromMeshes(meshes,
                                   skeleton,
-                                  name,
-                                  furtherPosition,
+                                  furtherDist,
                                   maxBound,
                                   minBound);
   return outSkeletalMesh;
@@ -366,8 +359,7 @@ boneTransform(const aiNode* root,
                     outBonesPerMesh);
 }
 SPtr<Skeletal>
-loadSkeletalFromAssimp(const aiScene* scene,
-                       const String& name)
+loadSkeletalFromAssimp(const aiScene* scene)
 {
   SPtr<Skeletal> outSkeleton = MemoryManager::instance().newPtr<Skeletal>();
 
@@ -433,8 +425,7 @@ loadSkeletalFromAssimp(const aiScene* scene,
   outSkeleton->loadFromData(bonesPerMesh,
                             globalInverseTransforms,
                             boneMappings,
-                            numsBones,
-                            name);
+                            numsBones);
 
   return outSkeleton;
 }
@@ -508,8 +499,7 @@ storeNodes(aiNode* current, WPtr<Node> storage)
 }
 SPtr<Animation>
 loadOneAnimationFromAssimp(const aiScene* scene,
-                           int32 animIndex,
-                           const String& name)
+                           int32 animIndex)
 {
   SPtr<Animation> outAnimation = MemoryManager::instance().newPtr<Animation>();
 
@@ -525,7 +515,7 @@ loadOneAnimationFromAssimp(const aiScene* scene,
   storeNodes(scene->mRootNode, rootNode);
   storeAnim(scene->mAnimations[animIndex], channels);
 
-  outAnimation->loadFromData(ticksPerSecond, duration, channels, rootNode, name);
+  outAnimation->loadFromData(ticksPerSecond, duration, channels, rootNode);
 
   return outAnimation;
 }
@@ -610,26 +600,46 @@ ResourceManager::importResourceFromFile(const WString& fileName,
     || (Math::hasFlag(importFlags, IMPORT_FLAGS::kImportAll)
     &&  Math::hasFlag(importFlags, IMPORT_FLAGS::kNotImportSkeletalMeshes)))) {
       // Load skeleton
-      SPtr<Skeletal> skeleton =
-      loadSkeletalFromAssimp(scene, eeWStringtoString(name));
-      if (skeleton) {
-        m_skeletals.insert(
-        Pair<String, SPtr<Skeletal>>(eeWStringtoString(name) + "_sk",
-                                     skeleton));
+      String strName = eeWStringtoString(name);
+      String resName = strName + "_sk";
+      SPtr<Skeletal> skeleton = nullptr;
+      if (m_skeletals.find(resName) == m_skeletals.end()) {
+        skeleton = loadSkeletalFromAssimp(scene);
+        if (skeleton) {
+          skeleton->setResourceName(resName);
+          m_skeletals.insert(
+          Pair<String, SPtr<Skeletal>>(resName, skeleton));
+        
+          serializeSkeleton(resName,
+                            L"Assets/"
+                          + eeStringtoWString(resName)
+                          + L".echoasset");
+        }
+      }
+      else {
+        skeleton = m_skeletals[resName];
       }
       
       if (scene->HasMeshes()) {
         // Load skeletal mesh
-        SPtr<SkeletalMesh> skMesh =
-        //loadSkeletalMeshFromAssimp(scene, skeleton, name + "_skm", textures);
-        loadSkeletalMeshFromAssimp(scene,
-                                   skeleton,
-                                   eeWStringtoString(name) + "_skm",
-                                   materials);
-        if (skMesh) {
-          m_skeletalMeshes.insert(
-            Pair<String, SPtr<SkeletalMesh>>(eeWStringtoString(name) + "_skm",
-                                             skMesh));
+        resName = strName + "_skm";
+        if (m_skeletalMeshes.find(resName) == m_skeletalMeshes.end()) {
+          SPtr<SkeletalMesh> skMesh =
+          //loadSkeletalMeshFromAssimp(scene, skeleton, name + "_skm", textures);
+          loadSkeletalMeshFromAssimp(scene,
+                                     skeleton,
+                                     materials);
+          if (skMesh) {
+            skMesh->setResourceName(resName);
+            m_skeletalMeshes.insert(
+              Pair<String, SPtr<SkeletalMesh>>(resName,
+                                               skMesh));
+
+            serializeSkeletalMesh(resName,
+                                  L"Assets/"
+                                + eeStringtoWString(resName)
+                                + L".echoasset");
+          }
         }
       }
     }
@@ -639,17 +649,24 @@ ResourceManager::importResourceFromFile(const WString& fileName,
          &&  Math::hasFlag(importFlags, IMPORT_FLAGS::kNotImportStaticMeshes))) {
       if (scene->HasMeshes()) {
         // Load static mesh
-        SPtr<StaticMesh> stMesh;
-        SPtr<StaticMesh>* tempMesh = &stMesh;
-        loadStaticMeshFromAssimp(scene,
-                                 eeWStringtoString(name) + "_sm",
-                                 materials,
-                                 tempMesh);
-        
-        if (stMesh) {
-          m_staticMeshes.insert(
-            Pair<String, SPtr<StaticMesh>>(eeWStringtoString(name) + "_sm", 
-                                           stMesh));
+        String resName = eeWStringtoString(name) + "_sm";
+        if (m_staticMeshes.find(resName) == m_staticMeshes.end()) {
+          SPtr<StaticMesh> stMesh;
+          loadStaticMeshFromAssimp(scene,
+                                   materials,
+                                   &stMesh);
+          
+          if (stMesh) {
+            stMesh->setResourceName(resName);
+            m_staticMeshes.insert(
+              Pair<String, SPtr<StaticMesh>>(resName,
+                                             stMesh));
+          
+            serializeStaticMesh(resName,
+                                L"Assets/"
+                              + eeStringtoWString(resName)
+                              + L".echoasset");
+          }
         }
       }
     }
@@ -664,9 +681,17 @@ ResourceManager::importResourceFromFile(const WString& fileName,
         String animName = eeWStringtoString(name)
                         + "_anim_"
                         + scene->mAnimations[i]->mName.C_Str();
-        SPtr<Animation> anim = loadOneAnimationFromAssimp(scene, i, animName);
-        if (anim) {
-          m_animations.insert(Pair<String, SPtr<Animation>>(animName, anim));
+        if (m_animations.find(animName) == m_animations.end()) {
+          SPtr<Animation> anim = loadOneAnimationFromAssimp(scene, i);
+          if (anim) {
+            anim->setResourceName(animName);
+            m_animations.insert(Pair<String, SPtr<Animation>>(animName, anim));
+            
+            serializeAnimation(animName,
+                               L"Assets/"
+                             + eeStringtoWString(animName)
+                             + L".echoasset");
+          }
         }
       }
     }
@@ -699,6 +724,7 @@ ResourceManager::loadTextureFromFile(const WString& fileName,
 
   tex->loadImages({ tempImg });
 
+  tex->setResourceName(resourceName);
   m_textures.insert(Pair<String, SPtr<Texture>>(resourceName,
                                                 tex));
 
@@ -710,7 +736,7 @@ WPtr<Material>
 ResourceManager::loadMaterialFromTextures(const Map<uint32, WPtr<Texture>>& textures,
                                           const String& resourceName)
 {
-  if (m_textures.find(resourceName) != m_textures.end()) {
+  if (m_materials.find(resourceName) != m_materials.end()) {
     Logger::instance().consoleLog("Resource already with this name");
     return {};
   }
@@ -718,14 +744,18 @@ ResourceManager::loadMaterialFromTextures(const Map<uint32, WPtr<Texture>>& text
   SPtr<Material> mat =
   MemoryManager::instance().newPtr<Material>(textures);
 
+  mat->setResourceName(resourceName);
   m_materials.insert(Pair<String, SPtr<Material>>(resourceName,
                                                   mat));
+
+  serializeMaterial(resourceName, L"Assets/" + eeStringtoWString(resourceName) + L".echomat");
+
   return m_materials[resourceName];
 }
 WPtr<StaticMesh>
 ResourceManager::loadStaticMeshFromMeshesArray(const Vector<Mesh>& meshes,
                                                const String& resourceName,
-                                               const Vector3f& furtherVertexPosition,
+                                               float furtherDist,
                                                const Vector3f& maxCoordinate,
                                                const Vector3f& minCoordinate)
 {
@@ -741,24 +771,30 @@ ResourceManager::loadStaticMeshFromMeshesArray(const Vector<Mesh>& meshes,
 
   SPtr<StaticMesh> staticMesh = MemoryManager::instance().newPtr<StaticMesh>();
   if (!staticMesh->loadFromMeshes(meshes,
-                                 resourceName,
-                                 furtherVertexPosition,
+                                 furtherDist,
                                  maxCoordinate,
                                  minCoordinate)) {
     return {};
   }
 
+  staticMesh->setResourceName(resourceName);
   m_staticMeshes.insert(Pair<String, SPtr<StaticMesh>>(resourceName,
                                                        staticMesh));
+
+  serializeStaticMesh(resourceName,
+                      L"Assets/"
+                    + eeStringtoWString(resourceName)
+                    + L".echoasset");
+
   return m_staticMeshes[resourceName];
 }
 WPtr<StaticMesh>
 ResourceManager::loadStaticMeshFromMeshesArray(
-                                const Vector<Pair<Mesh, WPtr<Material>>>& meshes,
-                                const String& resourceName,
-                                const Vector3f& furtherVertexPosition,
-                                const Vector3f& maxCoordinate,
-                                const Vector3f& minCoordinate)
+                               const Vector<Pair<Mesh, WPtr<Material>>>& meshes,
+                               const String& resourceName,
+                               float furtherDist,
+                               const Vector3f& maxCoordinate,
+                               const Vector3f& minCoordinate)
 {
   if (m_staticMeshes.find(resourceName) != m_staticMeshes.end()) {
     Logger::instance().consoleLog("Resource already with this name");
@@ -772,15 +808,21 @@ ResourceManager::loadStaticMeshFromMeshesArray(
 
   SPtr<StaticMesh> staticMesh = MemoryManager::instance().newPtr<StaticMesh>();
   if (!staticMesh->loadFromMeshes(meshes,
-                                  resourceName,
-                                  furtherVertexPosition,
+                                  furtherDist,
                                   maxCoordinate,
                                   minCoordinate)) {
     return {};
   }
-  
+
+  staticMesh->setResourceName(resourceName);
   m_staticMeshes.insert(Pair<String, SPtr<StaticMesh>>(resourceName,
                                                        staticMesh));
+
+  serializeStaticMesh(resourceName,
+                      L"Assets/"
+                    + eeStringtoWString(resourceName)
+                    + L".echoasset");
+
   return m_staticMeshes[resourceName];
 }
 
@@ -812,14 +854,21 @@ ResourceManager::loadSkeletalFromFile(const WString& fileName,
     return {};
   }
 
-  SPtr<Skeletal> skeleton = loadSkeletalFromAssimp(scene, resourceName);
+  SPtr<Skeletal> skeleton = loadSkeletalFromAssimp(scene);
   delete importer;
   if (skeleton)
   {
+    skeleton->setResourceName(resourceName);
     m_skeletals.insert(Pair<String, SPtr<Skeletal>>(resourceName,
                                                     skeleton));
     return m_skeletals[resourceName];
   }
+
+  serializeSkeleton(resourceName,
+                    L"Assets/"
+                  + eeStringtoWString(resourceName)
+                  + L".echoasset");
+
   return {};
 }
 
@@ -852,11 +901,18 @@ ResourceManager::loadAnimationFromFile(const WString& fileName,
     return {};
   }
 
-  SPtr<Animation> anim = loadOneAnimationFromAssimp(scene, animIndex, resourceName);
+  SPtr<Animation> anim = loadOneAnimationFromAssimp(scene, animIndex);
   delete importer;
   if (anim) {
+    anim->setResourceName(resourceName);
     m_animations.insert(Pair<String, SPtr<Animation>>(resourceName,
                                                       anim));
+
+    serializeAnimation(resourceName,
+                       L"Assets/"
+                     + eeStringtoWString(resourceName)
+                     + L".echoasset");
+
     return m_animations[resourceName];
   }
   return {};
@@ -1183,50 +1239,209 @@ enum E : uint8 {
 }
 
 void
+getFileName(WString filePath, String& fileName)
+{
+  String pathW2S = eeWStringtoString(filePath);
+  bool readingName = false;
+  auto pathSize = static_cast<int64>(pathW2S.size());
+  for (int64 i = pathSize - 1; i >= 0; --i) {
+    if (!readingName) {
+      if (pathW2S[i] == '.') {
+        readingName = true;
+      }
+    }
+    else {
+      if (pathW2S[i] == '/' || pathW2S[i] == '\\') {
+        break;
+      }
+      //resourceName.insert(resourceName.end() - 1, pathW2S[i]);
+      fileName = pathW2S[i] + fileName;
+    }
+  }
+}
+
+void
+getResourceData(File& iFile,
+                uint8& resourceCode,
+                uint8& versionNum,
+                uint8& sizeTSize)
+{
+  iFile.readBytes(reinterpret_cast<Byte*>(&resourceCode),
+                  sizeof(uint8));
+  iFile.readBytes(reinterpret_cast<Byte*>(&versionNum),
+                  sizeof(uint8));
+  iFile.readBytes(reinterpret_cast<Byte*>(&sizeTSize),
+                  sizeof(uint8));
+}
+
+void
 ResourceManager::loadAllSerialized()
 {
-  for (auto const& dir_entry : std::filesystem::directory_iterator("Assets")) {
-    std::cout << dir_entry.path() << '\n';
-
+  auto filesArray = std::filesystem::directory_iterator("Assets");
+  for (auto const& dir_entry : filesArray) {
     if (dir_entry.is_regular_file()) {
       File loadFile;
       WString filePath = dir_entry.path();
       loadFile.openFile(filePath, OPEN_TYPE::kReadOnly
-                                                | OPEN_TYPE::kBinary);
+                                | OPEN_TYPE::kBinary);
       if (loadFile.isOpen()) {
         String resourceName;
-
-        String pathW2S = eeWStringtoString(filePath);
-        bool readingName = false;
-        int64 pathSize = static_cast<int64>(pathW2S.size());
-        for (int64 i = pathSize - 1; i >= 0; --i) {
-          if (!readingName) {
-            if (pathW2S[i] == '.') {
-              readingName = true;
-            }
-          }
-          else {
-            if (pathW2S[i] == '/' || pathW2S[i] == '\\') {
-              break;
-            }
-            //resourceName.insert(resourceName.end() - 1, pathW2S[i]);
-            resourceName = pathW2S[i] + resourceName;
-          }
-        }
-
+        getFileName(filePath, resourceName);
 
         uint8 readResourceCode = 0;
-        loadFile.readBytes(reinterpret_cast<Byte*>(&readResourceCode),
-                           sizeof(uint8));
-
-        switch (readResourceCode)
-        {
-        case eRESOURCE_CODE::kTexture:
-          deserializeTexture(loadFile, resourceName);
-          break;
+        uint8 readVersionNum = 0;
+        uint8 readSizeTSize = 0;
+        getResourceData(loadFile, readResourceCode, readVersionNum, readSizeTSize);
+        
+        if (readResourceCode == eRESOURCE_CODE::kTexture) {
+          std::cout << dir_entry.path() << '\n';
+          loadSerializedTexture(loadFile,
+                                resourceName,
+                                readVersionNum,
+                                readSizeTSize);
+        }
+        else if (readResourceCode == eRESOURCE_CODE::kSkeletal) {
+          std::cout << dir_entry.path() << '\n';
+          loadSerializedSkeleton(loadFile,
+                                 resourceName,
+                                 readVersionNum,
+                                 readSizeTSize);
+        }
+        else if (readResourceCode == eRESOURCE_CODE::kAnimation) {
+          std::cout << dir_entry.path() << '\n';
+          loadSerializedAnimation(loadFile,
+                                  resourceName,
+                                  readVersionNum,
+                                  readSizeTSize);
         }
       }
     }
+  }
+  filesArray = std::filesystem::directory_iterator("Assets");
+  for (auto const& dir_entry : filesArray) {
+    if (dir_entry.is_regular_file()) {
+      File loadFile;
+      WString filePath = dir_entry.path();
+      loadFile.openFile(filePath, OPEN_TYPE::kReadOnly
+        | OPEN_TYPE::kBinary);
+      if (loadFile.isOpen()) {
+        String resourceName;
+        getFileName(filePath, resourceName);
+
+        uint8 readResourceCode = 0;
+        uint8 readVersionNum = 0;
+        uint8 readSizeTSize = 0;
+        getResourceData(loadFile, readResourceCode, readVersionNum, readSizeTSize);
+
+        if (readResourceCode == eRESOURCE_CODE::kMaterial) {
+          std::cout << dir_entry.path() << '\n';
+          loadSerializedMaterial(loadFile,
+                                 resourceName,
+                                 readVersionNum,
+                                 readSizeTSize);
+        }
+      }
+    }
+  }
+  filesArray = std::filesystem::directory_iterator("Assets");
+  for (auto const& dir_entry : filesArray) {
+    if (dir_entry.is_regular_file()) {
+      File loadFile;
+      WString filePath = dir_entry.path();
+      loadFile.openFile(filePath, OPEN_TYPE::kReadOnly
+        | OPEN_TYPE::kBinary);
+      if (loadFile.isOpen()) {
+        String resourceName;
+        getFileName(filePath, resourceName);
+
+        uint8 readResourceCode = 0;
+        uint8 readVersionNum = 0;
+        uint8 readSizeTSize = 0;
+        getResourceData(loadFile, readResourceCode, readVersionNum, readSizeTSize);
+
+        if (readResourceCode == eRESOURCE_CODE::kStaticMesh) {
+          std::cout << dir_entry.path() << '\n';
+          loadSerializedStaticMesh(loadFile,
+                                   resourceName,
+                                   readVersionNum,
+                                   readSizeTSize);
+        }
+        else if (readResourceCode == eRESOURCE_CODE::kSkeletalMesh) {
+          std::cout << dir_entry.path() << '\n';
+          loadSerializedSkeletalMesh(loadFile,
+                                     resourceName,
+                                     readVersionNum,
+                                     readSizeTSize);
+        }
+      }
+    }
+  }
+}
+
+void
+serializeStringHelper(File& oFile, const String& stringToSerialize)
+{
+  if (oFile.isOpen()) {
+    SIZE_T stringLength = stringToSerialize.size();
+    oFile.writeBytes(reinterpret_cast<Byte*>(&stringLength), sizeof(SIZE_T));
+    for (SIZE_T i = 0; i < stringLength; ++i) {
+      char c = stringToSerialize[i];
+      oFile.writeBytes(reinterpret_cast<Byte*>(&c), sizeof(char));
+    }
+  }
+}
+
+void
+loadSerializedStringHelper(File& iFile, String& stringToLoad, uint8 sizeOfSizeT)
+{
+  if (iFile.isOpen()) {
+    SIZE_T readStringLength = 0;
+    if (sizeOfSizeT == 4) {
+      uint32 byte4StringLenght = 0;
+      iFile.readBytes(reinterpret_cast<Byte*>(&byte4StringLenght),
+                      sizeof(uint32));
+      readStringLength = static_cast<SIZE_T>(byte4StringLenght);
+    }
+    else if (sizeOfSizeT == 8) {
+      uint64 byte8StringLenght = 0;
+      iFile.readBytes(reinterpret_cast<Byte*>(&byte8StringLenght),
+                      sizeof(uint64));
+      readStringLength = static_cast<SIZE_T>(byte8StringLenght);
+    }
+    
+    stringToLoad.clear();
+    for (SIZE_T i = 0; i < readStringLength; ++i) {
+      char c = 0;
+      iFile.readBytes(reinterpret_cast<Byte*>(&c),
+                      sizeof(char));
+    
+      stringToLoad += c;
+    }
+  }
+}
+
+void
+serializeFileStartData(File& oFile, uint8 resourceCode, uint8 versionNum)
+{
+  oFile.writeBytes(reinterpret_cast<Byte*>(&resourceCode), sizeof(uint8));
+  oFile.writeBytes(reinterpret_cast<Byte*>(&versionNum), sizeof(uint8));
+  uint8 sizeTSize = sizeof(SIZE_T);
+  oFile.writeBytes(reinterpret_cast<Byte*>(&sizeTSize), sizeof(uint8));
+}
+void
+loadSerializedSize(File& fileToLoad, SIZE_T& sizeToLoad, uint8 sizeTSize)
+{
+  if (sizeTSize == 4) {
+    uint32 byte4Size = 0;
+    fileToLoad.readBytes(reinterpret_cast<Byte*>(&byte4Size),
+      sizeof(uint32));
+    sizeToLoad = static_cast<SIZE_T>(byte4Size);
+  }
+  else if (sizeTSize == 8) {
+    uint64 byte8Size = 0;
+    fileToLoad.readBytes(reinterpret_cast<Byte*>(&byte8Size),
+      sizeof(uint64));
+    sizeToLoad = static_cast<SIZE_T>(byte8Size);
   }
 }
 
@@ -1239,10 +1454,8 @@ ResourceManager::serializeTexture(const String& resourceName,
     saveFile.openFile(fileToSave, OPEN_TYPE::kWriteOnly | OPEN_TYPE::kBinary);
     if (saveFile.isOpen()) {
       auto tex = m_textures[resourceName];
-      uint8 resourceCode = eRESOURCE_CODE::kTexture;
-      saveFile.writeBytes(reinterpret_cast<Byte*>(&resourceCode), sizeof(uint8));
-      int8 sizeTSize = sizeof(SIZE_T);
-      saveFile.writeBytes(reinterpret_cast<Byte*>(&sizeTSize), sizeof(uint8));
+      serializeFileStartData(saveFile, eRESOURCE_CODE::kTexture, 0);
+
       Vector<SPtr<Image>> images = tex->getImages();
       SIZE_T imagesCount = images.size();
       saveFile.writeBytes(reinterpret_cast<Byte*>(&imagesCount), sizeof(SIZE_T));
@@ -1262,7 +1475,300 @@ ResourceManager::serializeTexture(const String& resourceName,
   return false;
 }
 bool
-ResourceManager::deserializeTexture(File& fileToLoad, const String& resourceName)
+ResourceManager::serializeMaterial(const String& resourceName,
+                                   const WString& fileToSave)
+{
+  if (m_materials.find(resourceName) != m_materials.end()) {
+    File saveFile;
+    saveFile.openFile(fileToSave, OPEN_TYPE::kWriteOnly | OPEN_TYPE::kBinary);
+    if (saveFile.isOpen()) {
+      auto mat = m_materials[resourceName];
+      serializeFileStartData(saveFile, eRESOURCE_CODE::kMaterial, 0);
+
+      Map<uint32, WPtr<Texture>> texsMap = mat->getTexturesMap();
+      SIZE_T texCount = texsMap.size();
+      saveFile.writeBytes(reinterpret_cast<Byte*>(&texCount), sizeof(SIZE_T));
+
+      for (auto& tex : texsMap) {
+        uint32 texIndex = tex.first;
+        saveFile.writeBytes(reinterpret_cast<Byte*>(&texIndex), sizeof(uint32));
+        String texName = tex.second.lock()->getResourceName();
+        serializeStringHelper(saveFile, texName);
+      }
+    }
+
+    return true;
+  }
+  
+  return false;
+}
+void
+serializeMesh(File& saveFile, const Mesh& meshToSerialize)
+{
+  uint8 vertexType = meshToSerialize.getVertexType();
+  saveFile.writeBytes(reinterpret_cast<Byte*>(&vertexType), sizeof(uint8));
+  if (vertexType == eVertexType::kComplex) {
+    Vector<Triangle> trianglesArr = meshToSerialize.getTrianglesArray();
+
+    SIZE_T trianglesCount = trianglesArr.size();
+    saveFile.writeBytes(reinterpret_cast<Byte*>(&trianglesCount), sizeof(SIZE_T));
+    saveFile.writeBytes(reinterpret_cast<Byte*>(trianglesArr.data()), trianglesCount * sizeof(Triangle));
+
+    Vector<uint32> indicesArr = meshToSerialize.getIndicesArray();
+
+    SIZE_T indicesCount = indicesArr.size();
+    saveFile.writeBytes(reinterpret_cast<Byte*>(&indicesCount), sizeof(SIZE_T));
+    saveFile.writeBytes(reinterpret_cast<Byte*>(indicesArr.data()), indicesCount * sizeof(uint32));
+  }
+  else if (vertexType == eVertexType::kControlPoints) {
+    Vector<ComplexVertex> pointsArr = meshToSerialize.getControlPointsArray();
+
+    SIZE_T pointsCount = pointsArr.size();
+    saveFile.writeBytes(reinterpret_cast<Byte*>(&pointsCount), sizeof(SIZE_T));
+    saveFile.writeBytes(reinterpret_cast<Byte*>(pointsArr.data()), pointsCount * sizeof(ComplexVertex));
+  }
+}
+bool
+ResourceManager::serializeStaticMesh(const String& resourceName,
+                                     const WString& fileToSave)
+{
+  if (m_staticMeshes.find(resourceName) != m_staticMeshes.end()) {
+    File saveFile;
+    saveFile.openFile(fileToSave, OPEN_TYPE::kWriteOnly | OPEN_TYPE::kBinary);
+    if (saveFile.isOpen()) {
+      auto sMesh = m_staticMeshes[resourceName];
+      serializeFileStartData(saveFile, eRESOURCE_CODE::kStaticMesh, 0);
+
+      Vector<Pair<Mesh, WPtr<Material>>> meshes = sMesh->getMeshes();
+      SIZE_T meshesCount = meshes.size();
+      saveFile.writeBytes(reinterpret_cast<Byte*>(&meshesCount), sizeof(SIZE_T));
+
+      for (SIZE_T i = 0; i < meshesCount; ++i) {
+        serializeMesh(saveFile, meshes[i].first);
+        if (!meshes[i].second.expired()) {
+          serializeStringHelper(saveFile, meshes[i].second.lock()->getResourceName());
+        }
+        else {
+          SIZE_T stringLength = 0;
+          saveFile.writeBytes(reinterpret_cast<Byte*>(&stringLength), sizeof(SIZE_T));
+        }
+      }
+
+      Sphere boundSphere = sMesh->getBoundingSphere();
+      float sphereRadius = boundSphere.getRadious();
+      saveFile.writeBytes(reinterpret_cast<Byte*>(&sphereRadius), sizeof(float));
+
+      BoxAAB boundBox = sMesh->getBoundingBox();
+      Vector3f boxMinVertex = boundBox.getA();
+      saveFile.writeBytes(reinterpret_cast<Byte*>(&boxMinVertex), sizeof(Vector3f));
+      Vector3f boxMaxVertex = boundBox.getB();
+      saveFile.writeBytes(reinterpret_cast<Byte*>(&boxMaxVertex), sizeof(Vector3f));
+    }
+
+    return true;
+  }
+
+  return false;
+}
+bool
+ResourceManager::serializeSkeleton(const String& resourceName,
+                                   const WString& fileToSave)
+{
+  if (m_skeletals.find(resourceName) != m_skeletals.end()) {
+    File saveFile;
+    saveFile.openFile(fileToSave, OPEN_TYPE::kWriteOnly | OPEN_TYPE::kBinary);
+    if (saveFile.isOpen()) {
+      auto sSkeleton = m_skeletals[resourceName];
+      serializeFileStartData(saveFile, eRESOURCE_CODE::kSkeletal, 0);
+
+      Vector<Vector<Bone>>& bonesPerMesh = sSkeleton->getBonesData();
+      Vector<Matrix4f>& globalInverseTransforms = sSkeleton->getGlobalInverseTransforms();
+      Vector<Map<String, uint32>>& boneMaping = sSkeleton->getBoneMapping();
+      Vector<uint32> numsBones = sSkeleton->getNumBones();
+
+      SIZE_T meshesCount = bonesPerMesh.size();
+      saveFile.writeBytes(reinterpret_cast<Byte*>(&meshesCount), sizeof(SIZE_T));
+
+      for (SIZE_T i = 0; i < meshesCount; ++i) {
+        SIZE_T bonesCount = bonesPerMesh[i].size();
+        saveFile.writeBytes(reinterpret_cast<Byte*>(&bonesCount), sizeof(SIZE_T));
+        for (SIZE_T j = 0; j < bonesCount; ++j) {
+          bonesPerMesh[i][j];
+          serializeStringHelper(saveFile, bonesPerMesh[i][j].m_name);
+
+          SIZE_T vertexWeightsCount = bonesPerMesh[i][j].m_vertexWeights.size();
+          saveFile.writeBytes(reinterpret_cast<Byte*>(&vertexWeightsCount),
+                              sizeof(SIZE_T));
+          saveFile.writeBytes(
+            reinterpret_cast<Byte*>(bonesPerMesh[i][j].m_vertexWeights.data()),
+            vertexWeightsCount * sizeof(VertexWeight));
+            
+          saveFile.writeBytes(
+            reinterpret_cast<Byte*>(&bonesPerMesh[i][j].m_offsetMatrix),
+            sizeof(Matrix4f));
+          saveFile.writeBytes(
+            reinterpret_cast<Byte*>(&bonesPerMesh[i][j].m_finalTransformation),
+            sizeof(Matrix4f));
+
+        }
+
+        saveFile.writeBytes(reinterpret_cast<Byte*>(&globalInverseTransforms[i]),
+                            sizeof(Matrix4f));
+
+        SIZE_T bonesMapsCount = boneMaping[i].size();
+        saveFile.writeBytes(reinterpret_cast<Byte*>(&bonesMapsCount),
+                            sizeof(SIZE_T));
+        for (auto& bm : boneMaping[i]) {
+          serializeStringHelper(saveFile, bm.first);
+          saveFile.writeBytes(reinterpret_cast<Byte*>(&bm.second),
+                              sizeof(uint32));
+        }
+
+        saveFile.writeBytes(reinterpret_cast<Byte*>(&numsBones[i]),
+                            sizeof(uint32));
+      }
+    }
+
+    return true;
+  }
+
+  return false;
+}
+void
+serializeBoneMesh(File& saveFile, const BoneMesh& meshToSerialize)
+{
+  Vector<ComplexBigAnimVertex<4>> verticesArr = meshToSerialize.getVertexArray();
+
+  SIZE_T verticesCount = verticesArr.size();
+  saveFile.writeBytes(reinterpret_cast<Byte*>(&verticesCount), sizeof(SIZE_T));
+  saveFile.writeBytes(reinterpret_cast<Byte*>(verticesArr.data()),
+                      verticesCount * sizeof(ComplexBigAnimVertex<4>));
+
+  Vector<uint32> indicesArr = meshToSerialize.getIndexArray();
+
+  SIZE_T indicesCount = indicesArr.size();
+  saveFile.writeBytes(reinterpret_cast<Byte*>(&indicesCount), sizeof(SIZE_T));
+  saveFile.writeBytes(reinterpret_cast<Byte*>(indicesArr.data()),
+                      indicesCount * sizeof(uint32));
+}
+bool
+ResourceManager::serializeSkeletalMesh(const String& resourceName,
+                                       const WString& fileToSave)
+{
+  if (m_skeletalMeshes.find(resourceName) != m_skeletalMeshes.end()) {
+    File saveFile;
+    saveFile.openFile(fileToSave, OPEN_TYPE::kWriteOnly | OPEN_TYPE::kBinary);
+    if (saveFile.isOpen()) {
+      auto sSkMesh = m_skeletalMeshes[resourceName];
+      serializeFileStartData(saveFile, eRESOURCE_CODE::kSkeletalMesh, 0);
+
+      auto skeleton = sSkMesh->getSkeletal();
+      if (!skeleton.expired()) {
+        serializeStringHelper(saveFile, skeleton.lock()->getResourceName());
+      }
+      else {
+        SIZE_T stringLength = 0;
+        saveFile.writeBytes(reinterpret_cast<Byte*>(&stringLength), sizeof(SIZE_T));
+      }
+
+      Vector<Pair<BoneMesh, WPtr<Material>>> meshes = sSkMesh->getMeshes();
+      SIZE_T meshesCount = meshes.size();
+      saveFile.writeBytes(reinterpret_cast<Byte*>(&meshesCount), sizeof(SIZE_T));
+  
+      for (SIZE_T i = 0; i < meshesCount; ++i) {
+        serializeBoneMesh(saveFile, meshes[i].first);
+        if (!meshes[i].second.expired()) {
+          serializeStringHelper(saveFile, meshes[i].second.lock()->getResourceName());
+        }
+        else {
+          SIZE_T stringLength = 0;
+          saveFile.writeBytes(reinterpret_cast<Byte*>(&stringLength), sizeof(SIZE_T));
+        }
+      }
+  
+      Sphere boundSphere = sSkMesh->getBoundingSphere();
+      float sphereRadius = boundSphere.getRadious();
+      saveFile.writeBytes(reinterpret_cast<Byte*>(&sphereRadius), sizeof(float));
+  
+      BoxAAB boundBox = sSkMesh->getBoundingBox();
+      Vector3f boxMinVertex = boundBox.getA();
+      saveFile.writeBytes(reinterpret_cast<Byte*>(&boxMinVertex), sizeof(Vector3f));
+      Vector3f boxMaxVertex = boundBox.getB();
+      saveFile.writeBytes(reinterpret_cast<Byte*>(&boxMaxVertex), sizeof(Vector3f));
+    }
+  
+    return true;
+  }
+  
+  return false;
+}
+void
+serializeAnimationNode(File& saveFile, SPtr<Node> node)
+{
+  serializeStringHelper(saveFile, node->m_name);
+
+  saveFile.writeBytes(reinterpret_cast<Byte*>(&node->m_transformation),
+                      sizeof(Matrix4f));
+
+  saveFile.writeBytes(reinterpret_cast<Byte*>(&node->m_childrenCount),
+                      sizeof(uint32));
+
+  for (uint32 i = 0; i < node->m_childrenCount; ++i) {
+    serializeAnimationNode(saveFile, node->m_pChildren[i]);
+  }
+}
+bool
+ResourceManager::serializeAnimation(const String& resourceName,
+                                    const WString& fileToSave)
+{
+  if (m_animations.find(resourceName) != m_animations.end()) {
+    File saveFile;
+    saveFile.openFile(fileToSave, OPEN_TYPE::kWriteOnly | OPEN_TYPE::kBinary);
+    if (saveFile.isOpen()) {
+      auto sAnim = m_animations[resourceName];
+      serializeFileStartData(saveFile, eRESOURCE_CODE::kAnimation, 0);
+
+      float ticksPerSec = sAnim->getTicksPerSecond();
+      saveFile.writeBytes(reinterpret_cast<Byte*>(&ticksPerSec), sizeof(float));
+      float duration = sAnim->getDuration();
+      saveFile.writeBytes(reinterpret_cast<Byte*>(&duration), sizeof(float));
+
+      Vector<AnimNode> channels = sAnim->getChannels();
+      SIZE_T channelsCount = channels.size();
+      saveFile.writeBytes(reinterpret_cast<Byte*>(&channelsCount),
+                          sizeof(SIZE_T));
+      for (SIZE_T i = 0; i < channelsCount; ++i) {
+        serializeStringHelper(saveFile, channels[i].m_name);
+
+        saveFile.writeBytes(reinterpret_cast<Byte*>(&channels[i].m_positionKeysCount),
+                            sizeof(uint32));
+        saveFile.writeBytes(reinterpret_cast<Byte*>(&channels[i].m_rotationKeysCount),
+                            sizeof(uint32));
+        saveFile.writeBytes(reinterpret_cast<Byte*>(&channels[i].m_scalingKeysCount),
+                            sizeof(uint32));
+
+        saveFile.writeBytes(reinterpret_cast<Byte*>(channels[i].m_positionKeys.data()),
+                            channels[i].m_positionKeysCount * sizeof(VectorKeyFrame));
+        saveFile.writeBytes(reinterpret_cast<Byte*>(channels[i].m_rotationKeys.data()),
+                            channels[i].m_rotationKeysCount * sizeof(QuatKeyFrame));
+        saveFile.writeBytes(reinterpret_cast<Byte*>(channels[i].m_scalingKeys.data()),
+                            channels[i].m_scalingKeysCount * sizeof(VectorKeyFrame));
+      }
+
+      serializeAnimationNode(saveFile, sAnim->getRootNode());
+    }
+  
+    return true;
+  }
+  
+  return false;
+}
+
+bool
+ResourceManager::loadSerializedTexture(File& fileToLoad,
+                                       const String& resourceName,
+                                       uint8 versionNum,
+                                       uint8 sizeTSize)
 {
   if (m_textures.find(resourceName) != m_textures.end()) {
     Logger::instance().consoleLog("Resource already with this name");
@@ -1270,19 +1776,9 @@ ResourceManager::deserializeTexture(File& fileToLoad, const String& resourceName
   }
 
   if (fileToLoad.isOpen()) {
-    uint8 readSizeTSize = 0;
-    fileToLoad.readBytes(reinterpret_cast<Byte*>(&readSizeTSize), sizeof(uint8));
     SIZE_T readImagesCount = 0;
-    if (readSizeTSize == 4) {
-      uint32 byte4ImagesCount = 0;
-      fileToLoad.readBytes(reinterpret_cast<Byte*>(&byte4ImagesCount), sizeof(uint32));
-      readImagesCount = static_cast<SIZE_T>(byte4ImagesCount);
-    }
-    else if (readSizeTSize == 8) {
-      uint64 byte8ImagesCount = 0;
-      fileToLoad.readBytes(reinterpret_cast<Byte*>(&byte8ImagesCount), sizeof(uint64));
-      readImagesCount = static_cast<SIZE_T>(byte8ImagesCount);
-    }
+    loadSerializedSize(fileToLoad, readImagesCount, sizeTSize);
+
     Vector<SPtr<Image>> readImages;
     for (SIZE_T i = 0; i < readImagesCount; ++i) {
       readImages.push_back(MemoryManager::instance().newPtr<Image>());
@@ -1304,7 +1800,384 @@ ResourceManager::deserializeTexture(File& fileToLoad, const String& resourceName
 
     tex->loadImages(readImages);
 
+    tex->setResourceName(resourceName);
     m_textures.insert(Pair<String, SPtr<Texture>>(resourceName, tex));
+
+    return true;
+  }
+  return false;
+}
+bool
+ResourceManager::loadSerializedMaterial(File& fileToLoad,
+                                        const String& resourceName,
+                                        uint8 versionNum,
+                                        uint8 sizeTSize)
+{  
+  if (m_materials.find(resourceName) != m_materials.end()) {
+    Logger::instance().consoleLog("Resource already with this name");
+    return false;
+  }
+
+  if (fileToLoad.isOpen()) {
+    SIZE_T readTexCount = 0;
+    loadSerializedSize(fileToLoad, readTexCount, sizeTSize);
+
+    Map<uint32, WPtr<Texture>> readTexsMap;
+    for (SIZE_T i = 0; i < readTexCount; ++i) {
+      uint32 texIndex = 0;
+      fileToLoad.readBytes(reinterpret_cast<Byte*>(&texIndex), sizeof(uint32));
+      String texName;
+      loadSerializedStringHelper(fileToLoad, texName, sizeTSize);
+
+      if (m_textures.find(texName) != m_textures.end()) {
+        readTexsMap.insert(Pair<uint32, WPtr<Texture>>(texIndex,
+                                                       m_textures[texName]));
+      }
+      else {
+        readTexsMap.insert(Pair<uint32, WPtr<Texture>>(texIndex,
+                                                       {}));
+      }
+    }
+    SPtr<Material> mat = MemoryManager::instance().newPtr<Material>();
+    mat->createMaterial(readTexsMap);
+
+    mat->setResourceName(resourceName);
+    m_materials.insert(Pair<String, SPtr<Material>>(resourceName, mat));
+
+    return true;
+  }
+  return false;
+}
+void
+loadSerializedMesh(File& fileToLoad, Mesh& meshToLoad, uint8 sizeTSize)
+{
+  uint8 vertexType = 0;
+  fileToLoad.readBytes(reinterpret_cast<Byte*>(&vertexType),
+                       sizeof(uint8));
+                       
+  if (vertexType == eVertexType::kComplex) {
+    Vector<Triangle> trianglesArr;
+
+    SIZE_T trianglesCount;
+    loadSerializedSize(fileToLoad, trianglesCount, sizeTSize);
+    trianglesArr.resize(trianglesCount);
+    fileToLoad.readBytes(reinterpret_cast<Byte*>(trianglesArr.data()),
+                         trianglesCount * sizeof(Triangle));
+
+    Vector<uint32> indicesArr;
+
+    SIZE_T indicesCount;
+    loadSerializedSize(fileToLoad, indicesCount, sizeTSize);
+    indicesArr.resize(indicesCount);
+    fileToLoad.readBytes(reinterpret_cast<Byte*>(indicesArr.data()),
+                         indicesCount * sizeof(uint32));
+
+    meshToLoad.loadFromTrianglesArray(trianglesArr, indicesArr);
+  }
+  else if (vertexType == eVertexType::kControlPoints) {
+    Vector<ComplexVertex> pointsArr;
+
+    SIZE_T pointsCount;
+    loadSerializedSize(fileToLoad, pointsCount, sizeTSize);
+    pointsArr.resize(pointsCount);
+    fileToLoad.readBytes(reinterpret_cast<Byte*>(pointsArr.data()),
+                         pointsCount * sizeof(ComplexVertex));
+
+    meshToLoad.loadFromControlPoints(pointsArr);
+  }
+}
+bool
+ResourceManager::loadSerializedStaticMesh(File& fileToLoad,
+                                          const String& resourceName,
+                                          uint8 versionNum,
+                                          uint8 sizeTSize)
+{
+  if (m_staticMeshes.find(resourceName) != m_staticMeshes.end()) {
+    Logger::instance().consoleLog("Resource already with this name");
+    return false;
+  }
+
+  if (fileToLoad.isOpen()) {
+    SIZE_T meshesCount = 0;
+    loadSerializedSize(fileToLoad, meshesCount, sizeTSize);
+
+    Vector<Pair<Mesh, WPtr<Material>>> meshes;
+    for (SIZE_T i = 0; i < meshesCount; ++i) {
+      Mesh readMesh;
+      loadSerializedMesh(fileToLoad, readMesh, sizeTSize);
+      String matName;
+      loadSerializedStringHelper(fileToLoad, matName, sizeTSize);
+      if (m_materials.find(matName) != m_materials.end()) {
+        meshes.emplace_back(Pair<Mesh, WPtr<Material>>(readMesh,
+                                                       m_materials[matName]));
+      }
+      else {
+        meshes.emplace_back(Pair<Mesh, WPtr<Material>>(readMesh,
+                                                       {}));
+      }
+    }
+    
+    float sphereRadius = 0;
+    fileToLoad.readBytes(reinterpret_cast<Byte*>(&sphereRadius),
+                         sizeof(float));
+
+    Vector3f boxMinVertex;
+    fileToLoad.readBytes(reinterpret_cast<Byte*>(&boxMinVertex),
+                         sizeof(Vector3f));
+    Vector3f boxMaxVertex;
+    fileToLoad.readBytes(reinterpret_cast<Byte*>(&boxMaxVertex),
+                         sizeof(Vector3f));
+
+    SPtr<StaticMesh> stMesh = MemoryManager::instance().newPtr<StaticMesh>();
+    stMesh->loadFromMeshes(meshes, sphereRadius, boxMaxVertex, boxMinVertex);
+
+    stMesh->setResourceName(resourceName);
+    m_staticMeshes.insert(Pair<String, SPtr<StaticMesh>>(resourceName, stMesh));
+
+    return true;
+  }
+  return false;
+}
+bool
+ResourceManager::loadSerializedSkeleton(File& fileToLoad,
+                                        const String& resourceName,
+                                        uint8 versionNum,
+                                        uint8 sizeTSize)
+{
+  if (m_skeletals.find(resourceName) != m_skeletals.end()) {
+    Logger::instance().consoleLog("Resource already with this name");
+    return false;
+  }
+
+  if (fileToLoad.isOpen()) {
+    SIZE_T meshesCount = 0;
+    loadSerializedSize(fileToLoad, meshesCount, sizeTSize);
+
+    Vector<Vector<Bone>> bonesPerMesh;
+    bonesPerMesh.resize(meshesCount);
+    Vector<Matrix4f> globalInverseTransforms;
+    globalInverseTransforms.resize(meshesCount);
+    Vector<Map<String, uint32>> boneMaping;
+    boneMaping.resize(meshesCount);
+    Vector<uint32> numsBones;
+    numsBones.resize(meshesCount);
+
+    for (SIZE_T i = 0; i < meshesCount; ++i) {
+      SIZE_T bonesCount;
+      loadSerializedSize(fileToLoad, bonesCount, sizeTSize);
+      bonesPerMesh[i].resize(bonesCount);
+      for (SIZE_T j = 0; j < bonesCount; ++j) {
+        loadSerializedStringHelper(fileToLoad,
+                                   bonesPerMesh[i][j].m_name,
+                                   sizeTSize);
+
+        SIZE_T vertexWeightsCount;
+        loadSerializedSize(fileToLoad, vertexWeightsCount, sizeTSize);
+        bonesPerMesh[i][j].m_vertexWeights.resize(vertexWeightsCount);
+        fileToLoad.readBytes(
+          reinterpret_cast<Byte*>(bonesPerMesh[i][j].m_vertexWeights.data()),
+          vertexWeightsCount * sizeof(VertexWeight));
+        
+        fileToLoad.readBytes(
+          reinterpret_cast<Byte*>(&bonesPerMesh[i][j].m_offsetMatrix),
+          sizeof(Matrix4f));
+        fileToLoad.readBytes(
+          reinterpret_cast<Byte*>(&bonesPerMesh[i][j].m_finalTransformation),
+          sizeof(Matrix4f));
+      }
+
+      fileToLoad.readBytes(reinterpret_cast<Byte*>(&globalInverseTransforms[i]),
+                           sizeof(Matrix4f));
+
+      SIZE_T bonesMapsCount;
+      loadSerializedSize(fileToLoad, bonesMapsCount, sizeTSize);
+      for (SIZE_T j = 0; j < bonesMapsCount; ++j) {
+        String boneString;
+        loadSerializedStringHelper(fileToLoad, boneString, sizeTSize);
+        uint32 boneID;
+        fileToLoad.readBytes(reinterpret_cast<Byte*>(&boneID),
+                             sizeof(uint32));
+
+        boneMaping[i].insert(Pair<String, uint32>(boneString, boneID));
+      }
+
+      fileToLoad.readBytes(reinterpret_cast<Byte*>(&numsBones[i]),
+                           sizeof(uint32));
+    }
+
+    SPtr<Skeletal> skele = MemoryManager::instance().newPtr<Skeletal>();
+    skele->loadFromData(bonesPerMesh,
+                        globalInverseTransforms,
+                        boneMaping,
+                        numsBones);
+
+    skele->setResourceName(resourceName);
+    m_skeletals.insert(Pair<String, SPtr<Skeletal>>(resourceName, skele));
+
+    return true;
+  }
+  return false;
+}
+void
+loadSerializedBoneMesh(File& fileToLoad, BoneMesh& meshToLoad, uint8 sizeTSize)
+{
+  Vector<ComplexBigAnimVertex<4>> vertexArr;
+
+  SIZE_T verticesCount;
+  loadSerializedSize(fileToLoad, verticesCount, sizeTSize);
+  vertexArr.resize(verticesCount);
+  fileToLoad.readBytes(reinterpret_cast<Byte*>(vertexArr.data()),
+                       verticesCount * sizeof(ComplexBigAnimVertex<4>));
+
+  Vector<uint32> indicesArr;
+
+  SIZE_T indicesCount;
+  loadSerializedSize(fileToLoad, indicesCount, sizeTSize);
+  indicesArr.resize(indicesCount);
+  fileToLoad.readBytes(reinterpret_cast<Byte*>(indicesArr.data()),
+                       indicesCount * sizeof(uint32));
+
+  meshToLoad.loadFromArray(vertexArr, indicesArr);
+}
+bool
+ResourceManager::loadSerializedSkeletalMesh(File& fileToLoad,
+                                            const String& resourceName,
+                                            uint8 versionNum,
+                                            uint8 sizeTSize)
+{
+  if (m_skeletalMeshes.find(resourceName) != m_skeletalMeshes.end()) {
+    Logger::instance().consoleLog("Resource already with this name");
+    return false;
+  }
+
+  if (fileToLoad.isOpen()) {
+    String skeletonName;
+    SPtr<Skeletal> skeleton = nullptr;
+    loadSerializedStringHelper(fileToLoad, skeletonName, sizeTSize);
+    if (m_skeletals.find(skeletonName) != m_skeletals.end()) {
+      skeleton = m_skeletals[skeletonName];
+    }
+
+    SIZE_T meshesCount = 0;
+    loadSerializedSize(fileToLoad, meshesCount, sizeTSize);
+
+    Vector<Pair<BoneMesh, WPtr<Material>>> meshes;
+    for (SIZE_T i = 0; i < meshesCount; ++i) {
+      BoneMesh readMesh;
+      loadSerializedBoneMesh(fileToLoad, readMesh, sizeTSize);
+      String matName;
+      loadSerializedStringHelper(fileToLoad, matName, sizeTSize);
+      if (m_materials.find(matName) != m_materials.end()) {
+        meshes.emplace_back(Pair<BoneMesh, WPtr<Material>>(readMesh,
+                                                         m_materials[matName]));
+      }
+      else {
+        meshes.emplace_back(Pair<BoneMesh, WPtr<Material>>(readMesh,
+                                                           {}));
+      }
+    }
+    
+    float sphereRadius = 0;
+    fileToLoad.readBytes(reinterpret_cast<Byte*>(&sphereRadius),
+                         sizeof(float));
+
+    Vector3f boxMinVertex;
+    fileToLoad.readBytes(reinterpret_cast<Byte*>(&boxMinVertex),
+                         sizeof(Vector3f));
+    Vector3f boxMaxVertex;
+    fileToLoad.readBytes(reinterpret_cast<Byte*>(&boxMaxVertex),
+                         sizeof(Vector3f));
+
+    SPtr<SkeletalMesh> skMesh = MemoryManager::instance().newPtr<SkeletalMesh>();
+    skMesh->loadFromMeshes(meshes,
+                           skeleton,
+                           sphereRadius,
+                           boxMaxVertex,
+                           boxMinVertex);
+
+    skMesh->setResourceName(resourceName);
+    m_skeletalMeshes.insert(Pair<String, SPtr<SkeletalMesh>>(resourceName, skMesh));
+
+    return true;
+  }
+  return false;
+}
+void
+loadSerializedAnimationNode(File& fileToLoad, SPtr<Node>* node, uint8 sizeTSize)
+{
+  *node = MemoryManager::instance().newPtr<Node>();
+
+  loadSerializedStringHelper(fileToLoad, (*node)->m_name, sizeTSize);
+
+  fileToLoad.readBytes(reinterpret_cast<Byte*>(&(*node)->m_transformation),
+                       sizeof(Matrix4f));
+
+  fileToLoad.readBytes(reinterpret_cast<Byte*>(&(*node)->m_childrenCount),
+                       sizeof(uint32));
+
+  for (uint32 i = 0; i < (*node)->m_childrenCount; ++i) {
+    SPtr<Node> childNode = nullptr;
+    loadSerializedAnimationNode(fileToLoad, &childNode, sizeTSize);
+
+    childNode->m_pParent = *node;
+    (*node)->m_pChildren.push_back(childNode);
+  }
+}
+bool
+ResourceManager::loadSerializedAnimation(File& fileToLoad,
+                                         const String& resourceName,
+                                         uint8 versionNum,
+                                         uint8 sizeTSize)
+{
+  if (m_animations.find(resourceName) != m_animations.end()) {
+    Logger::instance().consoleLog("Resource already with this name");
+    return false;
+  }
+
+  if (fileToLoad.isOpen()) {
+    float ticksPerSec;
+    fileToLoad.readBytes(reinterpret_cast<Byte*>(&ticksPerSec),
+                         sizeof(float));
+    float duration;
+    fileToLoad.readBytes(reinterpret_cast<Byte*>(&duration),
+                         sizeof(float));
+
+    Vector<AnimNode> channels;
+    SIZE_T channelsCount;
+    loadSerializedSize(fileToLoad, channelsCount, sizeTSize);
+    channels.resize(channelsCount);
+    for (SIZE_T i = 0; i < channelsCount; ++i) {
+      loadSerializedStringHelper(fileToLoad, channels[i].m_name, sizeTSize);
+      
+      fileToLoad.readBytes(reinterpret_cast<Byte*>(&channels[i].m_positionKeysCount),
+                           sizeof(uint32));
+      fileToLoad.readBytes(reinterpret_cast<Byte*>(&channels[i].m_rotationKeysCount),
+                           sizeof(uint32));
+      fileToLoad.readBytes(reinterpret_cast<Byte*>(&channels[i].m_scalingKeysCount),
+                           sizeof(uint32));
+
+      channels[i].m_positionKeys.resize(channels[i].m_positionKeysCount);
+      fileToLoad.readBytes(reinterpret_cast<Byte*>(channels[i].m_positionKeys.data()),
+                           channels[i].m_positionKeysCount * sizeof(VectorKeyFrame));
+      channels[i].m_rotationKeys.resize(channels[i].m_rotationKeysCount);
+      fileToLoad.readBytes(reinterpret_cast<Byte*>(channels[i].m_rotationKeys.data()),
+                           channels[i].m_rotationKeysCount * sizeof(QuatKeyFrame));
+      channels[i].m_scalingKeys.resize(channels[i].m_scalingKeysCount);
+      fileToLoad.readBytes(reinterpret_cast<Byte*>(channels[i].m_scalingKeys.data()),
+                           channels[i].m_scalingKeysCount * sizeof(VectorKeyFrame));
+    }
+
+    SPtr<Node> rootNode = nullptr;
+    loadSerializedAnimationNode(fileToLoad, &rootNode, sizeTSize);
+
+    SPtr<Animation> sAnim = MemoryManager::instance().newPtr<Animation>();
+    sAnim->loadFromData(ticksPerSec,
+                        duration,
+                        channels,
+                        rootNode);
+
+    sAnim->setResourceName(resourceName);
+    m_animations.insert(Pair<String, SPtr<Animation>>(resourceName, sAnim));
 
     return true;
   }

@@ -21,33 +21,28 @@
 
 namespace eeEngineSDK {
 StaticMesh::StaticMesh(const Vector<Mesh>&meshes,
-                       const String& name,
-                       const Vector3f& furtherVertexPosition,
+                       float furtherDist,
                        const Vector3f& maxCoordinate,
                        const Vector3f& minCoordinate)
 {
   loadFromMeshes(meshes,
-                 name,
-                 furtherVertexPosition,
+                 furtherDist,
                  maxCoordinate,
                  minCoordinate);
 }
 StaticMesh::StaticMesh(const Vector<Pair<Mesh, WPtr<Material>>>& meshes,
-                       const String& name,
-                       const Vector3f& furtherVertexPosition,
+                       float furtherDist,
                        const Vector3f& maxCoordinate,
                        const Vector3f& minCoordinate)
 {
   loadFromMeshes(meshes,
-                 name,
-                 furtherVertexPosition,
+                 furtherDist,
                  maxCoordinate,
                  minCoordinate);
 }
 bool
 StaticMesh::loadFromMeshes(const Vector<Mesh>& meshes,
-                           const String& name,
-                           const Vector3f& furtherVertexPosition,
+                           float furtherDist,
                            const Vector3f& maxCoordinate,
                            const Vector3f& minCoordinate)
 {
@@ -55,8 +50,6 @@ StaticMesh::loadFromMeshes(const Vector<Mesh>& meshes,
     Logger::instance().consoleLog("Empty info loading model");
     return false;
   }
-
-  m_name = name;
 
   auto& resourseManager = ResourceManager::instance();
 
@@ -72,7 +65,7 @@ StaticMesh::loadFromMeshes(const Vector<Mesh>& meshes,
   }
 
   m_boundSphere.setCenter(Vector3f(0.0f, 0.0f, 0.0f));
-  m_boundSphere.setRadious(furtherVertexPosition.getMagnitud());
+  m_boundSphere.setRadious(furtherDist);
 
   m_boundCube.setA(minCoordinate);
   m_boundCube.setSize(maxCoordinate - minCoordinate);
@@ -80,8 +73,7 @@ StaticMesh::loadFromMeshes(const Vector<Mesh>& meshes,
 }
 bool
 StaticMesh::loadFromMeshes(const Vector<Pair<Mesh, WPtr<Material>>>& meshes,
-                           const String& name,
-                           const Vector3f& furtherVertexPosition,
+                           float furtherDist,
                            const Vector3f& maxCoordinate,
                            const Vector3f& minCoordinate)
 {
@@ -89,8 +81,6 @@ StaticMesh::loadFromMeshes(const Vector<Pair<Mesh, WPtr<Material>>>& meshes,
     Logger::instance().consoleLog("Empty info loading model");
     return false;
   }
-
-  m_name = name;
 
   int32 i = 0;
   m_meshes.resize(meshes.size());
@@ -101,7 +91,7 @@ StaticMesh::loadFromMeshes(const Vector<Pair<Mesh, WPtr<Material>>>& meshes,
   }
 
   m_boundSphere.setCenter(Vector3f(0.0f, 0.0f, 0.0f));
-  m_boundSphere.setRadious(furtherVertexPosition.getMagnitud());
+  m_boundSphere.setRadious(furtherDist);
 
   m_boundCube.setA(minCoordinate);
   m_boundCube.setSize(maxCoordinate - minCoordinate);
@@ -140,22 +130,10 @@ StaticMesh::setTexture(WPtr<Material> texture, SIZE_T index)
   }
 }
 
-String
-StaticMesh::getName()
-{
-  return m_name;
-}
-
 const Sphere&
 StaticMesh::getBoundingSphere()
 {
   return m_boundSphere;
-}
-
-const Vector3f&
-StaticMesh::getFurtherPosition()
-{
-  return m_furtherPosition;
 }
 
 const BoxAAB&

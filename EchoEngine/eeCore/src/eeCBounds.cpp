@@ -13,8 +13,6 @@ namespace eeEngineSDK {
 void
 CBounds::update()
 {
-  Vector3f furtherPosition = Vector3f(0.0f, 0.0f, 0.0f);
-
   if (m_actor.expired()) return;
 
   auto sActor = m_actor.lock();
@@ -23,7 +21,6 @@ CBounds::update()
     auto cmpModel = actorModel->getStaticMesh().lock();
     if (cmpModel) {
       m_sphereBound = cmpModel->getBoundingSphere();
-      furtherPosition = cmpModel->getFurtherPosition();
       m_boxBound = cmpModel->getBoundingBox();
     }
     else {
@@ -36,7 +33,6 @@ CBounds::update()
       auto cmpSkeletalMesh = actorSkeletalMesh->getModel().lock();
       if (cmpSkeletalMesh) {
         m_sphereBound = cmpSkeletalMesh->getBoundingSphere();
-        furtherPosition = cmpSkeletalMesh->getFurtherPosition();
         m_boxBound = cmpSkeletalMesh->getBoundingBox();
       }
       else {

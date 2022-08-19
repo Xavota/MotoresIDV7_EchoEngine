@@ -54,9 +54,8 @@ class EE_CORE_EXPORT BoneMesh
    * @param indices
    * The index data.
    */
-  template<typename V, typename I>
-  BoneMesh(const Vector<V>& vertices,
-           const Vector<I>& indices);
+  BoneMesh(const Vector<ComplexBigAnimVertex<4>>& vertices,
+           const Vector<uint32>& indices);
   /**
    * @brief
    * Default destructor
@@ -79,10 +78,9 @@ class EE_CORE_EXPORT BoneMesh
    * @return
    * Weather it succeed or failed to initialize.
    */
-  template<typename V, typename I>
   bool
-  loadFromArray(const Vector<V>& vertices,
-                const Vector<I>& indices);
+  loadFromArray(const Vector<ComplexBigAnimVertex<4>>& vertices,
+                const Vector<uint32>& indices);
 
   /**
    * @brief
@@ -92,7 +90,7 @@ class EE_CORE_EXPORT BoneMesh
    * Sets the mesh for the graphic memory to use, only for override in graphics
    * api specializations.
    */
-  virtual void
+  void
   set() const;
 
   /**
@@ -105,8 +103,11 @@ class EE_CORE_EXPORT BoneMesh
    * @return
    * Pointer to the vertex buffer.
    */
-  virtual const WPtr<VertexBuffer>
-  getVertexData() const;
+  FORCEINLINE const WPtr<VertexBuffer>&
+  getVertexData() const
+  {
+    return m_vertexData;
+  }
   /**
    * @brief
    * Getter for the index data.
@@ -117,8 +118,42 @@ class EE_CORE_EXPORT BoneMesh
    * @return
    * Pointer to the index buffer.
    */
-  virtual const WPtr<IndexBuffer>
-  getIndexData() const;
+  FORCEINLINE const WPtr<IndexBuffer>&
+  getIndexData() const
+  {
+    return m_indexData;
+  }
+
+  /**
+   * @brief
+   * Getter for the vertex data.
+   *
+   * @description
+   * Returns the pointer to the vertex buffer.
+   *
+   * @return
+   * Pointer to the vertex buffer.
+   */
+  FORCEINLINE const Vector<ComplexBigAnimVertex<4>>&
+  getVertexArray() const
+  {
+    return m_vertexArray;
+  }
+  /**
+   * @brief
+   * Getter for the index data.
+   *
+   * @description
+   * Returns the pointer to the index buffer.
+   *
+   * @return
+   * Pointer to the index buffer.
+   */
+  FORCEINLINE const Vector<uint32>&
+  getIndexArray() const
+  {
+    return m_indexArray;
+  }
 
   /**
    * @brief
@@ -149,7 +184,7 @@ class EE_CORE_EXPORT BoneMesh
   /**
    * The vertices stored.
    */
-  Vector<Vector4f> m_vertexArray;
+  Vector<ComplexBigAnimVertex<4>> m_vertexArray;
   /**
    * The indices stored.
    */
@@ -160,44 +195,4 @@ class EE_CORE_EXPORT BoneMesh
    */
   SIZE_T m_indexCount = 0;
 };
-
-template<typename V, typename I>
-inline BoneMesh::BoneMesh(const Vector<V>& vertices, const Vector<I>& indices)
-{
-  loadFromArray(vertices, indices);
-}
-
-template<typename V, typename I>
-bool 
-BoneMesh::loadFromArray(const Vector<V>& vertices,
-                                  const Vector<I>& indices)
-{
-  auto& graphicsApi = GraphicsApi::instance();
-
-  if (vertices.empty() || indices.empty()) {
-    Logger::instance().consoleLog("Empty info loading mesh");
-    return false;
-  }
-
-  if (!m_vertexData) {
-    m_vertexData = graphicsApi.createVertexBufferPtr();
-  }
-  if (!m_indexData) {
-    m_indexData = graphicsApi.createIndexBufferPtr();
-  }
-  m_vertexData->initData(vertices.size() * sizeof(V),
-                         sizeof(V),
-                         reinterpret_cast<const Byte*>(vertices.data()));
-  m_indexData->initData(indices.size() * sizeof(I),
-                        sizeof(I),
-                        reinterpret_cast<const Byte*>(indices.data()));
-
-  for (V ver : vertices) {
-    m_vertexArray.push_back(ver.position);
-  }
-
-  m_indexCount = indices.size();
-
-  return true;
-}
 }

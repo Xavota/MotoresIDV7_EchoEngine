@@ -12,6 +12,8 @@
 #pragma once
 #include "eePrerequisitesCore.h"
 
+#include "eeResource.h"
+
 namespace eeEngineSDK {
 namespace TEXTURE_TYPE_INDEX {
 enum E : uint8 {
@@ -24,7 +26,7 @@ enum E : uint8 {
  * @brief
  * The material class. Holds various textures of different kinds.
  */
-class EE_CORE_EXPORT Material
+class EE_CORE_EXPORT Material : public Resource
 {
  public:
   /**

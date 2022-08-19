@@ -21,13 +21,15 @@
 
 #include "eeColor.h"
 
+#include "eeResource.h"
+
 namespace eeEngineSDK {
 /**
  * @brief
  * The input texture for the models. It's sent to the graphics memory to be
  * used.
  */
-class EE_CORE_EXPORT Texture
+class EE_CORE_EXPORT Texture : public Resource
 {
  public:
   /**
@@ -153,11 +155,6 @@ class EE_CORE_EXPORT Texture
 
 
  protected:
-  /**
-   * The name of the texture.
-   */
-  String name;
-
   /**
    * The images for the shader resources.
    */
