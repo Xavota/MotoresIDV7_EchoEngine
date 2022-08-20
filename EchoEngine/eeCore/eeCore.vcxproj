@@ -180,6 +180,7 @@
     <ClCompile Include="src\eeAnimation.cpp" />
     <ClCompile Include="src\eeActor.cpp" />
     <ClCompile Include="src\eeAudio.cpp" />
+    <ClCompile Include="src\eeAudioChannel.cpp" />
     <ClCompile Include="src\eeAudioManager.cpp" />
     <ClCompile Include="src\eeBaseApp.cpp" />
     <ClCompile Include="src\eeBlendState.cpp" />
@@ -236,6 +237,7 @@
     <ClInclude Include="include\eeAnimation.h" />
     <ClInclude Include="include\eeActor.h" />
     <ClInclude Include="include\eeAudio.h" />
+    <ClInclude Include="include\eeAudioChannel.h" />
     <ClInclude Include="include\eeAudioManager.h" />
     <ClInclude Include="include\eeBaseApp.h" />
     <ClInclude Include="include\eeBlendState.h" />

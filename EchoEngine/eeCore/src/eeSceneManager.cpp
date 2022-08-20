@@ -6,6 +6,8 @@
 
 #include <eeBox.h>
 
+#include <eeFile.h>
+
 namespace eeEngineSDK {
 SceneManager::~SceneManager()
 {
@@ -33,6 +35,12 @@ SceneManager::addScene(const String& name)
 
   m_scenes[name] = MemoryManager::instance().newPtr<Scene>();
   m_scenes[name]->init();
+
+  File sceneSaveFile;
+  sceneSaveFile.openFile(L"Scenes/" + eeStringtoWString(name) + L".echomap",
+                         OPEN_TYPE::kWriteOnly | OPEN_TYPE::kBinary);
+  sceneSaveFile.close();
+
   return m_scenes[name];
 }
 WPtr<Scene>
@@ -44,6 +52,83 @@ SceneManager::getScene(const String& name)
     return {};
   }
   return m_scenes[name];
+}
+void
+SceneManager::saveAllScenes()
+{
+  for (const auto& sc : m_scenes) {
+    saveScene(sc.first);
+  }
+}
+void
+serializeString(File& oFile, const String& stringToSerialize)
+{
+  if (oFile.isOpen()) {
+    SIZE_T stringLength = stringToSerialize.size();
+    oFile.writeBytes(reinterpret_cast<Byte*>(&stringLength), sizeof(SIZE_T));
+    for (SIZE_T i = 0; i < stringLength; ++i) {
+      char c = stringToSerialize[i];
+      oFile.writeBytes(reinterpret_cast<Byte*>(&c), sizeof(char));
+    }
+  }
+}
+void
+loadSerializedString(File& iFile, String& stringToLoad, uint8 sizeOfSizeT)
+{
+  if (iFile.isOpen()) {
+    SIZE_T readStringLength = 0;
+    if (sizeOfSizeT == 4) {
+      uint32 byte4StringLenght = 0;
+      iFile.readBytes(reinterpret_cast<Byte*>(&byte4StringLenght),
+        sizeof(uint32));
+      readStringLength = static_cast<SIZE_T>(byte4StringLenght);
+    }
+    else if (sizeOfSizeT == 8) {
+      uint64 byte8StringLenght = 0;
+      iFile.readBytes(reinterpret_cast<Byte*>(&byte8StringLenght),
+        sizeof(uint64));
+      readStringLength = static_cast<SIZE_T>(byte8StringLenght);
+    }
+
+    stringToLoad.clear();
+    for (SIZE_T i = 0; i < readStringLength; ++i) {
+      char c = 0;
+      iFile.readBytes(reinterpret_cast<Byte*>(&c),
+        sizeof(char));
+
+      stringToLoad += c;
+    }
+  }
+}
+void
+serializeActor(File& /*saveFile*/, SPtr<Actor> /*pActor*/)
+{
+  
+}
+void
+serializeComponent(File& /*saveFile*/, SPtr<Component> /*pComponent*/)
+{
+  
+}
+void
+SceneManager::saveScene(const String& name)
+{
+  File saveFile;
+  saveFile.openFile(L"Scenes/" + eeStringtoWString(name) + L".echomap",
+                    OPEN_TYPE::kWriteOnly | OPEN_TYPE::kBinary);
+
+  uint8 versionNum = 0;
+  saveFile.writeBytes(reinterpret_cast<Byte*>(&versionNum), sizeof(uint8));
+  uint8 sizeTSize = sizeof(SIZE_T);
+  saveFile.writeBytes(reinterpret_cast<Byte*>(&sizeTSize), sizeof(uint8));
+
+  Map<String, SPtr<Actor>> actors = m_scenes[name]->getAllActors();
+
+  for (auto& a : actors) {
+    serializeActor(saveFile, a.second);
+  }
+
+  saveFile.close();
 }
 Vector<WPtr<Actor>>
 SceneManager::getAllRenderableActorsInside(WPtr<CCamera> camera,

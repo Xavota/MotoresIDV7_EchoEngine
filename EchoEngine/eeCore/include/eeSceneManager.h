@@ -76,6 +76,27 @@ class EE_CORE_EXPORT SceneManager : public Module<SceneManager>
    */
   WPtr<Scene>
   getScene(const String& name);
+  /**
+   * @brief
+   * Saves all the scenes.
+   *
+   * @description
+   * Serializes all scenes in their own files.
+   */
+  void
+  saveAllScenes();
+  /**
+   * @brief
+   * Saves a scenes.
+   *
+   * @description
+   * Serializes a scenes in their own file.
+   *
+   * @param name
+   * The identifying name of the saving scene.
+   */
+  void
+  saveScene(const String& name);
 
   /**
    * @brief

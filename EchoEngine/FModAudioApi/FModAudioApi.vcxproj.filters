@@ -25,6 +25,7 @@
     <ClInclude Include="include\eeFModSound.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\eeFModChannel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeFModAudio.cpp">
@@ -36,5 +37,6 @@
     <ClCompile Include="src\eeFModSound.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\eeFModChannel.cpp" />
   </ItemGroup>
 </Project>

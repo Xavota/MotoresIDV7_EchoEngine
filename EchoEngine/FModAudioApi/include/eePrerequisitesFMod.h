@@ -51,7 +51,11 @@
 
 
 namespace eeEngineSDK {
+using PCM16 = int16;
+using U32 = int32;
+using U16 = uint16;
+
 class FModAudioManager;
-class Audio;
+struct Audio;
 class Sound;
 }

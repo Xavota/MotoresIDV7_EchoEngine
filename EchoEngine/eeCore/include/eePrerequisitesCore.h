@@ -89,7 +89,7 @@ class SkeletalMesh;
 class Animation;
 class Image;
 class Material;
-class Audio;
+struct Audio;
 class Sound;
 
 class SceneManager;

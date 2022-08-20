@@ -226,6 +226,7 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\eeResource.h" />
+    <ClInclude Include="include\eeAudioChannel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeBaseApp.cpp">
@@ -385,5 +386,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\eeResource.cpp" />
+    <ClCompile Include="src\eeAudioChannel.cpp" />
   </ItemGroup>
 </Project>

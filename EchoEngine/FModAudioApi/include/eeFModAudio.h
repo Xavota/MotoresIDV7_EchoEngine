@@ -30,7 +30,7 @@ namespace eeEngineSDK {
  * while playing in a loop. It's used by the Audio manager to play it with the
  * other sounds and audios.
  */
-class EE_FMOD_EXPORT FModAudio : public Audio
+struct EE_FMOD_EXPORT FModAudio : public Audio
 {
  public:
   /**
@@ -38,6 +38,11 @@ class EE_FMOD_EXPORT FModAudio : public Audio
    * Default constructor.
    */
   FModAudio() = default;
+  /**
+   * @brief
+   * Default constructor.
+   */
+  FModAudio(const char* path);
   /**
    * @brief
    * Default destructor.
@@ -51,12 +56,32 @@ class EE_FMOD_EXPORT FModAudio : public Audio
    */
   FMOD::Sound* soundResource = nullptr;
   /**
-   * The channel the sound is playing. Creo
+   * The channel the sound is playing.
    */
   FMOD::Channel* channel = nullptr;
   /**
    * The number of sounds that the audio is divided to load one at a time.
    */
   int32 numSubSounds = 0;
+
+
+
+
+  ///**
+  // * The number of samples per second the audio is going to play.
+  // */
+  //U32 samplingRate;
+  ///**
+  // * The number of audio channels the audio has.
+  // */
+  //U16 numChannels;
+  ///**
+  // * The data of the audio.
+  // */
+  //float* data;
+  ///**
+  // * The total number of samples in the data.
+  // */
+  //U32 count;
 };
 }

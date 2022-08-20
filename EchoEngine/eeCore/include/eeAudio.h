@@ -22,9 +22,9 @@ namespace eeEngineSDK {
  * while playing in a loop. It's used by the Audio manager to play it with the
  * other sounds and audios.
  */
-class EE_CORE_EXPORT Audio
+struct EE_CORE_EXPORT Audio
 {
-public:
+ public:
   /**
    * @brief
    * Default constructor.
@@ -32,12 +32,32 @@ public:
   Audio() = default;
   /**
    * @brief
+   * Default constructor.
+   */
+  Audio(const char* path);
+  /**
+   * @brief
    * Default destructor.
    */
   virtual
-  ~Audio() = default;
+  ~Audio();
 
-private:
 
+  /**
+   * The number of samples per second the audio is going to play.
+   */
+  uint32 samplingRate;
+  /**
+   * The number of audio channels the audio has.
+   */
+  uint16 numChannels;
+  /**
+   * The data of the audio.
+   */
+  float* data;
+  /**
+   * The total number of samples in the data.
+   */
+  uint32 count;
 };
 }

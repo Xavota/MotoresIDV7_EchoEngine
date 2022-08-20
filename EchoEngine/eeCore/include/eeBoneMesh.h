@@ -103,7 +103,7 @@ class EE_CORE_EXPORT BoneMesh
    * @return
    * Pointer to the vertex buffer.
    */
-  FORCEINLINE const WPtr<VertexBuffer>&
+  FORCEINLINE WPtr<VertexBuffer>
   getVertexData() const
   {
     return m_vertexData;
@@ -118,7 +118,7 @@ class EE_CORE_EXPORT BoneMesh
    * @return
    * Pointer to the index buffer.
    */
-  FORCEINLINE const WPtr<IndexBuffer>&
+  FORCEINLINE WPtr<IndexBuffer>
   getIndexData() const
   {
     return m_indexData;

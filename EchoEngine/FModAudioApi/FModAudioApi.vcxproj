@@ -21,12 +21,14 @@
   <ItemGroup>
     <ClInclude Include="include\eeFModAudio.h" />
     <ClInclude Include="include\eeFModAudioManager.h" />
+    <ClInclude Include="include\eeFModChannel.h" />
     <ClInclude Include="include\eeFModSound.h" />
     <ClInclude Include="include\eePrerequisitesFMod.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeFModAudio.cpp" />
     <ClCompile Include="src\eeFModAudioManager.cpp" />
+    <ClCompile Include="src\eeFModChannel.cpp" />
     <ClCompile Include="src\eeFModSound.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

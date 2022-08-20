@@ -1314,6 +1314,8 @@ ResourceManager::loadAllSerialized()
                                   readVersionNum,
                                   readSizeTSize);
         }
+
+        loadFile.close();
       }
     }
   }
@@ -1340,6 +1342,8 @@ ResourceManager::loadAllSerialized()
                                  readVersionNum,
                                  readSizeTSize);
         }
+
+        loadFile.close();
       }
     }
   }
@@ -1373,6 +1377,8 @@ ResourceManager::loadAllSerialized()
                                      readVersionNum,
                                      readSizeTSize);
         }
+
+        loadFile.close();
       }
     }
   }
@@ -1495,11 +1501,11 @@ ResourceManager::serializeMaterial(const String& resourceName,
         String texName = tex.second.lock()->getResourceName();
         serializeStringHelper(saveFile, texName);
       }
-    }
+      saveFile.close();
 
-    return true;
+      return true;
+    }
   }
-  
   return false;
 }
 void
@@ -1512,20 +1518,23 @@ serializeMesh(File& saveFile, const Mesh& meshToSerialize)
 
     SIZE_T trianglesCount = trianglesArr.size();
     saveFile.writeBytes(reinterpret_cast<Byte*>(&trianglesCount), sizeof(SIZE_T));
-    saveFile.writeBytes(reinterpret_cast<Byte*>(trianglesArr.data()), trianglesCount * sizeof(Triangle));
+    saveFile.writeBytes(reinterpret_cast<Byte*>(trianglesArr.data()),
+                        static_cast<uint32>(trianglesCount * sizeof(Triangle)));
 
     Vector<uint32> indicesArr = meshToSerialize.getIndicesArray();
 
     SIZE_T indicesCount = indicesArr.size();
     saveFile.writeBytes(reinterpret_cast<Byte*>(&indicesCount), sizeof(SIZE_T));
-    saveFile.writeBytes(reinterpret_cast<Byte*>(indicesArr.data()), indicesCount * sizeof(uint32));
+    saveFile.writeBytes(reinterpret_cast<Byte*>(indicesArr.data()),
+                        static_cast<uint32>(indicesCount * sizeof(uint32)));
   }
   else if (vertexType == eVertexType::kControlPoints) {
     Vector<ComplexVertex> pointsArr = meshToSerialize.getControlPointsArray();
 
     SIZE_T pointsCount = pointsArr.size();
     saveFile.writeBytes(reinterpret_cast<Byte*>(&pointsCount), sizeof(SIZE_T));
-    saveFile.writeBytes(reinterpret_cast<Byte*>(pointsArr.data()), pointsCount * sizeof(ComplexVertex));
+    saveFile.writeBytes(reinterpret_cast<Byte*>(pointsArr.data()),
+                        static_cast<uint32>(pointsCount * sizeof(ComplexVertex)));
   }
 }
 bool
@@ -1563,9 +1572,11 @@ ResourceManager::serializeStaticMesh(const String& resourceName,
       saveFile.writeBytes(reinterpret_cast<Byte*>(&boxMinVertex), sizeof(Vector3f));
       Vector3f boxMaxVertex = boundBox.getB();
       saveFile.writeBytes(reinterpret_cast<Byte*>(&boxMaxVertex), sizeof(Vector3f));
-    }
 
-    return true;
+      saveFile.close();
+
+      return true;
+    }
   }
 
   return false;
@@ -1593,7 +1604,6 @@ ResourceManager::serializeSkeleton(const String& resourceName,
         SIZE_T bonesCount = bonesPerMesh[i].size();
         saveFile.writeBytes(reinterpret_cast<Byte*>(&bonesCount), sizeof(SIZE_T));
         for (SIZE_T j = 0; j < bonesCount; ++j) {
-          bonesPerMesh[i][j];
           serializeStringHelper(saveFile, bonesPerMesh[i][j].m_name);
 
           SIZE_T vertexWeightsCount = bonesPerMesh[i][j].m_vertexWeights.size();
@@ -1601,7 +1611,7 @@ ResourceManager::serializeSkeleton(const String& resourceName,
                               sizeof(SIZE_T));
           saveFile.writeBytes(
             reinterpret_cast<Byte*>(bonesPerMesh[i][j].m_vertexWeights.data()),
-            vertexWeightsCount * sizeof(VertexWeight));
+            static_cast<uint32>(vertexWeightsCount * sizeof(VertexWeight)));
             
           saveFile.writeBytes(
             reinterpret_cast<Byte*>(&bonesPerMesh[i][j].m_offsetMatrix),
@@ -1627,9 +1637,10 @@ ResourceManager::serializeSkeleton(const String& resourceName,
         saveFile.writeBytes(reinterpret_cast<Byte*>(&numsBones[i]),
                             sizeof(uint32));
       }
-    }
+      saveFile.close();
 
-    return true;
+      return true;
+    }
   }
 
   return false;
@@ -1642,14 +1653,14 @@ serializeBoneMesh(File& saveFile, const BoneMesh& meshToSerialize)
   SIZE_T verticesCount = verticesArr.size();
   saveFile.writeBytes(reinterpret_cast<Byte*>(&verticesCount), sizeof(SIZE_T));
   saveFile.writeBytes(reinterpret_cast<Byte*>(verticesArr.data()),
-                      verticesCount * sizeof(ComplexBigAnimVertex<4>));
+          static_cast<uint32>(verticesCount * sizeof(ComplexBigAnimVertex<4>)));
 
   Vector<uint32> indicesArr = meshToSerialize.getIndexArray();
 
   SIZE_T indicesCount = indicesArr.size();
   saveFile.writeBytes(reinterpret_cast<Byte*>(&indicesCount), sizeof(SIZE_T));
   saveFile.writeBytes(reinterpret_cast<Byte*>(indicesArr.data()),
-                      indicesCount * sizeof(uint32));
+                      static_cast<uint32>(indicesCount * sizeof(uint32)));
 }
 bool
 ResourceManager::serializeSkeletalMesh(const String& resourceName,
@@ -1695,9 +1706,11 @@ ResourceManager::serializeSkeletalMesh(const String& resourceName,
       saveFile.writeBytes(reinterpret_cast<Byte*>(&boxMinVertex), sizeof(Vector3f));
       Vector3f boxMaxVertex = boundBox.getB();
       saveFile.writeBytes(reinterpret_cast<Byte*>(&boxMaxVertex), sizeof(Vector3f));
+
+      saveFile.close();
+
+      return true;
     }
-  
-    return true;
   }
   
   return false;
@@ -1756,9 +1769,11 @@ ResourceManager::serializeAnimation(const String& resourceName,
       }
 
       serializeAnimationNode(saveFile, sAnim->getRootNode());
+
+      saveFile.close();
+
+      return true;
     }
-  
-    return true;
   }
   
   return false;
@@ -1767,7 +1782,7 @@ ResourceManager::serializeAnimation(const String& resourceName,
 bool
 ResourceManager::loadSerializedTexture(File& fileToLoad,
                                        const String& resourceName,
-                                       uint8 versionNum,
+                                       uint8 /*versionNum*/,
                                        uint8 sizeTSize)
 {
   if (m_textures.find(resourceName) != m_textures.end()) {
@@ -1810,7 +1825,7 @@ ResourceManager::loadSerializedTexture(File& fileToLoad,
 bool
 ResourceManager::loadSerializedMaterial(File& fileToLoad,
                                         const String& resourceName,
-                                        uint8 versionNum,
+                                        uint8 /*versionNum*/,
                                         uint8 sizeTSize)
 {  
   if (m_materials.find(resourceName) != m_materials.end()) {
@@ -1862,7 +1877,7 @@ loadSerializedMesh(File& fileToLoad, Mesh& meshToLoad, uint8 sizeTSize)
     loadSerializedSize(fileToLoad, trianglesCount, sizeTSize);
     trianglesArr.resize(trianglesCount);
     fileToLoad.readBytes(reinterpret_cast<Byte*>(trianglesArr.data()),
-                         trianglesCount * sizeof(Triangle));
+                         static_cast<uint32>(trianglesCount * sizeof(Triangle)));
 
     Vector<uint32> indicesArr;
 
@@ -1870,7 +1885,7 @@ loadSerializedMesh(File& fileToLoad, Mesh& meshToLoad, uint8 sizeTSize)
     loadSerializedSize(fileToLoad, indicesCount, sizeTSize);
     indicesArr.resize(indicesCount);
     fileToLoad.readBytes(reinterpret_cast<Byte*>(indicesArr.data()),
-                         indicesCount * sizeof(uint32));
+                         static_cast<uint32>(indicesCount * sizeof(uint32)));
 
     meshToLoad.loadFromTrianglesArray(trianglesArr, indicesArr);
   }
@@ -1881,7 +1896,7 @@ loadSerializedMesh(File& fileToLoad, Mesh& meshToLoad, uint8 sizeTSize)
     loadSerializedSize(fileToLoad, pointsCount, sizeTSize);
     pointsArr.resize(pointsCount);
     fileToLoad.readBytes(reinterpret_cast<Byte*>(pointsArr.data()),
-                         pointsCount * sizeof(ComplexVertex));
+                         static_cast<uint32>(pointsCount * sizeof(ComplexVertex)));
 
     meshToLoad.loadFromControlPoints(pointsArr);
   }
@@ -1889,7 +1904,7 @@ loadSerializedMesh(File& fileToLoad, Mesh& meshToLoad, uint8 sizeTSize)
 bool
 ResourceManager::loadSerializedStaticMesh(File& fileToLoad,
                                           const String& resourceName,
-                                          uint8 versionNum,
+                                          uint8 /*versionNum*/,
                                           uint8 sizeTSize)
 {
   if (m_staticMeshes.find(resourceName) != m_staticMeshes.end()) {
@@ -1941,7 +1956,7 @@ ResourceManager::loadSerializedStaticMesh(File& fileToLoad,
 bool
 ResourceManager::loadSerializedSkeleton(File& fileToLoad,
                                         const String& resourceName,
-                                        uint8 versionNum,
+                                        uint8 /*versionNum*/,
                                         uint8 sizeTSize)
 {
   if (m_skeletals.find(resourceName) != m_skeletals.end()) {
@@ -1976,7 +1991,7 @@ ResourceManager::loadSerializedSkeleton(File& fileToLoad,
         bonesPerMesh[i][j].m_vertexWeights.resize(vertexWeightsCount);
         fileToLoad.readBytes(
           reinterpret_cast<Byte*>(bonesPerMesh[i][j].m_vertexWeights.data()),
-          vertexWeightsCount * sizeof(VertexWeight));
+          static_cast<uint32>(vertexWeightsCount * sizeof(VertexWeight)));
         
         fileToLoad.readBytes(
           reinterpret_cast<Byte*>(&bonesPerMesh[i][j].m_offsetMatrix),
@@ -2027,7 +2042,7 @@ loadSerializedBoneMesh(File& fileToLoad, BoneMesh& meshToLoad, uint8 sizeTSize)
   loadSerializedSize(fileToLoad, verticesCount, sizeTSize);
   vertexArr.resize(verticesCount);
   fileToLoad.readBytes(reinterpret_cast<Byte*>(vertexArr.data()),
-                       verticesCount * sizeof(ComplexBigAnimVertex<4>));
+          static_cast<uint32>(verticesCount * sizeof(ComplexBigAnimVertex<4>)));
 
   Vector<uint32> indicesArr;
 
@@ -2035,14 +2050,14 @@ loadSerializedBoneMesh(File& fileToLoad, BoneMesh& meshToLoad, uint8 sizeTSize)
   loadSerializedSize(fileToLoad, indicesCount, sizeTSize);
   indicesArr.resize(indicesCount);
   fileToLoad.readBytes(reinterpret_cast<Byte*>(indicesArr.data()),
-                       indicesCount * sizeof(uint32));
+                       static_cast<uint32>(indicesCount * sizeof(uint32)));
 
   meshToLoad.loadFromArray(vertexArr, indicesArr);
 }
 bool
 ResourceManager::loadSerializedSkeletalMesh(File& fileToLoad,
                                             const String& resourceName,
-                                            uint8 versionNum,
+                                            uint8 /*versionNum*/,
                                             uint8 sizeTSize)
 {
   if (m_skeletalMeshes.find(resourceName) != m_skeletalMeshes.end()) {
@@ -2126,7 +2141,7 @@ loadSerializedAnimationNode(File& fileToLoad, SPtr<Node>* node, uint8 sizeTSize)
 bool
 ResourceManager::loadSerializedAnimation(File& fileToLoad,
                                          const String& resourceName,
-                                         uint8 versionNum,
+                                         uint8 /*versionNum*/,
                                          uint8 sizeTSize)
 {
   if (m_animations.find(resourceName) != m_animations.end()) {
