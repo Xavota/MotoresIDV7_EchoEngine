@@ -14,13 +14,37 @@
 #include "eePrerequisitesCore.h"
 
 namespace eeEngineSDK{
-namespace RENDER_ACTOR_FLAGS {
-enum E : uint8{
+/**
+ * @brief
+ * An enum that describe flags for the type of actors needed.
+ */
+namespace eRENDER_ACTOR_FLAGS {
+enum E : uint8
+{
   kNone = 0,
   kStaticMesh = 1,
   kSkeletalMesh = 2
 };
 }
+/**
+ * @brief
+ * The node of the actors tree, for easy access.
+ */
+struct ActorNode
+{
+  /**
+   * The actor value of this node.
+   */
+  WPtr<Actor> actorValue;
+  /**
+   * The node parent of this node.
+   */
+  WPtr<ActorNode> parentNode;
+  /**
+   * The node children of this node.
+   */
+  Vector<SPtr<ActorNode>> childrenNode;
+};
 /**
  * @brief
  * The scene, contains the actors graph.
@@ -57,27 +81,27 @@ class EE_CORE_EXPORT Scene
    */
   Vector<WPtr<Actor>>
   getAllRenderableActorsInside(WPtr<CCamera> camera,
-                               RENDER_ACTOR_FLAGS::E flags);
-  /**
-   * @brief
-   * Gets all actors of the scene inside the camera.
-   *
-   * @description
-   * Gets all actors of the scene that are inside the frustum of the camera and
-   * have a model and a render component.
-   *
-   * @param camera
-   * The camera to check the frustum.
-   * @param flags
-   * Flags for the type of actor needed.
-   * @param outRenderActors
-   * The actors that can be rendered.
-   */
-  void
-  getAllRenderableActorsInsideHelper(WPtr<CCamera> camera,
-                                     const Vector<SPtr<Actor>>& actors,
-                                     RENDER_ACTOR_FLAGS::E flags,
-                                     Vector<WPtr<Actor>>& outRenderActors);
+                               eRENDER_ACTOR_FLAGS::E flags);
+  ///**
+  // * @brief
+  // * Gets all actors of the scene inside the camera.
+  // *
+  // * @description
+  // * Gets all actors of the scene that are inside the frustum of the camera and
+  // * have a model and a render component.
+  // *
+  // * @param camera
+  // * The camera to check the frustum.
+  // * @param flags
+  // * Flags for the type of actor needed.
+  // * @param outRenderActors
+  // * The actors that can be rendered.
+  // */
+  //void
+  //getAllRenderableActorsInsideHelper(WPtr<CCamera> camera,
+  //                                   const Vector<WPtr<Actor>>& actors,
+  //                                   eRENDER_ACTOR_FLAGS::E flags,
+  //                                   Vector<WPtr<Actor>>& outRenderActors);
 
   /**
    * @brief
@@ -258,12 +282,47 @@ class EE_CORE_EXPORT Scene
       acts.emplace_back(act.second);
     }
   }
+  /**
+   * @brief
+   * Gets the actors tree.
+   *
+   * @description
+   * Returns the vector of actor nodes with their children trees.
+   *
+   * @return
+   * The vector of actor nodes with their children trees.
+   */
+  const Vector<SPtr<ActorNode>>&
+  getActorsTree()
+  {
+    return m_actorsTree;
+  }
 
  private:
+  /**
+   * @brief
+   * Gets the actor node with the given name.
+   *
+   * @description
+   * Returns the node of an actor with the given name that is inside the actors
+   * tree.
+   *
+   * @return
+   * The node of an actor with the given name that is inside the actors tree.
+   */
+  SPtr<ActorNode>
+  getActorNodeByName(const String& actorName);
+
+
+
   /**
    * The actors in the scene.
    */
   Map<String, SPtr<Actor>> m_actors;
+  /**
+   * The actors tree, for easy access.
+   */
+  Vector<SPtr<ActorNode>> m_actorsTree;
 
   /**
    * If the scene is active to be updated and rendered.

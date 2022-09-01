@@ -122,33 +122,33 @@ class EE_CORE_EXPORT Actor : public EnableSPtrFromThis<Actor>
   void
   setActive(bool active);
 
-  /**
-   * @brief
-   * Attach to an actor.
-   *
-   * @description
-   * Attach the actor to a parent actor.
-   *
-   * @param parent
-   * The new parent actor, nullptr if no parent.
-   */
-  void
-  attachTo(const SPtr<Actor> pParent);
-  /**
-   * @brief
-   * Gets the parent.
-   *
-   * @description
-   * Returns the actor to witch it is attached to.
-   *
-   * @retunr
-   * The actor to witch it is attached to.
-   */
-  WPtr<Actor>
-  getParent()
-  {
-    return m_pParent;
-  }
+  ///**
+  // * @brief
+  // * Attach to an actor.
+  // *
+  // * @description
+  // * Attach the actor to a parent actor.
+  // *
+  // * @param parent
+  // * The new parent actor, nullptr if no parent.
+  // */
+  //void
+  //attachTo(const SPtr<Actor> pParent);
+  ///**
+  // * @brief
+  // * Gets the parent.
+  // *
+  // * @description
+  // * Returns the actor to witch it is attached to.
+  // *
+  // * @retunr
+  // * The actor to witch it is attached to.
+  // */
+  //WPtr<Actor>
+  //getParent()
+  //{
+  //  return m_pParent;
+  //}
 
   /**
    * @brief
@@ -164,21 +164,21 @@ class EE_CORE_EXPORT Actor : public EnableSPtrFromThis<Actor>
   getTransform();
 
 
-  /**
-   * @brief
-   * Gets the children.
-   *
-   * @description
-   * Returns the children attach to the actor.
-   *
-   * @return
-   * The transform component.
-   */
-  Vector<SPtr<Actor>>
-  getChildren()
-  {
-    return m_pChilds;
-  }
+  ///**
+  // * @brief
+  // * Gets the children.
+  // *
+  // * @description
+  // * Returns the children attach to the actor.
+  // *
+  // * @return
+  // * The transform component.
+  // */
+  //Vector<SPtr<Actor>>
+  //getChildren()
+  //{
+  //  return m_pChilds;
+  //}
   
   /**
    * @brief
@@ -202,15 +202,15 @@ class EE_CORE_EXPORT Actor : public EnableSPtrFromThis<Actor>
    */
   Vector<SPtr<Component>> m_pComponents;
 
-  /**
-   * The list of child actors.
-   */
-  Vector<SPtr<Actor>> m_pChilds;
-
-  /**
-   * A parent actor, if it is.
-   */
-  WPtr<Actor> m_pParent;
+  ///**
+  // * The list of child actors.
+  // */
+  //Vector<SPtr<Actor>> m_pChilds; // TODO: Change to WPtr
+  //
+  ///**
+  // * A parent actor, if it is.
+  // */
+  //WPtr<Actor> m_pParent;
 
   /**
    * If the actor is active or not.

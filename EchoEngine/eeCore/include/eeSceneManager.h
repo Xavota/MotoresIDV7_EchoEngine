@@ -114,7 +114,7 @@ class EE_CORE_EXPORT SceneManager : public Module<SceneManager>
    */
   Vector<WPtr<Actor>>
   getAllRenderableActorsInside(WPtr<CCamera> camera,
-                       RENDER_ACTOR_FLAGS::E flags = RENDER_ACTOR_FLAGS::kNone);
+                     eRENDER_ACTOR_FLAGS::E flags = eRENDER_ACTOR_FLAGS::kNone);
 
   /**
    * @brief

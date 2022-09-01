@@ -12,53 +12,36 @@
 #include "eeCRender.h"
 #include "eeCSkeletalMesh.h"
 #include "eeCStaticMesh.h"
+#include "eeCTransform.h"
 
 namespace eeEngineSDK {
-Vector<WPtr<Actor>>
-Scene::getAllRenderableActorsInside(WPtr<CCamera> camera,
-                                    RENDER_ACTOR_FLAGS::E flags)
-{
-  Vector<SPtr<Actor>> actorsToCheck;
-  for (auto& act : m_actors) {
-    if (act.second->isActive()) {  
-      actorsToCheck.emplace_back(act.second);
-    }
-  }
-
-  Vector<WPtr<Actor>> renderActors;
-  if (!actorsToCheck.empty()) {
-    getAllRenderableActorsInsideHelper(camera,
-                                       actorsToCheck,
-                                       flags,
-                                       renderActors);
-  }
-  return renderActors;
-}
 void
-Scene::getAllRenderableActorsInsideHelper(WPtr<CCamera> camera,
-                                          const Vector<SPtr<Actor>>& actors,
-                                          RENDER_ACTOR_FLAGS::E flags,
-                                          Vector<WPtr<Actor>>& outRenderActors)
+getAllRenderableActorsInsideHelper(WPtr<CCamera> camera,
+                                   const Vector<SPtr<ActorNode>>& actors,
+                                   eRENDER_ACTOR_FLAGS::E flags,
+                                   Vector<WPtr<Actor>>& outRenderActors)
 {
-  Vector<SPtr<Actor>> actorsToCheck;
+  Vector<SPtr<ActorNode>> actorsToCheck;
   for (auto& act : actors) {
-    auto sAct = act;
-    Vector<SPtr<Actor>> childs = sAct->getChildren();
+    Vector<SPtr<ActorNode>> childs = act->childrenNode;
     for (auto& childAct : childs) {
-      if (childAct->isActive()) {
+      if (childAct->actorValue.lock()->isActive()) {
         actorsToCheck.emplace_back(childAct);
       }
     }
 
-    if (sAct->isActive()
-     && !sAct->getComponent<CRender>().expired()) {
+    auto sAct = act->actorValue.lock();
+    if (!sAct->getComponent<CRender>().expired()
+     && sAct->getComponent<CRender>().lock()->getActive()) {
       bool canPass = false;
-      if (Math::hasFlag(flags, RENDER_ACTOR_FLAGS::kStaticMesh)
-        && !sAct->getComponent<CStaticMesh>().expired()) {
+      if (Math::hasFlag(flags, eRENDER_ACTOR_FLAGS::kStaticMesh)
+       && !sAct->getComponent<CStaticMesh>().expired()
+       && sAct->getComponent<CStaticMesh>().lock()->getActive()) {
         canPass = true;
       }
-      if (Math::hasFlag(flags, RENDER_ACTOR_FLAGS::kSkeletalMesh)
-        && !sAct->getComponent<CSkeletalMesh>().expired()) {
+      if (Math::hasFlag(flags, eRENDER_ACTOR_FLAGS::kSkeletalMesh)
+       && !sAct->getComponent<CSkeletalMesh>().expired()
+       && sAct->getComponent<CSkeletalMesh>().lock()->getActive()) {
         canPass = true;
       }
       if (!canPass) {
@@ -67,7 +50,7 @@ Scene::getAllRenderableActorsInsideHelper(WPtr<CCamera> camera,
 
       WPtr<CBounds> boundC = sAct->getComponent<CBounds>();
       if (!boundC.expired() && camera.lock()->isModelOnCamera(boundC)) {
-        outRenderActors.push_back(act);
+        outRenderActors.push_back(act->actorValue);
       }
     }
   }
@@ -79,6 +62,26 @@ Scene::getAllRenderableActorsInsideHelper(WPtr<CCamera> camera,
                                        flags,
                                        outRenderActors);
   }
+}
+Vector<WPtr<Actor>>
+Scene::getAllRenderableActorsInside(WPtr<CCamera> camera,
+                                    eRENDER_ACTOR_FLAGS::E flags)
+{
+  Vector<SPtr<ActorNode>> actorsToCheck;
+  for (auto& act : m_actorsTree) {
+    if (act->actorValue.lock()->isActive()) {  
+      actorsToCheck.emplace_back(act);
+    }
+  }
+
+  Vector<WPtr<Actor>> renderActors;
+  if (!actorsToCheck.empty()) {
+    getAllRenderableActorsInsideHelper(camera,
+                                       actorsToCheck,
+                                       flags,
+                                       renderActors);
+  }
+  return renderActors;
 }
 WPtr<Actor>
 Scene::addActor(const String& name)
@@ -144,18 +147,81 @@ Scene::getAllActorsByComponentFlags(uint32 flags)
   }
   return r;
 }
+SPtr<ActorNode>
+getActorNodeByNameInTreeNode(const String& actorName, SPtr<ActorNode> rootNode)
+{
+  if (!rootNode->actorValue.expired()) {
+    if (rootNode->actorValue.lock()->getName() == actorName) {
+      return rootNode;
+    }
+
+    for (auto& anc : rootNode->childrenNode) {
+      return getActorNodeByNameInTreeNode(actorName, anc);
+    }
+  }
+  return nullptr;
+}
+SPtr<ActorNode>
+Scene::getActorNodeByName(const String& actorName)
+{
+  for (auto& an : m_actorsTree) {
+    auto actorNode = getActorNodeByNameInTreeNode(actorName, an);
+    if (actorNode) return actorNode;
+  }
+  return nullptr;
+}
 bool
 Scene::setActorChild(const String& parentName, const String& childName)
 {
-  if (m_actors.find(parentName) == m_actors.end()
-   && m_actors.find(childName) == m_actors.end()) {
+  if (m_actors.find(childName) == m_actors.end()) {
     Logger::instance().consoleLog("ERROR TRYING TO PARENT ACTOR");
     Logger::instance().consoleLog("Not an actor with that name!");
     return false;
   }
 
-  m_actors[childName]->attachTo(m_actors[parentName]);
-  m_actors.erase(m_actors.find(childName));
+  if (m_actors.find(parentName) == m_actors.end()) {
+    m_actors[childName]->getTransform().lock()->attachTo({});
+
+    auto childNode = getActorNodeByName(childName);
+    if (childNode) {
+      if (!childNode->parentNode.expired()) {
+        auto& parentChildren = childNode->parentNode.lock()->childrenNode;
+        SIZE_T childrenCount = parentChildren.size();
+        for (SIZE_T i = 0; i < childrenCount; ++i) {
+          if (parentChildren[i]->actorValue.lock()->getName() == childName) {
+            parentChildren.erase(parentChildren.begin() + i);
+          }
+        }
+      }
+      childNode->parentNode = {};
+    }
+  }
+  else {
+    m_actors[childName]->getTransform().lock()->attachTo(
+    m_actors[parentName]->getTransform());
+
+    auto childNode = getActorNodeByName(childName);
+    auto parentNode = getActorNodeByName(parentName);
+    if (childNode) {
+      if (!childNode->parentNode.expired()
+      && childNode->parentNode.lock()->actorValue.lock()->getName() != parentName) {
+        auto& parentChildren = childNode->parentNode.lock()->childrenNode;
+        SIZE_T childrenCount = parentChildren.size();
+        for (SIZE_T i = 0; i < childrenCount; ++i) {
+          if (parentChildren[i]->actorValue.lock()->getName() == childName) {
+            parentChildren.erase(parentChildren.begin() + i);
+          }
+        }
+      }
+      if (parentNode) {
+        childNode->parentNode = parentNode;
+        parentNode->childrenNode.emplace_back(childNode);
+      }
+      else {
+        childNode->parentNode = {};
+      }
+    }
+  }
   return true;
 }
 void

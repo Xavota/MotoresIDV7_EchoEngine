@@ -234,7 +234,7 @@ DX11GraphicsApi::unsetTextures(uint32 textureCount, uint32 startSlot)
   );
 }
 void
-DX11GraphicsApi::setVSConstantBuffers(const Vector<WPtr<ConstantBuffer>>& buffers, // TODO: Referencia constante
+DX11GraphicsApi::setVSConstantBuffers(const Vector<WPtr<ConstantBuffer>>& buffers,
                                       uint32 startSlot)
 {
   auto& memoryManager = MemoryManager::instance();
@@ -466,7 +466,7 @@ DX11GraphicsApi::unsetIndexBuffer()
   basics->m_deviceContext->IASetIndexBuffer(nullptr, DXGI_FORMAT_R16_UINT, 0);
 }
 void
-DX11GraphicsApi::setViewports(const Vector<ViewportDesc>& descs) // TODO
+DX11GraphicsApi::setViewports(const Vector<ViewportDesc>& descs)
 {
   Vector<D3D11_VIEWPORT> vps;
 

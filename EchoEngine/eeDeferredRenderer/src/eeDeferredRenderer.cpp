@@ -731,7 +731,7 @@ DeferredRenderer::onRender()
   if (!mainCam.expired()) {
     rActors =
     sceneManager.getAllRenderableActorsInside(sMainCam,
-                                              RENDER_ACTOR_FLAGS::kSkeletalMesh);
+                                              eRENDER_ACTOR_FLAGS::kSkeletalMesh);
   }
   
   for (const auto& act : rActors) {
@@ -806,7 +806,7 @@ DeferredRenderer::onRender()
   if (!mainCam.expired()) {
     rActors =
     sceneManager.getAllRenderableActorsInside(sMainCam,
-                                              RENDER_ACTOR_FLAGS::kStaticMesh);
+                                              eRENDER_ACTOR_FLAGS::kStaticMesh);
   }
   
   for (const auto& act : rActors) {

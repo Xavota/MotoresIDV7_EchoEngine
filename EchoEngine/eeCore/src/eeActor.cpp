@@ -24,7 +24,7 @@ void
 Actor::destroy()
 {
   m_pComponents.clear();
-  m_pChilds.clear();
+  //m_pChilds.clear();
 }
 bool
 Actor::isActive()
@@ -36,30 +36,30 @@ Actor::setActive(bool active)
 {
   m_active = active;
 }
-void
-Actor::attachTo(const SPtr<Actor> pParent)
-{
-  if (!m_pParent.expired()) {
-    auto spParent = m_pParent.lock();
-    SIZE_T childsSize = spParent->m_pChilds.size();
-    for (SIZE_T i = 0; i < childsSize; ++i) {
-      if (spParent->m_pChilds[i]->m_name == m_name) {
-        spParent->m_pChilds.erase(spParent->m_pChilds.begin() + i);
-        break;
-      }
-    }
-  }
-
-  m_pParent = pParent;
-  if (m_pParent.expired()) return;
-  auto spParent = m_pParent.lock();
-
-  spParent->m_pChilds.push_back(shared_from_this());
-
-  if (!spParent->getTransform().expired() && !getTransform().expired()) {
-    getTransform().lock()->attatchTo(spParent->getTransform());
-  }
-}
+//void
+//Actor::attachTo(const SPtr<Actor> pParent)
+//{
+//  if (!m_pParent.expired()) {
+//    auto spParent = m_pParent.lock();
+//    SIZE_T childsSize = spParent->m_pChilds.size();
+//    for (SIZE_T i = 0; i < childsSize; ++i) {
+//      if (spParent->m_pChilds[i]->m_name == m_name) {
+//        spParent->m_pChilds.erase(spParent->m_pChilds.begin() + i);
+//        break;
+//      }
+//    }
+//  }
+//
+//  m_pParent = pParent;
+//  if (m_pParent.expired()) return;
+//  auto spParent = m_pParent.lock();
+//
+//  spParent->m_pChilds.push_back(shared_from_this());
+//
+//  if (!spParent->getTransform().expired() && !getTransform().expired()) {
+//    getTransform().lock()->attatchTo(spParent->getTransform());
+//  }
+//}
 WPtr<CTransform>
 Actor::getTransform()
 {

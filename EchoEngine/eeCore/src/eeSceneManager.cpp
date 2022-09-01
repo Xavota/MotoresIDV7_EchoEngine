@@ -101,7 +101,7 @@ loadSerializedString(File& iFile, String& stringToLoad, uint8 sizeOfSizeT)
   }
 }
 void
-serializeActor(File& /*saveFile*/, SPtr<Actor> /*pActor*/)
+serializeActor(File& saveFile, SPtr<Actor> pActor)
 {
   
 }
@@ -125,6 +125,7 @@ SceneManager::saveScene(const String& name)
   Map<String, SPtr<Actor>> actors = m_scenes[name]->getAllActors();
 
   for (auto& a : actors) {
+    serializeString(saveFile, a.first);
     serializeActor(saveFile, a.second);
   }
 
@@ -132,7 +133,7 @@ SceneManager::saveScene(const String& name)
 }
 Vector<WPtr<Actor>>
 SceneManager::getAllRenderableActorsInside(WPtr<CCamera> camera,
-                                           RENDER_ACTOR_FLAGS::E flags)
+                                           eRENDER_ACTOR_FLAGS::E flags)
 {
   if (camera.expired()) { return {}; }
 

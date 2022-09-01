@@ -103,6 +103,7 @@ using eeEngineSDK::Sound;
 using eeEngineSDK::Audio;
 
 using eeEngineSDK::Actor;
+using eeEngineSDK::ActorNode;
 using eeEngineSDK::Component;
 using eeEngineSDK::CAnimation;
 using eeEngineSDK::CBounds;
@@ -667,22 +668,22 @@ NewActorWindow(bool& added, char* name)
 }
 
 void 
-MakeActorsTree(const Vector<SPtr<Actor>>& actors,
+MakeActorsTree(const Vector<SPtr<ActorNode>>& actors,
                WPtr<Actor>& ActorOnInspector,
                int32& n,
                int32& uniqueId)
 {
   static int selected = -1;
   for (auto& act : actors) {
-    auto sAct = act;
+    auto sAct = act->actorValue.lock();
     ImGui::PushID(uniqueId++);
     if (ImGui::Selectable(sAct->getName().c_str(), selected == n)) {
       selected = n;
-      ActorOnInspector = act;
+      ActorOnInspector = act->actorValue;
     }
     ImGui::PopID();
 
-    Vector<SPtr<Actor>> childs = sAct->getChildren();
+    Vector<SPtr<ActorNode>> childs = act->childrenNode;
     if (!childs.empty()) {
       if (ImGui::TreeNode("Children")) {
         MakeActorsTree(childs, ActorOnInspector, n, uniqueId);
@@ -773,8 +774,7 @@ UIRender()
         }
         ImGui::PopID();
 
-        Vector<SPtr<Actor>> actors;
-        sc.second->getAllActorsVector(actors);
+        Vector<SPtr<ActorNode>> actors = sc.second->getActorsTree();
         int32 n = 0;
         MakeActorsTree(actors, ActorOnInspector, n, uniqueId);
         ImGui::TreePop();

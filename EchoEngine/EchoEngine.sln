@@ -63,6 +63,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eeFModAudioApi", "FModAudio
 		{4656BAF2-E8EB-46A2-B234-157A9F5B4FBB} = {4656BAF2-E8EB-46A2-B234-157A9F5B4FBB}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eeOmniverseApi", "eeOmniverseApi\eeOmniverseApi.vcxproj", "{D611C867-F02F-4F5F-9D4A-03AA81385A86}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -159,6 +161,14 @@ Global
 		{64538B49-B012-43E5-B9CA-1940FD630F14}.Release|x64.Build.0 = Release|x64
 		{64538B49-B012-43E5-B9CA-1940FD630F14}.Release|x86.ActiveCfg = Release|Win32
 		{64538B49-B012-43E5-B9CA-1940FD630F14}.Release|x86.Build.0 = Release|Win32
+		{D611C867-F02F-4F5F-9D4A-03AA81385A86}.Debug|x64.ActiveCfg = Debug|x64
+		{D611C867-F02F-4F5F-9D4A-03AA81385A86}.Debug|x64.Build.0 = Debug|x64
+		{D611C867-F02F-4F5F-9D4A-03AA81385A86}.Debug|x86.ActiveCfg = Debug|Win32
+		{D611C867-F02F-4F5F-9D4A-03AA81385A86}.Debug|x86.Build.0 = Debug|Win32
+		{D611C867-F02F-4F5F-9D4A-03AA81385A86}.Release|x64.ActiveCfg = Release|x64
+		{D611C867-F02F-4F5F-9D4A-03AA81385A86}.Release|x64.Build.0 = Release|x64
+		{D611C867-F02F-4F5F-9D4A-03AA81385A86}.Release|x86.ActiveCfg = Release|Win32
+		{D611C867-F02F-4F5F-9D4A-03AA81385A86}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

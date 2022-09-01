@@ -11,11 +11,11 @@ CTransform::CTransform()
 void
 CTransform::update()
 {
-  if (m_actor.expired()) return;
+  //if (m_actor.expired()) return;
 
-  if (m_dirtyModelMatrix) {
-    m_dirtyModelMatrix = false;
-  }
+  //if (m_dirtyModelMatrix) {
+  //  m_dirtyModelMatrix = false;
+  //}
 }
 Matrix4f
 CTransform::getModelMatrix()
@@ -49,12 +49,12 @@ CTransform::getGlobalPosition()
 void
 CTransform::setPosition(const Vector3f& pos)
 {
-  m_dirtyModelMatrix = true;
-  for (auto& child : m_children) {
-    if (child) {
-      child->m_dirtyModelMatrix = true;
-    }
-  }
+  //m_dirtyModelMatrix = true;
+  //for (auto& child : m_children) {
+  //  if (child) {
+  //    child->m_dirtyModelMatrix = true;
+  //  }
+  //}
 
   m_position = pos;
 }
@@ -75,10 +75,10 @@ CTransform::getGlobalRotation()
 void
 CTransform::setRotation(const Quaternion& rot)
 {
-  m_dirtyModelMatrix = true;
-  for (auto& child : m_children) {
-    child->m_dirtyModelMatrix = true;
-  }
+  //m_dirtyModelMatrix = true;
+  //for (auto& child : m_children) {
+  //  child->m_dirtyModelMatrix = true;
+  //}
 
   m_rotation = rot;
 }
@@ -99,28 +99,28 @@ CTransform::getGlobalScale()
 void
 CTransform::setScale(const Vector3f& scale)
 {
-  m_dirtyModelMatrix = true;
-  for (auto& child : m_children) {
-    child->m_dirtyModelMatrix = true;
-  }
+  //m_dirtyModelMatrix = true;
+  //for (auto& child : m_children) {
+  //  child->m_dirtyModelMatrix = true;
+  //}
 
   m_scale = scale;
 }
 void
-CTransform::attatchTo(WPtr<CTransform> transformParent)
+CTransform::attachTo(WPtr<CTransform> transformParent)
 {
-  if (!m_parent.expired()) {
-    auto sParent = m_parent.lock();
-    sParent->m_children.erase(sParent->m_children.begin()
-                            + m_childIndex);
-  }
+  //if (!m_parent.expired()) {
+  //  auto sParent = m_parent.lock();
+  //  sParent->m_children.erase(sParent->m_children.begin()
+  //                          + m_childIndex);
+  //}
 
   m_parent = transformParent;
-  if (m_parent.expired()) return;
+  //if (m_parent.expired()) return;
 
-  auto sParent = m_parent.lock();
-  m_childIndex = static_cast<int32>(sParent->m_children.size());
-  sParent->m_children.push_back(
-    MemoryManager::instance().reinterpretPtr<CTransform>(shared_from_this()));
+  //auto sParent = m_parent.lock();
+  //m_childIndex = static_cast<int32>(sParent->m_children.size());
+  //sParent->m_children.push_back(
+  //  MemoryManager::instance().reinterpretPtr<CTransform>(shared_from_this()));
 }
 }

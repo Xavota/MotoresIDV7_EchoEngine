@@ -204,7 +204,7 @@ class EE_CORE_EXPORT CTransform : public Component
    * The new parent transform.
    */
   virtual void
-  attatchTo(WPtr<CTransform> transformParent);
+  attachTo(WPtr<CTransform> transformParent);
 
  private:
   /**
@@ -220,15 +220,15 @@ class EE_CORE_EXPORT CTransform : public Component
    */
   Vector3f m_scale;
 
-  /**
-   * The dirty flag of the model matrix.
-   */
-  bool m_dirtyModelMatrix = true;
+  ///**
+  // * The dirty flag of the model matrix.
+  // */
+  //bool m_dirtyModelMatrix = true;
 
-  /**
-   * The transform component children.
-   */
-  Vector<SPtr<CTransform>> m_children;
+  ///**
+  // * The transform component children.
+  // */
+  //Vector<SPtr<CTransform>> m_children; // TODO: Change to WPtr
   /**
    * The transform component parent.
    */
