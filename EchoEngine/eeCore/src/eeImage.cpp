@@ -21,7 +21,7 @@ Image::Image(const Image& other)
 }
 Image::Image(const WString& path)
 {
-  if (loadFromFile(path)) {
+  if (!loadFromFile(path)) {
     m_data = nullptr;
   }
 }
@@ -51,6 +51,8 @@ Image::loadFromFile(const WString& path)
     m_data[i].b = image[i * 4 + 2];
     m_data[i].a = image[i * 4 + 3];
   }
+
+  m_path = eeWStringtoString(path);
   return true;
 }
 void

@@ -29,7 +29,7 @@ class EE_CORE_EXPORT Renderer : public Module<Renderer>
   Renderer() = default;
   /**
    * @brief
-   * Copy constructor
+   * Default destructor.
    */
   virtual
   ~Renderer() = default;

@@ -27,25 +27,25 @@
     <ClCompile Include="src\eeBaseAppTest1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Externals\imgui\imgui.cpp">
+    <ClCompile Include="..\..\..\..\Externals\imgui\imgui.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Externals\imgui\imgui_demo.cpp">
+    <ClCompile Include="..\..\..\..\Externals\imgui\imgui_demo.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Externals\imgui\imgui_draw.cpp">
+    <ClCompile Include="..\..\..\..\Externals\imgui\imgui_draw.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Externals\imgui\imgui_tables.cpp">
+    <ClCompile Include="..\..\..\..\Externals\imgui\imgui_tables.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Externals\imgui\imgui_widgets.cpp">
+    <ClCompile Include="..\..\..\..\Externals\imgui\imgui_widgets.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Externals\imgui\backends\imgui_impl_win32.cpp">
+    <ClCompile Include="..\..\..\..\Externals\imgui\backends\imgui_impl_win32.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Externals\imgui\backends\imgui_impl_dx11.cpp">
+    <ClCompile Include="..\..\..\..\Externals\imgui\backends\imgui_impl_dx11.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
   </ItemGroup>

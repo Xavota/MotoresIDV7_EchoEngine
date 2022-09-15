@@ -49,7 +49,7 @@ class EE_CORE_EXPORT CRender : public Component
    * @return
    * The component type.
    */
-  int32
+  int8
   getType() override
   {
     return CmpType;

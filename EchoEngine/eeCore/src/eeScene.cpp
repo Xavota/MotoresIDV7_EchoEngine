@@ -94,6 +94,9 @@ Scene::addActor(const String& name)
 
   m_actors[name] = MemoryManager::instance().newPtr<Actor>();
   m_actors[name]->init(name);
+  SIZE_T nodeIndex = m_actorsTree.size();
+  m_actorsTree.emplace_back(MemoryManager::instance().newPtr<ActorNode>());
+  m_actorsTree[nodeIndex]->actorValue = m_actors[name];
   return m_actors[name];
 }
 WPtr<Actor>
@@ -210,6 +213,14 @@ Scene::setActorChild(const String& parentName, const String& childName)
         for (SIZE_T i = 0; i < childrenCount; ++i) {
           if (parentChildren[i]->actorValue.lock()->getName() == childName) {
             parentChildren.erase(parentChildren.begin() + i);
+          }
+        }
+      }
+      else {
+        SIZE_T childrenCount = m_actorsTree.size();
+        for (SIZE_T i = 0; i < childrenCount; ++i) {
+          if (m_actorsTree[i]->actorValue.lock()->getName() == childName) {
+            m_actorsTree.erase(m_actorsTree.begin() + i);
           }
         }
       }

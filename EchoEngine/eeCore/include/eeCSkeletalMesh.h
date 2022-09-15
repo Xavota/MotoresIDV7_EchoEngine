@@ -51,7 +51,7 @@ public:
    * @return
    * The component type.
    */
-  int32
+  int8
   getType() override
   {
     return CmpType;

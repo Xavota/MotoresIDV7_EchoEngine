@@ -4,9 +4,12 @@
 
 namespace eeEngineSDK {
 CTransform::CTransform()
- : m_position(0.0f, 0.0f, 0.0f),
-   m_rotation(Vector3f( 0.0f,0.0f,0.0f )),
-   m_scale(1.0f, 1.0f, 1.0f)
+ : //m_position(0.0f, 0.0f, 0.0f),
+   //m_rotation(Vector3f( 0.0f,0.0f,0.0f )),
+   //m_scale(1.0f, 1.0f, 1.0f),
+   m_transform(Vector3f(0.0f, 0.0f, 0.0f),
+               Quaternion(Vector3f(0.0f, 0.0f, 0.0f)),
+               Vector3f(1.0f, 1.0f, 1.0f))
 {}
 void
 CTransform::update()
@@ -24,15 +27,17 @@ CTransform::getModelMatrix()
   if (!m_parent.expired()) {
     transform = m_parent.lock()->getModelMatrix();
   }
-  return transform
-       * Matrix4f::translationMatrix(m_position)
-       * m_rotation.getRotationMatrix()
-       * Matrix4f::scaleMatrix(m_scale);
+  //return transform
+  //     * Matrix4f::translationMatrix(m_position)
+  //     * m_rotation.getRotationMatrix()
+  //     * Matrix4f::scaleMatrix(m_scale);
+  return transform * m_transform.getModelMatrix();
 }
 Vector3f
 CTransform::getPosition()
 {
-  return m_position;
+  //return m_position;
+  return m_transform.getPosition();
 }
 Vector3f
 CTransform::getGlobalPosition()
@@ -41,8 +46,11 @@ CTransform::getGlobalPosition()
   if (!m_parent.expired()) {
     transform = m_parent.lock()->getModelMatrix();
   }
+  //Vector4f worldPos = transform
+  //                  * Vector4f(m_position.x, m_position.y, m_position.z, 1.0f);
+  Vector3f localPos = m_transform.getPosition();
   Vector4f worldPos = transform
-                    * Vector4f(m_position.x, m_position.y, m_position.z, 1.0f);
+                    * Vector4f(localPos.x, localPos.y, localPos.z, 1.0f);
   Vector3f r(worldPos.x, worldPos.y, worldPos.z);
   return r;
 }
@@ -56,12 +64,14 @@ CTransform::setPosition(const Vector3f& pos)
   //  }
   //}
 
-  m_position = pos;
+  //m_position = pos;
+  m_transform.setPosition(pos);
 }
 Quaternion
 CTransform::getRotation()
 {
-  return m_rotation;
+  //return m_rotation;
+  return m_transform.getRotation();
 }
 Quaternion
 CTransform::getGlobalRotation()
@@ -70,7 +80,8 @@ CTransform::getGlobalRotation()
   if (!m_parent.expired()) {
     globalRot = m_parent.lock()->getRotation();
   }
-  return Quaternion(m_rotation.getEuclidean() + globalRot.getEuclidean());
+  Quaternion localRot = m_transform.getRotation();
+  return Quaternion(localRot.getEuclidean() + globalRot.getEuclidean());
 }
 void
 CTransform::setRotation(const Quaternion& rot)
@@ -80,12 +91,14 @@ CTransform::setRotation(const Quaternion& rot)
   //  child->m_dirtyModelMatrix = true;
   //}
 
-  m_rotation = rot;
+  //m_rotation = rot;
+  m_transform.setRotation(rot);
 }
 Vector3f
 CTransform::getScale()
 {
-  return m_scale;
+  //return m_scale;
+  return m_transform.getScale();
 }
 Vector3f
 CTransform::getGlobalScale()
@@ -94,7 +107,8 @@ CTransform::getGlobalScale()
   if (!m_parent.expired()) {
     globalScale = m_parent.lock()->getScale();
   }
-  return m_scale * globalScale;
+  Vector3f localScale = m_transform.getScale();
+  return localScale * globalScale;
 }
 void
 CTransform::setScale(const Vector3f& scale)
@@ -104,7 +118,8 @@ CTransform::setScale(const Vector3f& scale)
   //  child->m_dirtyModelMatrix = true;
   //}
 
-  m_scale = scale;
+  //m_scale = scale;
+  m_transform.setScale(scale);
 }
 void
 CTransform::attachTo(WPtr<CTransform> transformParent)

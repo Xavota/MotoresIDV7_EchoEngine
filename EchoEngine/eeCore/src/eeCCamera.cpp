@@ -54,11 +54,11 @@ CCamera::getUpVector()
   return m_utilityCamera.getUpVector();
 }
 void
-CCamera::setProjectionType(CAMERA_PROJECTION_TYPE type)
+CCamera::setProjectionType(eCAMERA_PROJECTION_TYPE::E type)
 {
   m_utilityCamera.setProjectionType(type);
 }
-CAMERA_PROJECTION_TYPE
+eCAMERA_PROJECTION_TYPE::E
 CCamera::getProjectionType()
 {
   return m_utilityCamera.getProjectionType();

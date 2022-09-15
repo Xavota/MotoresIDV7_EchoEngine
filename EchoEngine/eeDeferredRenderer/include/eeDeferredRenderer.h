@@ -29,7 +29,7 @@ class EE_DEFERRED_RENDERER_EXPORT DeferredRenderer : public Renderer
   DeferredRenderer();
   /**
    * @brief
-   * Copy constructor
+   * Default destructor.
    */
   ~DeferredRenderer() = default;
 

@@ -564,6 +564,81 @@ public:
   abs(const float _val);
   /**
    * @brief
+   * The absolute value.
+   *
+   * @description
+   * Returns the absolute value of the number passed.
+   *
+   * @param _val
+   * The number to know its absolute.
+   *
+   * @return
+   * The absolute value.
+   */
+  static FORCEINLINE double
+  absd(const double _val);
+  /**
+   * @brief
+   * The absolute value.
+   *
+   * @description
+   * Returns the absolute value of the number passed.
+   *
+   * @param _val
+   * The number to know its absolute.
+   *
+   * @return
+   * The absolute value.
+   */
+  static FORCEINLINE long double
+  absld(const long double _val);
+  /**
+   * @brief
+   * The sign of a value.
+   *
+   * @description
+   * Returns the sign of the number passed as a 1.0f or -1.0f.
+   *
+   * @param _val
+   * The number to know its sing.
+   *
+   * @return
+   * The sign value.
+   */
+  static FORCEINLINE float
+  sign(const float _val);
+  /**
+   * @brief
+   * The sign of a value.
+   *
+   * @description
+   * Returns the sign of the number passed as a 1.0f or -1.0f.
+   *
+   * @param _val
+   * The number to know its sing.
+   *
+   * @return
+   * The sign value.
+   */
+  static FORCEINLINE double
+  signd(const double _val);
+  /**
+   * @brief
+   * The sign of a value.
+   *
+   * @description
+   * Returns the sign of the number passed as a 1.0f or -1.0f.
+   *
+   * @param _val
+   * The number to know its sing.
+   *
+   * @return
+   * The sign value.
+   */
+  static FORCEINLINE long double
+  signld(const long double _val);
+  /**
+   * @brief
    * Returns a number with a needed sign.
    *
    * @description
@@ -1362,30 +1437,55 @@ PlatformMath::abs(const float _val)
 {
   return sqrt(_val * _val);
 }
+FORCEINLINE double
+PlatformMath::absd(const double _val)
+{
+  return sqrt(_val * _val);
+}
+FORCEINLINE long double
+PlatformMath::absld(const long double _val)
+{
+  return sqrt(_val * _val);
+}
+FORCEINLINE float
+PlatformMath::sign(const float _val)
+{
+  return abs(_val) / _val;
+}
+FORCEINLINE double
+PlatformMath::signd(const double _val)
+{
+  return abs(_val) / _val;
+}
+FORCEINLINE long double
+PlatformMath::signld(const long double _val)
+{
+  return abs(_val) / _val;
+}
 FORCEINLINE float
 PlatformMath::copysign(float _mag, float _sgn)
 {
-  return std::copysign(_mag, _sgn);
+  return abs(_mag) * sign(_sgn);
 }
 FORCEINLINE float
 PlatformMath::copysignf(float _mag, float _sgn)
 {
-  return std::copysignf(_mag, _sgn);
+  return copysign(_mag, _sgn);
 }
 FORCEINLINE double
 PlatformMath::copysign(double _mag, double _sgn)
 {
-  return std::copysign(_mag, _sgn);
+  return static_cast<double>(absd(_mag) * signd(_sgn));
 }
 FORCEINLINE long double
 PlatformMath::copysign(long double _mag, long double _sgn)
 {
-  return std::copysign(_mag, _sgn);
+  return static_cast<long double>(absld(_mag) * signld(_sgn));
 }
 FORCEINLINE long double
 PlatformMath::copysignl(long double _mag, long double _sgn)
 {
-  return std::copysignl(_mag, _sgn);
+  return static_cast<long double>(absld(_mag) * signld(_sgn));
 }
 FORCEINLINE float
 PlatformMath::max(const float _val1, const float _val2)

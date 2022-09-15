@@ -157,6 +157,21 @@ class EE_CORE_EXPORT BoneMesh
 
   /**
    * @brief
+   * Getter for the vertices count.
+   *
+   * @description
+   * Returns the number of vertices stored.
+   *
+   * @return
+   * The number of vertices stored.
+   */
+  FORCEINLINE SIZE_T
+  getVertexCount() const
+  {
+    return m_vertexArray.size();
+  }
+  /**
+   * @brief
    * Getter for the index count.
    *
    * @description

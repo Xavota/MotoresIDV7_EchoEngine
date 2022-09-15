@@ -18,6 +18,7 @@
 #define DEFERRED_RENDERING//*/#define OGL_TEST_RENDERING
 #define GAINPUT
 #define FMOD
+#define OMNIVERSE
 
 namespace eeEngineSDK {
 namespace eeConfigurations {
@@ -79,6 +80,27 @@ const String inputManagerName;
 const String audioManagerName = "eeFModAudioApi";
 #else
 const String audioManagerName;
+#endif
+
+/**
+ * The current omniverse manager plugin name.
+ */
+#if defined(OMNIVERSE)
+#if defined(_M_X64)
+const String omniverseManagerName = "eeOmniverseApi";
+#else
+const String omniverseManagerName;
+#endif
+#else
+const String omniverseManagerName;
+#endif
+/**
+ * Omniverse default live edit.
+ */
+#ifdef OMNIVERSE_LIVE_EDIT
+const bool omniverseLiveEdit = true;
+#else
+const bool omniverseLiveEdit = false;
 #endif
 
 /**

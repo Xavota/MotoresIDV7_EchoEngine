@@ -62,7 +62,7 @@ class EE_CORE_EXPORT CStaticMesh : public Component
    * @return
    * The component type.
    */
-  int32
+  int8
   getType() override
   {
     return CmpType;
@@ -144,6 +144,6 @@ class EE_CORE_EXPORT CStaticMesh : public Component
   /**
    * The number of indices.
    */
-  eMOBILITY_TYPE::E m_mobilityType = eMOBILITY_TYPE::kStatic;
+  eMOBILITY_TYPE::E m_mobilityType = eMOBILITY_TYPE::kDynamic;
 };
 }

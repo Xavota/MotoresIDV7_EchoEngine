@@ -82,14 +82,4 @@ CBounds::update()
 
   m_boxBound = BoxAAB(trans->getGlobalPosition() + minBound, maxBound - minBound);
 }
-Sphere
-CBounds::getSphereBound()
-{
-  return m_sphereBound;
-}
-BoxAAB
-CBounds::getBoxBound()
-{
-  return m_boxBound;
-}
 }

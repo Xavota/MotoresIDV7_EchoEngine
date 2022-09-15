@@ -103,6 +103,7 @@ class CRender;
 class CCamera;
 class CSkeletalMesh;
 class CBounds;
+class CLight;
 
 class ResourceManager;
 

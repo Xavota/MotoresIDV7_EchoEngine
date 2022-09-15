@@ -215,6 +215,7 @@
     <ClCompile Include="src\eeMouseDevice.cpp" />
     <ClCompile Include="src\eeOctree.cpp" />
     <ClCompile Include="src\eeOctreeNode.cpp" />
+    <ClCompile Include="src\eeOmniverseManager.cpp" />
     <ClCompile Include="src\eeRenderer.cpp" />
     <ClCompile Include="src\eeResource.cpp" />
     <ClCompile Include="src\eeSound.cpp" />
@@ -274,6 +275,7 @@
     <ClInclude Include="include\eeMouseDevice.h" />
     <ClInclude Include="include\eeOctree.h" />
     <ClInclude Include="include\eeOctreeNode.h" />
+    <ClInclude Include="include\eeOmniverseManager.h" />
     <ClInclude Include="include\eeRenderer.h" />
     <ClInclude Include="include\eeResource.h" />
     <ClInclude Include="include\eeSound.h" />

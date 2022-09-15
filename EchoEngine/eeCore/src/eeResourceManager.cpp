@@ -12,6 +12,8 @@
 #include <eeFile.h>
 #include <eeVertex.h>
 
+#include <eeSerializationUtilities.h>
+
 #include "eeGraficsApi.h"
 
 #include "eeMesh.h"
@@ -576,6 +578,7 @@ ResourceManager::importResourceFromFile(const WString& fileName,
       eeWStringtoString(fileName),
       aiProcessPreset_TargetRealtime_MaxQuality
       | aiProcess_ConvertToLeftHanded
+      | aiProcess_Triangulate
     );
 
     if (!scene) {
@@ -1239,28 +1242,6 @@ enum E : uint8 {
 }
 
 void
-getFileName(WString filePath, String& fileName)
-{
-  String pathW2S = eeWStringtoString(filePath);
-  bool readingName = false;
-  auto pathSize = static_cast<int64>(pathW2S.size());
-  for (int64 i = pathSize - 1; i >= 0; --i) {
-    if (!readingName) {
-      if (pathW2S[i] == '.') {
-        readingName = true;
-      }
-    }
-    else {
-      if (pathW2S[i] == '/' || pathW2S[i] == '\\') {
-        break;
-      }
-      //resourceName.insert(resourceName.end() - 1, pathW2S[i]);
-      fileName = pathW2S[i] + fileName;
-    }
-  }
-}
-
-void
 getResourceData(File& iFile,
                 uint8& resourceCode,
                 uint8& versionNum,
@@ -1385,70 +1366,12 @@ ResourceManager::loadAllSerialized()
 }
 
 void
-serializeStringHelper(File& oFile, const String& stringToSerialize)
-{
-  if (oFile.isOpen()) {
-    SIZE_T stringLength = stringToSerialize.size();
-    oFile.writeBytes(reinterpret_cast<Byte*>(&stringLength), sizeof(SIZE_T));
-    for (SIZE_T i = 0; i < stringLength; ++i) {
-      char c = stringToSerialize[i];
-      oFile.writeBytes(reinterpret_cast<Byte*>(&c), sizeof(char));
-    }
-  }
-}
-
-void
-loadSerializedStringHelper(File& iFile, String& stringToLoad, uint8 sizeOfSizeT)
-{
-  if (iFile.isOpen()) {
-    SIZE_T readStringLength = 0;
-    if (sizeOfSizeT == 4) {
-      uint32 byte4StringLenght = 0;
-      iFile.readBytes(reinterpret_cast<Byte*>(&byte4StringLenght),
-                      sizeof(uint32));
-      readStringLength = static_cast<SIZE_T>(byte4StringLenght);
-    }
-    else if (sizeOfSizeT == 8) {
-      uint64 byte8StringLenght = 0;
-      iFile.readBytes(reinterpret_cast<Byte*>(&byte8StringLenght),
-                      sizeof(uint64));
-      readStringLength = static_cast<SIZE_T>(byte8StringLenght);
-    }
-    
-    stringToLoad.clear();
-    for (SIZE_T i = 0; i < readStringLength; ++i) {
-      char c = 0;
-      iFile.readBytes(reinterpret_cast<Byte*>(&c),
-                      sizeof(char));
-    
-      stringToLoad += c;
-    }
-  }
-}
-
-void
 serializeFileStartData(File& oFile, uint8 resourceCode, uint8 versionNum)
 {
   oFile.writeBytes(reinterpret_cast<Byte*>(&resourceCode), sizeof(uint8));
   oFile.writeBytes(reinterpret_cast<Byte*>(&versionNum), sizeof(uint8));
   uint8 sizeTSize = sizeof(SIZE_T);
   oFile.writeBytes(reinterpret_cast<Byte*>(&sizeTSize), sizeof(uint8));
-}
-void
-loadSerializedSize(File& fileToLoad, SIZE_T& sizeToLoad, uint8 sizeTSize)
-{
-  if (sizeTSize == 4) {
-    uint32 byte4Size = 0;
-    fileToLoad.readBytes(reinterpret_cast<Byte*>(&byte4Size),
-      sizeof(uint32));
-    sizeToLoad = static_cast<SIZE_T>(byte4Size);
-  }
-  else if (sizeTSize == 8) {
-    uint64 byte8Size = 0;
-    fileToLoad.readBytes(reinterpret_cast<Byte*>(&byte8Size),
-      sizeof(uint64));
-    sizeToLoad = static_cast<SIZE_T>(byte8Size);
-  }
 }
 
 bool
@@ -1499,7 +1422,7 @@ ResourceManager::serializeMaterial(const String& resourceName,
         uint32 texIndex = tex.first;
         saveFile.writeBytes(reinterpret_cast<Byte*>(&texIndex), sizeof(uint32));
         String texName = tex.second.lock()->getResourceName();
-        serializeStringHelper(saveFile, texName);
+        serializeString(saveFile, texName);
       }
       saveFile.close();
 
@@ -1555,7 +1478,7 @@ ResourceManager::serializeStaticMesh(const String& resourceName,
       for (SIZE_T i = 0; i < meshesCount; ++i) {
         serializeMesh(saveFile, meshes[i].first);
         if (!meshes[i].second.expired()) {
-          serializeStringHelper(saveFile, meshes[i].second.lock()->getResourceName());
+          serializeString(saveFile, meshes[i].second.lock()->getResourceName());
         }
         else {
           SIZE_T stringLength = 0;
@@ -1604,7 +1527,7 @@ ResourceManager::serializeSkeleton(const String& resourceName,
         SIZE_T bonesCount = bonesPerMesh[i].size();
         saveFile.writeBytes(reinterpret_cast<Byte*>(&bonesCount), sizeof(SIZE_T));
         for (SIZE_T j = 0; j < bonesCount; ++j) {
-          serializeStringHelper(saveFile, bonesPerMesh[i][j].m_name);
+          serializeString(saveFile, bonesPerMesh[i][j].m_name);
 
           SIZE_T vertexWeightsCount = bonesPerMesh[i][j].m_vertexWeights.size();
           saveFile.writeBytes(reinterpret_cast<Byte*>(&vertexWeightsCount),
@@ -1629,7 +1552,7 @@ ResourceManager::serializeSkeleton(const String& resourceName,
         saveFile.writeBytes(reinterpret_cast<Byte*>(&bonesMapsCount),
                             sizeof(SIZE_T));
         for (auto& bm : boneMaping[i]) {
-          serializeStringHelper(saveFile, bm.first);
+          serializeString(saveFile, bm.first);
           saveFile.writeBytes(reinterpret_cast<Byte*>(&bm.second),
                               sizeof(uint32));
         }
@@ -1675,7 +1598,7 @@ ResourceManager::serializeSkeletalMesh(const String& resourceName,
 
       auto skeleton = sSkMesh->getSkeletal();
       if (!skeleton.expired()) {
-        serializeStringHelper(saveFile, skeleton.lock()->getResourceName());
+        serializeString(saveFile, skeleton.lock()->getResourceName());
       }
       else {
         SIZE_T stringLength = 0;
@@ -1689,7 +1612,7 @@ ResourceManager::serializeSkeletalMesh(const String& resourceName,
       for (SIZE_T i = 0; i < meshesCount; ++i) {
         serializeBoneMesh(saveFile, meshes[i].first);
         if (!meshes[i].second.expired()) {
-          serializeStringHelper(saveFile, meshes[i].second.lock()->getResourceName());
+          serializeString(saveFile, meshes[i].second.lock()->getResourceName());
         }
         else {
           SIZE_T stringLength = 0;
@@ -1718,7 +1641,7 @@ ResourceManager::serializeSkeletalMesh(const String& resourceName,
 void
 serializeAnimationNode(File& saveFile, SPtr<Node> node)
 {
-  serializeStringHelper(saveFile, node->m_name);
+  serializeString(saveFile, node->m_name);
 
   saveFile.writeBytes(reinterpret_cast<Byte*>(&node->m_transformation),
                       sizeof(Matrix4f));
@@ -1751,7 +1674,7 @@ ResourceManager::serializeAnimation(const String& resourceName,
       saveFile.writeBytes(reinterpret_cast<Byte*>(&channelsCount),
                           sizeof(SIZE_T));
       for (SIZE_T i = 0; i < channelsCount; ++i) {
-        serializeStringHelper(saveFile, channels[i].m_name);
+        serializeString(saveFile, channels[i].m_name);
 
         saveFile.writeBytes(reinterpret_cast<Byte*>(&channels[i].m_positionKeysCount),
                             sizeof(uint32));
@@ -1842,7 +1765,7 @@ ResourceManager::loadSerializedMaterial(File& fileToLoad,
       uint32 texIndex = 0;
       fileToLoad.readBytes(reinterpret_cast<Byte*>(&texIndex), sizeof(uint32));
       String texName;
-      loadSerializedStringHelper(fileToLoad, texName, sizeTSize);
+      loadSerializedString(fileToLoad, texName, sizeTSize);
 
       if (m_textures.find(texName) != m_textures.end()) {
         readTexsMap.insert(Pair<uint32, WPtr<Texture>>(texIndex,
@@ -1921,7 +1844,7 @@ ResourceManager::loadSerializedStaticMesh(File& fileToLoad,
       Mesh readMesh;
       loadSerializedMesh(fileToLoad, readMesh, sizeTSize);
       String matName;
-      loadSerializedStringHelper(fileToLoad, matName, sizeTSize);
+      loadSerializedString(fileToLoad, matName, sizeTSize);
       if (m_materials.find(matName) != m_materials.end()) {
         meshes.emplace_back(Pair<Mesh, WPtr<Material>>(readMesh,
                                                        m_materials[matName]));
@@ -1982,7 +1905,7 @@ ResourceManager::loadSerializedSkeleton(File& fileToLoad,
       loadSerializedSize(fileToLoad, bonesCount, sizeTSize);
       bonesPerMesh[i].resize(bonesCount);
       for (SIZE_T j = 0; j < bonesCount; ++j) {
-        loadSerializedStringHelper(fileToLoad,
+        loadSerializedString(fileToLoad,
                                    bonesPerMesh[i][j].m_name,
                                    sizeTSize);
 
@@ -2008,7 +1931,7 @@ ResourceManager::loadSerializedSkeleton(File& fileToLoad,
       loadSerializedSize(fileToLoad, bonesMapsCount, sizeTSize);
       for (SIZE_T j = 0; j < bonesMapsCount; ++j) {
         String boneString;
-        loadSerializedStringHelper(fileToLoad, boneString, sizeTSize);
+        loadSerializedString(fileToLoad, boneString, sizeTSize);
         uint32 boneID;
         fileToLoad.readBytes(reinterpret_cast<Byte*>(&boneID),
                              sizeof(uint32));
@@ -2068,7 +1991,7 @@ ResourceManager::loadSerializedSkeletalMesh(File& fileToLoad,
   if (fileToLoad.isOpen()) {
     String skeletonName;
     SPtr<Skeletal> skeleton = nullptr;
-    loadSerializedStringHelper(fileToLoad, skeletonName, sizeTSize);
+    loadSerializedString(fileToLoad, skeletonName, sizeTSize);
     if (m_skeletals.find(skeletonName) != m_skeletals.end()) {
       skeleton = m_skeletals[skeletonName];
     }
@@ -2081,7 +2004,7 @@ ResourceManager::loadSerializedSkeletalMesh(File& fileToLoad,
       BoneMesh readMesh;
       loadSerializedBoneMesh(fileToLoad, readMesh, sizeTSize);
       String matName;
-      loadSerializedStringHelper(fileToLoad, matName, sizeTSize);
+      loadSerializedString(fileToLoad, matName, sizeTSize);
       if (m_materials.find(matName) != m_materials.end()) {
         meshes.emplace_back(Pair<BoneMesh, WPtr<Material>>(readMesh,
                                                          m_materials[matName]));
@@ -2122,7 +2045,7 @@ loadSerializedAnimationNode(File& fileToLoad, SPtr<Node>* node, uint8 sizeTSize)
 {
   *node = MemoryManager::instance().newPtr<Node>();
 
-  loadSerializedStringHelper(fileToLoad, (*node)->m_name, sizeTSize);
+  loadSerializedString(fileToLoad, (*node)->m_name, sizeTSize);
 
   fileToLoad.readBytes(reinterpret_cast<Byte*>(&(*node)->m_transformation),
                        sizeof(Matrix4f));
@@ -2162,7 +2085,7 @@ ResourceManager::loadSerializedAnimation(File& fileToLoad,
     loadSerializedSize(fileToLoad, channelsCount, sizeTSize);
     channels.resize(channelsCount);
     for (SIZE_T i = 0; i < channelsCount; ++i) {
-      loadSerializedStringHelper(fileToLoad, channels[i].m_name, sizeTSize);
+      loadSerializedString(fileToLoad, channels[i].m_name, sizeTSize);
       
       fileToLoad.readBytes(reinterpret_cast<Byte*>(&channels[i].m_positionKeysCount),
                            sizeof(uint32));

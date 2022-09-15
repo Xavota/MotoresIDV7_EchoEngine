@@ -48,7 +48,7 @@ class EE_CORE_EXPORT CBounds : public Component
    * @return
    * The component type.
    */
-  FORCEINLINE int32
+  FORCEINLINE int8
   getType() override
   {
     return CmpType;
@@ -64,13 +64,49 @@ class EE_CORE_EXPORT CBounds : public Component
   void
   update() override;
 
-  Sphere
-  getSphereBound();
-  BoxAAB
-  getBoxBound();
+  /**
+   * @brief
+   * Getter of the sphere bound.
+   *
+   * @description
+   * Returns the sphere bound, of the static mesh transformed by the Transform
+   * component. If any of this isn't set, it returns a default sphere.
+   * 
+   * @return 
+   * The sphere bound, of the static mesh transformed by the Transform
+   * component. If any of this isn't set, it returns a default sphere.
+   */
+  FORCEINLINE const Sphere&
+  getSphereBound()
+  {
+    return m_sphereBound;
+  }
+  /**
+   * @brief
+   * Getter of the box bound.
+   *
+   * @description
+   * Returns the box bound, of the static mesh transformed by the Transform
+   * component. If any of this isn't set, it returns a default box.
+   *
+   * @return
+   * The box bound, of the static mesh transformed by the Transform
+   * component. If any of this isn't set, it returns a default box.
+   */
+  FORCEINLINE const BoxAAB&
+  getBoxBound()
+  {
+    return m_boxBound;
+  }
 
  private:
+  /**
+   * The sphere bound of the actor, for the culling.
+   */
   Sphere m_sphereBound;
+  /**
+   * The box bound of the actor, for the culling.
+   */
   BoxAAB m_boxBound;
 };
 }

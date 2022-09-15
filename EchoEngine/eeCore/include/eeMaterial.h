@@ -47,7 +47,7 @@ class EE_CORE_EXPORT Material : public Resource
   Material(const Map<uint32, WPtr<Texture>>& texturesMap);
   /**
    * @brief
-   * Copy constructor
+   * Default destructor.
    */
   ~Material() = default;
 

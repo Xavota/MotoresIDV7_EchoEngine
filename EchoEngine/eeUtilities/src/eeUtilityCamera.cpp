@@ -45,13 +45,13 @@ UtilityCamera::getUpVector()
   return m_upVector;
 }
 void
-UtilityCamera::setProjectionType(CAMERA_PROJECTION_TYPE type)
+UtilityCamera::setProjectionType(eCAMERA_PROJECTION_TYPE::E type)
 {
   m_projectionType = type;
 
   m_dirtyProj = true;
 }
-CAMERA_PROJECTION_TYPE
+eCAMERA_PROJECTION_TYPE::E
 UtilityCamera::getProjectionType()
 {
   return m_projectionType;
@@ -138,16 +138,16 @@ UtilityCamera::getProjectionMatrix()
     m_dirtyProj = false;
     
     switch (m_projectionType) {
-    case eeEngineSDK::CAMERA_PROJECTION_TYPE::kNone:
+    case eeEngineSDK::eCAMERA_PROJECTION_TYPE::kNone:
       m_projectionMat = Matrix4f::kIDENTITY;
       break;
-    case eeEngineSDK::CAMERA_PROJECTION_TYPE::kOrthographic:
+    case eeEngineSDK::eCAMERA_PROJECTION_TYPE::kOrthographic:
       m_projectionMat = Matrix4f::orthograficMatrixMatrix(m_viewSize.x,
                                                           m_viewSize.y,
                                                           m_nearZ,
                                                           m_farZ);
       break;
-    case eeEngineSDK::CAMERA_PROJECTION_TYPE::kPerspective:
+    case eeEngineSDK::eCAMERA_PROJECTION_TYPE::kPerspective:
       m_projectionMat = Matrix4f::perspectiveMatrix(m_fovAngleY,
                                                     m_viewSize.x / m_viewSize.y,
                                                     m_nearZ,

@@ -19,17 +19,17 @@ namespace eeEngineSDK{
  * Types of components.
  */
 namespace eCOMPONENT_TYPE {
-enum E : uint32
+enum E : uint8
 {
   kNone = 0,
-  kTransform = 1,
-  kStaticMesh = 2,
-  kRender = 4,
-  kCamera = 8,
-  kSkeletalMesh = 16,
-  kAnimation = 32,
-  kBounds = 64,
-  kLight = 128
+  kTransform,
+  kStaticMesh,
+  kRender,
+  kCamera,
+  kSkeletalMesh,
+  kAnimation ,
+  kBounds ,
+  kLight 
 };
 }
 
@@ -67,7 +67,7 @@ public:
    * @return
    * The component type.
    */
-  FORCEINLINE virtual int32
+  FORCEINLINE virtual int8
   getType()
   {
     return CmpType;

@@ -14,6 +14,7 @@
 #include "eeSceneManager.h"
 #include "eeInputManager.h"
 #include "eeAudioManager.h"
+#include "eeOmniverseManager.h"
 
 //#include "eeLUAUtilities.h"
 
@@ -111,39 +112,52 @@ BaseApp::initSystems(void* callback)
     if (rendererInit) {
       rendererInit();
     }
-
-    
-    DLLDynamics inputManager;
-    inputManager.initialize(eeConfigurations::inputManagerName
-                          + eeConfigurations::platformConfigPrefix
-                          + eeConfigurations::dynamicLibSuffix);
-    
-    auto inputManagerInit = inputManager.getFunction("initPlugin");
-    if (inputManagerInit) {
-      inputManagerInit();
-    }
-    if (InputManager::isStarted()) {
-      InputManager::instance().init(Vector2i{static_cast<int32>(screenWidth),
-                                             static_cast<int32>(screenHeight)});
-    }
-
-    
-    DLLDynamics audioManager;
-    audioManager.initialize(eeConfigurations::audioManagerName
-                          + eeConfigurations::platformConfigPrefix
-                          + eeConfigurations::dynamicLibSuffix);
-    
-    auto audioManagerInit = audioManager.getFunction("initPlugin");
-    if (audioManagerInit) {
-      audioManagerInit();
-    }
-    if (AudioManager::isStarted()) {
-      AudioManager::instance().init(64);
-    }
-
-
-    ResourceManager::instance().loadAllSerialized();
   }
+
+  DLLDynamics inputManager;
+  inputManager.initialize(eeConfigurations::inputManagerName
+                        + eeConfigurations::platformConfigPrefix
+                        + eeConfigurations::dynamicLibSuffix);
+  
+  auto inputManagerInit = inputManager.getFunction("initPlugin");
+  if (inputManagerInit) {
+    inputManagerInit();
+  }
+  if (InputManager::isStarted()) {
+    InputManager::instance().init(Vector2i{static_cast<int32>(screenWidth),
+                                           static_cast<int32>(screenHeight)});
+  }
+
+  
+  DLLDynamics audioManager;
+  audioManager.initialize(eeConfigurations::audioManagerName
+                        + eeConfigurations::platformConfigPrefix
+                        + eeConfigurations::dynamicLibSuffix);
+  
+  auto audioManagerInit = audioManager.getFunction("initPlugin");
+  if (audioManagerInit) {
+    audioManagerInit();
+  }
+  if (AudioManager::isStarted()) {
+    AudioManager::instance().init(64);
+  }
+
+  
+  DLLDynamics omniverseManager;
+  omniverseManager.initialize(eeConfigurations::omniverseManagerName
+                            + eeConfigurations::platformConfigPrefix
+                            + eeConfigurations::dynamicLibSuffix);
+  
+  auto omniverseManagerInit = omniverseManager.getFunction("initPlugin");
+  if (omniverseManagerInit) {
+    omniverseManagerInit();
+  }
+  if (OmniverseManager::isStarted()) {
+    OmniverseManager::instance().init(eeConfigurations::omniverseLiveEdit);
+  }
+
+
+  ResourceManager::instance().loadAllSerialized();
 
   return true;
 }

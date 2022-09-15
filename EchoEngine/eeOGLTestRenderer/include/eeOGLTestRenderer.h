@@ -31,7 +31,7 @@ class EE_OGL_TEST_RENDERER_EXPORT OGLTestRenderer : public Renderer
    OGLTestRenderer();
   /**
    * @brief
-   * Copy constructor
+   * Default destructor.
    */
   ~OGLTestRenderer() = default;
 

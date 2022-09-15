@@ -13,9 +13,8 @@
 #pragma once
 #include "eePrerequisitesCore.h"
 #include "eeComponent.h"
-#include "eeVector3.h"
-#include "eeMatrix4.h"
-#include "eeQuaternion.h"
+
+#include <eeTransform.h>
 
 namespace eeEngineSDK {
 /**
@@ -52,7 +51,7 @@ class EE_CORE_EXPORT CTransform : public Component
    * @return
    * The component type.
    */
-  int32
+  int8
   getType() override
   {
     return CmpType;
@@ -78,7 +77,7 @@ class EE_CORE_EXPORT CTransform : public Component
    * @return
    * The model matrix of the transformations.
    */
-  virtual Matrix4f
+  Matrix4f
   getModelMatrix();
 
   /**
@@ -91,7 +90,7 @@ class EE_CORE_EXPORT CTransform : public Component
    * @return
    * The position of the object.
    */
-  virtual Vector3f
+  Vector3f
   getPosition();
   /**
    * @brief
@@ -103,7 +102,7 @@ class EE_CORE_EXPORT CTransform : public Component
    * @return
    * The position of the object.
    */
-  virtual Vector3f
+  Vector3f
   getGlobalPosition();
   /**
    * @brief
@@ -115,7 +114,7 @@ class EE_CORE_EXPORT CTransform : public Component
    * @param pos
    * The new position for the object.
    */
-  virtual void
+  void
   setPosition(const Vector3f& pos);
 
   /**
@@ -128,7 +127,7 @@ class EE_CORE_EXPORT CTransform : public Component
    * @return
    * The rotation of the object.
    */
-  virtual Quaternion
+  Quaternion
   getRotation();
   /**
    * @brief
@@ -140,7 +139,7 @@ class EE_CORE_EXPORT CTransform : public Component
    * @return
    * The rotation of the object.
    */
-  virtual Quaternion
+  Quaternion
   getGlobalRotation();
   /**
    * @brief
@@ -152,7 +151,7 @@ class EE_CORE_EXPORT CTransform : public Component
    * @param rot
    * The new rotation for the object.
    */
-  virtual void
+  void
   setRotation(const Quaternion& rot);
 
   /**
@@ -165,7 +164,7 @@ class EE_CORE_EXPORT CTransform : public Component
    * @return
    * The scale of the object.
    */
-  virtual Vector3f
+  Vector3f
   getScale();
   /**
    * @brief
@@ -177,7 +176,7 @@ class EE_CORE_EXPORT CTransform : public Component
    * @return
    * The scale of the object.
    */
-  virtual Vector3f
+  Vector3f
   getGlobalScale();
   /**
    * @brief
@@ -189,8 +188,24 @@ class EE_CORE_EXPORT CTransform : public Component
    * @param scale
    * The new scale for the object.
    */
-  virtual void
+  void
   setScale(const Vector3f& scale);
+  
+  /**
+   * @brief
+   * Getter for the transform object.
+   *
+   * @description
+   * Returns the complete local transform object of the component.
+   *
+   * @return
+   * The complete local transform object of the component.
+   */
+  FORCEINLINE const Transform&
+  getTransformObj()
+  {
+    return m_transform;
+  }
 
 
   /**
@@ -207,18 +222,23 @@ class EE_CORE_EXPORT CTransform : public Component
   attachTo(WPtr<CTransform> transformParent);
 
  private:
+  ///**
+  // * The position of the actor.
+  // */
+  //Vector3f m_position;
+  ///**
+  // * The rotation of the actor.
+  // */
+  //Quaternion m_rotation;
+  ///**
+  // * The scale of the actor.
+  // */
+  //Vector3f m_scale;
+
   /**
-   * The position of the actor.
+   * The transform object for the component.
    */
-  Vector3f m_position;
-  /**
-   * The rotation of the actor.
-   */
-  Quaternion m_rotation;
-  /**
-   * The scale of the actor.
-   */
-  Vector3f m_scale;
+  Transform m_transform;
 
   ///**
   // * The dirty flag of the model matrix.
@@ -233,9 +253,9 @@ class EE_CORE_EXPORT CTransform : public Component
    * The transform component parent.
    */
   WPtr<CTransform> m_parent;
-  /**
-   * The child index on the parent transform.
-   */
-  int32 m_childIndex = -1;
+  ///**
+  // * The child index on the parent transform.
+  // */
+  //int32 m_childIndex = -1;
 };
 }

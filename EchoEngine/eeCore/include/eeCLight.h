@@ -82,11 +82,34 @@ class EE_CORE_EXPORT CLight : public Component
    * @return
    * The component type.
    */
-  int32
+  int8
   getType() override
   {
     return CmpType;
   }
+  
+  /**
+   * @brief
+   * Initialize the light.
+   * 
+   * @description
+   * Constructs the light with parameters.
+   *
+   * @param type
+   * The light type.
+   * @param newColor
+   * The light color.
+   * @param innerAngle
+   * The light inner angle.
+   * @param outerAngle
+   * The light outer angle.
+   */
+  void
+  init(eLIGHT_TYPE::E type,
+       Color newColor = Color(1.0f, 1.0f, 1.0f, 1.0f),
+       float intensity = 1.0f,
+       float innerAngle = Math::kPI * 0.25f,
+       float outerAngle = Math::kPI * 0.5f);
 
   /**
    * @brief

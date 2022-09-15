@@ -70,7 +70,7 @@ class EE_CORE_EXPORT CCamera : public Component
    * @return
    * The component type.
    */
-  int32
+  int8
   getType() override
   {
     return CmpType;
@@ -152,7 +152,7 @@ class EE_CORE_EXPORT CCamera : public Component
    * The enum for the projection type.
    */
   void
-  setProjectionType(CAMERA_PROJECTION_TYPE type);
+  setProjectionType(eCAMERA_PROJECTION_TYPE::E type);
   /**
    * @brief
    * Getter for the projection type.
@@ -163,7 +163,7 @@ class EE_CORE_EXPORT CCamera : public Component
    * @return
    * The projection matrix type.
    */
-  CAMERA_PROJECTION_TYPE
+  eCAMERA_PROJECTION_TYPE::E
   getProjectionType();
 
   /**

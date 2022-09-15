@@ -45,7 +45,7 @@ class EE_CORE_EXPORT Image
   Image(const WString& path);
   /**
    * @brief
-   * Copy constructor
+   * Default destructor.
    */
   ~Image();
 
@@ -186,6 +186,22 @@ class EE_CORE_EXPORT Image
     m_data[y * m_width + x] = newColor;
   }
 
+  /**
+   * @brief
+   * Get the image path.
+   *
+   * @description
+   * Returns the image path.
+   *
+   * @return
+   * The image path.
+   */
+  const String&
+  getPath()
+  {
+    return m_path;
+  }
+
  private:
   /**
    * The width of the image.
@@ -200,5 +216,10 @@ class EE_CORE_EXPORT Image
    * The data of the image.
    */
   ColorI* m_data = nullptr;
+
+  /**
+   * The path of the image, if there is one.
+   */
+  String m_path;
 };
 }

@@ -197,12 +197,14 @@
     <ClInclude Include="include\eeSTDHeaders.h" />
     <ClInclude Include="include\eeStringUtilities.h" />
     <ClInclude Include="include\eeTime.h" />
+    <ClInclude Include="include\eeTransform.h" />
     <ClInclude Include="include\eeTriangle.h" />
     <ClInclude Include="include\eeUtilityCamera.h" />
     <ClInclude Include="include\eeVector2.h" />
     <ClInclude Include="include\eeVector3.h" />
     <ClInclude Include="include\eeVector4.h" />
     <ClInclude Include="include\eeVertex.h" />
+    <ClInclude Include="include\eeSerializationUtilities.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeBox.cpp" />
@@ -224,11 +226,13 @@
     <ClCompile Include="src\eeSphere.cpp" />
     <ClCompile Include="src\eeStringUtilities.cpp" />
     <ClCompile Include="src\eeTime.cpp" />
+    <ClCompile Include="src\eeTransform.cpp" />
     <ClCompile Include="src\eeTriangle.cpp" />
     <ClCompile Include="src\eeUtilityCamera.cpp" />
     <ClCompile Include="src\eeVector2.cpp" />
     <ClCompile Include="src\eeVector3.cpp" />
     <ClCompile Include="src\eeVector4.cpp" />
+    <ClCompile Include="src\eeSerializationUtilities.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

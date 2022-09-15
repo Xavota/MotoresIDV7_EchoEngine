@@ -70,7 +70,7 @@ class EE_CORE_EXPORT Actor : public EnableSPtrFromThis<Actor>
    * Adds a component of the class of the template.
    */
   template <class T>
-  FORCEINLINE void
+  FORCEINLINE WPtr<T>
   addComponent();
 
   /**
@@ -86,6 +86,21 @@ class EE_CORE_EXPORT Actor : public EnableSPtrFromThis<Actor>
   template <class T>
   FORCEINLINE WPtr<T>
   getComponent();
+  /**
+   * @brief
+   * Gets all the components.
+   *
+   * @description
+   * Returns all the components that the actor has, including Transform.
+   *
+   * @return
+   * All the components that the actor has, including Transform.
+   */
+  FORCEINLINE const Vector<SPtr<Component>>&
+  getAllComponents()
+  {
+    return m_pComponents;
+  }
 
   /**
    * @brief
@@ -198,45 +213,37 @@ class EE_CORE_EXPORT Actor : public EnableSPtrFromThis<Actor>
 
  private:
   /**
-   * The list of components.
+   * The name of the actor.
    */
-  Vector<SPtr<Component>> m_pComponents;
-
-  ///**
-  // * The list of child actors.
-  // */
-  //Vector<SPtr<Actor>> m_pChilds; // TODO: Change to WPtr
-  //
-  ///**
-  // * A parent actor, if it is.
-  // */
-  //WPtr<Actor> m_pParent;
-
+  String m_name;
   /**
    * If the actor is active or not.
    */
   bool m_active = true;
 
   /**
-   * The name of the actor.
+   * The list of components.
    */
-  String m_name;
+  Vector<SPtr<Component>> m_pComponents;
 };
 template<typename T>
-FORCEINLINE void
+FORCEINLINE WPtr<T>
 Actor::addComponent()
 {
+  auto& memoryMan = MemoryManager::instance();
   T c; // This is to disable warning "constant logic expression"
   if (c.getType() == eCOMPONENT_TYPE::kTransform) {
   auto& loggerMan = Logger::instance();
     loggerMan.consoleLog("Things can't be in more than one place, kido.");
     loggerMan.consoleLog("ERROR ADDING TRANSFORM COMPONENT TO ACTOR.");
     loggerMan.consoleLog("CANNOT ADD A TRANSFORM COMPONENT");
-    return;
+    return getComponent<T>();
   }
   SIZE_T cmpIndex = m_pComponents.size();
   m_pComponents.push_back(MemoryManager::instance().newPtr<T>());
   m_pComponents[cmpIndex]->init(shared_from_this());
+
+  return memoryMan.reinterpretPtr<T>(m_pComponents[cmpIndex]);
 }
 template<typename T>
 FORCEINLINE WPtr<T>

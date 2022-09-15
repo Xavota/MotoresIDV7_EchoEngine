@@ -47,7 +47,7 @@ class EE_CORE_EXPORT CAnimation : public Component
    * @return
    * The component type.
    */
-  int32
+  int8
   getType() override
   {
     return CmpType;
@@ -88,6 +88,22 @@ class EE_CORE_EXPORT CAnimation : public Component
   void
   setAnimation(WPtr<Animation> anim); // TODO: CHANGE IT TO ADMIT ANIMATION 
                                       // STATE MACHINE.
+
+  /**
+   * @brief
+   * Returns the animation time.
+   *
+   * @description
+   * Returns the current time the animation is running.
+   *
+   * @return
+   * The current time the animation is running.
+   */
+  FORCEINLINE float
+  getAnimationTime()
+  {
+    return m_animTime;
+  }
 
  private:
   /**

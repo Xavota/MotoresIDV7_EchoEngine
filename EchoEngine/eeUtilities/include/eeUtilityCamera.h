@@ -21,13 +21,15 @@ namespace eeEngineSDK {
  * @brief
  * Enum for camera projection mode.
  */
-enum class CAMERA_PROJECTION_TYPE
+namespace eCAMERA_PROJECTION_TYPE {
+enum E
 {
   kNone = -1,
   kOrthographic,
   kPerspective,
   kCount
 };
+}
 
 /**
  * @brief
@@ -38,7 +40,7 @@ struct CameraDesc
   /**
    * The camera projection mode.
    */
-  CAMERA_PROJECTION_TYPE projectionType = CAMERA_PROJECTION_TYPE::kNone;
+  eCAMERA_PROJECTION_TYPE::E projectionType = eCAMERA_PROJECTION_TYPE::kNone;
   /**
    * The halve field of view angle in Y direction.
    */
@@ -176,7 +178,7 @@ class EE_UTILITY_EXPORT UtilityCamera
    * The enum for the projection type.
    */
   void
-  setProjectionType(CAMERA_PROJECTION_TYPE type);
+  setProjectionType(eCAMERA_PROJECTION_TYPE::E type);
   /**
    * @brief
    * Getter for the projection type.
@@ -187,7 +189,7 @@ class EE_UTILITY_EXPORT UtilityCamera
    * @return
    * The projection matrix type.
    */
-  CAMERA_PROJECTION_TYPE
+  eCAMERA_PROJECTION_TYPE::E
   getProjectionType();
 
   /**
@@ -416,7 +418,7 @@ class EE_UTILITY_EXPORT UtilityCamera
   /**
    * The projection type for the projection matrix.
    */
-  CAMERA_PROJECTION_TYPE m_projectionType = CAMERA_PROJECTION_TYPE::kNone;
+  eCAMERA_PROJECTION_TYPE::E m_projectionType = eCAMERA_PROJECTION_TYPE::kNone;
   /**
    * The halve FOV Y angle.
    */

@@ -33,7 +33,6 @@ CAnimation::getAnimation()
 void
 CAnimation::setAnimation(WPtr<Animation> anim)
 {
-  if (anim.expired()) return;
   m_anim = anim;
 }
 }

@@ -105,6 +105,8 @@
     <ClInclude Include="include\eeTriangle.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\eeSerializationUtilities.h" />
+    <ClInclude Include="include\eeTransform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeVector2.cpp">
@@ -179,5 +181,7 @@
     <ClCompile Include="src\eeTriangle.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\eeSerializationUtilities.cpp" />
+    <ClCompile Include="src\eeTransform.cpp" />
   </ItemGroup>
 </Project>

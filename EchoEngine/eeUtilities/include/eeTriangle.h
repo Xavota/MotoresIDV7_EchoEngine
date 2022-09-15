@@ -50,7 +50,7 @@ class EE_UTILITY_EXPORT Triangle
   {}
   /**
    * @brief
-   * Copy constructor
+   * Default destructor.
    */
   ~Triangle() = default;
 

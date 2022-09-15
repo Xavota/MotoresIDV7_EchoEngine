@@ -698,6 +698,7 @@ DeferredRenderer::onRender()
   
   // Set rasterizer
   m_solidCCWRasterizer->use();
+  graphicsApi.setPrimitiveTopology(ePRIMITIVE_TOPOLOGY::kTrianglelist);
   
   // Clear and set render targets
   graphicsApi.clearRenderTargets({ m_GBufferNormalTexture },
@@ -807,6 +808,9 @@ DeferredRenderer::onRender()
     rActors =
     sceneManager.getAllRenderableActorsInside(sMainCam,
                                               eRENDER_ACTOR_FLAGS::kStaticMesh);
+  }
+  else {
+    return;
   }
   
   for (const auto& act : rActors) {

@@ -180,6 +180,21 @@ class EE_CORE_EXPORT Mesh
   }
   /**
    * @brief
+   * Getter for the triangles count.
+   *
+   * @description
+   * Returns the number of triangles stored.
+   *
+   * @return
+   * The number of triangles stored.
+   */
+  FORCEINLINE SIZE_T
+  getTrianglesCount() const
+  {
+    return m_vertexArray.size();
+  }
+  /**
+   * @brief
    * Getter for the control points count.
    *
    * @description
@@ -209,18 +224,18 @@ class EE_CORE_EXPORT Mesh
   {
     return m_indexCount;
   }
-
+  
   /**
    * @brief
    * Getter for the triangles array.
    *
    * @description
-   * Returns the triangles array of the mesh.
+   * Returns the array of triangles that form this mesh.
    *
    * @return
-   * The triangles array of the mesh.
+   * The array of triangles that form this mesh.
    */
-  FORCEINLINE Vector<Triangle>
+  FORCEINLINE const Vector<Triangle>&
   getTrianglesArray() const
   {
     return m_vertexArray;
@@ -235,7 +250,7 @@ class EE_CORE_EXPORT Mesh
    * @return
    * The control points array of the mesh.
    */
-  FORCEINLINE Vector<ComplexVertex>
+  FORCEINLINE const Vector<ComplexVertex>&
   getControlPointsArray() const
   {
     return m_controlPoints;
@@ -251,7 +266,7 @@ class EE_CORE_EXPORT Mesh
    * @return
    * The indices array of the mesh.
    */
-  FORCEINLINE Vector<uint32>
+  FORCEINLINE const Vector<uint32>&
   getIndicesArray() const
   {
     return m_indexArray;

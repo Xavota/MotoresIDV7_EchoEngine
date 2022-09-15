@@ -55,6 +55,12 @@
     <Filter Include="src\Audio">
       <UniqueIdentifier>{e6d07bd0-0abb-481c-905b-25e2e0308b44}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Omniverse">
+      <UniqueIdentifier>{94bdaae4-676c-472a-8bca-a664ffa0b819}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Omniverse">
+      <UniqueIdentifier>{f31373ef-b598-4df3-a2d3-5e98f3ce744b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\eeCoreConfiguration.h">
@@ -227,6 +233,9 @@
     </ClInclude>
     <ClInclude Include="include\eeResource.h" />
     <ClInclude Include="include\eeAudioChannel.h" />
+    <ClInclude Include="include\eeOmniverseManager.h">
+      <Filter>include\Omniverse</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeBaseApp.cpp">
@@ -387,5 +396,8 @@
     </ClCompile>
     <ClCompile Include="src\eeResource.cpp" />
     <ClCompile Include="src\eeAudioChannel.cpp" />
+    <ClCompile Include="src\eeOmniverseManager.cpp">
+      <Filter>src\Omniverse</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
