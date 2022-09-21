@@ -133,10 +133,27 @@ class EE_OMNIVERSE_EXPORT OmniverseApi : public OmniverseManager
   * The name of the scene.
   *
   * @return
-  * If it succeeded on inserting the scene on teh stage.
+  * If it succeeded on inserting the scene on the stage.
   */
   bool
-  setScenegraphOnStage(SPtr<Scene> scenegraph, const String& name) override;
+  setScenegraphOnStage(SPtr<Scene> scenegraph) override;
+  /**
+  * @brief
+  * Transform the scene graph into a usd stage.
+  *
+  * @description
+  * Inserts everything in the scene into the usd stage file.
+  *
+  * @param scenegraph
+  * The scene that will be inserted in the stage.
+  * @param name
+  * The name of the scene.
+  *
+  * @return
+  * If it succeeded on inserting the scene on the stage.
+  */
+  bool
+  getScenegraphFromStage(SPtr<Scene>* scenegraph, const String& name) override;
 
 
 

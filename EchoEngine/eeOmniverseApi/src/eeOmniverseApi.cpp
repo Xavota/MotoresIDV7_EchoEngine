@@ -248,9 +248,9 @@ addStMeshCmpToScenegraph(SdfPath parentPath,
   if (sceneActor.expired()) return;
   auto& sActor = sceneActor.lock();
 
-  auto transCmp = sActor->getComponent<CTransform>();
-  if (transCmp.expired()) return;
-  auto sTransCmp = transCmp.lock();
+  //auto transCmp = sActor->getComponent<CTransform>();
+  //if (transCmp.expired()) return;
+  //auto sTransCmp = transCmp.lock();
   if (stMeshCmp.expired()) return;
   auto sStMeshCmp = stMeshCmp.lock();
 
@@ -337,17 +337,15 @@ addStMeshCmpToScenegraph(SdfPath parentPath,
     }
     attr2.SetInterpolation(UsdGeomTokens->vertex);
     
-    const auto& actorTrans = sTransCmp->getTransformObj();
-    Vector3f transPos = actorTrans.getPosition();
-    Vector3f transRot = actorTrans.getRotation().getEuclidean();
-    Vector3f transScale = actorTrans.getScale();
-    // Move it up
-    mesh.AddTranslateOp(UsdGeomXformOp::PrecisionFloat).Set(GfVec3f(-transPos.x, transPos.y, transPos.z) * 100.f);
-    mesh.AddRotateXYZOp(UsdGeomXformOp::PrecisionFloat).Set(GfVec3f(transRot.x, transRot.y, transRot.z) * Math::k180_OVER_PI);
-    mesh.AddScaleOp(UsdGeomXformOp::PrecisionFloat).Set(GfVec3f(transScale.x, transScale.y, transScale.z));
-    
-    // Make the cube a physics rigid body dynamic
-    //enablePhysics(mesh.GetPrim(), true);
+    //const auto& actorTrans = sTransCmp->getTransformObj();
+    //Vector3f transPos = actorTrans.getPosition();
+    //Vector3f transRot = actorTrans.getRotation().getEuclidean();
+    //Vector3f transScale = actorTrans.getScale();
+    // 
+    //mesh.AddTranslateOp(UsdGeomXformOp::PrecisionFloat).Set(GfVec3f(-transPos.x, transPos.y, transPos.z) * 100.f);
+    //mesh.AddRotateXYZOp(UsdGeomXformOp::PrecisionFloat).Set(GfVec3f(transRot.x, transRot.y, transRot.z) * Math::k180_OVER_PI);
+    //mesh.AddScaleOp(UsdGeomXformOp::PrecisionFloat).Set(GfVec3f(transScale.x, transScale.y, transScale.z));
+
 
 
     String matName("Mat_" + stm.second.lock()->getResourceName());
@@ -393,9 +391,9 @@ addSkMeshCmpToScenegraph(SdfPath parentPath,
   if (sceneActor.expired()) return;
   auto& sActor = sceneActor.lock();
 
-  auto transCmp = sActor->getComponent<CTransform>();
-  if (transCmp.expired()) return;
-  auto sTransCmp = transCmp.lock();
+  //auto transCmp = sActor->getComponent<CTransform>();
+  //if (transCmp.expired()) return;
+  //auto sTransCmp = transCmp.lock();
   if (skMeshCmp.expired()) return;
   auto sSkMeshCmp = skMeshCmp.lock();
 
@@ -476,17 +474,14 @@ addSkMeshCmpToScenegraph(SdfPath parentPath,
     }
     attr2.SetInterpolation(UsdGeomTokens->vertex);
     
-    const auto& actorTrans = sTransCmp->getTransformObj();
-    Vector3f transPos = actorTrans.getPosition();
-    Vector3f transRot = actorTrans.getRotation().getEuclidean();
-    Vector3f transScale = actorTrans.getScale();
-    // Move it up
-    mesh.AddTranslateOp(UsdGeomXformOp::PrecisionFloat).Set(GfVec3f(-transPos.x, transPos.y, transPos.z) * 100.f);
-    mesh.AddRotateXYZOp(UsdGeomXformOp::PrecisionFloat).Set(GfVec3f(transRot.x, transRot.y, transRot.z) * Math::k180_OVER_PI);
-    mesh.AddScaleOp(UsdGeomXformOp::PrecisionFloat).Set(GfVec3f(transScale.x, transScale.y, transScale.z));
-    
-    // Make the cube a physics rigid body dynamic
-    //enablePhysics(mesh.GetPrim(), true);
+    //const auto& actorTrans = sTransCmp->getTransformObj();
+    //Vector3f transPos = actorTrans.getPosition();
+    //Vector3f transRot = actorTrans.getRotation().getEuclidean();
+    //Vector3f transScale = actorTrans.getScale();
+    //
+    //mesh.AddTranslateOp(UsdGeomXformOp::PrecisionFloat).Set(GfVec3f(-transPos.x, transPos.y, transPos.z) * 100.f);
+    //mesh.AddRotateXYZOp(UsdGeomXformOp::PrecisionFloat).Set(GfVec3f(transRot.x, transRot.y, transRot.z) * Math::k180_OVER_PI);
+    //mesh.AddScaleOp(UsdGeomXformOp::PrecisionFloat).Set(GfVec3f(transScale.x, transScale.y, transScale.z));
 
 
     String matName("Mat_" + stm.second.lock()->getResourceName());
@@ -534,6 +529,22 @@ addActorToScenegraph(SdfPath parentPath,
 
   auto& sActor = sceneActor.lock();
 
+  auto transCmp = sActor->getComponent<CTransform>();
+  if (transCmp.expired()) return;
+  auto sTransCmp = transCmp.lock();
+
+  UsdGeomXform act = UsdGeomXform::Define(stage, parentPath);
+
+  const auto& actorTrans = sTransCmp->getTransformObj();
+  Vector3f transPos = actorTrans.getPosition();
+  Vector3f transRot = actorTrans.getRotation().getEuclidean();
+  Vector3f transScale = actorTrans.getScale();
+
+  act.AddTranslateOp(UsdGeomXformOp::PrecisionFloat).Set(GfVec3f(-transPos.x, transPos.y, transPos.z) * 100.f);
+  act.AddRotateXYZOp(UsdGeomXformOp::PrecisionFloat).Set(GfVec3f(transRot.x, transRot.y, transRot.z) * Math::k180_OVER_PI);
+  act.AddScaleOp(UsdGeomXformOp::PrecisionFloat).Set(GfVec3f(transScale.x, transScale.y, transScale.z));
+
+
   const auto& actorComponents = sActor->getAllComponents();
 
   for (const auto& cmp : actorComponents) {
@@ -571,7 +582,7 @@ setActorOnStageHelper(SdfPath parentPath,
   return true;
 }
 bool
-OmniverseApi::setScenegraphOnStage(SPtr<Scene> scenegraph, const String& name)
+OmniverseApi::setScenegraphOnStage(SPtr<Scene> scenegraph)
 {
   auto& actorsTree = scenegraph->getActorsTree();
   for (auto& a : actorsTree) {

@@ -1383,7 +1383,7 @@ ResourceManager::serializeTexture(const String& resourceName,
     saveFile.openFile(fileToSave, OPEN_TYPE::kWriteOnly | OPEN_TYPE::kBinary);
     if (saveFile.isOpen()) {
       auto tex = m_textures[resourceName];
-      serializeFileStartData(saveFile, eRESOURCE_CODE::kTexture, 0);
+      serializeFileStartData(saveFile, eRESOURCE_CODE::kTexture, 1);
 
       Vector<SPtr<Image>> images = tex->getImages();
       SIZE_T imagesCount = images.size();
@@ -1395,6 +1395,8 @@ ResourceManager::serializeTexture(const String& resourceName,
         saveFile.writeBytes(reinterpret_cast<Byte*>(&imgHeight), sizeof(uint32));
         saveFile.writeBytes(reinterpret_cast<Byte*>(img->getData()),
                             imgWidth * imgHeight * sizeof(ColorI));
+
+        serializeString(saveFile, img->getPath());
       }
       saveFile.close();
 
@@ -1705,7 +1707,7 @@ ResourceManager::serializeAnimation(const String& resourceName,
 bool
 ResourceManager::loadSerializedTexture(File& fileToLoad,
                                        const String& resourceName,
-                                       uint8 /*versionNum*/,
+                                       uint8 versionNum,
                                        uint8 sizeTSize)
 {
   if (m_textures.find(resourceName) != m_textures.end()) {
@@ -1730,6 +1732,11 @@ ResourceManager::loadSerializedTexture(File& fileToLoad,
       fileToLoad.readBytes(imgData, dataArraySize);
       readImages[i]->loadFromPixelData(imgData, width, height);
       delete[] imgData;
+      if (versionNum > 0) {
+        String imgPath;
+        loadSerializedString(fileToLoad,imgPath, sizeTSize);
+        readImages[i]->setPath(imgPath);
+      }
     }
 
     SPtr<Texture> tex = GraphicsApi::instance().createTexturePtr();

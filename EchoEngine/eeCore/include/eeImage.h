@@ -201,6 +201,21 @@ class EE_CORE_EXPORT Image
   {
     return m_path;
   }
+  /**
+   * @brief
+   * Set the image path.
+   *
+   * @description
+   * Sets the image path.
+   *
+   * @param path
+   * The image path.
+   */
+  const void
+  setPath(const String& path)
+  {
+    m_path = path;
+  }
 
  private:
   /**

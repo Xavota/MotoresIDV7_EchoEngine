@@ -298,6 +298,37 @@ class EE_CORE_EXPORT Scene
     return m_actorsTree;
   }
 
+  /**
+   * @brief
+   * Getter of the scene name.
+   *
+   * @description
+   * Returns the name that identifies the scene.
+   *
+   * @return
+   * The name that identifies the scene.
+   */
+  FORCEINLINE const String&
+  getName()
+  {
+    return m_name;
+  }
+  /**
+   * @brief
+   * Setter of the scene name.
+   *
+   * @description
+   * Sets the name that identifies the scene.
+   *
+   * @param name
+   * The name that identifies the scene.
+   */
+  FORCEINLINE void
+  setName(const String& name)
+  {
+    m_name = name;
+  }
+
  private:
   /**
    * @brief
@@ -323,6 +354,11 @@ class EE_CORE_EXPORT Scene
    * The actors tree, for easy access.
    */
   Vector<SPtr<ActorNode>> m_actorsTree;
+
+  /**
+   * The name that identifies the scene.
+   */
+  String m_name;
 
   /**
    * If the scene is active to be updated and rendered.

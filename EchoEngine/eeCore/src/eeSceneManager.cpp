@@ -53,6 +53,8 @@ SceneManager::addScene(const String& name)
   m_scenes[name] = MemoryManager::instance().newPtr<Scene>();
   m_scenes[name]->init();
 
+  m_scenes[name]->setName(name);
+
   File sceneSaveFile;
   sceneSaveFile.openFile(L"Scenes/" + eeStringtoWString(name) + L".echomap",
                          OPEN_TYPE::kWriteOnly | OPEN_TYPE::kBinary);
@@ -532,6 +534,9 @@ SceneManager::loadScene(const WString& filePath)
   getFileName(filePath, sceneName);
   if (m_scenes.find(sceneName) == m_scenes.end()) {
     m_scenes[sceneName] = memoryMan.newPtr<Scene>();
+    m_scenes[sceneName]->init();
+
+    m_scenes[sceneName]->setName(sceneName);
   }
 
   File loadFile;
