@@ -106,6 +106,15 @@ class EE_OMNIVERSE_EXPORT OmniverseApi : public OmniverseManager
   */
   void
   openStage(const String& stageUrl) override;
+  /**
+  * @brief
+  * Saves the active stage to the .usd file.
+  *
+  * @description
+  * Saves the active stage to the .usd file.
+  */
+  void
+  saveStage() override;
 
   /**
   * @brief
@@ -129,48 +138,38 @@ class EE_OMNIVERSE_EXPORT OmniverseApi : public OmniverseManager
   *
   * @param scenegraph
   * The scene that will be inserted in the stage.
-  * @param name
-  * The name of the scene.
   *
   * @return
   * If it succeeded on inserting the scene on the stage.
   */
   bool
-  setScenegraphOnStage(SPtr<Scene> scenegraph) override;
+  setScenegraphOnStage(WPtr<Scene> scenegraph) override;
   /**
   * @brief
-  * Transform the scene graph into a usd stage.
+  * Returns the scenegraph inside the stage.
   *
   * @description
-  * Inserts everything in the scene into the usd stage file.
+  * Inserts everything in the stage file into the scene.
   *
   * @param scenegraph
-  * The scene that will be inserted in the stage.
-  * @param name
-  * The name of the scene.
-  *
-  * @return
-  * If it succeeded on inserting the scene on the stage.
+  * The scene that will get the stage.
   */
-  bool
-  getScenegraphFromStage(SPtr<Scene>* scenegraph, const String& name) override;
-
-
-
-  // Test functions
   void
-  createBox(const Transform& boxTransform) override;
-  void
-  createMeshActor(WPtr<Actor> meshActor) override;
-  void
-  traverseStage() override;
+  getScenegraphFromStage(SPtr<Scene>* scenegraph) override;
 
-  SdfPath m_rootPrimPath;
 
  private:
   /**
   * Globals for Omniverse Connection and base Stage
   */
   UsdStageRefPtr m_stage;
+  /**
+  * The root path of the stage
+  */
+  SdfPath m_rootPrimPath;
+  /**
+  * The scenegraph that is currently using.
+  */
+  WPtr<Scene> m_scenegraph;
 };
 }

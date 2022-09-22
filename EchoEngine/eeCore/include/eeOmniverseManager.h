@@ -89,6 +89,15 @@ class EE_CORE_EXPORT OmniverseManager : public Module<OmniverseManager>
   */
   virtual void
   openStage(const String& stageUrl) {}
+  /**
+  * @brief
+  * Saves the active stage to the .usd file.
+  *
+  * @description
+  * Saves the active stage to the .usd file.
+  */
+  virtual void
+  saveStage() {}
 
   /**
   * @brief
@@ -112,14 +121,24 @@ class EE_CORE_EXPORT OmniverseManager : public Module<OmniverseManager>
   *
   * @param scenegraph
   * The scene that will be inserted in the stage.
-  * @param name
-  * The name of the scene.
   *
   * @return
-  * If it succeeded on inserting the scene on teh stage.
+  * If it succeeded on inserting the scene on the stage.
   */
   virtual bool
-  setScenegraphOnStage(SPtr<Scene> scenegraph, const String& name) { return false; }
+  setScenegraphOnStage(WPtr<Scene> scenegraph) { return false; }
+  /**
+  * @brief
+  * Returns the scenegraph inside the stage.
+  *
+  * @description
+  * Inserts everything in the stage file into the scene.
+  *
+  * @param scenegraph
+  * The scene that will get the stage.
+  */
+  virtual void
+  getScenegraphFromStage(SPtr<Scene>* scenegraph) {}
   
 
 

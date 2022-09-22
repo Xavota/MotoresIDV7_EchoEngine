@@ -204,12 +204,378 @@ OmniverseApi::openStage(const String& stageUrl)
     failNotify("Failure to open stage in Omniverse:", stageUrl);
   }
 
-  // Keep the model contained inside of "Root", only need to do this once per model
-  m_rootPrimPath = SdfPath::AbsoluteRootPath().AppendChild(_tokens->Root);
-  UsdGeomXform rootPrim = UsdGeomXform::Define(m_stage, m_rootPrimPath);
-
   // Define the defaultPrim as the /Root prim
-  m_stage->SetDefaultPrim(rootPrim.GetPrim());
+  UsdGeomXform rootPrim = static_cast<UsdGeomXform>(m_stage->GetDefaultPrim());
+  m_rootPrimPath = rootPrim.GetPath();
+}
+void
+updateStMeshCmpToScenegraph(const SdfPath& parentPath,
+                            UsdStageRefPtr stage,
+                            WPtr<CStaticMesh> stMeshCmp,
+                            WPtr<Actor> sceneActor)
+{
+  if (sceneActor.expired()) return;
+  auto& sActor = sceneActor.lock();
+
+  //auto transCmp = sActor->getComponent<CTransform>();
+  //if (transCmp.expired()) return;
+  //auto sTransCmp = transCmp.lock();
+  if (stMeshCmp.expired()) return;
+  auto sStMeshCmp = stMeshCmp.lock();
+
+  auto stMesh = sStMeshCmp->getStaticMesh().lock();
+  if (!stMesh) return;
+  auto meshes = stMesh->getMeshes();
+  if (meshes.empty()) return;
+  
+  int32 meshIndex = 0;
+  for (auto& stm : meshes) {
+    // Create the geometry inside of "Root"
+    String meshName("ChActM_" + eeToString(meshIndex++));
+    SdfPath meshPrimPath = parentPath.AppendChild(TfToken(meshName));//_tokens->box);
+    UsdGeomMesh mesh = UsdGeomMesh::Get(stage, meshPrimPath);
+
+    if (!mesh) continue;
+
+    // Set orientation
+    mesh.CreateOrientationAttr(VtValue(UsdGeomTokens->leftHanded));
+
+    // Add all of the vertices
+    int num_vertices = stm.first.getTrianglesCount();
+    auto& vertices = stm.first.getTrianglesArray();
+    VtArray<GfVec3f> points;
+    points.resize(num_vertices * 3);
+    for (int i = 0; i < num_vertices; i++) {
+      points[i * 3 + 0] = GfVec3f(-vertices[i].x.position.x, vertices[i].x.position.y, vertices[i].x.position.z) * 100.0f;
+      points[i * 3 + 1] = GfVec3f(-vertices[i].y.position.x, vertices[i].y.position.y, vertices[i].y.position.z) * 100.0f;
+      points[i * 3 + 2] = GfVec3f(-vertices[i].z.position.x, vertices[i].z.position.y, vertices[i].z.position.z) * 100.0f;
+    }
+    mesh.CreatePointsAttr(VtValue(points));
+    
+    // Calculate indices for each triangle
+    int num_indices = stm.first.getIndexCount();
+    auto& indicesArr = stm.first.getIndicesArray();
+    VtArray<int> vecIndices;
+    vecIndices.resize(num_indices);
+    for (int i = 0; i < num_indices; i++) {
+      vecIndices[i] = indicesArr[i];
+    }
+    mesh.CreateFaceVertexIndicesAttr(VtValue(vecIndices));
+    
+    // Add vertex normals
+    int num_normals = stm.first.getTrianglesCount();
+    VtArray<GfVec3f> meshNormals;
+    meshNormals.resize(num_normals * 3);
+    for (int i = 0; i < num_normals; i++) {
+      meshNormals[i * 3 + 0] = GfVec3f(-vertices[i].x.normal.x, vertices[i].x.normal.y, vertices[i].x.normal.z);
+      meshNormals[i * 3 + 1] = GfVec3f(-vertices[i].y.normal.x, vertices[i].y.normal.y, vertices[i].y.normal.z);
+      meshNormals[i * 3 + 2] = GfVec3f(-vertices[i].z.normal.x, vertices[i].z.normal.y, vertices[i].z.normal.z);
+    }
+    mesh.CreateNormalsAttr(VtValue(meshNormals));
+    
+    // Add face vertex count
+    VtArray<int> faceVertexCounts;
+    faceVertexCounts.resize(stm.first.getTrianglesCount());
+    std::fill(faceVertexCounts.begin(), faceVertexCounts.end(), 3);
+    mesh.CreateFaceVertexCountsAttr(VtValue(faceVertexCounts));
+    
+    // Set the color on the mesh
+    UsdPrim meshPrim = mesh.GetPrim();
+    UsdAttribute displayColorAttr = mesh.CreateDisplayColorAttr();
+    {
+      VtVec3fArray valueArray;
+      GfVec3f rgbFace(0.463f, 0.725f, 0.0f);
+      valueArray.push_back(rgbFace);
+      displayColorAttr.Set(valueArray);
+    }
+    
+    // Set the UV (st) values for this mesh
+    UsdGeomPrimvar attr2 = mesh.CreatePrimvar(_tokens->st, SdfValueTypeNames->TexCoord2fArray);
+    {
+      int uv_count = stm.first.getTrianglesCount();
+      VtVec2fArray valueArray;
+      valueArray.resize(uv_count * 3);
+      for (int i = 0; i < uv_count; ++i)
+      {
+        valueArray[i * 3 + 0].Set(vertices[i].x.uvCoord.x, 1.0f - vertices[i].x.uvCoord.y);
+        valueArray[i * 3 + 1].Set(vertices[i].y.uvCoord.x, 1.0f - vertices[i].y.uvCoord.y);
+        valueArray[i * 3 + 2].Set(vertices[i].z.uvCoord.x, 1.0f - vertices[i].z.uvCoord.y);
+      }
+    
+      bool status = attr2.Set(valueArray);
+    }
+    attr2.SetInterpolation(UsdGeomTokens->vertex);
+
+
+
+    String matName("Mat_" + stm.second.lock()->getResourceName());
+    SdfPath matPath = meshPrimPath.AppendChild(TfToken("Mat_Pat"));
+    auto mat = UsdShadeMaterial::Get(stage, matPath);
+
+    auto pbrShader = UsdShadeShader::Get(stage, matPath.AppendChild(TfToken("PBRShader")));
+    pbrShader.GetInput(TfToken("roughness")).Set(0.4f);
+    pbrShader.GetInput(TfToken("metallic")).Set(0.0f);
+
+    auto tex = stm.second.lock()->getTexturesMap();
+    auto img = tex[0].lock()->getImages()[0];
+
+    String imgPath = "D:/GitHub/MotoresIDV7_EchoEngine/EchoEngine/bin/" + img->getPath();
+
+    auto diffuseTextureSampler = UsdShadeShader::Get(stage, matPath.AppendChild(TfToken("diffuseTexture")));
+    diffuseTextureSampler.GetInput(TfToken("file")).Set(SdfAssetPath(imgPath));
+  }
+}
+void
+updateSkMeshCmpToScenegraph(const SdfPath& parentPath,
+                            UsdStageRefPtr stage,
+                            WPtr<CSkeletalMesh> skMeshCmp,
+                            WPtr<Actor> sceneActor)
+{
+  if (sceneActor.expired()) return;
+  auto& sActor = sceneActor.lock();
+
+  //auto transCmp = sActor->getComponent<CTransform>();
+  //if (transCmp.expired()) return;
+  //auto sTransCmp = transCmp.lock();
+  if (skMeshCmp.expired()) return;
+  auto sSkMeshCmp = skMeshCmp.lock();
+
+  auto skMesh = sSkMeshCmp->getModel().lock();
+  if (!skMesh) return;
+  auto meshes = skMesh->getMeshes();
+  if (meshes.empty()) return;
+  
+  int32 meshIndex = 0;
+  for (auto& stm : meshes) {
+    // Create the geometry inside of "Root"
+    String meshName("ChActM_" + eeToString(meshIndex++));
+    SdfPath meshPrimPath = parentPath.AppendChild(TfToken(meshName));//_tokens->box);
+    UsdGeomMesh mesh = UsdGeomMesh::Get(stage, meshPrimPath);
+
+    if (!mesh) continue;
+
+    // Add all of the vertices
+    int num_vertices = stm.first.getVertexCount();
+    auto& vertices = stm.first.getVertexArray();
+    VtArray<GfVec3f> points;
+    points.resize(num_vertices);
+    for (int i = 0; i < num_vertices; i++) {
+      points[i] = GfVec3f(-vertices[i].position.x, vertices[i].position.y, vertices[i].position.z) * 100.0f;
+    }
+    mesh.CreatePointsAttr(VtValue(points));
+    
+    // Calculate indices for each triangle
+    int num_indices = stm.first.getIndexCount();
+    auto& indicesArr = stm.first.getIndexArray();
+    VtArray<int> vecIndices;
+    vecIndices.resize(num_indices);
+    for (int i = 0; i < num_indices; i++) {
+      vecIndices[i] = indicesArr[i];
+    }
+    mesh.CreateFaceVertexIndicesAttr(VtValue(vecIndices));
+    
+    // Add vertex normals
+    int num_normals = stm.first.getVertexCount();
+    VtArray<GfVec3f> meshNormals;
+    meshNormals.resize(num_normals);
+    for (int i = 0; i < num_normals; i++) {
+      meshNormals[i] = GfVec3f(-vertices[i].normal.x, vertices[i].normal.y, vertices[i].normal.z);
+    }
+    mesh.CreateNormalsAttr(VtValue(meshNormals));
+    
+    // Add face vertex count
+    VtArray<int> faceVertexCounts;
+    faceVertexCounts.resize(num_indices / 3);
+    std::fill(faceVertexCounts.begin(), faceVertexCounts.end(), 3);
+    mesh.CreateFaceVertexCountsAttr(VtValue(faceVertexCounts));
+    
+    // Set the color on the mesh
+    UsdPrim meshPrim = mesh.GetPrim();
+    UsdAttribute displayColorAttr = mesh.GetDisplayColorAttr();
+    {
+      VtVec3fArray valueArray;
+      GfVec3f rgbFace(0.463f, 0.725f, 0.0f);
+      valueArray.push_back(rgbFace);
+      displayColorAttr.Set(valueArray);
+    }
+    
+    // Set the UV (st) values for this mesh
+    UsdGeomPrimvar attr2 = mesh.GetPrimvar(_tokens->st);
+    {
+      int uv_count = stm.first.getVertexCount();
+      VtVec2fArray valueArray;
+      valueArray.resize(uv_count);
+      for (int i = 0; i < uv_count; ++i)
+      {
+        valueArray[i].Set(vertices[i].uvCoord.x, 1.0f - vertices[i].uvCoord.y);
+      }
+    
+      bool status = attr2.Set(valueArray);
+    }
+    attr2.SetInterpolation(UsdGeomTokens->vertex);
+
+
+    String matName("Mat_" + stm.second.lock()->getResourceName());
+    SdfPath matPath = meshPrimPath.AppendChild(TfToken("Mat_Pat"));
+    auto mat = UsdShadeMaterial::Get(stage, matPath);
+
+    auto pbrShader = UsdShadeShader::Get(stage, matPath.AppendChild(TfToken("PBRShader")));
+    pbrShader.GetInput(TfToken("roughness")).Set(0.4f);
+    pbrShader.GetInput(TfToken("metallic")).Set(0.0f);
+
+    auto tex = stm.second.lock()->getTexturesMap();
+    auto img = tex[0].lock()->getImages()[0];
+
+    String imgPath = "D:/GitHub/MotoresIDV7_EchoEngine/EchoEngine/bin/" + img->getPath();
+
+    auto diffuseTextureSampler = UsdShadeShader::Get(stage, matPath.AppendChild(TfToken("diffuseTexture")));
+    diffuseTextureSampler.GetInput(TfToken("file")).Set(SdfAssetPath(imgPath));
+  }
+}
+void
+updateActorToScenegraph(const SdfPath& parentPath,
+                        UsdStageRefPtr stage,
+                        WPtr<Actor> sceneActor)
+{
+  if (sceneActor.expired()) return;
+
+  auto& memoryMan = MemoryManager::instance();
+
+  auto& sActor = sceneActor.lock();
+
+  auto transCmp = sActor->getComponent<CTransform>();
+  if (transCmp.expired()) return;
+  auto sTransCmp = transCmp.lock();
+
+  UsdGeomXform act = UsdGeomXform::Get(stage, parentPath);
+
+  const auto& actorTrans = sTransCmp->getTransformObj();
+  Vector3f transPos = actorTrans.getPosition() * 100.0f;
+  Vector3f transRot = actorTrans.getRotation().getEuclidean() * Math::k180_OVER_PI;
+  Vector3f transScale = actorTrans.getScale();
+
+  UsdGeomXformable xForm = act;
+
+  // Define storage for the different xform ops that Omniverse Kit likes to use
+  UsdGeomXformOp translateOp;
+  UsdGeomXformOp rotateOp;
+  UsdGeomXformOp scaleOp;
+  GfVec3f position(0);
+  GfVec3f rotXYZ(0);
+  GfVec3f scale(1);
+
+  // Get the xform ops stack
+  bool resetXformStack = false;
+  std::vector<UsdGeomXformOp> xFormOps = xForm.GetOrderedXformOps(&resetXformStack);
+
+  // Get the current xform op values
+  for (size_t i = 0; i < xFormOps.size(); i++)
+  {
+    switch (xFormOps[i].GetOpType()) {
+    case UsdGeomXformOp::TypeTranslate:
+      translateOp = xFormOps[i];
+      translateOp.Get(&position);
+      break;
+    case UsdGeomXformOp::TypeRotateXYZ:
+      rotateOp = xFormOps[i];
+      rotateOp.Get(&rotXYZ);
+      break;
+    case UsdGeomXformOp::TypeScale:
+      scaleOp = xFormOps[i];
+      scaleOp.Get(&scale);
+      break;
+    }
+  }
+
+  position = GfVec3f(-transPos.x, transPos.y, transPos.z);
+  rotXYZ = GfVec3f(transRot.x, transRot.y, transRot.z);
+  scale = GfVec3f(transScale.x, transScale.y, transScale.z);
+
+  // A utility class to set the position, rotation, or scale values
+  class SetOp
+  {
+  public:
+    SetOp(UsdGeomXformable& xForm, UsdGeomXformOp& op, UsdGeomXformOp::Type opType, const GfVec3f& value, const UsdGeomXformOp::Precision precision)
+    {
+      if (!op)
+      {
+        op = xForm.AddXformOp(opType, precision);
+        std::unique_lock<std::mutex> lk(gLogMutex);
+        std::cout << " Adding " << UsdGeomXformOp::GetOpTypeToken(opType) << std::endl;
+      }
+
+      if (op.GetPrecision() == UsdGeomXformOp::Precision::PrecisionFloat)
+        op.Set(GfVec3f(value));
+      else
+        op.Set(value);
+
+      std::unique_lock<std::mutex> lk(gLogMutex);
+      std::cout << " Setting " << UsdGeomXformOp::GetOpTypeToken(opType) << std::endl;
+    }
+  };
+
+  SetOp(xForm, translateOp, UsdGeomXformOp::TypeTranslate, position, UsdGeomXformOp::Precision::PrecisionFloat);
+  SetOp(xForm, rotateOp, UsdGeomXformOp::TypeRotateXYZ, rotXYZ, UsdGeomXformOp::Precision::PrecisionFloat);
+  SetOp(xForm, scaleOp, UsdGeomXformOp::TypeScale, scale, UsdGeomXformOp::Precision::PrecisionFloat);
+
+  // Make sure the xform op order is correct (translate, rotate, scale)
+  std::vector<UsdGeomXformOp> xFormOpsReordered;
+  xFormOpsReordered.push_back(translateOp);
+  xFormOpsReordered.push_back(rotateOp);
+  xFormOpsReordered.push_back(scaleOp);
+  xForm.SetXformOpOrder(xFormOpsReordered);
+
+
+  //const auto& actorComponents = sActor->getAllComponents();
+  //
+  //for (const auto& cmp : actorComponents) {
+  //  switch (cmp->getType()) {
+  //  case eCOMPONENT_TYPE::kStaticMesh:
+  //    updateStMeshCmpToScenegraph(parentPath,
+  //                                stage,
+  //                                memoryMan.reinterpretPtr<CStaticMesh>(cmp),
+  //                                sceneActor);
+  //    break;
+  //  case eCOMPONENT_TYPE::kSkeletalMesh:
+  //    updateSkMeshCmpToScenegraph(parentPath,
+  //                                stage,
+  //                                memoryMan.reinterpretPtr<CSkeletalMesh>(cmp),
+  //                                sceneActor);
+  //    break;
+  //  }
+  //}
+}
+void
+updateActorOnStageHelper(const SdfPath& parentPath,
+                         UsdStageRefPtr stage,
+                         SPtr<ActorNode> actNode)
+{
+  auto& sActor = actNode->actorValue.lock();
+  String parentName(sActor->getName());
+  SdfPath parentPrimPath = parentPath.AppendChild(TfToken(parentName));
+
+  updateActorToScenegraph(parentPrimPath, stage, actNode->actorValue);
+
+  for (auto& a : actNode->childrenNode) {
+    updateActorOnStageHelper(parentPrimPath, stage, a);
+  }
+}
+void
+updateScenegraphOnStage(WPtr<Scene> scenegraph,
+                        const SdfPath& rootPath,
+                        UsdStageRefPtr stage)
+{
+  auto& actorsTree = scenegraph.lock()->getActorsTree();
+  for (auto& a : actorsTree) {
+    updateActorOnStageHelper(rootPath, stage, a);
+  }
+}
+void
+OmniverseApi::saveStage()
+{
+  updateScenegraphOnStage(m_scenegraph, m_rootPrimPath, m_stage);
+
+  m_stage->Save();
 }
 String
 getConnectedUsername(const String& stageUrl)
@@ -240,7 +606,7 @@ OmniverseApi::getUserLocalPath()
   return userFolder + "/" + username;
 }
 void
-addStMeshCmpToScenegraph(SdfPath parentPath,
+addStMeshCmpToScenegraph(const SdfPath& parentPath,
                          UsdStageRefPtr stage,
                          WPtr<CStaticMesh> stMeshCmp,
                          WPtr<Actor> sceneActor)
@@ -383,7 +749,7 @@ addStMeshCmpToScenegraph(SdfPath parentPath,
   }
 }
 void
-addSkMeshCmpToScenegraph(SdfPath parentPath,
+addSkMeshCmpToScenegraph(const SdfPath& parentPath,
                          UsdStageRefPtr stage,
                          WPtr<CSkeletalMesh> skMeshCmp,
                          WPtr<Actor> sceneActor)
@@ -519,7 +885,7 @@ addSkMeshCmpToScenegraph(SdfPath parentPath,
   }
 }
 void
-addActorToScenegraph(SdfPath parentPath,
+addActorToScenegraph(const SdfPath& parentPath,
                      UsdStageRefPtr stage,
                      WPtr<Actor> sceneActor)
 {
@@ -565,7 +931,7 @@ addActorToScenegraph(SdfPath parentPath,
   }
 }
 bool
-setActorOnStageHelper(SdfPath parentPath,
+setActorOnStageHelper(const SdfPath& parentPath,
                       UsdStageRefPtr stage,
                       SPtr<ActorNode> actNode)
 {
@@ -582,9 +948,10 @@ setActorOnStageHelper(SdfPath parentPath,
   return true;
 }
 bool
-OmniverseApi::setScenegraphOnStage(SPtr<Scene> scenegraph)
+OmniverseApi::setScenegraphOnStage(WPtr<Scene> scenegraph)
 {
-  auto& actorsTree = scenegraph->getActorsTree();
+  m_scenegraph = scenegraph;
+  auto& actorsTree = m_scenegraph.lock()->getActorsTree();
   for (auto& a : actorsTree) {
     setActorOnStageHelper(m_rootPrimPath, m_stage, a);
   }
@@ -595,246 +962,15 @@ OmniverseApi::setScenegraphOnStage(SPtr<Scene> scenegraph)
   return true;
 }
 void
-OmniverseApi::traverseStage()
+OmniverseApi::getScenegraphFromStage(SPtr<Scene>* /*scenegraph*/)
 {
+  auto& loggerMan = Logger::instance();
+
   auto range = m_stage->Traverse();
-  for (const auto& node : range) {
-    if (node.IsA<UsdGeomMesh>()) { {
-        std::unique_lock<std::mutex> lk(gLogMutex);
-        std::cout << "Found UsdGeomMesh: " << node.GetName() << std::endl;
-      }
-      //return UsdGeomMesh(node);
-
-      //auto mesh = UsdGeomMesh(node);
-      //
-      //VtVec2fArray uvs;
-      //mesh.GetPrimvar(_tokens->st).Get<VtVec2fArray>(&uvs);
-      //for (auto& uv : uvs) {
-      //  std::cout << uv.GetArray()[0] << ", " << uv.GetArray()[1] << std::endl;
-      //}
-      //
-      //VtValue verticesVal;
-      //mesh.GetPointsAttr().Get(&verticesVal);
-      //auto verticesArr = verticesVal.Get<VtArray<GfVec3f>>();
-      //for (auto& v : verticesArr) {
-      //  std::cout << v[0] << ", " << v[1] << ", " << v[2] << std::endl;
-      //}
-    }
-  }
-}
-double h = 50.0;
-int gBoxVertexIndices[] = { 0, 1, 2, 1, 3, 2, 4, 5, 6, 4, 6, 7, 8, 9, 10, 8, 10, 11, 12, 13, 14, 12, 14, 15, 16, 17, 18, 16, 18, 19, 20, 21, 22, 20, 22, 23 };
-double gBoxNormals[][3] = { {0, 0, -1}, {0, 0, -1}, {0, 0, -1}, {0, 0, -1}, {0, 0, 1}, {0, 0, 1}, {0, 0, 1}, {0, 0, 1}, {0, -1, 0}, {0, -1, 0}, {0, -1, 0}, {0, -1, 0}, {1, 0, 0}, {1, 0, 0}, {1, 0, 0}, {1, 0, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {-1, 0, 0}, {-1, 0, 0}, {-1, 0, 0}, {-1, 0, 0} };
-double gBoxPoints[][3] = { {h, -h, -h}, {-h, -h, -h}, {h, h, -h}, {-h, h, -h}, {h, h, h}, {-h, h, h}, {-h, -h, h}, {h, -h, h}, {h, -h, h}, {-h, -h, h}, {-h, -h, -h}, {h, -h, -h}, {h, h, h}, {h, -h, h}, {h, -h, -h}, {h, h, -h}, {-h, h, h}, {h, h, h}, {h, h, -h}, {-h, h, -h}, {-h, -h, h}, {-h, h, h}, {-h, h, -h}, {-h, -h, -h} };
-float gBoxUV[][2] = { {0, 0}, {0, 1}, {1, 1}, {1, 0}, {0, 0}, {0, 1}, {1, 1}, {1, 0}, {0, 0}, {0, 1}, {1, 1}, {1, 0}, {0, 0}, {0, 1}, {1, 1}, {1, 0}, {0, 0}, {0, 1}, {1, 1}, {1, 0}, {0, 0}, {0, 1}, {1, 1}, {1, 0} };
-void
-OmniverseApi::createBox(const Transform& boxTransform)
-{
-  // Create the geometry inside of "Root"
-  std::string boxName("box_1");
-  SdfPath boxPrimPath = m_rootPrimPath.AppendChild(TfToken(boxName));//_tokens->box);
-  UsdGeomMesh mesh = UsdGeomMesh::Define(m_stage, boxPrimPath);
-  
-  //if (!mesh)
-  //	return mesh;
-  
-  // Set orientation
-  mesh.CreateOrientationAttr(VtValue(UsdGeomTokens->rightHanded));
-  
-  // Add all of the vertices
-  int num_vertices = HW_ARRAY_COUNT(gBoxPoints);
-  VtArray<GfVec3f> points;
-  points.resize(num_vertices);
-  for (int i = 0; i < num_vertices; i++) {
-    points[i] = GfVec3f(gBoxPoints[i][0], gBoxPoints[i][1], gBoxPoints[i][2]);
-  }
-  mesh.CreatePointsAttr(VtValue(points));
-  
-  // Calculate indices for each triangle
-  int num_indices = HW_ARRAY_COUNT(gBoxVertexIndices); // 2 Triangles per face * 3 Vertices per Triangle * 6 Faces
-  VtArray<int> vecIndices;
-  vecIndices.resize(num_indices);
-  for (int i = 0; i < num_indices; i++) {
-    vecIndices[i] = gBoxVertexIndices[i];
-  }
-  mesh.CreateFaceVertexIndicesAttr(VtValue(vecIndices));
-  
-  // Add vertex normals
-  int num_normals = HW_ARRAY_COUNT(gBoxNormals);
-  VtArray<GfVec3f> meshNormals;
-  meshNormals.resize(num_vertices);
-  for (int i = 0; i < num_vertices; i++) {
-    meshNormals[i] = GfVec3f((float)gBoxNormals[i][0], (float)gBoxNormals[i][1], (float)gBoxNormals[i][2]);
-  }
-  mesh.CreateNormalsAttr(VtValue(meshNormals));
-  
-  // Add face vertex count
-  VtArray<int> faceVertexCounts;
-  faceVertexCounts.resize(12); // 2 Triangles per face * 6 faces
-  std::fill(faceVertexCounts.begin(), faceVertexCounts.end(), 3);
-  mesh.CreateFaceVertexCountsAttr(VtValue(faceVertexCounts));
-  
-  // Set the color on the mesh
-  UsdPrim meshPrim = mesh.GetPrim();
-  UsdAttribute displayColorAttr = mesh.CreateDisplayColorAttr();
+  for (const auto& node : range)
   {
-    VtVec3fArray valueArray;
-    GfVec3f rgbFace(0.463f, 0.725f, 0.0f);
-    valueArray.push_back(rgbFace);
-    displayColorAttr.Set(valueArray);
+    loggerMan.consoleLog(node.GetPath().GetString());
   }
-  
-  // Set the UV (st) values for this mesh
-  UsdGeomPrimvar attr2 = mesh.CreatePrimvar(_tokens->st, SdfValueTypeNames->TexCoord2fArray);
-  {
-    int uv_count = HW_ARRAY_COUNT(gBoxUV);
-    VtVec2fArray valueArray;
-    valueArray.resize(uv_count);
-    for (int i = 0; i < uv_count; ++i)
-    {
-      valueArray[i].Set(gBoxUV[i]);
-    }
-
-    bool status = attr2.Set(valueArray);
-  }
-  attr2.SetInterpolation(UsdGeomTokens->vertex);
-
-  Vector3f transPos = boxTransform.getPosition();
-  Vector3f transRot = boxTransform.getRotation().getEuclidean();
-  Vector3f transScale = boxTransform.getScale();
-  // Move it up
-  mesh.AddTranslateOp(UsdGeomXformOp::PrecisionFloat).Set(GfVec3f(transPos.x, transPos.y, transPos.z));
-  mesh.AddRotateXYZOp(UsdGeomXformOp::PrecisionFloat).Set(GfVec3f(transRot.x, transRot.y, transRot.z));
-  mesh.AddScaleOp(UsdGeomXformOp::PrecisionFloat).Set(GfVec3f(transScale.x, transScale.y, transScale.z));
-  
-  // Make the cube a physics rigid body dynamic
-  //enablePhysics(mesh.GetPrim(), true);
-  
-  // Commit the changes to the USD
-  omniUsdLiveProcess();
-  m_stage->Save();
-  
-  //return mesh;
-}
-void
-OmniverseApi::createMeshActor(WPtr<Actor> meshActor)
-{
-  auto& sMeshActor = meshActor.lock();
-
-  auto stMeshCmp = sMeshActor->getComponent<CStaticMesh>().lock();
-  if (!stMeshCmp) return;
-  auto transCmp = sMeshActor->getComponent<CTransform>().lock();
-  if (!transCmp) return;
-
-  auto stMesh = stMeshCmp->getStaticMesh().lock();
-  if (!stMesh) return;
-
-  auto stMeshes = stMesh->getMeshes();
-  if (stMeshes.empty()) return;
-
-
-  std::string parentName(sMeshActor->getName());
-  SdfPath parentPrimPath = m_rootPrimPath.AppendChild(TfToken(parentName));
-  
-  //if (!mesh)
-  //	return mesh;
-  
-  int32 meshIndex = 0;
-  for (auto& stm : stMeshes) {
-    // Create the geometry inside of "Root"
-    std::string meshName(sMeshActor->getName() + "C_" + eeToString(meshIndex++));
-    SdfPath meshPrimPath = parentPrimPath.AppendChild(TfToken(meshName));//_tokens->box);
-    UsdGeomMesh mesh = UsdGeomMesh::Define(m_stage, meshPrimPath);
-
-    if (!mesh) continue;
-
-    // Set orientation
-    mesh.CreateOrientationAttr(VtValue(UsdGeomTokens->rightHanded));
-
-    // Add all of the vertices
-    int num_vertices = stm.first.getTrianglesCount();
-    auto& vertices = stm.first.getTrianglesArray();
-    VtArray<GfVec3f> points;
-    points.resize(num_vertices * 3);
-    for (int i = 0; i < num_vertices; i++) {
-      points[i * 3 + 0] = GfVec3f(vertices[i].x.position.x, vertices[i].x.position.y, vertices[i].x.position.z) * 100.0f;
-      points[i * 3 + 1] = GfVec3f(vertices[i].y.position.x, vertices[i].y.position.y, vertices[i].y.position.z) * 100.0f;
-      points[i * 3 + 2] = GfVec3f(vertices[i].z.position.x, vertices[i].z.position.y, vertices[i].z.position.z) * 100.0f;
-    }
-    mesh.CreatePointsAttr(VtValue(points));
-    
-    // Calculate indices for each triangle
-    int num_indices = stm.first.getIndexCount();
-    auto& indicesArr = stm.first.getIndicesArray();
-    VtArray<int> vecIndices;
-    vecIndices.resize(num_indices);
-    for (int i = 0; i < num_indices; i++) {
-      vecIndices[i] = indicesArr[i];
-    }
-    mesh.CreateFaceVertexIndicesAttr(VtValue(vecIndices));
-    
-    // Add vertex normals
-    int num_normals = stm.first.getTrianglesCount();
-    VtArray<GfVec3f> meshNormals;
-    meshNormals.resize(num_normals * 3);
-    for (int i = 0; i < num_normals; i++) {
-      meshNormals[i * 3 + 0] = GfVec3f(vertices[i].x.normal.x, vertices[i].x.normal.y, vertices[i].x.normal.z);
-      meshNormals[i * 3 + 1] = GfVec3f(vertices[i].y.normal.x, vertices[i].y.normal.y, vertices[i].y.normal.z);
-      meshNormals[i * 3 + 2] = GfVec3f(vertices[i].z.normal.x, vertices[i].z.normal.y, vertices[i].z.normal.z);
-    }
-    mesh.CreateNormalsAttr(VtValue(meshNormals));
-    
-    // Add face vertex count
-    VtArray<int> faceVertexCounts;
-    faceVertexCounts.resize(stm.first.getTrianglesCount());
-    std::fill(faceVertexCounts.begin(), faceVertexCounts.end(), 3);
-    mesh.CreateFaceVertexCountsAttr(VtValue(faceVertexCounts));
-    
-    // Set the color on the mesh
-    UsdPrim meshPrim = mesh.GetPrim();
-    UsdAttribute displayColorAttr = mesh.CreateDisplayColorAttr();
-    {
-      VtVec3fArray valueArray;
-      GfVec3f rgbFace(0.463f, 0.725f, 0.0f);
-      valueArray.push_back(rgbFace);
-      displayColorAttr.Set(valueArray);
-    }
-    
-    // Set the UV (st) values for this mesh
-    UsdGeomPrimvar attr2 = mesh.CreatePrimvar(_tokens->st, SdfValueTypeNames->TexCoord2fArray);
-    {
-      int uv_count = stm.first.getTrianglesCount();
-      VtVec2fArray valueArray;
-      valueArray.resize(uv_count * 3);
-      for (int i = 0; i < uv_count; ++i)
-      {
-        valueArray[i * 3 + 0].Set(vertices[i].x.uvCoord.x, vertices[i].x.uvCoord.y);
-        valueArray[i * 3 + 1].Set(vertices[i].y.uvCoord.x, vertices[i].y.uvCoord.y);
-        valueArray[i * 3 + 2].Set(vertices[i].z.uvCoord.x, vertices[i].z.uvCoord.y);
-      }
-    
-      bool status = attr2.Set(valueArray);
-    }
-    attr2.SetInterpolation(UsdGeomTokens->vertex);
-    
-    const auto& actorTrans = transCmp->getTransformObj();
-    Vector3f transPos = actorTrans.getPosition();
-    Vector3f transRot = actorTrans.getRotation().getEuclidean();
-    Vector3f transScale = actorTrans.getScale();
-    // Move it up
-    mesh.AddTranslateOp(UsdGeomXformOp::PrecisionFloat).Set(GfVec3f(transPos.x, transPos.y, transPos.z) * 100.f);
-    mesh.AddRotateXYZOp(UsdGeomXformOp::PrecisionFloat).Set(GfVec3f(transRot.x, transRot.y, transRot.z) * Math::k180_OVER_PI);
-    mesh.AddScaleOp(UsdGeomXformOp::PrecisionFloat).Set(GfVec3f(transScale.x, transScale.y, transScale.z));
-    
-    // Make the cube a physics rigid body dynamic
-    //enablePhysics(mesh.GetPrim(), true);
-  }
-  
-  // Commit the changes to the USD
-  omniUsdLiveProcess();
-  m_stage->Save();
-  
-  //return mesh;
 }
 
 

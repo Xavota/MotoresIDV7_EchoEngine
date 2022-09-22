@@ -876,7 +876,19 @@ UIRender()
     ImGui::End();
   }
 
-  ImGui::ShowDemoWindow();
+
+  if (eeEngineSDK::OmniverseManager::isStarted()) {
+    static auto& omniverseMan = OmniverseManager::instance();
+    if (ImGui::Begin("Omniverse Manager")) {
+      if (ImGui::Button("Save stage")) {
+        omniverseMan.saveStage();
+      }
+    }
+    ImGui::End();
+  }
+
+
+  //ImGui::ShowDemoWindow();
   
   ImGui::Render();
 
@@ -926,317 +938,317 @@ BaseAppTest1::onInit()
   //
   //
   //
-  WPtr<Actor> pTempActor;
-  
-  
-  
-  resourceManager.loadStaticMeshFromMeshesArray({ Mesh::cube },
-                                                "Cube",
-                                                Math::sqrt(3),
-                                                Vector3f{ 1.0f, 1.0f, 1.0f },
-                                                Vector3f{ -1.0f, -1.0f, -1.f });
-  resourceManager.loadStaticMeshFromMeshesArray({ Mesh::sphere },
-                                                "Sphere",
-                                                1.0f,
-                                                Vector3f{ 1.0f, 1.0f, 1.0f },
-                                                Vector3f{ -1.0f, -1.0f, -1.f });
-  //resourceManager.loadStaticMeshFromMeshesArray({ Mesh::tetrahedron },
-  //                                              "Tetrahedron",
-  //                                              Vector3f{ 1.0f, -0.54f, -0.58f },
-  //                                              Vector3f{ 1.0f, 1.09f, 1.15f },
-  //                                              Vector3f{ -1.0f, -0.54f, -0.58f });
-  
-  
-  
-  CameraDesc camDesc;
-  camDesc.projectionType = eeEngineSDK::eCAMERA_PROJECTION_TYPE::kPerspective;
-  camDesc.fovAngleY = Math::kPI / 4.0f;
-  camDesc.viewSize = Vector2f{ static_cast<float>(screenWidth),
-                               static_cast<float>(screenHeight) };
-  camDesc.nearZ = 0.01f;
-  camDesc.farZ = 100.0f;
-
-  pTempActor = pScene->addActor("Player");
-  auto spTempActor = pTempActor.lock();
-  spTempActor->getTransform().lock()->setPosition(Vector3f{ 0.0f, 3.0f, -6.0f });
-  spTempActor->addComponent<CCamera>();
-  spTempActor->getComponent<CCamera>().lock()->init(camDesc);
-  spTempActor->getComponent<CCamera>().lock()->setMain(true);
-
-
-
-  pTempActor = pScene->addActor("AtatchToActor");
-  spTempActor = pTempActor.lock();
-  pScene->setActorChild("Player", "AtatchToActor");
-  spTempActor->getTransform().lock()->setPosition(Vector3f{ 0.0f, 0.0f, 30.0f });
-  spTempActor->addComponent<CStaticMesh>();
-  spTempActor->getComponent<CStaticMesh>().lock()->setStaticMesh
-  (
-    resourceManager.getResourceStaticMesh("Cube")
-  );
-  spTempActor->addComponent<CBounds>();
-  spTempActor->addComponent<CRender>();
-
-
-
-  pTempActor = pScene->addActor("Player2");
-  spTempActor = pTempActor.lock();
-  spTempActor->getTransform().lock()->setPosition(Vector3f{ 5.0f, 3.0f, -6.0f });
-  spTempActor->getTransform().lock()->setScale(Vector3f{ 0.1f, 0.1f, 0.1f });
-  spTempActor->addComponent<CCamera>();
-  spTempActor->getComponent<CCamera>().lock()->init(camDesc);
-
-
-  resourceManager.importResourceFromFile(L"Models/arcane_jinx_sketchfab.fbx",
-  eeEngineSDK::IMPORT_FLAGS::kImportStaticMeshes);
-  
-  resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_Body_baseColor.png");
-  resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_Body_normal.png");
-  resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_FaceAcc_baseColor.png");
-  resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_FaceAcc_normal.png");
-  resourceManager.importResourceFromFile(L"Textures/Jinx/FACE_-_TEST.png");
-  resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_Head_normal.png");
-  
-  texturesMap.clear();
-  
-  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
-  resourceManager.getResourceTexture("F_MED_UproarBraids_Body_baseColor_tex");
-  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
-  resourceManager.getResourceTexture("F_MED_UproarBraids_Body_normal_tex");
-  resourceManager.loadMaterialFromTextures(texturesMap,
-                                       "F_MED_UproarBraids_Body_baseColor_mat");
-  
-  texturesMap.clear();
-  
-  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
-  resourceManager.getResourceTexture("F_MED_UproarBraids_FaceAcc_baseColor_tex");
-  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
-  resourceManager.getResourceTexture("F_MED_UproarBraids_FaceAcc_normal_tex");
-  resourceManager.loadMaterialFromTextures(texturesMap,
-                                    "F_MED_UproarBraids_FaceAcc_baseColor_mat");
-  
-  texturesMap.clear();
-  
-  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
-  resourceManager.getResourceTexture("FACE_-_TEST_tex");
-  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
-  resourceManager.getResourceTexture("F_MED_UproarBraids_Head_normal_tex");
-  resourceManager.loadMaterialFromTextures(texturesMap,
-                                           "FACE_-_TEST_mat");
-  
-  pTempActor = pScene->addActor("Test");
-  spTempActor = pTempActor.lock();
-  spTempActor->getTransform().lock()->setScale(Vector3f{ 2.0f, 2.0f, 2.0f });
-  spTempActor->getTransform().lock()->setPosition(Vector3f{ 3.0f, 0.0f, 0.0f });
-  spTempActor->getTransform().lock()->setRotation(Quaternion(Vector3f{ 1.5707f, 0.0f, 0.0f }));
-  spTempActor->addComponent<CStaticMesh>();
-  spTempActor->getComponent<CStaticMesh>().lock()->setMobilityType(
-                                          eeEngineSDK::eMOBILITY_TYPE::kStatic);
-  spTempActor->getComponent<CStaticMesh>().lock()->setStaticMesh
-  (
-    resourceManager.getResourceStaticMesh("arcane_jinx_sketchfab_sm")
-  );
-  spTempActor->getComponent<CStaticMesh>().lock()->getStaticMesh().lock()->setTexture
-  (
-    resourceManager.getResourceMaterial
-    (
-      "F_MED_UproarBraids_Body_baseColor_mat"
-    ),
-    0
-  );
-  spTempActor->getComponent<CStaticMesh>().lock()->getStaticMesh().lock()->setTexture
-  (
-    resourceManager.getResourceMaterial
-    (
-      "F_MED_UproarBraids_FaceAcc_baseColor_mat"
-    ),
-    1
-  );
-  spTempActor->getComponent<CStaticMesh>().lock()->getStaticMesh().lock()->setTexture
-  (
-    resourceManager.getResourceMaterial
-    (
-      "FACE_-_TEST_mat"
-    ),
-    2
-  );
-  spTempActor->addComponent<CBounds>();
-  spTempActor->addComponent<CRender>();
-
-
-  resourceManager.importResourceFromFile(L"Models/boblampclean.md5mesh");
-
-  resourceManager.importResourceFromFile(L"Textures/guard1_body.jpg");
-  texturesMap.clear();
-  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
-    resourceManager.getResourceTexture("guard1_body_tex");
-  resourceManager.loadMaterialFromTextures(texturesMap,
-    "guard1_body_mat");
-  resourceManager.importResourceFromFile(L"Textures/guard1_face.jpg");
-  texturesMap.clear();
-  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
-    resourceManager.getResourceTexture("guard1_face_tex");
-  resourceManager.loadMaterialFromTextures(texturesMap,
-    "guard1_face_mat");
-  resourceManager.importResourceFromFile(L"Textures/guard1_helmet.jpg");
-  texturesMap.clear();
-  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
-    resourceManager.getResourceTexture("guard1_helmet_tex");
-  resourceManager.loadMaterialFromTextures(texturesMap,
-    "guard1_helmet_mat");
-  resourceManager.importResourceFromFile(L"Textures/iron_grill.jpg");
-  texturesMap.clear();
-  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
-    resourceManager.getResourceTexture("iron_grill_tex");
-  resourceManager.loadMaterialFromTextures(texturesMap,
-    "iron_grill_mat");
-  resourceManager.importResourceFromFile(L"Textures/round_grill.jpg");
-  texturesMap.clear();
-  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
-    resourceManager.getResourceTexture("round_grill_tex");
-  resourceManager.loadMaterialFromTextures(texturesMap,
-    "round_grill_mat");
-
-  SPtr<Image> tempImg = memoryManager.newPtr<Image>();
-  tempImg->loadFromFile(L"Textures/guard1_body.jpg");
-
-  SPtr<Texture> tempTex = graphicsApi.createTexturePtr();
-  tempTex->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kShaderResource,
-    Point2D{ tempImg->getWidth(), tempImg->getHeight() });
-
-  tempTex->loadImages({ tempImg });
-
-
-  pTempActor = pScene->addActor("AnimTest");
-  spTempActor = pTempActor.lock();
-  spTempActor->getTransform().lock()->setScale(Vector3f{ 0.03f, 0.03f, 0.03f });
-  spTempActor->getTransform().lock()->setRotation(Quaternion(Vector3f{ Math::kPI * 0.5f,
-                                                                       0.0f,
-                                                                       0.0f }));
-  spTempActor->addComponent<CSkeletalMesh>();
-  spTempActor->getComponent<CSkeletalMesh>().lock()->setModel
-  (
-    resourceManager.getResourceSkeletalMesh("boblampclean_skm")
-  );
-  spTempActor->getComponent<CSkeletalMesh>().lock()->getModel().lock()->setTexture
-  (
-    resourceManager.getResourceMaterial("guard1_body_mat"),
-    0
-  );
-  spTempActor->getComponent<CSkeletalMesh>().lock()->getModel().lock()->setTexture
-  (
-    resourceManager.getResourceMaterial("guard1_face_mat"),
-    1
-  );
-  spTempActor->getComponent<CSkeletalMesh>().lock()->getModel().lock()->setTexture
-  (
-    resourceManager.getResourceMaterial("guard1_helmet_mat"),
-    2
-  );
-  spTempActor->getComponent<CSkeletalMesh>().lock()->getModel().lock()->setTexture
-  (
-    resourceManager.getResourceMaterial("iron_grill_mat"),
-    3
-  );
-  spTempActor->getComponent<CSkeletalMesh>().lock()->getModel().lock()->setTexture
-  (
-    resourceManager.getResourceMaterial("round_grill_mat"),
-    4
-  );
-  spTempActor->getComponent<CSkeletalMesh>().lock()->getModel().lock()->setTexture
-  (
-    resourceManager.getResourceMaterial("guard1_body_mat"),
-    5
-  );
-  spTempActor->addComponent<CAnimation>();
-  spTempActor->getComponent<CAnimation>().lock()->setAnimation
-  (
-    resourceManager.getResourceAnimation("boblampclean_anim_")
-  );
-  spTempActor->addComponent<CBounds>();
-  spTempActor->addComponent<CRender>();
-
-
-  resourceManager.importResourceFromFile(L"Models/Scary_Clown_Walk.fbx");
-
-  pTempActor = pScene->addActor("AnimTest2");
-  spTempActor = pTempActor.lock();
-  spTempActor->getTransform().lock()->setScale(Vector3f{ 0.01f, 0.01f, 0.01f });
-  spTempActor->getTransform().lock()->setPosition(Vector3f{ -3.0f, 2.5f, 0.0f });
-  spTempActor->addComponent<CSkeletalMesh>();
-  spTempActor->getComponent<CSkeletalMesh>().lock()->setModel
-  (
-    resourceManager.getResourceSkeletalMesh("Scary_Clown_Walk_skm")
-  );
-  spTempActor->addComponent<CAnimation>();
-  spTempActor->getComponent<CAnimation>().lock()->setAnimation
-  (
-    resourceManager.getResourceAnimation("Scary_Clown_Walk_anim_mixamo.com")
-  );
-  spTempActor->addComponent<CBounds>();
-  spTempActor->addComponent<CRender>();
-
-
-  resourceManager.importResourceFromFile(L"Models/simpleCube.fbx",
-    eeEngineSDK::IMPORT_FLAGS::kImportStaticMeshes);
-
-  pTempActor = pScene->addActor("DownWall");
-  spTempActor = pTempActor.lock();
-  spTempActor->getTransform().lock()->setScale(Vector3f{ 10.0f, 0.5f, 10.0f });
-  spTempActor->getTransform().lock()->setPosition(Vector3f{ 0.0f, -1.0f, 0.0f });
-  spTempActor->addComponent<CStaticMesh>();
-  spTempActor->getComponent<CStaticMesh>().lock()->setMobilityType(
-    eeEngineSDK::eMOBILITY_TYPE::kStatic);
-  spTempActor->getComponent<CStaticMesh>().lock()->setStaticMesh
-  (
-    resourceManager.getResourceStaticMesh("simpleCube_sm")
-  );
-  spTempActor->addComponent<CBounds>();
-  spTempActor->addComponent<CRender>();
-
-
-
-  pTempActor = pScene->addActor("DirLight");
-  spTempActor = pTempActor.lock();
-  spTempActor->addComponent<CLight>();
-  spTempActor->getComponent<CLight>().lock()->setColor(Color{ 1.0f, 0.0f, 0.0f, 1.0f });
-  spTempActor->getTransform().lock()->setRotation(
-    Quaternion::createFromAxisAngle(Vector3f(0.0f, 1.0f, 0.0f), -Math::kPI * 0.5f));
-
-  pTempActor = pScene->addActor("DirLight2");
-  spTempActor = pTempActor.lock();
-  spTempActor->addComponent<CLight>();
-  spTempActor->getComponent<CLight>().lock()->setColor(Color{ 0.0f, 1.0f, 0.0f, 1.0f });
-  spTempActor->getTransform().lock()->setRotation(
-    Quaternion::createFromAxisAngle(Vector3f(0.0f, 1.0f, 0.0f), Math::kPI * 0.5f));
-
-  pTempActor = pScene->addActor("PointLight1");
-  spTempActor = pTempActor.lock();
-  spTempActor->getTransform().lock()->setScale(Vector3f{ 0.2f, 0.2f, 0.2f });
-  spTempActor->addComponent<CLight>();
-  spTempActor->getComponent<CLight>().lock()->setLightType(eeEngineSDK::eLIGHT_TYPE::kPoint);
-  spTempActor->getComponent<CLight>().lock()->setColor(Color{ 0.0f, 0.0f, 1.0f, 1.0f });
-  spTempActor->getComponent<CLight>().lock()->setIntensity(1.0f);
-  spTempActor->addComponent<CStaticMesh>();
-  spTempActor->getComponent<CStaticMesh>().lock()->setStaticMesh
-  (
-    resourceManager.getResourceStaticMesh("Sphere")
-  );
-  spTempActor->addComponent<CBounds>();
-  spTempActor->addComponent<CRender>();
-
-
-  sceneManager.partitionAllScenes();
+  //WPtr<Actor> pTempActor;
+  //
+  //
+  //
+  //resourceManager.loadStaticMeshFromMeshesArray({ Mesh::cube },
+  //                                              "Cube",
+  //                                              Math::sqrt(3),
+  //                                              Vector3f{ 1.0f, 1.0f, 1.0f },
+  //                                              Vector3f{ -1.0f, -1.0f, -1.f });
+  //resourceManager.loadStaticMeshFromMeshesArray({ Mesh::sphere },
+  //                                              "Sphere",
+  //                                              1.0f,
+  //                                              Vector3f{ 1.0f, 1.0f, 1.0f },
+  //                                              Vector3f{ -1.0f, -1.0f, -1.f });
+  ////resourceManager.loadStaticMeshFromMeshesArray({ Mesh::tetrahedron },
+  ////                                              "Tetrahedron",
+  ////                                              Vector3f{ 1.0f, -0.54f, -0.58f },
+  ////                                              Vector3f{ 1.0f, 1.09f, 1.15f },
+  ////                                              Vector3f{ -1.0f, -0.54f, -0.58f });
+  //
+  //
+  //
+  //CameraDesc camDesc;
+  //camDesc.projectionType = eeEngineSDK::eCAMERA_PROJECTION_TYPE::kPerspective;
+  //camDesc.fovAngleY = Math::kPI / 4.0f;
+  //camDesc.viewSize = Vector2f{ static_cast<float>(screenWidth),
+  //                             static_cast<float>(screenHeight) };
+  //camDesc.nearZ = 0.01f;
+  //camDesc.farZ = 100.0f;
+  //
+  //pTempActor = pScene->addActor("Player");
+  //auto spTempActor = pTempActor.lock();
+  //spTempActor->getTransform().lock()->setPosition(Vector3f{ 0.0f, 3.0f, -6.0f });
+  //spTempActor->addComponent<CCamera>();
+  //spTempActor->getComponent<CCamera>().lock()->init(camDesc);
+  //spTempActor->getComponent<CCamera>().lock()->setMain(true);
+  //
+  //
+  //
+  //pTempActor = pScene->addActor("AtatchToActor");
+  //spTempActor = pTempActor.lock();
+  //pScene->setActorChild("Player", "AtatchToActor");
+  //spTempActor->getTransform().lock()->setPosition(Vector3f{ 0.0f, 0.0f, 30.0f });
+  //spTempActor->addComponent<CStaticMesh>();
+  //spTempActor->getComponent<CStaticMesh>().lock()->setStaticMesh
+  //(
+  //  resourceManager.getResourceStaticMesh("Cube")
+  //);
+  //spTempActor->addComponent<CBounds>();
+  //spTempActor->addComponent<CRender>();
+  //
+  //
+  //
+  //pTempActor = pScene->addActor("Player2");
+  //spTempActor = pTempActor.lock();
+  //spTempActor->getTransform().lock()->setPosition(Vector3f{ 5.0f, 3.0f, -6.0f });
+  //spTempActor->getTransform().lock()->setScale(Vector3f{ 0.1f, 0.1f, 0.1f });
+  //spTempActor->addComponent<CCamera>();
+  //spTempActor->getComponent<CCamera>().lock()->init(camDesc);
+  //
+  //
+  //resourceManager.importResourceFromFile(L"Models/arcane_jinx_sketchfab.fbx",
+  //eeEngineSDK::IMPORT_FLAGS::kImportStaticMeshes);
+  //
+  //resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_Body_baseColor.png");
+  //resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_Body_normal.png");
+  //resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_FaceAcc_baseColor.png");
+  //resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_FaceAcc_normal.png");
+  //resourceManager.importResourceFromFile(L"Textures/Jinx/FACE_-_TEST.png");
+  //resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_Head_normal.png");
+  //
+  //texturesMap.clear();
+  //
+  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  //resourceManager.getResourceTexture("F_MED_UproarBraids_Body_baseColor_tex");
+  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
+  //resourceManager.getResourceTexture("F_MED_UproarBraids_Body_normal_tex");
+  //resourceManager.loadMaterialFromTextures(texturesMap,
+  //                                     "F_MED_UproarBraids_Body_baseColor_mat");
+  //
+  //texturesMap.clear();
+  //
+  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  //resourceManager.getResourceTexture("F_MED_UproarBraids_FaceAcc_baseColor_tex");
+  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
+  //resourceManager.getResourceTexture("F_MED_UproarBraids_FaceAcc_normal_tex");
+  //resourceManager.loadMaterialFromTextures(texturesMap,
+  //                                  "F_MED_UproarBraids_FaceAcc_baseColor_mat");
+  //
+  //texturesMap.clear();
+  //
+  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  //resourceManager.getResourceTexture("FACE_-_TEST_tex");
+  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
+  //resourceManager.getResourceTexture("F_MED_UproarBraids_Head_normal_tex");
+  //resourceManager.loadMaterialFromTextures(texturesMap,
+  //                                         "FACE_-_TEST_mat");
+  //
+  //pTempActor = pScene->addActor("Test");
+  //spTempActor = pTempActor.lock();
+  //spTempActor->getTransform().lock()->setScale(Vector3f{ 2.0f, 2.0f, 2.0f });
+  //spTempActor->getTransform().lock()->setPosition(Vector3f{ 3.0f, 0.0f, 0.0f });
+  //spTempActor->getTransform().lock()->setRotation(Quaternion(Vector3f{ 1.5707f, 0.0f, 0.0f }));
+  //spTempActor->addComponent<CStaticMesh>();
+  //spTempActor->getComponent<CStaticMesh>().lock()->setMobilityType(
+  //                                        eeEngineSDK::eMOBILITY_TYPE::kStatic);
+  //spTempActor->getComponent<CStaticMesh>().lock()->setStaticMesh
+  //(
+  //  resourceManager.getResourceStaticMesh("arcane_jinx_sketchfab_sm")
+  //);
+  //spTempActor->getComponent<CStaticMesh>().lock()->getStaticMesh().lock()->setTexture
+  //(
+  //  resourceManager.getResourceMaterial
+  //  (
+  //    "F_MED_UproarBraids_Body_baseColor_mat"
+  //  ),
+  //  0
+  //);
+  //spTempActor->getComponent<CStaticMesh>().lock()->getStaticMesh().lock()->setTexture
+  //(
+  //  resourceManager.getResourceMaterial
+  //  (
+  //    "F_MED_UproarBraids_FaceAcc_baseColor_mat"
+  //  ),
+  //  1
+  //);
+  //spTempActor->getComponent<CStaticMesh>().lock()->getStaticMesh().lock()->setTexture
+  //(
+  //  resourceManager.getResourceMaterial
+  //  (
+  //    "FACE_-_TEST_mat"
+  //  ),
+  //  2
+  //);
+  //spTempActor->addComponent<CBounds>();
+  //spTempActor->addComponent<CRender>();
+  //
+  //
+  //resourceManager.importResourceFromFile(L"Models/boblampclean.md5mesh");
+  //
+  //resourceManager.importResourceFromFile(L"Textures/guard1_body.jpg");
+  //texturesMap.clear();
+  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  //  resourceManager.getResourceTexture("guard1_body_tex");
+  //resourceManager.loadMaterialFromTextures(texturesMap,
+  //  "guard1_body_mat");
+  //resourceManager.importResourceFromFile(L"Textures/guard1_face.jpg");
+  //texturesMap.clear();
+  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  //  resourceManager.getResourceTexture("guard1_face_tex");
+  //resourceManager.loadMaterialFromTextures(texturesMap,
+  //  "guard1_face_mat");
+  //resourceManager.importResourceFromFile(L"Textures/guard1_helmet.jpg");
+  //texturesMap.clear();
+  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  //  resourceManager.getResourceTexture("guard1_helmet_tex");
+  //resourceManager.loadMaterialFromTextures(texturesMap,
+  //  "guard1_helmet_mat");
+  //resourceManager.importResourceFromFile(L"Textures/iron_grill.jpg");
+  //texturesMap.clear();
+  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  //  resourceManager.getResourceTexture("iron_grill_tex");
+  //resourceManager.loadMaterialFromTextures(texturesMap,
+  //  "iron_grill_mat");
+  //resourceManager.importResourceFromFile(L"Textures/round_grill.jpg");
+  //texturesMap.clear();
+  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  //  resourceManager.getResourceTexture("round_grill_tex");
+  //resourceManager.loadMaterialFromTextures(texturesMap,
+  //  "round_grill_mat");
+  //
+  //SPtr<Image> tempImg = memoryManager.newPtr<Image>();
+  //tempImg->loadFromFile(L"Textures/guard1_body.jpg");
+  //
+  //SPtr<Texture> tempTex = graphicsApi.createTexturePtr();
+  //tempTex->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kShaderResource,
+  //  Point2D{ tempImg->getWidth(), tempImg->getHeight() });
+  //
+  //tempTex->loadImages({ tempImg });
+  //
+  //
+  //pTempActor = pScene->addActor("AnimTest");
+  //spTempActor = pTempActor.lock();
+  //spTempActor->getTransform().lock()->setScale(Vector3f{ 0.03f, 0.03f, 0.03f });
+  //spTempActor->getTransform().lock()->setRotation(Quaternion(Vector3f{ Math::kPI * 0.5f,
+  //                                                                     0.0f,
+  //                                                                     0.0f }));
+  //spTempActor->addComponent<CSkeletalMesh>();
+  //spTempActor->getComponent<CSkeletalMesh>().lock()->setModel
+  //(
+  //  resourceManager.getResourceSkeletalMesh("boblampclean_skm")
+  //);
+  //spTempActor->getComponent<CSkeletalMesh>().lock()->getModel().lock()->setTexture
+  //(
+  //  resourceManager.getResourceMaterial("guard1_body_mat"),
+  //  0
+  //);
+  //spTempActor->getComponent<CSkeletalMesh>().lock()->getModel().lock()->setTexture
+  //(
+  //  resourceManager.getResourceMaterial("guard1_face_mat"),
+  //  1
+  //);
+  //spTempActor->getComponent<CSkeletalMesh>().lock()->getModel().lock()->setTexture
+  //(
+  //  resourceManager.getResourceMaterial("guard1_helmet_mat"),
+  //  2
+  //);
+  //spTempActor->getComponent<CSkeletalMesh>().lock()->getModel().lock()->setTexture
+  //(
+  //  resourceManager.getResourceMaterial("iron_grill_mat"),
+  //  3
+  //);
+  //spTempActor->getComponent<CSkeletalMesh>().lock()->getModel().lock()->setTexture
+  //(
+  //  resourceManager.getResourceMaterial("round_grill_mat"),
+  //  4
+  //);
+  //spTempActor->getComponent<CSkeletalMesh>().lock()->getModel().lock()->setTexture
+  //(
+  //  resourceManager.getResourceMaterial("guard1_body_mat"),
+  //  5
+  //);
+  //spTempActor->addComponent<CAnimation>();
+  //spTempActor->getComponent<CAnimation>().lock()->setAnimation
+  //(
+  //  resourceManager.getResourceAnimation("boblampclean_anim_")
+  //);
+  //spTempActor->addComponent<CBounds>();
+  //spTempActor->addComponent<CRender>();
+  //
+  //
+  //resourceManager.importResourceFromFile(L"Models/Scary_Clown_Walk.fbx");
+  //
+  //pTempActor = pScene->addActor("AnimTest2");
+  //spTempActor = pTempActor.lock();
+  //spTempActor->getTransform().lock()->setScale(Vector3f{ 0.01f, 0.01f, 0.01f });
+  //spTempActor->getTransform().lock()->setPosition(Vector3f{ -3.0f, 2.5f, 0.0f });
+  //spTempActor->addComponent<CSkeletalMesh>();
+  //spTempActor->getComponent<CSkeletalMesh>().lock()->setModel
+  //(
+  //  resourceManager.getResourceSkeletalMesh("Scary_Clown_Walk_skm")
+  //);
+  //spTempActor->addComponent<CAnimation>();
+  //spTempActor->getComponent<CAnimation>().lock()->setAnimation
+  //(
+  //  resourceManager.getResourceAnimation("Scary_Clown_Walk_anim_mixamo.com")
+  //);
+  //spTempActor->addComponent<CBounds>();
+  //spTempActor->addComponent<CRender>();
+  //
+  //
+  //resourceManager.importResourceFromFile(L"Models/simpleCube.fbx",
+  //                              eeEngineSDK::IMPORT_FLAGS::kImportStaticMeshes);
+  //
+  //pTempActor = pScene->addActor("DownWall");
+  //spTempActor = pTempActor.lock();
+  //spTempActor->getTransform().lock()->setScale(Vector3f{ 10.0f, 0.5f, 10.0f });
+  //spTempActor->getTransform().lock()->setPosition(Vector3f{ 0.0f, -1.0f, 0.0f });
+  //spTempActor->addComponent<CStaticMesh>();
+  //spTempActor->getComponent<CStaticMesh>().lock()->setMobilityType(
+  //  eeEngineSDK::eMOBILITY_TYPE::kStatic);
+  //spTempActor->getComponent<CStaticMesh>().lock()->setStaticMesh
+  //(
+  //  resourceManager.getResourceStaticMesh("simpleCube_sm")
+  //);
+  //spTempActor->addComponent<CBounds>();
+  //spTempActor->addComponent<CRender>();
+  //
+  //
+  //
+  //pTempActor = pScene->addActor("DirLight");
+  //spTempActor = pTempActor.lock();
+  //spTempActor->addComponent<CLight>();
+  //spTempActor->getComponent<CLight>().lock()->setColor(Color{ 1.0f, 0.0f, 0.0f, 1.0f });
+  //spTempActor->getTransform().lock()->setRotation(
+  //  Quaternion::createFromAxisAngle(Vector3f(0.0f, 1.0f, 0.0f), -Math::kPI * 0.5f));
+  //
+  //pTempActor = pScene->addActor("DirLight2");
+  //spTempActor = pTempActor.lock();
+  //spTempActor->addComponent<CLight>();
+  //spTempActor->getComponent<CLight>().lock()->setColor(Color{ 0.0f, 1.0f, 0.0f, 1.0f });
+  //spTempActor->getTransform().lock()->setRotation(
+  //  Quaternion::createFromAxisAngle(Vector3f(0.0f, 1.0f, 0.0f), Math::kPI * 0.5f));
+  //
+  //pTempActor = pScene->addActor("PointLight1");
+  //spTempActor = pTempActor.lock();
+  //spTempActor->getTransform().lock()->setScale(Vector3f{ 0.2f, 0.2f, 0.2f });
+  //spTempActor->addComponent<CLight>();
+  //spTempActor->getComponent<CLight>().lock()->setLightType(eeEngineSDK::eLIGHT_TYPE::kPoint);
+  //spTempActor->getComponent<CLight>().lock()->setColor(Color{ 0.0f, 0.0f, 1.0f, 1.0f });
+  //spTempActor->getComponent<CLight>().lock()->setIntensity(1.0f);
+  //spTempActor->addComponent<CStaticMesh>();
+  //spTempActor->getComponent<CStaticMesh>().lock()->setStaticMesh
+  //(
+  //  resourceManager.getResourceStaticMesh("Sphere")
+  //);
+  //spTempActor->addComponent<CBounds>();
+  //spTempActor->addComponent<CRender>();
+  //
+  //
+  //sceneManager.partitionAllScenes();
 
 
 
   if (OmniverseManager::isStarted()) {
     auto& omniverseMan = OmniverseManager::instance();
     String localPath = omniverseMan.getUserLocalPath();
-    omniverseMan.createStage(localPath + "/Main.usd");
-    //omniverseMan.openStage(localPath + "/Main.usd");
-    //omniverseMan.traverseStage();
-    omniverseMan.setScenegraphOnStage(pScene, "Main");
+    //omniverseMan.createStage(localPath + "/Main.usd");
+    //omniverseMan.setScenegraphOnStage(pScene);
+    omniverseMan.openStage(localPath + "/Main.usd");
+    omniverseMan.getScenegraphFromStage(&pScene);
   }
 
 

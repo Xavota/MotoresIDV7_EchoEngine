@@ -89,7 +89,7 @@ Scene::addActor(const String& name)
   if (m_actors.find(name) != m_actors.end()) {
     Logger::instance().consoleLog("ERROR TRYING TO ADD ACTOR TO SCENE");
     Logger::instance().consoleLog("Actor already with that name!");
-    return {};
+    return m_actors[name];
   }
 
   m_actors[name] = MemoryManager::instance().newPtr<Actor>();

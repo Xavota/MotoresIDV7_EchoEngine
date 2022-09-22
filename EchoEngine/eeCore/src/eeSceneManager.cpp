@@ -47,7 +47,7 @@ SceneManager::addScene(const String& name)
   if (m_scenes.find(name) != m_scenes.end()) {
     Logger::instance().consoleLog("ERROR TRYING TO ADD SCENE");
     Logger::instance().consoleLog("Scene already with that name!");
-    return {};
+    return m_scenes[name];
   }
 
   m_scenes[name] = MemoryManager::instance().newPtr<Scene>();
