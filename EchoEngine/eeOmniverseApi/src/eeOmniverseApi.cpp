@@ -3,6 +3,7 @@
 
 #include <eeLogger.h>
 #include <eeMemoryManager.h>
+#include <eeResourceManager.h>
 
 #include <eeScene.h>
 
@@ -19,6 +20,8 @@
 #include <eeStringUtilities.h>
 #include <eeMath.h>
 #include <eeFile.h>
+
+#include <eeSerializationUtilities.h>
 
 
 
@@ -62,6 +65,10 @@ TF_DEFINE_PRIVATE_TOKENS(
 );
 
 namespace eeEngineSDK {
+OmniverseApi::~OmniverseApi()
+{
+  destroy();
+}
 static bool gOmniverseLoggingEnabled = false;
 static std::mutex gLogMutex;
 // Omniverse Log callback
@@ -126,7 +133,7 @@ OmniverseApi::init(bool doLiveEdit)
   return true;
 }
 void
-OmniverseApi::shutDown()
+OmniverseApi::destroy()
 {
   // Calling this prior to shutdown ensures that all pending live updates complete.
   omniUsdLiveWaitForPendingUpdates();
@@ -195,6 +202,8 @@ OmniverseApi::createStage(const String& stageUrl)
 
   // Define the defaultPrim as the /Root prim
   m_stage->SetDefaultPrim(rootPrim.GetPrim());
+
+  getFileName(eeStringtoWString(stageUrl), m_stageFileName);
 }
 void
 OmniverseApi::openStage(const String& stageUrl)
@@ -207,6 +216,15 @@ OmniverseApi::openStage(const String& stageUrl)
   // Define the defaultPrim as the /Root prim
   UsdGeomXform rootPrim = static_cast<UsdGeomXform>(m_stage->GetDefaultPrim());
   m_rootPrimPath = rootPrim.GetPath();
+
+  getFileName(eeStringtoWString(stageUrl), m_stageFileName);
+}
+void
+OmniverseApi::closeStage()
+{
+  if (m_stage) {
+    m_stage.Reset();
+  }
 }
 void
 updateStMeshCmpToScenegraph(const SdfPath& parentPath,
@@ -573,7 +591,7 @@ updateScenegraphOnStage(WPtr<Scene> scenegraph,
 void
 OmniverseApi::saveStage()
 {
-  updateScenegraphOnStage(m_scenegraph, m_rootPrimPath, m_stage);
+  updateScenegraphOnStage(m_openedScenegraph, m_rootPrimPath, m_stage);
 
   m_stage->Save();
 }
@@ -950,8 +968,8 @@ setActorOnStageHelper(const SdfPath& parentPath,
 bool
 OmniverseApi::setScenegraphOnStage(WPtr<Scene> scenegraph)
 {
-  m_scenegraph = scenegraph;
-  auto& actorsTree = m_scenegraph.lock()->getActorsTree();
+  m_openedScenegraph = scenegraph;
+  auto& actorsTree = m_openedScenegraph.lock()->getActorsTree();
   for (auto& a : actorsTree) {
     setActorOnStageHelper(m_rootPrimPath, m_stage, a);
   }
@@ -962,14 +980,117 @@ OmniverseApi::setScenegraphOnStage(WPtr<Scene> scenegraph)
   return true;
 }
 void
-OmniverseApi::getScenegraphFromStage(SPtr<Scene>* /*scenegraph*/)
+loadMeshFromStage(const UsdGeomMesh& meshNode,
+                  UsdStageRefPtr stage,
+                  WPtr<Actor> actorMesh)
+{
+  auto stMeshCmp = actorMesh.lock()->addComponent<CStaticMesh>().lock();
+
+  Vector<Pair<Mesh, WPtr<Material>>> meshes;
+  float furtherDist = 0.0f;
+  Vector3f maxCoord = Vector3f(-99999.9f, -99999.9f, -99999.9f);
+  Vector3f minCoord = Vector3f(99999.9f, 99999.9f, 99999.9f);
+
+  
+  //// Add all of the vertices
+  //int num_vertices = stm.first.getTrianglesCount();
+  //auto& vertices = stm.first.getTrianglesArray();
+  //VtArray<GfVec3f> points;
+  //points.resize(num_vertices * 3);
+  //for (int i = 0; i < num_vertices; i++) {
+  //  points[i * 3 + 0] = GfVec3f(-vertices[i].x.position.x, vertices[i].x.position.y, vertices[i].x.position.z) * 100.0f;
+  //  points[i * 3 + 1] = GfVec3f(-vertices[i].y.position.x, vertices[i].y.position.y, vertices[i].y.position.z) * 100.0f;
+  //  points[i * 3 + 2] = GfVec3f(-vertices[i].z.position.x, vertices[i].z.position.y, vertices[i].z.position.z) * 100.0f;
+  //}
+  //mesh.CreatePointsAttr(VtValue(points));
+  //
+  //// Calculate indices for each triangle
+  //int num_indices = stm.first.getIndexCount();
+  //auto& indicesArr = stm.first.getIndicesArray();
+  //VtArray<int> vecIndices;
+  //vecIndices.resize(num_indices);
+  //for (int i = 0; i < num_indices; i++) {
+  //  vecIndices[i] = indicesArr[i];
+  //}
+  //mesh.CreateFaceVertexIndicesAttr(VtValue(vecIndices));
+  //
+  //// Add vertex normals
+  //int num_normals = stm.first.getTrianglesCount();
+  //VtArray<GfVec3f> meshNormals;
+  //meshNormals.resize(num_normals * 3);
+  //for (int i = 0; i < num_normals; i++) {
+  //  meshNormals[i * 3 + 0] = GfVec3f(-vertices[i].x.normal.x, vertices[i].x.normal.y, vertices[i].x.normal.z);
+  //  meshNormals[i * 3 + 1] = GfVec3f(-vertices[i].y.normal.x, vertices[i].y.normal.y, vertices[i].y.normal.z);
+  //  meshNormals[i * 3 + 2] = GfVec3f(-vertices[i].z.normal.x, vertices[i].z.normal.y, vertices[i].z.normal.z);
+  //}
+  //mesh.CreateNormalsAttr(VtValue(meshNormals));
+  //
+  //// Add face vertex count
+  //VtArray<int> faceVertexCounts;
+  //faceVertexCounts.resize(stm.first.getTrianglesCount());
+  //std::fill(faceVertexCounts.begin(), faceVertexCounts.end(), 3);
+  //mesh.CreateFaceVertexCountsAttr(VtValue(faceVertexCounts));
+  //
+  //// Set the color on the mesh
+  //UsdPrim meshPrim = mesh.GetPrim();
+  //UsdAttribute displayColorAttr = mesh.CreateDisplayColorAttr();
+  //{
+  //  VtVec3fArray valueArray;
+  //  GfVec3f rgbFace(0.463f, 0.725f, 0.0f);
+  //  valueArray.push_back(rgbFace);
+  //  displayColorAttr.Set(valueArray);
+  //}
+  //
+  //// Set the UV (st) values for this mesh
+  //UsdGeomPrimvar attr2 = mesh.CreatePrimvar(_tokens->st, SdfValueTypeNames->TexCoord2fArray);
+  //{
+  //  int uv_count = stm.first.getTrianglesCount();
+  //  VtVec2fArray valueArray;
+  //  valueArray.resize(uv_count * 3);
+  //  for (int i = 0; i < uv_count; ++i)
+  //  {
+  //    valueArray[i * 3 + 0].Set(vertices[i].x.uvCoord.x, 1.0f - vertices[i].x.uvCoord.y);
+  //    valueArray[i * 3 + 1].Set(vertices[i].y.uvCoord.x, 1.0f - vertices[i].y.uvCoord.y);
+  //    valueArray[i * 3 + 2].Set(vertices[i].z.uvCoord.x, 1.0f - vertices[i].z.uvCoord.y);
+  //  }
+  //
+  //  bool status = attr2.Set(valueArray);
+  //}
+  //attr2.SetInterpolation(UsdGeomTokens->vertex);
+
+
+  auto stMesh =
+  ResourceManager::instance().loadStaticMeshFromMeshesArray(meshes,
+                              meshNode.GetPrim().GetName().GetString() + "_stm",
+                              furtherDist,
+                              maxCoord,
+                              minCoord);
+
+  stMeshCmp->setStaticMesh(stMesh);
+}
+void
+OmniverseApi::getScenegraphFromStage(SPtr<Scene>* scenegraph)
 {
   auto& loggerMan = Logger::instance();
+  auto& memoryMan = MemoryManager::instance();
+
+  if (!m_stage) {
+    loggerMan.consoleLog("There is no Omniverse Stage opened now.");
+    return;
+  }
+
+  *scenegraph = memoryMan.newPtr<Scene>();
+  (*scenegraph)->setName(m_stageFileName);
 
   auto range = m_stage->Traverse();
   for (const auto& node : range)
   {
     loggerMan.consoleLog(node.GetPath().GetString());
+
+    if (node.IsA<UsdGeomMesh>()) {
+      auto act = (*scenegraph)->addActor(node.GetName().GetString());
+      loadMeshFromStage(m_rootPrimPath, m_stage, act);
+    }
   }
 }
 

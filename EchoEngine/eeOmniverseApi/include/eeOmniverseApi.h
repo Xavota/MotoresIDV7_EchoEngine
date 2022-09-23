@@ -60,7 +60,7 @@ class EE_OMNIVERSE_EXPORT OmniverseApi : public OmniverseManager
    * @brief
    * Default destructor.
    */
-  ~OmniverseApi() = default;
+  ~OmniverseApi();
 
   /**
   * @brief
@@ -80,7 +80,7 @@ class EE_OMNIVERSE_EXPORT OmniverseApi : public OmniverseManager
   * Stops the omniverse application.
   */
   void
-  shutDown() override;
+  destroy() override;
 
   /**
   * @brief
@@ -106,6 +106,15 @@ class EE_OMNIVERSE_EXPORT OmniverseApi : public OmniverseManager
   */
   void
   openStage(const String& stageUrl) override;
+  /**
+  * @brief
+  * Closes the active stage.
+  *
+  * @description
+  * Closes the active stage.
+  */
+  void
+  closeStage() override;
   /**
   * @brief
   * Saves the active stage to the .usd file.
@@ -170,6 +179,10 @@ class EE_OMNIVERSE_EXPORT OmniverseApi : public OmniverseManager
   /**
   * The scenegraph that is currently using.
   */
-  WPtr<Scene> m_scenegraph;
+  WPtr<Scene> m_openedScenegraph;
+  /**
+  * The name of the stage file, which is the name of the active scene.
+  */
+  String m_stageFileName;
 };
 }

@@ -49,7 +49,7 @@ class EE_CORE_EXPORT OmniverseManager : public Module<OmniverseManager>
   * Stops the omniverse application.
   */
   virtual void
-  shutDown() {}
+  destroy() {}
 
   /**
   * @brief
@@ -89,6 +89,15 @@ class EE_CORE_EXPORT OmniverseManager : public Module<OmniverseManager>
   */
   virtual void
   openStage(const String& stageUrl) {}
+  /**
+  * @brief
+  * Closes the active stage.
+  *
+  * @description
+  * Closes the active stage.
+  */
+  virtual void
+  closeStage() {}
   /**
   * @brief
   * Saves the active stage to the .usd file.

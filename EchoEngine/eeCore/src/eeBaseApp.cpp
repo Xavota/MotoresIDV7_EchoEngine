@@ -204,6 +204,7 @@ BaseApp::destroy()
   if (Renderer::isStarted()) Renderer::shutDown();
   if (ResourceManager::isStarted()) ResourceManager::shutDown();
   if (Input::isStarted()) Input::shutDown();
+  if (OmniverseManager::isStarted()) OmniverseManager::shutDown();
   if (SceneManager::isStarted()) SceneManager::shutDown();
   if (MemoryManager::isStarted()) MemoryManager::shutDown();
   if (Time::isStarted()) Time::shutDown();
