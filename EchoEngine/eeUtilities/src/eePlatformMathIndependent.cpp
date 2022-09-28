@@ -336,7 +336,7 @@ PlatformMath::intersectionCapsulePoint(const Capsule& _capsule,
   }
 
   Vector3f d = _point - center;
-  float h = d.getMagnitud();
+  float h = d.getMagnitude();
   float a = d.dot(Vector3f::kUP);
   float distance = sqrt(h*h - a*a);
 
@@ -400,7 +400,7 @@ PlatformMath::intersectionCapsuleSphere(const Capsule& _capsule,
   Vector3f sCenter = _sphere.getCenter();
   
   Vector3f d = _sphere.getCenter() - center;
-  float h = d.getMagnitud();
+  float h = d.getMagnitude();
   float a = d.dot(Vector3f::kUP);
   float distance = sqrt(h * h - a * a);
 
@@ -453,7 +453,7 @@ PlatformMath::intersectionCapsuleCapsule(const Capsule& _capsule1,
 
 
   Vector3f d = center2 - center1;
-  float h = d.getMagnitud();
+  float h = d.getMagnitude();
   float a = d.dot(Vector3f::kUP);
   float distance = sqrt(h * h - a * a);
 

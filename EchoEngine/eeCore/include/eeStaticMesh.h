@@ -160,6 +160,51 @@ class EE_CORE_EXPORT StaticMesh : public Resource
   getMeshes(Vector<Pair<Mesh, WPtr<Material>>>& outMeshes);
   /**
    * @brief
+   * Add a mesh to the list.
+   *
+   * @description
+   * Adds a mesh with the default material to the list of meshes.
+   *
+   * @param stMesh
+   * The mesh to add to the list of meshes.
+   * @param furtherDist
+   * The distance to the vertex most far away from the origin.
+   * @param maxCoordinate
+   * The max coordinate of all vertex positions.
+   * @param minCoordinate
+   * The min coordinate of all vertex positions.
+   */
+  void
+  addMesh(const Mesh& stMesh,
+          float furtherDist,
+          const Vector3f& maxCoordinate,
+          const Vector3f& minCoordinate);
+  /**
+   * @brief
+   * Add a mesh to the list.
+   *
+   * @description
+   * Adds a mesh with its material to the list of meshes.
+   *
+   * @param stMesh
+   * The mesh to add to the list of meshes.
+   * @param mat
+   * The material of the mesh.
+   * @param furtherDist
+   * The distance to the vertex most far away from the origin.
+   * @param maxCoordinate
+   * The max coordinate of all vertex positions.
+   * @param minCoordinate
+   * The min coordinate of all vertex positions.
+   */
+  void
+  addMesh(const Mesh& stMesh,
+          WPtr<Material> mat,
+          float furtherDist,
+          const Vector3f& maxCoordinate,
+          const Vector3f& minCoordinate);
+  /**
+   * @brief
    * Getter for the texture data.
    *
    * @description
@@ -210,6 +255,16 @@ class EE_CORE_EXPORT StaticMesh : public Resource
    */
   const BoxAAB&
   getBoundingBox();
+
+  /**
+   * @brief
+   * Clears the static mesh.
+   *
+   * @description
+   * Clears the array of meshes to set the static mesh clean.
+   */
+  void
+  clear();
 
  private:
   /**

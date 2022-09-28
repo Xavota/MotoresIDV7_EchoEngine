@@ -117,7 +117,7 @@ class EE_UTILITY_EXPORT Vector3f
    * The length of the vector.
    */
   float
-  getMagnitud() const;
+  getMagnitude() const;
   /**
    * @brief
    * The normalization of the vector.

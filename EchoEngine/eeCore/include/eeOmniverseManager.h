@@ -147,7 +147,7 @@ class EE_CORE_EXPORT OmniverseManager : public Module<OmniverseManager>
   * The scene that will get the stage.
   */
   virtual void
-  getScenegraphFromStage(SPtr<Scene>* scenegraph) {}
+  getScenegraphFromStage(WPtr<Scene> scenegraph) {}
   
 
 

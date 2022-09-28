@@ -113,6 +113,51 @@ StaticMesh::getMeshes(Vector<Pair<Mesh, WPtr<Material>>>& outMeshes)
     ++i;
   }
 }
+void
+StaticMesh::addMesh(const Mesh& stMesh,
+                    float furtherDist,
+                    const Vector3f& maxCoordinate,
+                    const Vector3f& minCoordinate)
+{
+  addMesh(stMesh,
+          ResourceManager::instance().getResourceMaterial("Default_mat"),
+          furtherDist,
+          minCoordinate,
+          maxCoordinate);
+}
+void
+StaticMesh::addMesh(const Mesh& stMesh,
+                    WPtr<Material> mat,
+                    float furtherDist,
+                    const Vector3f& maxCoordinate,
+                    const Vector3f& minCoordinate)
+{
+  auto& resourseManager = ResourceManager::instance();
+
+  m_meshes.emplace_back
+  (
+    Pair<Mesh, WPtr<Material>>
+    (
+      stMesh,
+      mat
+    )
+  );
+
+  float rad = m_boundSphere.getRadious();
+  rad = rad > furtherDist ? rad : furtherDist;
+  m_boundSphere.setRadious(rad);
+
+  Vector3f minCoord = m_boundCube.getA();
+  minCoord.x = minCoord.x < minCoordinate.x ? minCoord.x : minCoordinate.x;
+  minCoord.y = minCoord.y < minCoordinate.y ? minCoord.y : minCoordinate.y;
+  minCoord.z = minCoord.z < minCoordinate.z ? minCoord.z : minCoordinate.z;
+  m_boundCube.setA(minCoord);
+  Vector3f maxCoord = m_boundCube.getB();
+  maxCoord.x = maxCoord.x > maxCoordinate.x ? maxCoord.x : maxCoordinate.x;
+  maxCoord.y = maxCoord.y > maxCoordinate.y ? maxCoord.y : maxCoordinate.y;
+  maxCoord.z = maxCoord.z > maxCoordinate.z ? maxCoord.z : maxCoordinate.z;
+  m_boundCube.setSize(maxCoord - minCoord);
+}
 Vector<WPtr<Material>>
 StaticMesh::getTextures()
 {
@@ -140,5 +185,13 @@ const BoxAAB&
 StaticMesh::getBoundingBox()
 {
   return m_boundCube;
+}
+void
+StaticMesh::clear()
+{
+  m_meshes.clear();
+  m_boundCube.setA(Vector3f(0.0f, 0.0f, 0.0f));
+  m_boundCube.setSize(Vector3f(0.0f, 0.0f, 0.0f));
+  m_boundSphere.setRadious(0.0f);
 }
 }

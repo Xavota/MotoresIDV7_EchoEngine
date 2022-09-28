@@ -597,6 +597,16 @@ SceneManager::getAllRenderableActorsInside(WPtr<CCamera> camera,
   }
   return renderActors;
 }
+WPtr<Scene>
+SceneManager::getActiveScene()
+{
+  for (auto& s : m_scenes) {
+    if (s.second->isActive()) {
+      return s.second;
+    }
+  }
+  return {};
+}
 Vector<SPtr<Actor>>
 SceneManager::getAllActorsByComponentFlags(uint32 flags)
 {

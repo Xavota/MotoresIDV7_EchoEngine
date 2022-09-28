@@ -43,19 +43,19 @@ Vector3f::getDistance(const Vector3f& other) const
   return Math::sqrt(d.x * d.x + d.y * d.y + d.z * d.z);
 }
 float
-Vector3f::getMagnitud() const
+Vector3f::getMagnitude() const
 {
   return Math::sqrt(this->x * this->x + this->y * this->y + this->z * this->z);
 }
 Vector3f
 Vector3f::getNormalize() const
 {
-  return *this / this->getMagnitud();
+  return *this / this->getMagnitude();
 }
 Vector3f
 Vector3f::normalize()
 {
-  *this = *this / this->getMagnitud();
+  *this = *this / this->getMagnitude();
   return *this;
 }
 Vector3f

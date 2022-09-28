@@ -25,7 +25,7 @@ Triangle::getSplitTrianglesByPlane(const Triangle& splitTriangle,
     return { {splitTriangle}, {} };
   }
   Vector3f plainNormal = splitterPlane.getNormal();
-  float newW = splitterPlane.d / plainNormal.getMagnitud();
+  float newW = splitterPlane.d / plainNormal.getMagnitude();
   plainNormal.normalize();
 
   // Separate points depending on which side of the plain they are.
@@ -102,10 +102,10 @@ Triangle::getSplitTrianglesByPlane(const Triangle& splitTriangle,
 
   // Gets the values needed for the las part
   Vector3f dAB = pB - pA;
-  float dABm = dAB.getMagnitud();
+  float dABm = dAB.getMagnitude();
   dAB.normalize();
   Vector3f dAC = pC - pA;
-  float dACm = dAC.getMagnitud();
+  float dACm = dAC.getMagnitude();
   dAC.normalize();
 
   float dtAB = (newW - plainNormal.dot(pA)) / plainNormal.dot(dAB);

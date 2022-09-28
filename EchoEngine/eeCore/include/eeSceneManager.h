@@ -176,6 +176,18 @@ class EE_CORE_EXPORT SceneManager : public Module<SceneManager>
   }
   /**
    * @brief
+   * Gets the first active scene.
+   *
+   * @description
+   * Returns the first active scene..
+   *
+   * @return
+   * The first active scene..
+   */
+  WPtr<Scene>
+  getActiveScene();
+  /**
+   * @brief
    * Gets all actors with the given components.
    *
    * @description

@@ -47,7 +47,7 @@ CBounds::update()
   auto trans = sActor->getTransform().lock();
 
   m_sphereBound =
-  Sphere(trans->getGlobalPosition(), m_sphereBound.getRadious() * trans->getScale().getMagnitud());
+  Sphere(trans->getGlobalPosition(), m_sphereBound.getRadious() * trans->getScale().getMagnitude());
 
 
   Matrix4f modelMatrix = trans->getModelMatrix();
