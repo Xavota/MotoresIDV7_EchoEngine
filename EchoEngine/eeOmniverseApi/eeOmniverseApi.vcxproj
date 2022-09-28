@@ -20,13 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeOmniverseApi.cpp" />
-    <ClCompile Include="src\helloWorld.cpp" />
-    <ClCompile Include="src\pch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\eeOmniverseApi.h" />
     <ClInclude Include="include\eePrerrequisitesOmniverse.h" />
-    <ClInclude Include="include\pch.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -150,15 +147,15 @@
       <PreprocessorDefinitions>EE_OMNIVERSE_EXPORTS;BOOST_ALL_DYN_LINK;TBB_USE_DEBUG=1;_CRT_SECURE_NO_WARNINGS;DEBUG;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>Default</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>./include/;$(SolutionDir)eeUtilities/include;$(SolutionDir)eeCore/include;$(DEVLIBS)Omniverse/target-deps/nv_usd/debug/include;$(DEVLIBS)Omniverse/target-deps/usd_ext_physics/debug/include;$(DEVLIBS)Omniverse/target-deps/omni_client_library/include;$(DEVLIBS)Omniverse/target-deps/python/include;$(DEVLIBS)Omniverse/windows-x86_64/debug;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;$(SolutionDir)eeUtilities/include;$(SolutionDir)eeCore/include;$(DEVLIBS)Omniverse/200.1.0/target-deps/usd/debug/include;$(DEVLIBS)Omniverse/200.1.0/target-deps/usd_ext_physics/debug/include;$(DEVLIBS)Omniverse/200.1.0/target-deps/omni_client_library/include;$(DEVLIBS)Omniverse/200.1.0/target-deps/omni_usd_resolver/include;$(DEVLIBS)Omniverse/200.1.0/target-deps/python/include;$(DEVLIBS)Omniverse/200.1.0/target-deps/tinytoml/include;$(DEVLIBS)Omniverse/200.1.0/target-deps/nlohmann-json/include;$(DEVLIBS)Omniverse/200.1.0/source/cppUtils;$(DEVLIBS)Omniverse/200.1.0/source/omniLiveSessionLib/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 /wd4244 /wd4305 /wd4267 -D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>eeCored.lib;eeUtilitiesd.lib;ar.lib;arch.lib;gf.lib;js.lib;kind.lib;pcp.lib;plug.lib;sdf.lib;tf.lib;trace.lib;usd.lib;usdGeom.lib;vt.lib;work.lib;usdShade.lib;usdLux.lib;usdPhysics.lib;omniclient.lib;python37.lib;boost_python37-vc141-mt-gd-x64-1_68.lib;shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Omniverse/target-deps/nv_usd/debug/lib;$(DEVLIBS)Omniverse/target-deps/usd_ext_physics/debug/lib;$(DEVLIBS)Omniverse/target-deps/omni_client_library/debug;$(DEVLIBS)Omniverse/target-deps/python/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>eeCored.lib;eeUtilitiesd.lib;ar.lib;arch.lib;gf.lib;js.lib;kind.lib;pcp.lib;plug.lib;sdf.lib;tf.lib;trace.lib;usd.lib;usdGeom.lib;usdUtils.lib;vt.lib;work.lib;usdShade.lib;usdLux.lib;usdPhysics.lib;omniclient.lib;omni_usd_resolver.lib;python37.lib;boost_python37-vc141-mt-gd-x64-1_68.lib;shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Omniverse/200.1.0/target-deps/usd/debug/lib;$(DEVLIBS)Omniverse/200.1.0/target-deps/usd_ext_physics/debug/lib;$(DEVLIBS)Omniverse/200.1.0/target-deps/omni_client_library/debug;$(DEVLIBS)Omniverse/200.1.0/target-deps/omni_usd_resolver/debug;$(DEVLIBS)Omniverse/200.1.0/target-deps/python/lib;$(DEVLIBS)Omniverse/200.1.0/target-deps/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>

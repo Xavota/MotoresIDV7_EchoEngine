@@ -326,9 +326,9 @@ TEST(eeUtilities, Vector3)
   EXPECT_TRUE(vf.cross(vf2) == Vector3f( 8.0f,  10.0f,  6.0f));
   
   EXPECT_EQ(vf.getDistance(vf2), 5.0f);
-  EXPECT_EQ(vf2.getMagnitud(), 3.0f);
+  EXPECT_EQ(vf2.getMagnitude(), 3.0f);
 
-  float mag = vf.getMagnitud();
+  float mag = vf.getMagnitude();
   EXPECT_TRUE(vf.getNormalize() == Vector3f( 0.30151134f,  
                                                           0.30151134f, 
                                                          -0.90453403f));

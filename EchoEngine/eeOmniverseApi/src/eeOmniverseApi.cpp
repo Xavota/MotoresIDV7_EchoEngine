@@ -109,44 +109,20 @@ OmniClientConnectionStatusCallbackImpl(void* userData,
   }
 }
 
-bool
-OmniverseApi::init(bool doLiveEdit)
+
+// Get the Absolute path of the current executable
+// Borrowed from https://stackoverflow.com/questions/1528298/get-path-of-executable
+static fs::path getExePath()
 {
-  // Register a function to be called whenever the library wants to print something to a log
-  omniClientSetLogCallback(logCallback);
-
-  // The default log level is "Info", set it to "Debug" to see all messages
-  omniClientSetLogLevel(eOmniClientLogLevel_Debug);
-
-  // Initialize the library and pass it the version constant defined in OmniClient.h
-  // This allows the library to verify it was built with a compatible version. It will
-  // return false if there is a version mismatch.
-  if (!omniClientInitialize(kOmniClientVersion)) {
-    return false;
-  }
-
-  omniClientRegisterConnectionStatusCallback(nullptr,
-                                        OmniClientConnectionStatusCallbackImpl);
-
-  // Enable live updates
-  omniUsdLiveSetDefaultEnabled(doLiveEdit);
-
-  m_status = eOMNI_STATUS::kOk;
-
-  return true;
-}
-void
-OmniverseApi::destroy()
-{
-  // Calling this prior to shutdown ensures that all pending live updates complete.
-  omniUsdLiveWaitForPendingUpdates();
-
-  // The stage is a sophisticated object that needs to be destroyed properly.  
-  // Since gStage is a smart pointer we can just reset it
-  m_stage.Reset();
-
-  //omniClientTick(1000);
-  omniClientShutdown();
+#ifdef _WIN32
+  wchar_t path[MAX_PATH] = { 0 };
+  GetModuleFileNameW(NULL, path, MAX_PATH);
+  return path;
+#else
+  char result[PATH_MAX];
+  ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
+  return std::string(result, (count > 0) ? count : 0);
+#endif
 }
 
 void
@@ -160,6 +136,54 @@ failNotify(const String& msg, const String detail = "")
     //fprintf(stderr, "%s\n", detail);
     Logger::instance().consoleLog(detail);
   }
+}
+
+bool
+OmniverseApi::init(bool doLiveEdit)
+{
+  // This is not strictly required for this sample because the sample copies all of the USD plugin
+  // files to the correct place relative to the executable and current working directory.  This is
+  // an instructional bit for apps that may not be able to do this.
+
+  // Find absolute path of the resolver plugins `resources` folder
+  std::string pluginResourcesFolder = getExePath().parent_path().string() + "/usd/omniverse/resources";
+  PlugRegistry::GetInstance().RegisterPlugins(pluginResourcesFolder);
+  std::string PluginName = "OmniUsdResolver";
+  if (TfType::FindByName(PluginName).IsUnknown())
+  {
+    failNotify("Could not find the Omniverse USD Resolver plugin");
+    return false;
+  }
+
+  // Register a function to be called whenever the library wants to print something to a log
+  omniClientSetLogCallback(logCallback);
+
+  // The default log level is "Info", set it to "Debug" to see all messages
+  omniClientSetLogLevel(eOmniClientLogLevel_Debug);
+
+  // Initialize the library and pass it the version constant defined in OmniClient.h
+  // This allows the library to verify it was built with a compatible version. It will
+  // return false if there is a version mismatch.
+  if (!omniClientInitialize(kOmniClientVersion))
+  {
+    return false;
+  }
+
+  omniClientRegisterConnectionStatusCallback(nullptr, OmniClientConnectionStatusCallbackImpl);
+
+  return true;
+}
+void
+OmniverseApi::destroy()
+{
+  // Calling this prior to shutdown ensures that all pending live updates complete.
+  omniClientLiveWaitForPendingUpdates();
+
+  // The stage is a sophisticated object that needs to be destroyed properly.  
+  // Since gStage is a smart pointer we can just reset it
+  m_stage.Reset();
+
+  omniClientShutdown();
 }
 
 // Create a new connection for this model in Omniverse, returns the created stage URL
@@ -332,16 +356,16 @@ updateStMeshCmpToScenegraph(const SdfPath& parentPath,
     String matName("Mat_" + stm.second.lock()->getResourceName());
     SdfPath matPath = meshPrimPath.AppendChild(TfToken("Mat_Pat"));
     auto mat = UsdShadeMaterial::Get(stage, matPath);
-
+    
     auto pbrShader = UsdShadeShader::Get(stage, matPath.AppendChild(TfToken("PBRShader")));
     pbrShader.GetInput(TfToken("roughness")).Set(0.4f);
     pbrShader.GetInput(TfToken("metallic")).Set(0.0f);
-
+    
     auto tex = stm.second.lock()->getTexturesMap();
     auto img = tex[0].lock()->getImages()[0];
-
+    
     String imgPath = "D:/GitHub/MotoresIDV7_EchoEngine/EchoEngine/bin/" + img->getPath();
-
+    
     auto diffuseTextureSampler = UsdShadeShader::Get(stage, matPath.AppendChild(TfToken("diffuseTexture")));
     diffuseTextureSampler.GetInput(TfToken("file")).Set(SdfAssetPath(imgPath));
   }
@@ -439,16 +463,16 @@ updateSkMeshCmpToScenegraph(const SdfPath& parentPath,
     String matName("Mat_" + stm.second.lock()->getResourceName());
     SdfPath matPath = meshPrimPath.AppendChild(TfToken("Mat_Pat"));
     auto mat = UsdShadeMaterial::Get(stage, matPath);
-
+    
     auto pbrShader = UsdShadeShader::Get(stage, matPath.AppendChild(TfToken("PBRShader")));
     pbrShader.GetInput(TfToken("roughness")).Set(0.4f);
     pbrShader.GetInput(TfToken("metallic")).Set(0.0f);
-
+    
     auto tex = stm.second.lock()->getTexturesMap();
     auto img = tex[0].lock()->getImages()[0];
-
+    
     String imgPath = "D:/GitHub/MotoresIDV7_EchoEngine/EchoEngine/bin/" + img->getPath();
-
+    
     auto diffuseTextureSampler = UsdShadeShader::Get(stage, matPath.AppendChild(TfToken("diffuseTexture")));
     diffuseTextureSampler.GetInput(TfToken("file")).Set(SdfAssetPath(imgPath));
   }
@@ -738,22 +762,22 @@ addStMeshCmpToScenegraph(const SdfPath& parentPath,
     String matName("Mat_" + stm.second.lock()->getResourceName());
     SdfPath matPath = meshPrimPath.AppendChild(TfToken("Mat_Pat"));
     auto mat = UsdShadeMaterial::Define(stage, matPath);
-
+    
     auto pbrShader = UsdShadeShader::Define(stage, matPath.AppendChild(TfToken("PBRShader")));
     pbrShader.CreateIdAttr(VtValue(TfToken("UsdPreviewSurface")));
     pbrShader.CreateInput(TfToken("roughness"), SdfValueTypeNames->Float).Set(0.4f);
     pbrShader.CreateInput(TfToken("metallic"), SdfValueTypeNames->Float).Set(0.0f);
-
+    
     mat.CreateSurfaceOutput().ConnectToSource(pbrShader.ConnectableAPI(), TfToken("surface"));
-
+    
     auto stReader = UsdShadeShader::Define(stage, matPath.AppendChild(TfToken("stReader")));
     stReader.CreateIdAttr(VtValue(TfToken("UsdPrimvarReader_float2")));
-
+    
     auto tex = stm.second.lock()->getTexturesMap();
     auto img = tex[0].lock()->getImages()[0];
-
+    
     String imgPath = "D:/GitHub/MotoresIDV7_EchoEngine/EchoEngine/bin/" + img->getPath();
-
+    
     auto diffuseTextureSampler = UsdShadeShader::Define(stage, matPath.AppendChild(TfToken("diffuseTexture")));
     diffuseTextureSampler.CreateIdAttr(VtValue(TfToken("UsdUVTexture")));
     diffuseTextureSampler.CreateInput(TfToken("file"), SdfValueTypeNames->Asset).Set(SdfAssetPath(imgPath));
@@ -761,10 +785,10 @@ addStMeshCmpToScenegraph(const SdfPath& parentPath,
     diffuseTextureSampler.CreateInput(TfToken("st"), SdfValueTypeNames->Float2).ConnectToSource(stReader.ConnectableAPI(), TfToken("result"));
     diffuseTextureSampler.CreateOutput(TfToken("rgb"), SdfValueTypeNames->Float3);
     pbrShader.CreateInput(TfToken("diffuseColor"), SdfValueTypeNames->Color3f).ConnectToSource(diffuseTextureSampler.ConnectableAPI(), TfToken("rgb"));
-
+    
     auto stInput = mat.CreateInput(TfToken("frame:stPrimvarName"), SdfValueTypeNames->Token);
     stInput.Set(TfToken("st"));
-
+    
     stReader.CreateInput(TfToken("varname"), SdfValueTypeNames->Token).ConnectToSource(stInput);
     UsdShadeMaterialBindingAPI(mesh).Bind(mat);
   }
@@ -874,22 +898,22 @@ addSkMeshCmpToScenegraph(const SdfPath& parentPath,
     String matName("Mat_" + stm.second.lock()->getResourceName());
     SdfPath matPath = meshPrimPath.AppendChild(TfToken("Mat_Pat"));
     auto mat = UsdShadeMaterial::Define(stage, matPath);
-
+    
     auto pbrShader = UsdShadeShader::Define(stage, matPath.AppendChild(TfToken("PBRShader")));
     pbrShader.CreateIdAttr(VtValue(TfToken("UsdPreviewSurface")));
     pbrShader.CreateInput(TfToken("roughness"), SdfValueTypeNames->Float).Set(0.4f);
     pbrShader.CreateInput(TfToken("metallic"), SdfValueTypeNames->Float).Set(0.0f);
-
+    
     mat.CreateSurfaceOutput().ConnectToSource(pbrShader.ConnectableAPI(), TfToken("surface"));
-
+    
     auto stReader = UsdShadeShader::Define(stage, matPath.AppendChild(TfToken("stReader")));
     stReader.CreateIdAttr(VtValue(TfToken("UsdPrimvarReader_float2")));
-
+    
     auto tex = stm.second.lock()->getTexturesMap();
     auto img = tex[0].lock()->getImages()[0];
-
+    
     String imgPath = "D:/GitHub/MotoresIDV7_EchoEngine/EchoEngine/bin/" + img->getPath();
-
+    
     auto diffuseTextureSampler = UsdShadeShader::Define(stage, matPath.AppendChild(TfToken("diffuseTexture")));
     diffuseTextureSampler.CreateIdAttr(VtValue(TfToken("UsdUVTexture")));
     diffuseTextureSampler.CreateInput(TfToken("file"), SdfValueTypeNames->Asset).Set(SdfAssetPath(imgPath));
@@ -897,10 +921,10 @@ addSkMeshCmpToScenegraph(const SdfPath& parentPath,
     diffuseTextureSampler.CreateInput(TfToken("st"), SdfValueTypeNames->Float2).ConnectToSource(stReader.ConnectableAPI(), TfToken("result"));
     diffuseTextureSampler.CreateOutput(TfToken("rgb"), SdfValueTypeNames->Float3);
     pbrShader.CreateInput(TfToken("diffuseColor"), SdfValueTypeNames->Color3f).ConnectToSource(diffuseTextureSampler.ConnectableAPI(), TfToken("rgb"));
-
+    
     auto stInput = mat.CreateInput(TfToken("frame:stPrimvarName"), SdfValueTypeNames->Token);
     stInput.Set(TfToken("st"));
-
+    
     stReader.CreateInput(TfToken("varname"), SdfValueTypeNames->Token).ConnectToSource(stInput);
     UsdShadeMaterialBindingAPI(mesh).Bind(mat);
   }
@@ -978,7 +1002,7 @@ OmniverseApi::setScenegraphOnStage(WPtr<Scene> scenegraph)
   }
 
   // Commit the changes to the USD
-  omniUsdLiveProcess();
+  omniClientLiveProcess();
   m_stage->Save();
   return true;
 }

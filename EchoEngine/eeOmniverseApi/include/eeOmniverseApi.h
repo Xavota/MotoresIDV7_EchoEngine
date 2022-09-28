@@ -15,20 +15,55 @@
 
 #include <eeOmniverseManager.h>
 
-#include <OmniClient.h>
-#include <OmniUsdLive.h>
-#include <pxr/usd/usd/stage.h>
-#include <pxr/usd/usdGeom/mesh.h>
-#include <pxr/usd/usdGeom/metrics.h>
+#include "xformUtils.h"
+#include "primUtils.h"
+
+#include <chrono>
+#include <cctype>
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <thread>
+#include <vector>
+#include <cassert>
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
+#ifdef _WIN32
+#include <conio.h>
+#include <windows.h>
+#include <filesystem>
+namespace fs = std::filesystem;
+#else
+#include <limits.h>
+#include <unistd.h>     //readlink
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+#endif
+
+#include <fstream>
+#include <mutex>
+#include <memory>
+#include <map>
+#include <condition_variable>
+
+#include "OmniClient.h"
+#include "OmniUsdResolver.h"
+#include "OmniChannel.h"
+#include "LiveSessionInfo.h"
+#include "LiveSessionConfigFile.h"
+#include "pxr/usd/usd/stage.h"
+#include "pxr/usd/usdGeom/mesh.h"
+#include "pxr/usd/usdGeom/metrics.h"
 #include <pxr/base/gf/matrix4f.h>
-#include <pxr/base/gf/rotation.h>
-#include <pxr/base/gf/vec2f.h>
+#include "pxr/base/gf/vec2f.h"
+#include <pxr/base/plug/registry.h>
 #include <pxr/usd/usdUtils/pipeline.h>
 #include <pxr/usd/usdUtils/sparseValueWriter.h>
 #include <pxr/usd/usdShade/material.h>
-#include <pxr/usd/usd/prim.h>
-#include <pxr/usd/usd/primRange.h>
-#include <pxr/usd/usdGeom/primvar.h>
+#include "pxr/usd/usd/prim.h"
+#include "pxr/usd/usd/primRange.h"
+#include "pxr/usd/usdGeom/primvar.h"
 #include <pxr/usd/usdShade/input.h>
 #include <pxr/usd/usdShade/output.h>
 #include <pxr/usd/usdGeom/xform.h>
@@ -39,9 +74,16 @@
 #include <pxr/usd/usdShade/shader.h>
 #include <pxr/usd/usd/modelAPI.h>
 
-#include <eeTransform.h>
+// Physics includes, note that usdPhysics is now part of USD itself, 
+// in newer USD versions these includes will be replaced by pxr official usdPhysics schema
+#include <usdPhysics/scene.h>
+#include <usdPhysics/rigidBodyAPI.h>
+#include <usdPhysics/collisionAPI.h>
+#include <usdPhysics/meshCollisionAPI.h>
 
 PXR_NAMESPACE_USING_DIRECTIVE
+
+#include <eeTransform.h>
 
 
 namespace eeEngineSDK {
