@@ -385,12 +385,14 @@ DrawLightCmp(WPtr<CLight> light, int32& uniqueId)
 void
 DrawTransformCmp(WPtr<CTransform> trans, int32& uniqueId)
 {
+  bool anyTransform = false;;
   auto sTrans = trans.lock();
   ImGui::PushID(uniqueId++);
   Vector3f actPos = sTrans->getPosition();
   float pos[3] = { actPos.x, actPos.y, actPos.z };
   if (ImGui::DragFloat3("Position", pos, 0.01f, -1000.0f, 1000.0f)) {
     sTrans->setPosition(Vector3f(pos[0], pos[1], pos[2]));
+    anyTransform = true;
   }
   ImGui::PopID();
   ImGui::PushID(uniqueId++);
@@ -398,6 +400,7 @@ DrawTransformCmp(WPtr<CTransform> trans, int32& uniqueId)
   float rot[3] = { actRot.x, actRot.y, actRot.z };
   if (ImGui::DragFloat3("Rotation", rot, 0.01f, -1000.0f, 1000.0f)) {
     sTrans->setRotation(Quaternion(Vector3f(rot[0], rot[1], rot[2])));
+    anyTransform = true;
   }
   ImGui::PopID();
   ImGui::PushID(uniqueId++);
@@ -405,8 +408,17 @@ DrawTransformCmp(WPtr<CTransform> trans, int32& uniqueId)
   float scale[3] = { actScale.x, actScale.y, actScale.z };
   if (ImGui::DragFloat3("Scale", scale, 0.01f, -1000.0f, 1000.0f)) {
     sTrans->setScale(Vector3f(scale[0], scale[1], scale[2]));
+    anyTransform = true;
   }
   ImGui::PopID();
+
+  auto& omniverseMan = OmniverseManager::instance();
+  if (OmniverseManager::isStarted()
+   && omniverseMan.stageIsOpen()
+   && omniverseMan.isLive()
+   && anyTransform) {
+    omniverseMan.saveStage(SceneManager::instance().getActiveScene());
+  }
 }
 
 void
@@ -499,12 +511,16 @@ DrawStaticMeshCmp(WPtr<CStaticMesh> staticMesh, int32& uniqueId)
   }
   ImGui::PopID();
 
-  String staticMeshName = sStaticMesh->getStaticMesh().lock()->getResourceName();
+  String staticMeshName;
+  if (!sStaticMesh->getStaticMesh().expired()) {
+    staticMeshName = sStaticMesh->getStaticMesh().lock()->getResourceName();
+  }
   Map<String, SPtr<StaticMesh>> staticMeshes =
   ResourceManager::instance().getAllStaticMeshResources();
   int32 staticMeshIndex = 0;
   int32 tempIndex = 0;
   Vector<const char*> names;
+  names.push_back("none");
   for (auto& m : staticMeshes) {
     names.push_back(m.first.c_str());
     if (m.first == staticMeshName) {
@@ -908,15 +924,113 @@ UIRender()
 
   if (eeEngineSDK::OmniverseManager::isStarted()) {
     static auto& omniverseMan = OmniverseManager::instance();
-    if (ImGui::Begin("Omniverse Manager")) {
-      if (ImGui::Button("Save stage")) {
-        omniverseMan.saveStage();
+
+    static String localPath;
+    static Vector<String> sessionNames;
+    static String activeSessionName;
+
+    static bool openingOmniStage = false;
+    static bool joinOmniSession = false;
+    static bool creatingOmniSession = false;
+
+    if (openingOmniStage) {
+      if (ImGui::Begin("Opening Stage")) {
+        ImGui::Text(("Admin path: " + localPath).c_str());
+        static char stageName[64];
+        ImGui::InputText("Stage Name", stageName, 64);
+
+        if (ImGui::Button("Open Stage")) {
+          omniverseMan.openStage(localPath + "/" + stageName);
+          omniverseMan.getScenegraphFromStage(sceneManager.getActiveScene());
+          openingOmniStage = false;
+        }
+        if (ImGui::Button("Create Stage")) {
+          omniverseMan.createStage(localPath + "/" + stageName);
+          omniverseMan.setScenegraphOnStage(sceneManager.getActiveScene());
+          openingOmniStage = false;
+        }
       }
-      if (ImGui::Button("Update stage")) {
-        omniverseMan.getScenegraphFromStage(SceneManager::instance().getActiveScene());
-      }
+      ImGui::End();
     }
-    ImGui::End();
+
+    if (joinOmniSession) {
+      if (ImGui::Begin("Joining Session")) {
+        SIZE_T sessionsCount = sessionNames.size();
+
+        static int sessionIndex = 0;
+        Vector<const char*> sessionNamesChr;
+        for (SIZE_T i = 0; i < sessionsCount; ++i) {
+          sessionNamesChr.push_back(sessionNames[i].c_str());
+        }
+
+        ImGui::Combo("Existing sessions names", &sessionIndex, sessionNamesChr.data(), sessionNamesChr.size());
+
+        if (ImGui::Button("Join Session")) {
+          if (omniverseMan.joinSession(sessionNames[sessionIndex])) {
+            omniverseMan.getScenegraphFromStage(sceneManager.getActiveScene());
+            activeSessionName = sessionNames[sessionIndex];
+          }
+          joinOmniSession = false;
+        }
+        if (ImGui::Button("Create Session")) {
+          joinOmniSession = false;
+          creatingOmniSession = true;
+        }
+      }
+      ImGui::End();
+    }
+
+    if (creatingOmniSession) {
+      if (ImGui::Begin("Creating live session")) {
+        static char sessionName[64];
+        ImGui::InputText("New Session Name", sessionName, 64);
+
+        if (ImGui::Button("Create Session")) {
+          if (omniverseMan.createNewSession(sessionName)) {
+            omniverseMan.getScenegraphFromStage(sceneManager.getActiveScene());
+            activeSessionName = sessionName;
+          }
+          creatingOmniSession = false;
+        }
+      }
+      ImGui::End();
+    }
+
+    if (!openingOmniStage && !joinOmniSession && !creatingOmniSession) {
+      if (ImGui::Begin("Omniverse Manager")) {
+        if (ImGui::Button("Open Stage")) {
+          openingOmniStage = true;
+          localPath = omniverseMan.getUserLocalPath();
+        }
+        if (omniverseMan.stageIsOpen()) {
+          if (ImGui::Button("Close Stage")) {
+            omniverseMan.closeStage();
+          }
+          ImGui::Separator();
+          ImGui::Text("Session Info:");
+          if (ImGui::Button("Join Session")) {
+            joinOmniSession = true;
+            sessionNames = omniverseMan.getExisitingSessionNames();
+          }
+          if (omniverseMan.isLive()) {
+            ImGui::Text(("Active session name: " + activeSessionName).c_str());
+            if (ImGui::Button("Stop Session")) {
+              omniverseMan.stopLiveSession();
+              omniverseMan.updateScenegraphFromStage(sceneManager.getActiveScene());
+            }
+          }
+          else {
+            if (ImGui::Button("Save stage")) {
+              omniverseMan.saveStage(sceneManager.getActiveScene());
+            }
+            if (ImGui::Button("Update stage")) {
+              omniverseMan.updateScenegraphFromStage(sceneManager.getActiveScene());
+            }
+          }
+        }
+      }
+      ImGui::End();
+    }
   }
 
 
@@ -974,16 +1088,16 @@ BaseAppTest1::onInit()
 
 
 
-  resourceManager.loadStaticMeshFromMeshesArray({ Mesh::cube },
-                                                "Cube",
-                                                Math::sqrt(3),
-                                                Vector3f{ 1.0f, 1.0f, 1.0f },
-                                                Vector3f{ -1.0f, -1.0f, -1.f });
-  resourceManager.loadStaticMeshFromMeshesArray({ Mesh::sphere },
-                                                "Sphere",
-                                                1.0f,
-                                                Vector3f{ 1.0f, 1.0f, 1.0f },
-                                                Vector3f{ -1.0f, -1.0f, -1.f });
+  //resourceManager.loadStaticMeshFromMeshesArray({ Mesh::cube },
+  //                                              "Cube",
+  //                                              Math::sqrt(3),
+  //                                              Vector3f{ 1.0f, 1.0f, 1.0f },
+  //                                              Vector3f{ -1.0f, -1.0f, -1.f });
+  //resourceManager.loadStaticMeshFromMeshesArray({ Mesh::sphere },
+  //                                              "Sphere",
+  //                                              1.0f,
+  //                                              Vector3f{ 1.0f, 1.0f, 1.0f },
+  //                                              Vector3f{ -1.0f, -1.0f, -1.f });
   //resourceManager.loadStaticMeshFromMeshesArray({ Mesh::tetrahedron },
   //                                              "Tetrahedron",
   //                                              Vector3f{ 1.0f, -0.54f, -0.58f },
@@ -1009,234 +1123,234 @@ BaseAppTest1::onInit()
 
 
 
-  pTempActor = pScene->addActor("AtatchToActor");
-  spTempActor = pTempActor.lock();
-  pScene->setActorChild("Player", "AtatchToActor");
-  spTempActor->getTransform().lock()->setPosition(Vector3f{ 0.0f, 0.0f, 30.0f });
-  spTempActor->addComponent<CStaticMesh>();
-  spTempActor->getComponent<CStaticMesh>().lock()->setStaticMesh
-  (
-    resourceManager.getResourceStaticMesh("Cube")
-  );
-  spTempActor->addComponent<CBounds>();
-  spTempActor->addComponent<CRender>();
-
-
-
-  pTempActor = pScene->addActor("Player2");
-  spTempActor = pTempActor.lock();
-  spTempActor->getTransform().lock()->setPosition(Vector3f{ 5.0f, 3.0f, -6.0f });
-  spTempActor->getTransform().lock()->setScale(Vector3f{ 0.1f, 0.1f, 0.1f });
-  spTempActor->addComponent<CCamera>();
-  spTempActor->getComponent<CCamera>().lock()->init(camDesc);
-
-
-  resourceManager.importResourceFromFile(L"Models/arcane_jinx_sketchfab.fbx",
-    eeEngineSDK::IMPORT_FLAGS::kImportStaticMeshes);
-
-  resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_Body_baseColor.png");
-  resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_Body_normal.png");
-  resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_FaceAcc_baseColor.png");
-  resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_FaceAcc_normal.png");
-  resourceManager.importResourceFromFile(L"Textures/Jinx/FACE_-_TEST.png");
-  resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_Head_normal.png");
-
-  texturesMap.clear();
-
-  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
-    resourceManager.getResourceTexture("F_MED_UproarBraids_Body_baseColor_tex");
-  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
-    resourceManager.getResourceTexture("F_MED_UproarBraids_Body_normal_tex");
-  resourceManager.loadMaterialFromTextures(texturesMap,
-    "F_MED_UproarBraids_Body_baseColor_mat");
-
-  texturesMap.clear();
-
-  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
-    resourceManager.getResourceTexture("F_MED_UproarBraids_FaceAcc_baseColor_tex");
-  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
-    resourceManager.getResourceTexture("F_MED_UproarBraids_FaceAcc_normal_tex");
-  resourceManager.loadMaterialFromTextures(texturesMap,
-    "F_MED_UproarBraids_FaceAcc_baseColor_mat");
-
-  texturesMap.clear();
-
-  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
-    resourceManager.getResourceTexture("FACE_-_TEST_tex");
-  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
-    resourceManager.getResourceTexture("F_MED_UproarBraids_Head_normal_tex");
-  resourceManager.loadMaterialFromTextures(texturesMap,
-    "FACE_-_TEST_mat");
-
-  pTempActor = pScene->addActor("Test");
-  spTempActor = pTempActor.lock();
-  spTempActor->getTransform().lock()->setScale(Vector3f{ 2.0f, 2.0f, 2.0f });
-  spTempActor->getTransform().lock()->setPosition(Vector3f{ 3.0f, 0.0f, 0.0f });
-  spTempActor->getTransform().lock()->setRotation(Quaternion(Vector3f{ 1.5707f, 0.0f, 0.0f }));
-  spTempActor->addComponent<CStaticMesh>();
-  spTempActor->getComponent<CStaticMesh>().lock()->setMobilityType(
-    eeEngineSDK::eMOBILITY_TYPE::kStatic);
-  spTempActor->getComponent<CStaticMesh>().lock()->setStaticMesh
-  (
-    resourceManager.getResourceStaticMesh("arcane_jinx_sketchfab_sm")
-  );
-  spTempActor->getComponent<CStaticMesh>().lock()->getStaticMesh().lock()->setTexture
-  (
-    resourceManager.getResourceMaterial
-    (
-      "F_MED_UproarBraids_Body_baseColor_mat"
-    ),
-    0
-  );
-  spTempActor->getComponent<CStaticMesh>().lock()->getStaticMesh().lock()->setTexture
-  (
-    resourceManager.getResourceMaterial
-    (
-      "F_MED_UproarBraids_FaceAcc_baseColor_mat"
-    ),
-    1
-  );
-  spTempActor->getComponent<CStaticMesh>().lock()->getStaticMesh().lock()->setTexture
-  (
-    resourceManager.getResourceMaterial
-    (
-      "FACE_-_TEST_mat"
-    ),
-    2
-  );
-  spTempActor->addComponent<CBounds>();
-  spTempActor->addComponent<CRender>();
-
-
-  resourceManager.importResourceFromFile(L"Models/boblampclean.md5mesh");
-
-  resourceManager.importResourceFromFile(L"Textures/guard1_body.jpg");
-  texturesMap.clear();
-  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
-    resourceManager.getResourceTexture("guard1_body_tex");
-  resourceManager.loadMaterialFromTextures(texturesMap,
-    "guard1_body_mat");
-  resourceManager.importResourceFromFile(L"Textures/guard1_face.jpg");
-  texturesMap.clear();
-  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
-    resourceManager.getResourceTexture("guard1_face_tex");
-  resourceManager.loadMaterialFromTextures(texturesMap,
-    "guard1_face_mat");
-  resourceManager.importResourceFromFile(L"Textures/guard1_helmet.jpg");
-  texturesMap.clear();
-  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
-    resourceManager.getResourceTexture("guard1_helmet_tex");
-  resourceManager.loadMaterialFromTextures(texturesMap,
-    "guard1_helmet_mat");
-  resourceManager.importResourceFromFile(L"Textures/iron_grill.jpg");
-  texturesMap.clear();
-  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
-    resourceManager.getResourceTexture("iron_grill_tex");
-  resourceManager.loadMaterialFromTextures(texturesMap,
-    "iron_grill_mat");
-  resourceManager.importResourceFromFile(L"Textures/round_grill.jpg");
-  texturesMap.clear();
-  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
-    resourceManager.getResourceTexture("round_grill_tex");
-  resourceManager.loadMaterialFromTextures(texturesMap,
-    "round_grill_mat");
-
-  SPtr<Image> tempImg = memoryManager.newPtr<Image>();
-  tempImg->loadFromFile(L"Textures/guard1_body.jpg");
-
-  SPtr<Texture> tempTex = graphicsApi.createTexturePtr();
-  tempTex->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kShaderResource,
-    Point2D{ tempImg->getWidth(), tempImg->getHeight() });
-
-  tempTex->loadImages({ tempImg });
-
-
-  pTempActor = pScene->addActor("AnimTest");
-  spTempActor = pTempActor.lock();
-  spTempActor->getTransform().lock()->setScale(Vector3f{ 0.03f, 0.03f, 0.03f });
-  spTempActor->getTransform().lock()->setRotation(Quaternion(Vector3f{ Math::kPI * 0.5f,
-                                                                       0.0f,
-                                                                       0.0f }));
-  spTempActor->addComponent<CSkeletalMesh>();
-  spTempActor->getComponent<CSkeletalMesh>().lock()->setModel
-  (
-    resourceManager.getResourceSkeletalMesh("boblampclean_skm")
-  );
-  spTempActor->getComponent<CSkeletalMesh>().lock()->getModel().lock()->setTexture
-  (
-    resourceManager.getResourceMaterial("guard1_body_mat"),
-    0
-  );
-  spTempActor->getComponent<CSkeletalMesh>().lock()->getModel().lock()->setTexture
-  (
-    resourceManager.getResourceMaterial("guard1_face_mat"),
-    1
-  );
-  spTempActor->getComponent<CSkeletalMesh>().lock()->getModel().lock()->setTexture
-  (
-    resourceManager.getResourceMaterial("guard1_helmet_mat"),
-    2
-  );
-  spTempActor->getComponent<CSkeletalMesh>().lock()->getModel().lock()->setTexture
-  (
-    resourceManager.getResourceMaterial("iron_grill_mat"),
-    3
-  );
-  spTempActor->getComponent<CSkeletalMesh>().lock()->getModel().lock()->setTexture
-  (
-    resourceManager.getResourceMaterial("round_grill_mat"),
-    4
-  );
-  spTempActor->getComponent<CSkeletalMesh>().lock()->getModel().lock()->setTexture
-  (
-    resourceManager.getResourceMaterial("guard1_body_mat"),
-    5
-  );
-  spTempActor->addComponent<CAnimation>();
-  spTempActor->getComponent<CAnimation>().lock()->setAnimation
-  (
-    resourceManager.getResourceAnimation("boblampclean_anim_")
-  );
-  spTempActor->addComponent<CBounds>();
-  spTempActor->addComponent<CRender>();
-
-
-  resourceManager.importResourceFromFile(L"Models/Scary_Clown_Walk.fbx");
-
-  pTempActor = pScene->addActor("AnimTest2");
-  spTempActor = pTempActor.lock();
-  spTempActor->getTransform().lock()->setScale(Vector3f{ 0.01f, 0.01f, 0.01f });
-  spTempActor->getTransform().lock()->setPosition(Vector3f{ -3.0f, 2.5f, 0.0f });
-  spTempActor->addComponent<CSkeletalMesh>();
-  spTempActor->getComponent<CSkeletalMesh>().lock()->setModel
-  (
-    resourceManager.getResourceSkeletalMesh("Scary_Clown_Walk_skm")
-  );
-  spTempActor->addComponent<CAnimation>();
-  spTempActor->getComponent<CAnimation>().lock()->setAnimation
-  (
-    resourceManager.getResourceAnimation("Scary_Clown_Walk_anim_mixamo.com")
-  );
-  spTempActor->addComponent<CBounds>();
-  spTempActor->addComponent<CRender>();
-
-
-  resourceManager.importResourceFromFile(L"Models/simpleCube.fbx",
-    eeEngineSDK::IMPORT_FLAGS::kImportStaticMeshes);
-
-  pTempActor = pScene->addActor("DownWall");
-  spTempActor = pTempActor.lock();
-  spTempActor->getTransform().lock()->setScale(Vector3f{ 10.0f, 0.5f, 10.0f });
-  spTempActor->getTransform().lock()->setPosition(Vector3f{ 0.0f, -1.0f, 0.0f });
-  spTempActor->addComponent<CStaticMesh>();
-  spTempActor->getComponent<CStaticMesh>().lock()->setMobilityType(
-    eeEngineSDK::eMOBILITY_TYPE::kStatic);
-  spTempActor->getComponent<CStaticMesh>().lock()->setStaticMesh
-  (
-    resourceManager.getResourceStaticMesh("simpleCube_sm")
-  );
-  spTempActor->addComponent<CBounds>();
-  spTempActor->addComponent<CRender>();
+  //pTempActor = pScene->addActor("AtatchToActor");
+  //spTempActor = pTempActor.lock();
+  //pScene->setActorChild("Player", "AtatchToActor");
+  //spTempActor->getTransform().lock()->setPosition(Vector3f{ 0.0f, 0.0f, 30.0f });
+  //spTempActor->addComponent<CStaticMesh>();
+  //spTempActor->getComponent<CStaticMesh>().lock()->setStaticMesh
+  //(
+  //  resourceManager.getResourceStaticMesh("Cube")
+  //);
+  //spTempActor->addComponent<CBounds>();
+  //spTempActor->addComponent<CRender>();
+  //
+  //
+  //
+  //pTempActor = pScene->addActor("Player2");
+  //spTempActor = pTempActor.lock();
+  //spTempActor->getTransform().lock()->setPosition(Vector3f{ 5.0f, 3.0f, -6.0f });
+  //spTempActor->getTransform().lock()->setScale(Vector3f{ 0.1f, 0.1f, 0.1f });
+  //spTempActor->addComponent<CCamera>();
+  //spTempActor->getComponent<CCamera>().lock()->init(camDesc);
+  //
+  //
+  //resourceManager.importResourceFromFile(L"Models/arcane_jinx_sketchfab.fbx",
+  //  eeEngineSDK::IMPORT_FLAGS::kImportStaticMeshes);
+  //
+  //resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_Body_baseColor.png");
+  //resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_Body_normal.png");
+  //resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_FaceAcc_baseColor.png");
+  //resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_FaceAcc_normal.png");
+  //resourceManager.importResourceFromFile(L"Textures/Jinx/FACE_-_TEST.png");
+  //resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_Head_normal.png");
+  //
+  //texturesMap.clear();
+  //
+  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  //  resourceManager.getResourceTexture("F_MED_UproarBraids_Body_baseColor_tex");
+  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
+  //  resourceManager.getResourceTexture("F_MED_UproarBraids_Body_normal_tex");
+  //resourceManager.loadMaterialFromTextures(texturesMap,
+  //  "F_MED_UproarBraids_Body_baseColor_mat");
+  //
+  //texturesMap.clear();
+  //
+  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  //  resourceManager.getResourceTexture("F_MED_UproarBraids_FaceAcc_baseColor_tex");
+  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
+  //  resourceManager.getResourceTexture("F_MED_UproarBraids_FaceAcc_normal_tex");
+  //resourceManager.loadMaterialFromTextures(texturesMap,
+  //  "F_MED_UproarBraids_FaceAcc_baseColor_mat");
+  //
+  //texturesMap.clear();
+  //
+  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  //  resourceManager.getResourceTexture("FACE_-_TEST_tex");
+  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
+  //  resourceManager.getResourceTexture("F_MED_UproarBraids_Head_normal_tex");
+  //resourceManager.loadMaterialFromTextures(texturesMap,
+  //  "FACE_-_TEST_mat");
+  //
+  //pTempActor = pScene->addActor("Test");
+  //spTempActor = pTempActor.lock();
+  //spTempActor->getTransform().lock()->setScale(Vector3f{ 2.0f, 2.0f, 2.0f });
+  //spTempActor->getTransform().lock()->setPosition(Vector3f{ 3.0f, 0.0f, 0.0f });
+  //spTempActor->getTransform().lock()->setRotation(Quaternion(Vector3f{ 1.5707f, 0.0f, 0.0f }));
+  //spTempActor->addComponent<CStaticMesh>();
+  ////spTempActor->getComponent<CStaticMesh>().lock()->setMobilityType(
+  ////  eeEngineSDK::eMOBILITY_TYPE::kStatic);
+  //spTempActor->getComponent<CStaticMesh>().lock()->setStaticMesh
+  //(
+  //  resourceManager.getResourceStaticMesh("arcane_jinx_sketchfab_sm")
+  //);
+  //spTempActor->getComponent<CStaticMesh>().lock()->getStaticMesh().lock()->setTexture
+  //(
+  //  resourceManager.getResourceMaterial
+  //  (
+  //    "F_MED_UproarBraids_Body_baseColor_mat"
+  //  ),
+  //  0
+  //);
+  //spTempActor->getComponent<CStaticMesh>().lock()->getStaticMesh().lock()->setTexture
+  //(
+  //  resourceManager.getResourceMaterial
+  //  (
+  //    "F_MED_UproarBraids_FaceAcc_baseColor_mat"
+  //  ),
+  //  1
+  //);
+  //spTempActor->getComponent<CStaticMesh>().lock()->getStaticMesh().lock()->setTexture
+  //(
+  //  resourceManager.getResourceMaterial
+  //  (
+  //    "FACE_-_TEST_mat"
+  //  ),
+  //  2
+  //);
+  //spTempActor->addComponent<CBounds>();
+  //spTempActor->addComponent<CRender>();
+  //
+  //
+  //resourceManager.importResourceFromFile(L"Models/boblampclean.md5mesh");
+  //
+  //resourceManager.importResourceFromFile(L"Textures/guard1_body.jpg");
+  //texturesMap.clear();
+  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  //  resourceManager.getResourceTexture("guard1_body_tex");
+  //resourceManager.loadMaterialFromTextures(texturesMap,
+  //  "guard1_body_mat");
+  //resourceManager.importResourceFromFile(L"Textures/guard1_face.jpg");
+  //texturesMap.clear();
+  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  //  resourceManager.getResourceTexture("guard1_face_tex");
+  //resourceManager.loadMaterialFromTextures(texturesMap,
+  //  "guard1_face_mat");
+  //resourceManager.importResourceFromFile(L"Textures/guard1_helmet.jpg");
+  //texturesMap.clear();
+  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  //  resourceManager.getResourceTexture("guard1_helmet_tex");
+  //resourceManager.loadMaterialFromTextures(texturesMap,
+  //  "guard1_helmet_mat");
+  //resourceManager.importResourceFromFile(L"Textures/iron_grill.jpg");
+  //texturesMap.clear();
+  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  //  resourceManager.getResourceTexture("iron_grill_tex");
+  //resourceManager.loadMaterialFromTextures(texturesMap,
+  //  "iron_grill_mat");
+  //resourceManager.importResourceFromFile(L"Textures/round_grill.jpg");
+  //texturesMap.clear();
+  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  //  resourceManager.getResourceTexture("round_grill_tex");
+  //resourceManager.loadMaterialFromTextures(texturesMap,
+  //  "round_grill_mat");
+  //
+  //SPtr<Image> tempImg = memoryManager.newPtr<Image>();
+  //tempImg->loadFromFile(L"Textures/guard1_body.jpg");
+  //
+  //SPtr<Texture> tempTex = graphicsApi.createTexturePtr();
+  //tempTex->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kShaderResource,
+  //  Point2D{ tempImg->getWidth(), tempImg->getHeight() });
+  //
+  //tempTex->loadImages({ tempImg });
+  //
+  //
+  //pTempActor = pScene->addActor("AnimTest");
+  //spTempActor = pTempActor.lock();
+  //spTempActor->getTransform().lock()->setScale(Vector3f{ 0.03f, 0.03f, 0.03f });
+  //spTempActor->getTransform().lock()->setRotation(Quaternion(Vector3f{ Math::kPI * 0.5f,
+  //                                                                     0.0f,
+  //                                                                     0.0f }));
+  //spTempActor->addComponent<CSkeletalMesh>();
+  //spTempActor->getComponent<CSkeletalMesh>().lock()->setModel
+  //(
+  //  resourceManager.getResourceSkeletalMesh("boblampclean_skm")
+  //);
+  //spTempActor->getComponent<CSkeletalMesh>().lock()->getModel().lock()->setTexture
+  //(
+  //  resourceManager.getResourceMaterial("guard1_body_mat"),
+  //  0
+  //);
+  //spTempActor->getComponent<CSkeletalMesh>().lock()->getModel().lock()->setTexture
+  //(
+  //  resourceManager.getResourceMaterial("guard1_face_mat"),
+  //  1
+  //);
+  //spTempActor->getComponent<CSkeletalMesh>().lock()->getModel().lock()->setTexture
+  //(
+  //  resourceManager.getResourceMaterial("guard1_helmet_mat"),
+  //  2
+  //);
+  //spTempActor->getComponent<CSkeletalMesh>().lock()->getModel().lock()->setTexture
+  //(
+  //  resourceManager.getResourceMaterial("iron_grill_mat"),
+  //  3
+  //);
+  //spTempActor->getComponent<CSkeletalMesh>().lock()->getModel().lock()->setTexture
+  //(
+  //  resourceManager.getResourceMaterial("round_grill_mat"),
+  //  4
+  //);
+  //spTempActor->getComponent<CSkeletalMesh>().lock()->getModel().lock()->setTexture
+  //(
+  //  resourceManager.getResourceMaterial("guard1_body_mat"),
+  //  5
+  //);
+  //spTempActor->addComponent<CAnimation>();
+  //spTempActor->getComponent<CAnimation>().lock()->setAnimation
+  //(
+  //  resourceManager.getResourceAnimation("boblampclean_anim_")
+  //);
+  //spTempActor->addComponent<CBounds>();
+  //spTempActor->addComponent<CRender>();
+  //
+  //
+  //resourceManager.importResourceFromFile(L"Models/Scary_Clown_Walk.fbx");
+  //
+  //pTempActor = pScene->addActor("AnimTest2");
+  //spTempActor = pTempActor.lock();
+  //spTempActor->getTransform().lock()->setScale(Vector3f{ 0.01f, 0.01f, 0.01f });
+  //spTempActor->getTransform().lock()->setPosition(Vector3f{ -3.0f, 2.5f, 0.0f });
+  //spTempActor->addComponent<CSkeletalMesh>();
+  //spTempActor->getComponent<CSkeletalMesh>().lock()->setModel
+  //(
+  //  resourceManager.getResourceSkeletalMesh("Scary_Clown_Walk_skm")
+  //);
+  //spTempActor->addComponent<CAnimation>();
+  //spTempActor->getComponent<CAnimation>().lock()->setAnimation
+  //(
+  //  resourceManager.getResourceAnimation("Scary_Clown_Walk_anim_mixamo.com")
+  //);
+  //spTempActor->addComponent<CBounds>();
+  //spTempActor->addComponent<CRender>();
+  //
+  //
+  //resourceManager.importResourceFromFile(L"Models/simpleCube.fbx",
+  //  eeEngineSDK::IMPORT_FLAGS::kImportStaticMeshes);
+  //
+  //pTempActor = pScene->addActor("DownWall");
+  //spTempActor = pTempActor.lock();
+  //spTempActor->getTransform().lock()->setScale(Vector3f{ 10.0f, 0.5f, 10.0f });
+  //spTempActor->getTransform().lock()->setPosition(Vector3f{ 0.0f, -1.0f, 0.0f });
+  //spTempActor->addComponent<CStaticMesh>();
+  ////spTempActor->getComponent<CStaticMesh>().lock()->setMobilityType(
+  ////  eeEngineSDK::eMOBILITY_TYPE::kStatic);
+  //spTempActor->getComponent<CStaticMesh>().lock()->setStaticMesh
+  //(
+  //  resourceManager.getResourceStaticMesh("simpleCube_sm")
+  //);
+  //spTempActor->addComponent<CBounds>();
+  //spTempActor->addComponent<CRender>();
 
 
 
@@ -1261,24 +1375,24 @@ BaseAppTest1::onInit()
   spTempActor->getComponent<CLight>().lock()->setLightType(eeEngineSDK::eLIGHT_TYPE::kPoint);
   spTempActor->getComponent<CLight>().lock()->setColor(Color{ 0.0f, 0.0f, 1.0f, 1.0f });
   spTempActor->getComponent<CLight>().lock()->setIntensity(1.0f);
-  spTempActor->addComponent<CStaticMesh>();
-  spTempActor->getComponent<CStaticMesh>().lock()->setStaticMesh
-  (
-    resourceManager.getResourceStaticMesh("Sphere")
-  );
-  spTempActor->addComponent<CBounds>();
-  spTempActor->addComponent<CRender>();
+  //spTempActor->addComponent<CStaticMesh>();
+  //spTempActor->getComponent<CStaticMesh>().lock()->setStaticMesh
+  //(
+  //  resourceManager.getResourceStaticMesh("Sphere")
+  //);
+  //spTempActor->addComponent<CBounds>();
+  //spTempActor->addComponent<CRender>();
   
   
-  sceneManager.partitionAllScenes();
+  //sceneManager.partitionAllScenes();
 
 
 
   if (OmniverseManager::isStarted()) {
     auto& omniverseMan = OmniverseManager::instance();
     String localPath = omniverseMan.getUserLocalPath();
-    omniverseMan.createStage(localPath + "/Main.usd");
-    omniverseMan.setScenegraphOnStage(pScene);
+    //omniverseMan.createStage(localPath + "/Main.usd");
+    //omniverseMan.setScenegraphOnStage(pScene);
     //omniverseMan.openStage(localPath + "/Main.usd");
     //omniverseMan.getScenegraphFromStage(pScene);
   }
@@ -1297,7 +1411,13 @@ BaseAppTest1::onUpdate(float deltaTime)
   auto& inputMan = InputManager::instance();
   auto& sceneManager = SceneManager::instance();
   auto& audioMan = AudioManager::instance();
+  auto& omniverseMan = OmniverseManager::instance();
 
+  if (OmniverseManager::isStarted()
+   && omniverseMan.stageIsOpen()
+   && omniverseMan.isLive()) {
+    omniverseMan.updateScenegraphFromStage(sceneManager.getActiveScene());
+  }
 
   auto scene = sceneManager.getScene("Main").lock();
   EE_NO_EXIST_RETURN(scene);
@@ -1324,10 +1444,7 @@ BaseAppTest1::onUpdate(float deltaTime)
 
 
 
-  auto actor = scene->getActor("Test").lock();
-
-
-
+  SPtr<Actor> actor = nullptr;
   actor = scene->getActor(activePlayerName).lock();
 
   SPtr<CTransform> trans = nullptr;
@@ -1389,6 +1506,13 @@ BaseAppTest1::onUpdate(float deltaTime)
 
 
   sceneManager.update();
+
+
+  if (OmniverseManager::isStarted()
+   && omniverseMan.stageIsOpen()
+   && omniverseMan.isLive()) {
+    omniverseMan.saveStage(sceneManager.getActiveScene());
+  }
 }
 
 void

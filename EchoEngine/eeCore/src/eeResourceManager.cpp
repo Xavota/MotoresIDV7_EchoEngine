@@ -708,7 +708,7 @@ ResourceManager::loadTextureFromFile(const WString& fileName,
 {
   if (m_textures.find(resourceName) != m_textures.end()) {
     Logger::instance().consoleLog("Resource already with this name");
-    return {};
+    return m_textures[resourceName];
   }
 
   if (fileName.empty()) {
@@ -741,7 +741,7 @@ ResourceManager::loadMaterialFromTextures(const Map<uint32, WPtr<Texture>>& text
 {
   if (m_materials.find(resourceName) != m_materials.end()) {
     Logger::instance().consoleLog("Resource already with this name");
-    return {};
+    return m_materials[resourceName];
   }
 
   SPtr<Material> mat =

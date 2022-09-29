@@ -127,6 +127,37 @@ class EE_OMNIVERSE_EXPORT OmniverseApi : public OmniverseManager
 
   /**
   * @brief
+  * Gets if the omniverse api is on a live session.
+  *
+  * @description
+  * Returns true if the omniverse api is on a live session.
+  *
+  * @return
+  * If the omniverse api is on a live session.
+  */
+  bool
+  isLive() override
+  {
+    return m_isLive;
+  }
+  /**
+  * @brief
+  * Gets if the stage is opened.
+  *
+  * @description
+  * Returns true if the stage is opened.
+  *
+  * @return
+  * If the stage is opened.
+  */
+  bool
+  stageIsOpen() override
+  {
+    return m_stage != nullptr;
+  }
+
+  /**
+  * @brief
   * Creates a stage .usd file.
   *
   * @description
@@ -164,9 +195,12 @@ class EE_OMNIVERSE_EXPORT OmniverseApi : public OmniverseManager
   *
   * @description
   * Saves the active stage to the .usd file.
+  *
+  * @param scenegraph
+  * The scene that will be inserted in the stage.
   */
   void
-  saveStage() override;
+  saveStage(WPtr<Scene> scenegraph) override;
 
   /**
   * @brief
@@ -208,6 +242,85 @@ class EE_OMNIVERSE_EXPORT OmniverseApi : public OmniverseManager
   */
   void
   getScenegraphFromStage(WPtr<Scene> scenegraph) override;
+  /**
+  * @brief
+  * Updates the scenegraph inside the stage.
+  *
+  * @description
+  * Inserts everything on the stage file into the scene.
+  *
+  * @param scenegraph
+  * The scene that will get the stage.
+  */
+  void
+  updateScenegraphFromStage(WPtr<Scene> scenegraph) override;
+
+  
+  /**
+  * @brief
+  * Gets the names of the existing live sessions.
+  *
+  * @description
+  * Returns the names of the existing live sessions.
+  *
+  * @return
+  * The names of the existing live sessions.
+  */
+  Vector<String>
+  getExisitingSessionNames() override
+  {
+    String sessionFolderForStage = m_liveSessionInfo.GetSessionFolderPathForStage();
+    Vector<String> sessionList = m_liveSessionInfo.GetLiveSessionList();
+    return sessionList;
+  }
+  /**
+  * @brief
+  * Join an existing session.
+  *
+  * @description
+  * Join a live session that already exists.
+  *
+  * @return
+  * If it succeeded on joining the session.
+  */
+  bool
+  joinSession(const String& sessionName) override;
+  /**
+  * @brief
+  * Creates a new session.
+  *
+  * @description
+  * Creates a new live session.
+  *
+  * @return
+  * If it succeeded on creating the session.
+  */
+  bool
+  createNewSession(const String& sessionName) override;
+  /**
+  * @brief
+  * Stops the currently active live session.
+  *
+  * @description
+  * Stops the currently active live session.
+  */
+  void
+  stopLiveSession() override;
+  /**
+  * @brief
+  * Getter of the active session name.
+  *
+  * @description
+  * Returns the currently active session name.
+  *
+  * @return
+  * The currently active session name.
+  */
+  const String&
+  getActiveSessionName() override
+  {
+    return m_activeSessionName;
+  }
 
 
  private:
@@ -220,9 +333,21 @@ class EE_OMNIVERSE_EXPORT OmniverseApi : public OmniverseManager
   */
   SdfPath m_rootPrimPath;
   /**
-  * The scenegraph that is currently using.
+  * The information for the life session of the Omniverse api
   */
-  WPtr<Scene> m_openedScenegraph;
+  LiveSessionInfo m_liveSessionInfo;
+  /**
+  * The current active session name.
+  */
+  String m_activeSessionName;
+  /**
+  * If the api is active live.
+  */
+  bool m_isLive = false;
+  /**
+  * The path of the stage file.
+  */
+  String m_stagePath;
   /**
   * The name of the stage file, which is the name of the active scene.
   */

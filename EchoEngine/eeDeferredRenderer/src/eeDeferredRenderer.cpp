@@ -834,7 +834,9 @@ DeferredRenderer::onRender()
       Vector<WPtr<Texture>> texs;
       Map<uint32, WPtr<Texture>> texturesMap;
       for (SIZE_T j = 0; j < meshesCount; ++j) {
-        texturesMap = meshes[j].second.lock()->getTexturesMap();
+        if (!meshes[j].second.expired()) {
+          texturesMap = meshes[j].second.lock()->getTexturesMap();
+        }
   
         if (texturesMap.find(TEXTURE_TYPE_INDEX::kDiffuse) != texturesMap.end()) {
           texs.push_back(texturesMap.find(TEXTURE_TYPE_INDEX::kDiffuse)->second);

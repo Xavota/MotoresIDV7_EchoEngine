@@ -154,7 +154,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>eeCored.lib;eeUtilitiesd.lib;ar.lib;arch.lib;gf.lib;js.lib;kind.lib;pcp.lib;plug.lib;sdf.lib;tf.lib;trace.lib;usd.lib;usdGeom.lib;usdUtils.lib;vt.lib;work.lib;usdShade.lib;usdLux.lib;usdPhysics.lib;omniclient.lib;omni_usd_resolver.lib;python37.lib;boost_python37-vc141-mt-gd-x64-1_68.lib;shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>eeCored.lib;eeUtilitiesd.lib;ar.lib;arch.lib;gf.lib;js.lib;kind.lib;pcp.lib;plug.lib;sdf.lib;tf.lib;trace.lib;usd.lib;usdGeom.lib;usdUtils.lib;vt.lib;work.lib;usdShade.lib;usdLux.lib;usdPhysics.lib;omniclient.lib;omni_usd_resolver.lib;python37.lib;boost_python37-vc141-mt-gd-x64-1_68.lib;shlwapi.lib;omniLiveSessionLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Omniverse/200.1.0/target-deps/usd/debug/lib;$(DEVLIBS)Omniverse/200.1.0/target-deps/usd_ext_physics/debug/lib;$(DEVLIBS)Omniverse/200.1.0/target-deps/omni_client_library/debug;$(DEVLIBS)Omniverse/200.1.0/target-deps/omni_usd_resolver/debug;$(DEVLIBS)Omniverse/200.1.0/target-deps/python/lib;$(DEVLIBS)Omniverse/200.1.0/target-deps/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>

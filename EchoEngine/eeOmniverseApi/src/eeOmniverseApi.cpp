@@ -112,7 +112,8 @@ OmniClientConnectionStatusCallbackImpl(void* userData,
 
 // Get the Absolute path of the current executable
 // Borrowed from https://stackoverflow.com/questions/1528298/get-path-of-executable
-static fs::path getExePath()
+static fs::path
+getExePath()
 {
 #ifdef _WIN32
   wchar_t path[MAX_PATH] = { 0 };
@@ -136,6 +137,35 @@ failNotify(const String& msg, const String detail = "")
     //fprintf(stderr, "%s\n", detail);
     Logger::instance().consoleLog(detail);
   }
+}
+
+String
+getConnectedUsername(const String& stageUrl)
+{
+  // Get the username for the connection
+  String userName("_none_");
+  omniClientWait(
+    omniClientGetServerInfo(stageUrl.c_str(),
+      &userName,
+      [](void* userData,
+        OmniClientResult result,
+        struct OmniClientServerInfo const* info) noexcept
+      {
+        auto userName = static_cast<String*>(userData);
+        if (userData && userName && info && info->username)
+        {
+          userName->assign(info->username);
+        }
+      }));
+
+  return userName;
+}
+String
+OmniverseApi::getUserLocalPath()
+{
+  String userFolder = "omniverse://localhost/Users";
+  String username = getConnectedUsername(userFolder);
+  return userFolder + "/" + username;
 }
 
 bool
@@ -186,7 +216,113 @@ OmniverseApi::destroy()
   omniClientShutdown();
 }
 
-// Create a new connection for this model in Omniverse, returns the created stage URL
+bool
+OmniverseApi::joinSession(const String& sessionName)
+{
+  auto& loggerMan = Logger::instance();
+
+  if (!m_stage) {
+    loggerMan.consoleLog("No currently opened stage. Unable to join session");
+    return false;
+  }
+
+  //m_liveSessionInfo.Initialize(m_stagePath.c_str());
+
+  m_liveSessionInfo.SetSessionName(sessionName.c_str());
+
+  // Check that the config file version matches
+  LiveSessionConfigFile sessionConfig;
+  std::string tomlUrl = m_liveSessionInfo.GetLiveSessionTomlUrl();
+  if (!sessionConfig.IsVersionCompatible(tomlUrl.c_str()))
+  {
+    std::string actualVersion = sessionConfig.GetSessionConfigValue(tomlUrl.c_str(), LiveSessionConfigFile::Key::Version);
+    loggerMan.consoleLog("The session config TOML file version is not compatible, exiting.");
+    String currentVer = LiveSessionConfigFile::kCurrentVersion;
+    loggerMan.consoleLog("Expected: " + currentVer + " Actual: " + actualVersion);
+    return false;
+  }
+
+  UsdStageRefPtr liveStage;
+  std::string liveSessionUrl = m_liveSessionInfo.GetLiveSessionUrl();
+  liveStage = UsdStage::Open(liveSessionUrl);
+
+
+  // Get the live layer from the live stage
+  SdfLayerHandle liveLayer = liveStage->GetRootLayer();
+
+  // Construct the layers so that we can join the session
+  m_stage->GetSessionLayer()->InsertSubLayerPath(liveLayer->GetIdentifier());
+  m_stage->SetEditTarget(UsdEditTarget(liveLayer));
+
+  m_isLive = true;
+
+  return true;
+}
+bool
+OmniverseApi::createNewSession(const String& sessionName)
+{
+  auto& loggerMan = Logger::instance();
+
+  if (!m_stage) {
+    loggerMan.consoleLog("No currently opened stage. Unable to create session");
+    return false;
+  }
+
+  //m_liveSessionInfo.Initialize(m_stagePath.c_str());
+
+  if (!m_liveSessionInfo.SetSessionName(sessionName.c_str()))
+  {
+    loggerMan.consoleLog("Session names must start with an alphabetical character, but may contain alphanumeric, hyphen, or underscore characters.");
+    return false;
+  }
+
+  // Make sure that this session doesn't already exist (don't overwrite/stomp it)
+  if (m_liveSessionInfo.DoesSessionExist())
+  {
+    loggerMan.consoleLog("Session config file already exists: " + m_liveSessionInfo.GetLiveSessionTomlUrl());
+    return false;
+  }
+
+  // Create the session config file 
+  LiveSessionConfigFile::KeyMap keyMap;
+  std::string stageUrl = m_liveSessionInfo.GetStageUrl();
+  std::string connectedUserName = getConnectedUsername(stageUrl);
+  keyMap[LiveSessionConfigFile::Key::Admin] = connectedUserName.c_str();
+  keyMap[LiveSessionConfigFile::Key::StageUrl] = stageUrl.c_str();
+  keyMap[LiveSessionConfigFile::Key::Mode] = "default";
+  LiveSessionConfigFile sessionConfig;
+  if (!sessionConfig.CreateSessionConfigFile(m_liveSessionInfo.GetLiveSessionTomlUrl().c_str(), keyMap))
+  {
+    loggerMan.consoleLog("Unable to create session config file: " + m_liveSessionInfo.GetLiveSessionTomlUrl());
+    return false;
+  }
+
+  // Create the new root.live file to be the stage's edit target
+  UsdStageRefPtr liveStage;
+  std::string liveSessionUrl = m_liveSessionInfo.GetLiveSessionUrl();
+  liveStage = UsdStage::CreateNew(liveSessionUrl);
+
+
+  // Get the live layer from the live stage
+  SdfLayerHandle liveLayer = liveStage->GetRootLayer();
+
+  // Construct the layers so that we can join the session
+  m_stage->GetSessionLayer()->InsertSubLayerPath(liveLayer->GetIdentifier());
+  m_stage->SetEditTarget(UsdEditTarget(liveLayer));
+
+  m_isLive = true;
+
+  return true;
+}
+void
+OmniverseApi::stopLiveSession()
+{
+  m_stage->GetSessionLayer()->GetSubLayerPaths().clear();
+  m_stage->SetEditTarget(UsdEditTarget(m_stage->GetRootLayer()));
+
+  m_isLive = false;
+}
+
 void
 OmniverseApi::createStage(const String& stageUrl)
 {
@@ -209,11 +345,12 @@ OmniverseApi::createStage(const String& stageUrl)
     failNotify("Failure to create model in Omniverse", stageUrl);
     return;
   }
+  m_stagePath = stageUrl;
 
   {
     std::unique_lock<std::mutex> lk(gLogMutex);
     //std::cout << "New stage created: " << stageUrl << std::endl;
-    Logger::instance().consoleLog("New stage created: " + stageUrl);
+    Logger::instance().consoleLog("New stage created: " + m_stagePath);
   }
 
   // Always a good idea to declare your up-ness
@@ -230,7 +367,13 @@ OmniverseApi::createStage(const String& stageUrl)
   // Define the defaultPrim as the /Root prim
   m_stage->SetDefaultPrim(rootPrim.GetPrim());
 
-  getFileName(eeStringtoWString(stageUrl), m_stageFileName);
+
+  m_liveSessionInfo.Initialize(m_stagePath.c_str());
+
+  //findOrCreateSession(m_stage, m_liveSessionInfo);
+
+
+  getFileName(eeStringtoWString(m_stagePath), m_stageFileName);
 }
 void
 OmniverseApi::openStage(const String& stageUrl)
@@ -238,13 +381,21 @@ OmniverseApi::openStage(const String& stageUrl)
   m_stage = UsdStage::Open(stageUrl);
   if (!m_stage) {
     failNotify("Failure to open stage in Omniverse:", stageUrl);
+    return;
   }
+  m_stagePath = stageUrl;
 
   // Define the defaultPrim as the /Root prim
   UsdGeomXform rootPrim = static_cast<UsdGeomXform>(m_stage->GetDefaultPrim());
   m_rootPrimPath = rootPrim.GetPath();
 
-  getFileName(eeStringtoWString(stageUrl), m_stageFileName);
+
+  m_liveSessionInfo.Initialize(m_stagePath.c_str());
+
+  //findOrCreateSession(m_stage, m_liveSessionInfo);
+
+
+  getFileName(eeStringtoWString(m_stagePath), m_stageFileName);
 }
 void
 OmniverseApi::closeStage()
@@ -253,6 +404,7 @@ OmniverseApi::closeStage()
     m_stage.Reset();
   }
 }
+
 void
 updateStMeshCmpToScenegraph(const SdfPath& parentPath,
                             UsdStageRefPtr stage,
@@ -546,7 +698,6 @@ updateActorToScenegraph(const SdfPath& parentPath,
       {
         op = xForm.AddXformOp(opType, precision);
         std::unique_lock<std::mutex> lk(gLogMutex);
-        std::cout << " Adding " << UsdGeomXformOp::GetOpTypeToken(opType) << std::endl;
       }
 
       if (op.GetPrecision() == UsdGeomXformOp::Precision::PrecisionFloat)
@@ -555,7 +706,6 @@ updateActorToScenegraph(const SdfPath& parentPath,
         op.Set(value);
 
       std::unique_lock<std::mutex> lk(gLogMutex);
-      std::cout << " Setting " << UsdGeomXformOp::GetOpTypeToken(opType) << std::endl;
     }
   };
 
@@ -616,40 +766,19 @@ updateScenegraphOnStage(WPtr<Scene> scenegraph,
   }
 }
 void
-OmniverseApi::saveStage()
+OmniverseApi::saveStage(WPtr<Scene> scenegraph)
 {
-  updateScenegraphOnStage(m_openedScenegraph, m_rootPrimPath, m_stage);
+  if (scenegraph.expired()) {
+    Logger::instance().consoleLog("No scenegraph passed.");
+    return;
+  }
 
-  m_stage->Save();
-}
-String
-getConnectedUsername(const String& stageUrl)
-{
-  // Get the username for the connection
-  String userName("_none_");
-  omniClientWait(
-  omniClientGetServerInfo(stageUrl.c_str(),
-                          &userName,
-  [](void* userData,
-     OmniClientResult result,
-     struct OmniClientServerInfo const* info) noexcept
-  {
-    auto userName = static_cast<String*>(userData);
-    if (userData && userName && info && info->username)
-    {
-      userName->assign(info->username);
-    }
-  }));
+  updateScenegraphOnStage(scenegraph, m_rootPrimPath, m_stage);
 
-  return userName;
+  if (m_isLive) omniClientLiveProcess();
+  else m_stage->Save();
 }
-String
-OmniverseApi::getUserLocalPath()
-{
-  String userFolder = "omniverse://localhost/Users";
-  String username = getConnectedUsername(userFolder);
-  return userFolder + "/" + username;
-}
+
 void
 addStMeshCmpToScenegraph(const SdfPath& parentPath,
                          UsdStageRefPtr stage,
@@ -995,8 +1124,7 @@ setActorOnStageHelper(const SdfPath& parentPath,
 bool
 OmniverseApi::setScenegraphOnStage(WPtr<Scene> scenegraph)
 {
-  m_openedScenegraph = scenegraph;
-  auto& actorsTree = m_openedScenegraph.lock()->getActorsTree();
+  auto& actorsTree = scenegraph.lock()->getActorsTree();
   for (auto& a : actorsTree) {
     setActorOnStageHelper(m_rootPrimPath, m_stage, a);
   }
@@ -1006,11 +1134,15 @@ OmniverseApi::setScenegraphOnStage(WPtr<Scene> scenegraph)
   m_stage->Save();
   return true;
 }
+
 void
 loadMeshFromStage(const UsdGeomMesh& meshNode,
+                  UsdStageRefPtr stage,
                   WPtr<Actor> actorMesh,
                   bool firstTime)
 {
+  auto& resourceMan = ResourceManager::instance();
+
   auto stMeshCmp = actorMesh.lock()->getComponent<CStaticMesh>().lock();
   if (!stMeshCmp) {
     stMeshCmp = actorMesh.lock()->addComponent<CStaticMesh>().lock();
@@ -1126,23 +1258,105 @@ loadMeshFromStage(const UsdGeomMesh& meshNode,
   mesh.loadFromVertexArray(verticesArr, indicesArrVal);
 
 
+  //String matName("Mat_" + stm.second.lock()->getResourceName());
+  //SdfPath matPath = meshPrimPath.AppendChild(TfToken("Mat_Pat"));
+  //auto mat = UsdShadeMaterial::Define(stage, matPath);
+  //
+  //auto pbrShader = UsdShadeShader::Define(stage, matPath.AppendChild(TfToken("PBRShader")));
+  //pbrShader.CreateIdAttr(VtValue(TfToken("UsdPreviewSurface")));
+  //pbrShader.CreateInput(TfToken("roughness"), SdfValueTypeNames->Float).Set(0.4f);
+  //pbrShader.CreateInput(TfToken("metallic"), SdfValueTypeNames->Float).Set(0.0f);
+  //
+  //mat.CreateSurfaceOutput().ConnectToSource(pbrShader.ConnectableAPI(), TfToken("surface"));
+  //
+  //auto stReader = UsdShadeShader::Define(stage, matPath.AppendChild(TfToken("stReader")));
+  //stReader.CreateIdAttr(VtValue(TfToken("UsdPrimvarReader_float2")));
+  //
+  //auto tex = stm.second.lock()->getTexturesMap();
+  //auto img = tex[0].lock()->getImages()[0];
+  //
+  //String imgPath = "D:/GitHub/MotoresIDV7_EchoEngine/EchoEngine/bin/" + img->getPath();
+  //
+  //auto diffuseTextureSampler = UsdShadeShader::Define(stage, matPath.AppendChild(TfToken("diffuseTexture")));
+  //diffuseTextureSampler.CreateIdAttr(VtValue(TfToken("UsdUVTexture")));
+  //diffuseTextureSampler.CreateInput(TfToken("file"), SdfValueTypeNames->Asset).Set(SdfAssetPath(imgPath));
+  ////diffuseTextureSampler.CreateInput(TfToken("rgba"), SdfValueTypeNames->Color4fArray).Set(VtVec4fArray());
+  //diffuseTextureSampler.CreateInput(TfToken("st"), SdfValueTypeNames->Float2).ConnectToSource(stReader.ConnectableAPI(), TfToken("result"));
+  //diffuseTextureSampler.CreateOutput(TfToken("rgb"), SdfValueTypeNames->Float3);
+  //pbrShader.CreateInput(TfToken("diffuseColor"), SdfValueTypeNames->Color3f).ConnectToSource(diffuseTextureSampler.ConnectableAPI(), TfToken("rgb"));
+  //
+  //auto stInput = mat.CreateInput(TfToken("frame:stPrimvarName"), SdfValueTypeNames->Token);
+  //stInput.Set(TfToken("st"));
+  //
+  //stReader.CreateInput(TfToken("varname"), SdfValueTypeNames->Token).ConnectToSource(stInput);
+  //UsdShadeMaterialBindingAPI(mesh).Bind(mat);
+
+
+  auto diffPath = meshNode.GetPath().AppendChild(TfToken("Mat_Pat")).AppendChild(TfToken("diffuseTexture"));
+  String pathStr = diffPath.GetString();
+  SdfAssetPath imgAssetPath;
+  UsdShadeShader::Get(stage, diffPath).GetInput(TfToken("file")).Get<SdfAssetPath>(&imgAssetPath);
+  String imgPathVal = imgAssetPath.GetAssetPath();
+
+  auto imgPathSize = static_cast<int64>(imgPathVal.size());
+  String realImgPathVal;
+  String currentFolder;
+  bool readingFolder = false;
+  for (int64 i = imgPathSize - 1; i >= 0; --i) {
+    if (!readingFolder) {
+      if (imgPathVal[i] == '/' || imgPathVal[i] == '\\') {
+        readingFolder = true;
+        currentFolder += imgPathVal[i];
+        continue;
+      }
+      realImgPathVal = imgPathVal[i] + realImgPathVal;
+    }
+    else {
+      if (imgPathVal[i] == '/' || imgPathVal[i] == '\\') {
+        if (currentFolder == "Textures/") {
+          realImgPathVal = currentFolder + realImgPathVal;
+          break;
+        }
+        else {
+          realImgPathVal = currentFolder + realImgPathVal;
+          currentFolder.clear();
+          currentFolder += imgPathVal[i];
+          continue;
+        }
+      }
+      currentFolder = imgPathVal[i] + currentFolder;
+    }
+  }
+
+  WString imgPath = eeStringtoWString(realImgPathVal);
+
+  String imgFileName;
+  getFileName(imgPath, imgFileName);
+  auto tex = resourceMan.loadTextureFromFile(imgPath, imgFileName + "_tex");
+
+  if (!tex.expired()) {
+    Map<uint32, WPtr<Texture>> texsMap;
+    texsMap[0] = tex;
+    mat = resourceMan.loadMaterialFromTextures(texsMap, imgFileName + "_mat");
+  }
+
+
   auto stMesh =
-  ResourceManager::instance().getResourceStaticMesh(
-                              actorMesh.lock()->getName() + "_stm");
+  resourceMan.getResourceStaticMesh(actorMesh.lock()->getName() + "_stm");
   if (stMesh.expired()) {
     stMesh =
-    ResourceManager::instance().loadStaticMeshFromMeshesArray(
-                              {Pair<Mesh, WPtr<Material>>(mesh, mat)},
-                              actorMesh.lock()->getName() + "_stm",
-                              furtherDist,
-                              maxCoord,
-                              minCoord);
+    resourceMan.loadStaticMeshFromMeshesArray(
+                                        {Pair<Mesh, WPtr<Material>>(mesh, mat)},
+                                        actorMesh.lock()->getName() + "_stm",
+                                        furtherDist,
+                                        maxCoord,
+                                        minCoord);
   }
   else {
     if (firstTime) {
       stMesh.lock()->clear();
     }
-    stMesh.lock()->addMesh(mesh, furtherDist, maxCoord, minCoord);
+    stMesh.lock()->addMesh(mesh, mat, furtherDist, maxCoord, minCoord);
   }
 
   if (firstTime) {
@@ -1154,10 +1368,39 @@ loadMeshFromStage(const UsdGeomMesh& meshNode,
 }
 void
 traversePrimChild(const UsdPrim& childPrim,
+                  UsdStageRefPtr stage,
                   SPtr<Scene> scenegraph,
                   SPtr<Actor> parentActor)
 {
   auto& act = static_cast<UsdGeomXform>(childPrim);
+
+  GfVec3i defaultRotationOrder(0, 1, 2);
+  GfVec3d pos(0);
+  GfVec3d rot(0);
+  GfVec3d sca(1);
+
+  if (!xformUtils::getLocalTransformSRT(childPrim,
+                                        pos,
+                                        rot,
+                                        defaultRotationOrder,
+                                        sca)) { 
+    return;
+  }
+
+  auto trans = parentActor->getTransform().lock();
+  const double* position = pos.GetArray();
+  trans->setPosition(Vector3f{ static_cast<float>(-position[0]),
+                               static_cast<float>(position[1]),
+                               static_cast<float>(position[2]) } * 0.01f);
+  const double* rotationXYZ = rot.GetArray();
+  trans->setRotation(Quaternion{Vector3f{ static_cast<float>(rotationXYZ[0]),
+                                          static_cast<float>(-rotationXYZ[1]),
+                                          static_cast<float>(-rotationXYZ[2]) }
+                              * Math::kPI_OVER_180});
+  const double* scale = sca.GetArray();
+  trans->setScale(Vector3f{ static_cast<float>(scale[0]),
+                            static_cast<float>(scale[1]),
+                            static_cast<float>(scale[2]) });
 
 
 
@@ -1168,10 +1411,10 @@ traversePrimChild(const UsdPrim& childPrim,
       auto newAct = scenegraph->addActor(child.GetName()).lock();
       scenegraph->setActorChild(parentActor->getName(), newAct->getName());
 
-      traversePrimChild(child, scenegraph, newAct);
+      traversePrimChild(child, stage, scenegraph, newAct);
     }
     else if (child.IsA<UsdGeomMesh>()) {
-      loadMeshFromStage(static_cast<UsdGeomMesh>(child), parentActor, firstTime);
+      loadMeshFromStage(static_cast<UsdGeomMesh>(child), stage, parentActor, firstTime);
     }
 
     firstTime = false;
@@ -1196,20 +1439,94 @@ OmniverseApi::getScenegraphFromStage(WPtr<Scene> scenegraph)
   for (const auto& child : children) {
     auto parentAct = sScene->addActor(child.GetName()).lock();
 
-    traversePrimChild(child, sScene, parentAct);
+    traversePrimChild(child, m_stage, sScene, parentAct);
+  }
+}
+
+void
+updateTraversePrimChild(const UsdPrim& childPrim,
+                        SPtr<Scene> scenegraph,
+                        SPtr<Actor> parentActor)
+{
+  auto& act = static_cast<UsdGeomXform>(childPrim);
+
+  GfVec3i defaultRotationOrder(0, 1, 2);
+  GfVec3d pos(0);
+  GfVec3d rot(0);
+  GfVec3d sca(1);
+
+  if (!xformUtils::getLocalTransformSRT(childPrim,
+                                        pos,
+                                        rot,
+                                        defaultRotationOrder,
+                                        sca)) { 
+    return;
   }
 
-  //auto range = m_stage->Traverse();
-  //for (const auto& node : range) {
-  //  loggerMan.consoleLog(node.GetPath().GetString());
-  //
-  //  if (node.IsA<UsdGeomMesh>()) {
-  //    auto act = sScene->addActor(node.GetName().GetString());
-  //    loadMeshFromStage(static_cast<UsdGeomMesh>(node), m_stage, act);
-  //  }
-  //
-  //  const auto& children = node.GetAllChildren();
-  //}
+  auto trans = parentActor->getTransform().lock();
+  const double* position = pos.GetArray();
+  trans->setPosition(Vector3f{ static_cast<float>(-position[0]),
+                               static_cast<float>(position[1]),
+                               static_cast<float>(position[2]) } * 0.01f);
+  const double* rotationXYZ = rot.GetArray();
+  trans->setRotation(Quaternion{Vector3f{ static_cast<float>(rotationXYZ[0]),
+                                          static_cast<float>(-rotationXYZ[1]),
+                                          static_cast<float>(-rotationXYZ[2]) }
+                              * Math::kPI_OVER_180});
+  const double* scale = sca.GetArray();
+  trans->setScale(Vector3f{ static_cast<float>(scale[0]),
+                            static_cast<float>(scale[1]),
+                            static_cast<float>(scale[2]) });
+
+
+
+  const auto& children = childPrim.GetAllChildren();
+  bool firstTime = true;
+  for (const auto& child : children) {
+    if (child.IsA<UsdGeomXform>()) {
+      auto newAct = scenegraph->getActor(child.GetName()).lock();
+      if (!newAct) {
+        newAct = scenegraph->addActor(child.GetName()).lock();
+        scenegraph->setActorChild(parentActor->getName(), newAct->getName()); // TODO: Check if it isn't already a child of this actor.
+      }
+
+      updateTraversePrimChild(child, scenegraph, newAct);
+    }
+
+    firstTime = false;
+  }
+}
+void
+OmniverseApi::updateScenegraphFromStage(WPtr<Scene> scenegraph)
+{
+  auto& loggerMan = Logger::instance();
+  auto& memoryMan = MemoryManager::instance();
+
+  if (!m_stage) {
+    loggerMan.consoleLog("There is no Omniverse Stage opened now.");
+    return;
+  }
+  if (scenegraph.expired()) {
+    loggerMan.consoleLog("No scenegraph passed.");
+    return;
+  }
+
+  omniClientLiveProcess();
+  m_stage->Reload();
+
+  auto sScene = scenegraph.lock();
+
+  auto rootPrim = m_stage->GetPrimAtPath(m_rootPrimPath);
+  const auto& children = rootPrim.GetAllChildren();
+  for (const auto& child : children) {
+    auto parentAct = sScene->getActor(child.GetName()).lock();
+    if (!parentAct) {
+      parentAct = sScene->addActor(child.GetName()).lock();
+    }
+
+    updateTraversePrimChild(child, sScene, parentAct);
+  }
+
 }
 
 
