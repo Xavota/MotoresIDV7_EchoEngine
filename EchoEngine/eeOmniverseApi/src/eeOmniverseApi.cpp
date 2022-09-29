@@ -1124,6 +1124,11 @@ setActorOnStageHelper(const SdfPath& parentPath,
 bool
 OmniverseApi::setScenegraphOnStage(WPtr<Scene> scenegraph)
 {
+  if (!m_stage) {
+    Logger::instance().consoleLog("There is no Omniverse Stage opened now.");
+    return false;
+  }
+
   auto& actorsTree = scenegraph.lock()->getActorsTree();
   for (auto& a : actorsTree) {
     setActorOnStageHelper(m_rootPrimPath, m_stage, a);

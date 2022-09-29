@@ -524,7 +524,7 @@ DrawStaticMeshCmp(WPtr<CStaticMesh> staticMesh, int32& uniqueId)
   for (auto& m : staticMeshes) {
     names.push_back(m.first.c_str());
     if (m.first == staticMeshName) {
-      staticMeshIndex = tempIndex;
+      staticMeshIndex = tempIndex + 1;
     }
     tempIndex++;
   }
@@ -544,16 +544,20 @@ DrawSkeletalMeshCmp(WPtr<CSkeletalMesh> skMesh, int32& uniqueId)
 {
   auto sSkMesh = skMesh.lock();
   ImGui::PushID(uniqueId++);
-  String modelName = sSkMesh->getModel().lock()->getResourceName();
+  String modelName;
+  if (!sSkMesh->getModel().expired()) {
+    modelName = sSkMesh->getModel().lock()->getResourceName();
+  }
   Map<String, SPtr<SkeletalMesh>> skMeshes =
   ResourceManager::instance().getAllSkeletalMeshResources();
-  int modelIndex = 0;
-  int tempIndex = 0;
+  int32 modelIndex = 0;
+  int32 tempIndex = 0;
   Vector<const char*> names;
+  names.push_back("none");
   for (auto& skm : skMeshes) {
     names.push_back(skm.first.c_str());
     if (skm.first == modelName) {
-      modelIndex = tempIndex;
+      modelIndex = tempIndex + 1;
     }
     tempIndex++;
   }
@@ -561,7 +565,8 @@ DrawSkeletalMeshCmp(WPtr<CSkeletalMesh> skMesh, int32& uniqueId)
                    &modelIndex,
                    names.data(),
                    static_cast<int32>(names.size()))) {
-    sSkMesh->setModel(ResourceManager::instance().getResourceSkeletalMesh(names[modelIndex]));
+    sSkMesh->setModel(
+    ResourceManager::instance().getResourceSkeletalMesh(names[modelIndex - 1]));
   }
   ImGui::PopID();
 }
@@ -759,10 +764,10 @@ UIRender()
     bool added = false;
     static char name[255];
     if (NewSceneWindow(added, name)) {
-      if (added) {
+      if (added && name != "") {
         sceneManager.getScene(AddingActorScene).lock()->addActor(name);
       }
-      AddingScene = false;
+      AddingActor = false;
     }
   }
 
@@ -1388,14 +1393,26 @@ BaseAppTest1::onInit()
 
 
 
-  if (OmniverseManager::isStarted()) {
-    auto& omniverseMan = OmniverseManager::instance();
-    String localPath = omniverseMan.getUserLocalPath();
-    //omniverseMan.createStage(localPath + "/Main.usd");
-    //omniverseMan.setScenegraphOnStage(pScene);
-    //omniverseMan.openStage(localPath + "/Main.usd");
-    //omniverseMan.getScenegraphFromStage(pScene);
-  }
+  resourceManager.importResourceFromFile(L"Models/BattleDroid.fbx",
+                                eeEngineSDK::IMPORT_FLAGS::kImportStaticMeshes);
+  resourceManager.importResourceFromFile(L"Models/Mabis.fbx",
+                                eeEngineSDK::IMPORT_FLAGS::kImportStaticMeshes);
+  resourceManager.importResourceFromFile(L"Models/Vela_v1.fbx",
+                                eeEngineSDK::IMPORT_FLAGS::kImportStaticMeshes);
+  //pScene = sceneManager.addScene("ExamBattleDroidScene").lock();
+  //spTempActor = pScene->addActor("ExamBattleDroidActor").lock();
+  //spTempActor->addComponent<CStaticMesh>();
+
+
+
+    //if (OmniverseManager::isStarted()) {
+    //  auto& omniverseMan = OmniverseManager::instance();
+    //  String localPath = omniverseMan.getUserLocalPath();
+    //  //omniverseMan.createStage(localPath + "/Main.usd");
+    //  //omniverseMan.setScenegraphOnStage(pScene);
+    //  //omniverseMan.openStage(localPath + "/Main.usd");
+    //  //omniverseMan.getScenegraphFromStage(pScene);
+    //}
 
 
 
@@ -1423,24 +1440,24 @@ BaseAppTest1::onUpdate(float deltaTime)
   EE_NO_EXIST_RETURN(scene);
 
   static String activePlayerName = "Player";
-  if (inputMan.getDevice(0).lock()->getButtonDown(eeEngineSDK::KEYBOARD_INPUT::kTab)) {
-    if (!scene->getActor(activePlayerName).expired()
-     && !scene->getActor(activePlayerName).lock()->getComponent<CCamera>().expired()) {
-      scene->getActor(activePlayerName).lock()->getComponent<CCamera>().lock()->setMain(false);
-    }
-
-    if (activePlayerName == "Player") {
-      activePlayerName = "Player2";
-    }
-    else {
-      activePlayerName = "Player";
-    }
-
-    if (!scene->getActor(activePlayerName).expired()
-     && !scene->getActor(activePlayerName).lock()->getComponent<CCamera>().expired()) {
-      scene->getActor(activePlayerName).lock()->getComponent<CCamera>().lock()->setMain(true);
-    }
-  }
+  //if (inputMan.getDevice(0).lock()->getButtonDown(eeEngineSDK::KEYBOARD_INPUT::kTab)) {
+  //  if (!scene->getActor(activePlayerName).expired()
+  //   && !scene->getActor(activePlayerName).lock()->getComponent<CCamera>().expired()) {
+  //    scene->getActor(activePlayerName).lock()->getComponent<CCamera>().lock()->setMain(false);
+  //  }
+  //
+  //  if (activePlayerName == "Player") {
+  //    activePlayerName = "Player2";
+  //  }
+  //  else {
+  //    activePlayerName = "Player";
+  //  }
+  //
+  //  if (!scene->getActor(activePlayerName).expired()
+  //   && !scene->getActor(activePlayerName).lock()->getComponent<CCamera>().expired()) {
+  //    scene->getActor(activePlayerName).lock()->getComponent<CCamera>().lock()->setMain(true);
+  //  }
+  //}
 
 
 
