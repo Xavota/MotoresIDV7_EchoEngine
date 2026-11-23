@@ -25,14 +25,26 @@ Window::initWindow(void* /*callback*/,
 bool
 Window::initRenders()
 {
-  auto& graphicsApi = GraphicsApi::instance();
-  
-  m_rtv = graphicsApi.createTexturePtr();
-  m_rtv->createAsBackBuffer();
-  
-  m_dsv = graphicsApi.createTexturePtr();
-  m_dsv->create2D(eTEXTURE_BIND_FLAGS::kDepthStencil,
-                  Point2D{ m_width, m_height });
+  if (GraphicsApi::isStarted()) {
+    auto& graphicsApi = GraphicsApi::instance();
+    
+    m_rtv = graphicsApi.createTexturePtr();
+    m_rtv->createAsBackBuffer();
+    
+    m_dsv = graphicsApi.createTexturePtr();
+    m_dsv->create2D(eTEXTURE_BIND_FLAGS::kDepthStencil,
+                    Point2D{ m_width, m_height });
+  }
+  else {
+    auto& memoryMan = MemoryManager::instance();
+
+    m_rtv = memoryMan.newPtr<Texture>();
+    m_rtv->createAsBackBuffer();
+
+    m_dsv = memoryMan.newPtr<Texture>();
+    m_dsv->create2D(eTEXTURE_BIND_FLAGS::kDepthStencil,
+                    Point2D{ m_width, m_height });
+  }
   
   return true;
 }

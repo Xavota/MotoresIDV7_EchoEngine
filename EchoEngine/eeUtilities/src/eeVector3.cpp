@@ -40,12 +40,12 @@ float
 Vector3f::getDistance(const Vector3f& other) const
 {
   Vector3f d = other - *this;
-  return Math::sqrt(d.x * d.x + d.y * d.y + d.z * d.z);
+  return Math::sqrtf(d.x * d.x + d.y * d.y + d.z * d.z);
 }
 float
 Vector3f::getMagnitude() const
 {
-  return Math::sqrt(this->x * this->x + this->y * this->y + this->z * this->z);
+  return Math::sqrtf(this->x * this->x + this->y * this->y + this->z * this->z);
 }
 Vector3f
 Vector3f::getNormalize() const
@@ -263,14 +263,14 @@ float
 Vector3i::getDistance(const Vector3i& other) const
 {
   Vector3i d = other - *this;
-  return Math::sqrt(static_cast<float>(d.x * d.x)
+  return Math::sqrtf(static_cast<float>(d.x * d.x)
                   + static_cast<float>(d.y * d.y)
                   + static_cast<float>(d.z * d.z));
 }
 float
 Vector3i::getMagnitud() const
 {
-  return Math::sqrt(static_cast<float>(this->x * this->x)
+  return Math::sqrtf(static_cast<float>(this->x * this->x)
                   + static_cast<float>(this->y * this->y)
                   + static_cast<float>(this->z * this->z));
 }
@@ -413,14 +413,14 @@ float
 Point3D::getDistance(const Point3D& other) const
 {
   Point3D d = other - *this;
-  return Math::sqrt(static_cast<float>(d.x * d.x)
+  return Math::sqrtf(static_cast<float>(d.x * d.x)
                   + static_cast<float>(d.y * d.y)
                   + static_cast<float>(d.z * d.z));
 }
 float
 Point3D::getMagnitud() const
 {
-  return Math::sqrt(static_cast<float>(this->x * this->x)
+  return Math::sqrtf(static_cast<float>(this->x * this->x)
                   + static_cast<float>(this->y * this->y)
                   + static_cast<float>(this->z * this->z));
 }

@@ -9,12 +9,23 @@ BoneMesh::BoneMesh(const BoneMesh& other)
 {
   if (other.m_vertexData && other.m_vertexData->isValid()
    && other.m_indexData  && other.m_indexData->isValid()) {
-    auto& graphicsApi = GraphicsApi::instance();
-    if (!m_vertexData) {
-      m_vertexData = graphicsApi.createVertexBufferPtr();
+    if (GraphicsApi::isStarted()) {
+      auto& graphicsApi = GraphicsApi::instance();
+      if (!m_vertexData) {
+        m_vertexData = graphicsApi.createVertexBufferPtr();
+      }
+      if (!m_indexData) {
+        m_indexData = graphicsApi.createIndexBufferPtr();
+      }
     }
-    if (!m_indexData) {
-      m_indexData = graphicsApi.createIndexBufferPtr();
+    else {
+      auto& memoryMan = MemoryManager::instance();
+      if (!m_vertexData) {
+        m_vertexData = memoryMan.newPtr<VertexBuffer>();
+      }
+      if (!m_indexData) {
+        m_indexData = memoryMan.newPtr<IndexBuffer>();
+      }
     }
 
     m_vertexData->initData(other.m_vertexData->getDataSize(),
@@ -46,18 +57,28 @@ bool
 BoneMesh::loadFromArray(const Vector<ComplexBigAnimVertex<4>>& vertices,
                         const Vector<uint32>& indices)
 {
-  auto& graphicsApi = GraphicsApi::instance();
-
   if (vertices.empty() || indices.empty()) {
     Logger::instance().consoleLog("Empty info loading mesh");
     return false;
   }
 
-  if (!m_vertexData) {
-    m_vertexData = graphicsApi.createVertexBufferPtr();
+  if (GraphicsApi::isStarted()) {
+    auto& graphicsApi = GraphicsApi::instance();
+    if (!m_vertexData) {
+      m_vertexData = graphicsApi.createVertexBufferPtr();
+    }
+    if (!m_indexData) {
+      m_indexData = graphicsApi.createIndexBufferPtr();
+    }
   }
-  if (!m_indexData) {
-    m_indexData = graphicsApi.createIndexBufferPtr();
+  else {
+    auto& memoryMan = MemoryManager::instance();
+    if (!m_vertexData) {
+      m_vertexData = memoryMan.newPtr<VertexBuffer>();
+    }
+    if (!m_indexData) {
+      m_indexData = memoryMan.newPtr<IndexBuffer>();
+    }
   }
   m_vertexData->initData(vertices.size() * sizeof(ComplexBigAnimVertex<4>),
                          sizeof(ComplexBigAnimVertex<4>),

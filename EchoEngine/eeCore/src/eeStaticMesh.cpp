@@ -46,6 +46,8 @@ StaticMesh::loadFromMeshes(const Vector<Mesh>& meshes,
                            const Vector3f& maxCoordinate,
                            const Vector3f& minCoordinate)
 {
+  clear();
+
   if (meshes.empty()) {
     Logger::instance().consoleLog("Empty info loading model");
     return false;
@@ -62,6 +64,7 @@ StaticMesh::loadFromMeshes(const Vector<Mesh>& meshes,
         resourseManager.getResourceMaterial("Default_mat")
       )
     );
+    m_dirtyMatFlags.emplace_back(Pair<bool, String>(true, "Default_mat"));
   }
 
   m_boundSphere.setCenter(Vector3f(0.0f, 0.0f, 0.0f));
@@ -77,6 +80,8 @@ StaticMesh::loadFromMeshes(const Vector<Pair<Mesh, WPtr<Material>>>& meshes,
                            const Vector3f& maxCoordinate,
                            const Vector3f& minCoordinate)
 {
+  clear();
+
   if (meshes.empty()) {
     Logger::instance().consoleLog("Empty info loading model");
     return false;
@@ -84,9 +89,18 @@ StaticMesh::loadFromMeshes(const Vector<Pair<Mesh, WPtr<Material>>>& meshes,
 
   int32 i = 0;
   m_meshes.resize(meshes.size());
+  m_dirtyMatFlags.resize(meshes.size());
   for (const auto& m : meshes) {
     m_meshes[i].first = m.first;
-    m_meshes[i].second = m.second.lock();
+    m_meshes[i].second = m.second;
+
+    m_dirtyMatFlags[i].first = true;
+    if (!m_meshes[i].second.expired()) {
+      m_dirtyMatFlags[i].second = m_meshes[i].second.lock()->getResourceName();
+    }
+    else {
+      m_dirtyMatFlags[i].second = "Default_mat";
+    }
     ++i;
   }
 
@@ -132,8 +146,6 @@ StaticMesh::addMesh(const Mesh& stMesh,
                     const Vector3f& maxCoordinate,
                     const Vector3f& minCoordinate)
 {
-  auto& resourseManager = ResourceManager::instance();
-
   m_meshes.emplace_back
   (
     Pair<Mesh, WPtr<Material>>
@@ -142,6 +154,13 @@ StaticMesh::addMesh(const Mesh& stMesh,
       mat
     )
   );
+  if (!mat.expired()) {
+    m_dirtyMatFlags.emplace_back(Pair<bool, String>(true,
+                                                mat.lock()->getResourceName()));
+  }
+  else {
+    m_dirtyMatFlags.emplace_back(Pair<bool, String>(true, "Default_mat"));
+  }
 
   float rad = m_boundSphere.getRadious();
   rad = rad > furtherDist ? rad : furtherDist;
@@ -171,6 +190,13 @@ void
 StaticMesh::setTexture(WPtr<Material> texture, SIZE_T index)
 {
   if (m_meshes.size() > index) {
+    m_dirtyMatFlags[index].first = true;
+    if (!m_meshes[index].second.expired()) {
+      m_dirtyMatFlags[index].second = m_meshes[index].second.lock()->getResourceName();
+    }
+    else {
+      m_dirtyMatFlags[index].second = "Default_mat";
+    }
     m_meshes[index].second = texture;
   }
 }
@@ -190,6 +216,7 @@ void
 StaticMesh::clear()
 {
   m_meshes.clear();
+  m_dirtyMatFlags.clear();
   m_boundCube.setA(Vector3f(0.0f, 0.0f, 0.0f));
   m_boundCube.setSize(Vector3f(0.0f, 0.0f, 0.0f));
   m_boundSphere.setRadious(0.0f);

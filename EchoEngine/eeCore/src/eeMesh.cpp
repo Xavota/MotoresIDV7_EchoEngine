@@ -39,8 +39,6 @@ bool
 Mesh::loadFromVertexArray(const Vector<ComplexVertex>& vertices,
                           const Vector<uint32>& indices)
 {
-  auto& graphicsApi = GraphicsApi::instance();
-
   if (vertices.empty() || indices.empty()) {
     Logger::instance().consoleLog("Empty info loading mesh");
     return false;
@@ -59,11 +57,23 @@ Mesh::loadFromVertexArray(const Vector<ComplexVertex>& vertices,
   }
 
 
-  if (!m_vertexData) {
-    m_vertexData = graphicsApi.createVertexBufferPtr();
+  if (GraphicsApi::isStarted()) {
+    auto& graphicsApi = GraphicsApi::instance();
+    if (!m_vertexData) {
+      m_vertexData = graphicsApi.createVertexBufferPtr();
+    }
+    if (!m_indexData) {
+      m_indexData = graphicsApi.createIndexBufferPtr();
+    }
   }
-  if (!m_indexData) {
-    m_indexData = graphicsApi.createIndexBufferPtr();
+  else {
+    auto& memoryMan = MemoryManager::instance();
+    if (!m_vertexData) {
+      m_vertexData = memoryMan.newPtr<VertexBuffer>();
+    }
+    if (!m_indexData) {
+      m_indexData = memoryMan.newPtr<IndexBuffer>();
+    }
   }
   m_vertexData->initData(m_vertexArray.size() * sizeof(ComplexVertex) * 3,
                          sizeof(ComplexVertex),
@@ -83,8 +93,6 @@ bool
 Mesh::loadFromTrianglesArray(const Vector<Triangle>& triangles,
                              const Vector<uint32>& indices)
 {
-  auto& graphicsApi = GraphicsApi::instance();
-
   m_vertexArray = triangles;
   if (!indices.empty()) {
     m_indexArray = indices;
@@ -96,11 +104,23 @@ Mesh::loadFromTrianglesArray(const Vector<Triangle>& triangles,
     }
   }
 
-  if (!m_vertexData) {
-    m_vertexData = graphicsApi.createVertexBufferPtr();
+  if (GraphicsApi::isStarted()) {
+    auto& graphicsApi = GraphicsApi::instance();
+    if (!m_vertexData) {
+      m_vertexData = graphicsApi.createVertexBufferPtr();
+    }
+    if (!m_indexData) {
+      m_indexData = graphicsApi.createIndexBufferPtr();
+    }
   }
-  if (!m_indexData) {
-    m_indexData = graphicsApi.createIndexBufferPtr();
+  else {
+    auto& memoryMan = MemoryManager::instance();
+    if (!m_vertexData) {
+      m_vertexData = memoryMan.newPtr<VertexBuffer>();
+    }
+    if (!m_indexData) {
+      m_indexData = memoryMan.newPtr<IndexBuffer>();
+    }
   }
   m_vertexData->initData(m_vertexArray.size() * sizeof(Triangle),
                          sizeof(ComplexVertex),
@@ -119,10 +139,18 @@ Mesh::loadFromTrianglesArray(const Vector<Triangle>& triangles,
 bool
 Mesh::loadFromControlPoints(const Vector<ComplexVertex>& vertices)
 {
-  auto& graphicsApi = GraphicsApi::instance();
   m_controlPoints = vertices;
-  if (!m_vertexData) {
-    m_vertexData = graphicsApi.createVertexBufferPtr();
+  if (GraphicsApi::isStarted()) {
+    auto& graphicsApi = GraphicsApi::instance();
+    if (!m_vertexData) {
+      m_vertexData = graphicsApi.createVertexBufferPtr();
+    }
+  }
+  else {
+    auto& memoryMan = MemoryManager::instance();
+    if (!m_vertexData) {
+      m_vertexData = memoryMan.newPtr<VertexBuffer>();
+    }
   }
   m_vertexData->initData(m_controlPoints.size() * sizeof(ComplexVertex),
                          sizeof(ComplexVertex),
@@ -579,12 +607,23 @@ Mesh::copyMeshTransformed(const Mesh& meshToCopy,
     outNewMesh.m_indexArray.push_back(indexCount++);
   }
 
-  auto& graphicsApi = GraphicsApi::instance();
-  if (!outNewMesh.m_vertexData) {
-    outNewMesh.m_vertexData = graphicsApi.createVertexBufferPtr();
+  if (GraphicsApi::isStarted()) {
+    auto& graphicsApi = GraphicsApi::instance();
+    if (!outNewMesh.m_vertexData) {
+      outNewMesh.m_vertexData = graphicsApi.createVertexBufferPtr();
+    }
+    if (!outNewMesh.m_indexData) {
+      outNewMesh.m_indexData = graphicsApi.createIndexBufferPtr();
+    }
   }
-  if (!outNewMesh.m_indexData) {
-    outNewMesh.m_indexData = graphicsApi.createIndexBufferPtr();
+  else {
+    auto& memoryMan = MemoryManager::instance();
+    if (!outNewMesh.m_vertexData) {
+      outNewMesh.m_vertexData = memoryMan.newPtr<VertexBuffer>();
+    }
+    if (!outNewMesh.m_indexData) {
+      outNewMesh.m_indexData = memoryMan.newPtr<IndexBuffer>();
+    }
   }
   outNewMesh.m_vertexData->initData(
     outNewMesh.m_vertexArray.size() * sizeof(ComplexVertex) * 3,

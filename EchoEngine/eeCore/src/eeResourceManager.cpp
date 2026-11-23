@@ -8,6 +8,7 @@
 #include <eeLogger.h>
 #include <eeMemoryManager.h>
 #include <eeMath.h>
+#include <eeClock.h>
 
 #include <eeFile.h>
 #include <eeVertex.h>
@@ -28,6 +29,7 @@
 #include "eeSkeletal.h"
 #include "eeAnimation.h"
 #include "eeImage.h"
+
 
 
 namespace eeEngineSDK
@@ -76,9 +78,9 @@ loadStaticMeshFromAssimp(const aiScene* scene,
         minBound.z = v.position.z < minBound.z ? v.position.z : minBound.z;
         v.position.w = 1.0f;
 
-        float distance = Math::pow(Math::pow(v.position.x, 2.0f)
-                                 + Math::pow(v.position.y, 2.0f)
-                                 + Math::pow(v.position.z, 2.0f), 0.5f);
+        float distance = Math::powf(Math::powf(v.position.x, 2.0f)
+                                 + Math::powf(v.position.y, 2.0f)
+                                 + Math::powf(v.position.z, 2.0f), 0.5f);
 
         if (distance > furtherDistance)
         {
@@ -192,9 +194,9 @@ loadSkeletalMeshFromAssimp(const aiScene* scene,
         minBound.z = v.position.z < minBound.z ? v.position.z : minBound.z;
         v.position.w = 1.0f;
 
-        float distance = Math::pow(Math::pow(v.position.x, 2.0f)
-                                 + Math::pow(v.position.y, 2.0f)
-                                 + Math::pow(v.position.z, 2.0f), 0.5f);
+        float distance = Math::powf(Math::powf(v.position.x, 2.0f)
+                                  + Math::powf(v.position.y, 2.0f)
+                                  + Math::powf(v.position.z, 2.0f), 0.5f);
 
         if (distance > furtherDist)
         {
@@ -553,9 +555,13 @@ ResourceManager::importResourceFromFile(const WString& fileName,
     c = (c >= 'A' && c <= 'Z' ? c + 32 : c);
   }
 
+  Clock timeStamp;
   /* LOAD RESOURCES FROM THE FILE */
+  if (fileExtension == L"echoasset" || fileExtension == L"echomat") {
+    loadSerializedFile(fileName);
+  }
   // If is a texture extension
-  if (fileExtension == L"png"  || fileExtension == L"jpg"
+  else if (fileExtension == L"png"  || fileExtension == L"jpg"
    || fileExtension == L"tga"  || fileExtension == L"bmp"
    || fileExtension == L"tiff") {
     // Check flags
@@ -700,6 +706,10 @@ ResourceManager::importResourceFromFile(const WString& fileName,
     }
     delete importer;
   }
+
+  timeStamp.update();
+  Logger::instance().consoleLog(eeToString(timeStamp.geTimeElapsed()));
+
   return true;
 }
 WPtr<Texture>
@@ -721,7 +731,13 @@ ResourceManager::loadTextureFromFile(const WString& fileName,
     return {};
   }
 
-  SPtr<Texture> tex = GraphicsApi::instance().createTexturePtr();
+  SPtr<Texture> tex;
+  if (GraphicsApi::isStarted()) {
+    tex = GraphicsApi::instance().createTexturePtr();
+  }
+  else {
+    tex = MemoryManager::instance().newPtr<Texture>();
+  }
   tex->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kShaderResource,
                 Point2D{ tempImg->getWidth(), tempImg->getHeight() });
 
@@ -932,7 +948,13 @@ ResourceManager::loadVertexShaderFromFile(const WString& fileName,
     return {};
   }
 
-  SPtr<VertexShader> shader = GraphicsApi::instance().createVertexShaderPtr();
+  SPtr<VertexShader> shader;
+  if (GraphicsApi::isStarted()) {
+    shader = GraphicsApi::instance().createVertexShaderPtr();
+  }
+  else {
+    shader = MemoryManager::instance().newPtr<VertexShader>();
+  }
   if (!shader->compileFromFile(fileName, functionName, macroDefinitions)) {
     Logger::instance().consoleLog("Error compiling shader");
     return {};
@@ -954,7 +976,13 @@ ResourceManager::loadVertexShaderFromString(const String& shaderString,
     return {};
   }
 
-  SPtr<VertexShader> shader = GraphicsApi::instance().createVertexShaderPtr();
+  SPtr<VertexShader> shader;
+  if (GraphicsApi::isStarted()) {
+    shader = GraphicsApi::instance().createVertexShaderPtr();
+  }
+  else {
+    shader = MemoryManager::instance().newPtr<VertexShader>();
+  }
   if (!shader->compileFromString(shaderString, functionName, macroDefinitions)) {
     Logger::instance().consoleLog("Error compiling shader");
     return {};
@@ -976,7 +1004,13 @@ ResourceManager::loadPixelShaderFromFile(const WString& fileName,
     return {};
   }
 
-  SPtr<PixelShader> shader = GraphicsApi::instance().createPixelShaderPtr();
+  SPtr<PixelShader> shader;
+  if (GraphicsApi::isStarted()) {
+    shader = GraphicsApi::instance().createPixelShaderPtr();
+  }
+  else {
+    shader = MemoryManager::instance().newPtr<PixelShader>();
+  }
   if (!shader->compileFromFile(fileName, functionName, macroDefinitions)) {
     Logger::instance().consoleLog("Error compiling shader");
     return {};
@@ -998,7 +1032,13 @@ ResourceManager::loadPixelShaderFromString(const String& shaderString,
     return {};
   }
 
-  SPtr<PixelShader> shader = GraphicsApi::instance().createPixelShaderPtr();
+  SPtr<PixelShader> shader;
+  if (GraphicsApi::isStarted()) {
+    shader = GraphicsApi::instance().createPixelShaderPtr();
+  }
+  else {
+    shader = MemoryManager::instance().newPtr<PixelShader>();
+  }
   if (!shader->compileFromString(shaderString, functionName, macroDefinitions)) {
     Logger::instance().consoleLog("Error compiling shader");
     return {};
@@ -1020,7 +1060,13 @@ ResourceManager::loadHullShaderFromFile(const WString& fileName,
     return {};
   }
 
-  SPtr<HullShader> shader = GraphicsApi::instance().createHullShaderPtr();
+  SPtr<HullShader> shader;
+  if (GraphicsApi::isStarted()) {
+    shader = GraphicsApi::instance().createHullShaderPtr();
+  }
+  else {
+    shader = MemoryManager::instance().newPtr<HullShader>();
+  }
   if (!shader->compileFromFile(fileName, functionName, macroDefinitions)) {
     Logger::instance().consoleLog("Error compiling shader");
     return {};
@@ -1042,7 +1088,13 @@ ResourceManager::loadHullShaderFromString(const String& shaderString,
     return {};
   }
 
-  SPtr<HullShader> shader = GraphicsApi::instance().createHullShaderPtr();
+  SPtr<HullShader> shader;
+  if (GraphicsApi::isStarted()) {
+    shader = GraphicsApi::instance().createHullShaderPtr();
+  }
+  else {
+    shader = MemoryManager::instance().newPtr<HullShader>();
+  }
   if (!shader->compileFromString(shaderString, functionName, macroDefinitions)) {
     Logger::instance().consoleLog("Error compiling shader");
     return {};
@@ -1064,7 +1116,13 @@ ResourceManager::loadDomainShaderFromFile(const WString& fileName,
     return {};
   }
 
-  SPtr<DomainShader> shader = GraphicsApi::instance().createDomainShaderPtr();
+  SPtr<DomainShader> shader;
+  if (GraphicsApi::isStarted()) {
+    shader = GraphicsApi::instance().createDomainShaderPtr();
+  }
+  else {
+    shader = MemoryManager::instance().newPtr<DomainShader>();
+  }
   if (!shader->compileFromFile(fileName, functionName, macroDefinitions)) {
     Logger::instance().consoleLog("Error compiling shader");
     return {};
@@ -1086,7 +1144,13 @@ ResourceManager::loadDomainShaderFromString(const String& shaderString,
     return {};
   }
 
-  SPtr<DomainShader> shader = GraphicsApi::instance().createDomainShaderPtr();
+  SPtr<DomainShader> shader;
+  if (GraphicsApi::isStarted()) {
+    shader = GraphicsApi::instance().createDomainShaderPtr();
+  }
+  else {
+    shader = MemoryManager::instance().newPtr<DomainShader>();
+  }
   if (!shader->compileFromString(shaderString, functionName, macroDefinitions)) {
     Logger::instance().consoleLog("Error compiling shader");
     return {};
@@ -1255,6 +1319,61 @@ getResourceData(File& iFile,
                   sizeof(uint8));
 }
 
+void
+ResourceManager::loadSerializedFile(const WString& filePath)
+{
+  File loadFile;
+  loadFile.openFile(filePath, OPEN_TYPE::kReadOnly
+                            | OPEN_TYPE::kBinary);
+  if (loadFile.isOpen()) {
+    String resourceName;
+    getFileName(filePath, resourceName);
+
+    uint8 readResourceCode = 0;
+    uint8 readVersionNum = 0;
+    uint8 readSizeTSize = 0;
+    getResourceData(loadFile, readResourceCode, readVersionNum, readSizeTSize);
+    
+    if (readResourceCode == eRESOURCE_CODE::kTexture) {
+      loadSerializedTexture(loadFile,
+                            resourceName,
+                            readVersionNum,
+                            readSizeTSize);
+    }
+    else if (readResourceCode == eRESOURCE_CODE::kSkeletal) {
+      loadSerializedSkeleton(loadFile,
+                             resourceName,
+                             readVersionNum,
+                             readSizeTSize);
+    }
+    else if (readResourceCode == eRESOURCE_CODE::kAnimation) {
+      loadSerializedAnimation(loadFile,
+                              resourceName,
+                              readVersionNum,
+                              readSizeTSize);
+    }
+    else if (readResourceCode == eRESOURCE_CODE::kMaterial) {
+      loadSerializedMaterial(loadFile,
+                             resourceName,
+                             readVersionNum,
+                             readSizeTSize);
+    }
+    else if (readResourceCode == eRESOURCE_CODE::kStaticMesh) {
+      loadSerializedStaticMesh(loadFile,
+                               resourceName,
+                               readVersionNum,
+                               readSizeTSize);
+    }
+    else if (readResourceCode == eRESOURCE_CODE::kSkeletalMesh) {
+      loadSerializedSkeletalMesh(loadFile,
+                                 resourceName,
+                                 readVersionNum,
+                                 readSizeTSize);
+    }
+
+    loadFile.close();
+  }
+}
 void
 ResourceManager::loadAllSerialized()
 {
@@ -1739,7 +1858,13 @@ ResourceManager::loadSerializedTexture(File& fileToLoad,
       }
     }
 
-    SPtr<Texture> tex = GraphicsApi::instance().createTexturePtr();
+    SPtr<Texture> tex;
+    if  (GraphicsApi::isStarted()) {
+      tex = GraphicsApi::instance().createTexturePtr();
+    }
+    else {
+      tex = MemoryManager::instance().newPtr<Texture>();
+    }
     tex->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kShaderResource,
       Point2D{ readImages[0]->getWidth(), readImages[0]->getHeight() });
 

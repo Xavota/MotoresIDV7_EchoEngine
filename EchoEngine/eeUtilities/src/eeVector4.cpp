@@ -18,12 +18,12 @@ float
 Vector4f::getDistance(const Vector4f& other) const
 {
   Vector4f d = other - *this;
-  return Math::sqrt(d.x * d.x + d.y * d.y + d.z * d.z + d.w * d.w);
+  return Math::sqrtf(d.x * d.x + d.y * d.y + d.z * d.z + d.w * d.w);
 }
 float
 Vector4f::getMagnitude() const
 {
-  return Math::sqrt(this->x * this->x + this->y * this->y
+  return Math::sqrtf(this->x * this->x + this->y * this->y
                   + this->z * this->z + this->w * this->w);
 }
 Vector4f
@@ -214,7 +214,7 @@ float
 Vector4i::getDistance(const Vector4i& other) const
 {
   Vector4i d = other - *this;
-  return Math::sqrt(static_cast<float>(d.x * d.x)
+  return Math::sqrtf(static_cast<float>(d.x * d.x)
                   + static_cast<float>(d.y * d.y)
                   + static_cast<float>(d.z * d.z)
                   + static_cast<float>(d.w * d.w));
@@ -222,7 +222,7 @@ Vector4i::getDistance(const Vector4i& other) const
 float
 Vector4i::getMagnitude() const
 {
-  return Math::sqrt(static_cast<float>(this->x * this->x)
+  return Math::sqrtf(static_cast<float>(this->x * this->x)
                   + static_cast<float>(this->y * this->y)
                   + static_cast<float>(this->z * this->z)
                   + static_cast<float>(this->w * this->w));
@@ -377,7 +377,7 @@ float
 Point4D::getDistance(const Point4D& other) const
 {
   Point4D d = other - *this;
-  return Math::sqrt(static_cast<float>(d.x * d.x)
+  return Math::sqrtf(static_cast<float>(d.x * d.x)
                   + static_cast<float>(d.y * d.y)
                   + static_cast<float>(d.z * d.z)
                   + static_cast<float>(d.w * d.w));
@@ -385,7 +385,7 @@ Point4D::getDistance(const Point4D& other) const
 float
 Point4D::getMagnitude() const
 {
-  return Math::sqrt(static_cast<float>(this->x * this->x)
+  return Math::sqrtf(static_cast<float>(this->x * this->x)
                   + static_cast<float>(this->y * this->y)
                   + static_cast<float>(this->z * this->z)
                   + static_cast<float>(this->w * this->w));

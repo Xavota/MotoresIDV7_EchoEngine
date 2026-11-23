@@ -129,7 +129,8 @@ MemoryManager::safeRelease(SPtr<T> ptr)
   return false;
 }
 template<typename T>
-inline bool MemoryManager::rawSafeRelease(T** ptr)
+inline bool
+MemoryManager::rawSafeRelease(T** ptr)
 {
   if (*ptr)
   {

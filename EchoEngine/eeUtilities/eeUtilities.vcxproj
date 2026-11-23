@@ -175,6 +175,7 @@
   <ItemGroup>
     <ClInclude Include="include\eeBox.h" />
     <ClInclude Include="include\eeCapsule.h" />
+    <ClInclude Include="include\eeClock.h" />
     <ClInclude Include="include\eeColor.h" />
     <ClInclude Include="include\eeDLLDynamics.h" />
     <ClInclude Include="include\eeFile.h" />
@@ -209,6 +210,7 @@
   <ItemGroup>
     <ClCompile Include="src\eeBox.cpp" />
     <ClCompile Include="src\eeCapsule.cpp" />
+    <ClCompile Include="src\eeClock.cpp" />
     <ClCompile Include="src\eeColor.cpp" />
     <ClCompile Include="src\eeDLLDynamics.cpp" />
     <ClCompile Include="src\eeFile.cpp" />

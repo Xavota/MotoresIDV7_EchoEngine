@@ -38,14 +38,14 @@ Quaternion::conjugate()
 Quaternion
 Quaternion::getNormalize() const
 {
-  float rad = Math::sqrt(x * x + y * y + z * z + w * w);
+  float rad = Math::sqrtf(x * x + y * y + z * z + w * w);
   Quaternion r(w / rad, x / rad, y / rad, z / rad);
   return r;
 }
 Quaternion&
 Quaternion::normalize()
 {
-  float rad = Math::sqrt(x * x + y * y + z * z + w * w);
+  float rad = Math::sqrtf(x * x + y * y + z * z + w * w);
   x /= rad;
   y /= rad;
   z /= rad;
@@ -65,7 +65,7 @@ Quaternion::getEuclidean()
   // pitch (y-axis rotation)
   float sinp = 2 * (w * y - z * x);
   if (Math::abs(sinp) >= 1) {
-    angles.y = Math::copysign(Math::kPI / 2, sinp); // use 90 degrees if out of range
+    angles.y = Math::copysignf(Math::kPI / 2, sinp); // use 90 degrees if out of range
   }
   else {
     angles.y = Math::asin(sinp);

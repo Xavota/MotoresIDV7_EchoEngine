@@ -204,8 +204,8 @@ enum E
  * @brief
  * Stencil operations.
  */
-namespace eSTENCIL_OP { // TODO: Este enum no debería existir o al menos tener
-enum E                  //       menos elementos más entendibles
+namespace eSTENCIL_OP { // TODO: Este enum no deberia existir o al menos tener
+enum E                  //       menos elementos mas entendibles
 {
   kKeep,
   kZero,
@@ -222,8 +222,8 @@ enum E                  //       menos elementos más entendibles
  * @brief
  * Blend info for blend state.
  */
-namespace eBLEND { // TODO: Este enum no debería existir o al menos tener
-enum E             //       menos elementos más entendibles
+namespace eBLEND { // TODO: Este enum no deberia existir o al menos tener
+enum E             //       menos elementos mas entendibles
 {
   kZero,
   kOne,
@@ -479,7 +479,7 @@ struct ViewportDesc
   float maxDepth;
 };
 
-// TODO: De aquí para abajo nada debería existir o al menos ser más entendibles.
+// TODO: De aqui para abajo nada deberia existir o al menos ser mas entendibles.
 
 /**
  * @brief

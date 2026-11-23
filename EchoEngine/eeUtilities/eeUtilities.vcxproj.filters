@@ -107,6 +107,7 @@
     </ClInclude>
     <ClInclude Include="include\eeSerializationUtilities.h" />
     <ClInclude Include="include\eeTransform.h" />
+    <ClInclude Include="include\eeClock.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\eeVector2.cpp">
@@ -183,5 +184,6 @@
     </ClCompile>
     <ClCompile Include="src\eeSerializationUtilities.cpp" />
     <ClCompile Include="src\eeTransform.cpp" />
+    <ClCompile Include="src\eeClock.cpp" />
   </ItemGroup>
 </Project>

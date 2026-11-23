@@ -266,6 +266,10 @@ class EE_CORE_EXPORT StaticMesh : public Resource
   void
   clear();
 
+  /**
+   * The vector of dirty flags for the materials. For Omniverse use. TODO
+   */
+  Vector<Pair<bool, String>> m_dirtyMatFlags;
  private:
   /**
    * The vector of pairs of meshes and texture indices.

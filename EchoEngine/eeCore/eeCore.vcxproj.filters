@@ -22,9 +22,6 @@
     <Filter Include="src\SceneGraph\Components">
       <UniqueIdentifier>{0bbef58c-4df7-4dec-b875-207c6f4b55b9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\Graphics">
-      <UniqueIdentifier>{cf1e2103-6e2f-4aea-9b92-188185d8dfb2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="include\Resources">
       <UniqueIdentifier>{b1af8962-0f85-4bbf-92e6-f8633cfef29f}</UniqueIdentifier>
     </Filter>
@@ -37,29 +34,35 @@
     <Filter Include="include\Externals">
       <UniqueIdentifier>{77d00bff-6a27-4c03-bef4-0f0588b2d4d6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\Renderer">
-      <UniqueIdentifier>{31c28eab-df9a-4769-be2d-db993498e830}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Renderer">
       <UniqueIdentifier>{4ea83aa9-a0d6-4f92-bd50-0e1bd41890c3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Inputs">
-      <UniqueIdentifier>{b8dfd66d-4825-4768-b924-da2b4af7f227}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Inputs">
       <UniqueIdentifier>{e838b8cb-8e4f-482f-8a60-e59e805dcdd7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\Audio">
-      <UniqueIdentifier>{5f215e82-eda8-4b02-8b8d-1ec8ec221d11}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Audio">
       <UniqueIdentifier>{e6d07bd0-0abb-481c-905b-25e2e0308b44}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\Omniverse">
-      <UniqueIdentifier>{94bdaae4-676c-472a-8bca-a664ffa0b819}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Omniverse">
       <UniqueIdentifier>{f31373ef-b598-4df3-a2d3-5e98f3ce744b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Interfaces">
+      <UniqueIdentifier>{1470294d-7960-439f-ad2c-41bea2c8e138}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Interfaces\Audio">
+      <UniqueIdentifier>{5f215e82-eda8-4b02-8b8d-1ec8ec221d11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Interfaces\Graphics">
+      <UniqueIdentifier>{cf1e2103-6e2f-4aea-9b92-188185d8dfb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Interfaces\Inputs">
+      <UniqueIdentifier>{b8dfd66d-4825-4768-b924-da2b4af7f227}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Interfaces\Omniverse">
+      <UniqueIdentifier>{94bdaae4-676c-472a-8bca-a664ffa0b819}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Interfaces\Renderer">
+      <UniqueIdentifier>{31c28eab-df9a-4769-be2d-db993498e830}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -109,40 +112,40 @@
       <Filter>include\SceneGraph\Components</Filter>
     </ClInclude>
     <ClInclude Include="include\eeBlendState.h">
-      <Filter>include\Graphics</Filter>
+      <Filter>include\Interfaces\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="include\eeBuffer.h">
-      <Filter>include\Graphics</Filter>
+      <Filter>include\Interfaces\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="include\eeConstantBuffer.h">
-      <Filter>include\Graphics</Filter>
+      <Filter>include\Interfaces\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="include\eeDepthStencilState.h">
-      <Filter>include\Graphics</Filter>
+      <Filter>include\Interfaces\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="include\eeIndexBuffer.h">
-      <Filter>include\Graphics</Filter>
+      <Filter>include\Interfaces\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="include\eeInputLayout.h">
-      <Filter>include\Graphics</Filter>
+      <Filter>include\Interfaces\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="include\eePixelShader.h">
-      <Filter>include\Graphics</Filter>
+      <Filter>include\Interfaces\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="include\eeRasterizerState.h">
-      <Filter>include\Graphics</Filter>
+      <Filter>include\Interfaces\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="include\eeSamplerState.h">
-      <Filter>include\Graphics</Filter>
+      <Filter>include\Interfaces\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="include\eeTexture.h">
-      <Filter>include\Graphics</Filter>
+      <Filter>include\Interfaces\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="include\eeVertexBuffer.h">
-      <Filter>include\Graphics</Filter>
+      <Filter>include\Interfaces\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="include\eeVertexShader.h">
-      <Filter>include\Graphics</Filter>
+      <Filter>include\Interfaces\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="include\eeAnimation.h">
       <Filter>include\Resources</Filter>
@@ -172,7 +175,7 @@
       <Filter>include\Resources</Filter>
     </ClInclude>
     <ClInclude Include="include\eeRenderer.h">
-      <Filter>include\Renderer</Filter>
+      <Filter>include\Interfaces\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="include\eeBoneMesh.h">
       <Filter>include\Resources</Filter>
@@ -186,55 +189,55 @@
     <ClInclude Include="include\eeOctreeNode.h">
       <Filter>include\SceneGraph</Filter>
     </ClInclude>
-    <ClInclude Include="include\eeWindow.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\eeInputManager.h">
-      <Filter>include\Inputs</Filter>
+      <Filter>include\Interfaces\Inputs</Filter>
     </ClInclude>
     <ClInclude Include="include\eeMouseDevice.h">
-      <Filter>include\Inputs</Filter>
+      <Filter>include\Interfaces\Inputs</Filter>
     </ClInclude>
     <ClInclude Include="include\eeKeyboardDevice.h">
-      <Filter>include\Inputs</Filter>
+      <Filter>include\Interfaces\Inputs</Filter>
     </ClInclude>
     <ClInclude Include="include\eeInputDeviceEvent.h">
-      <Filter>include\Inputs</Filter>
+      <Filter>include\Interfaces\Inputs</Filter>
     </ClInclude>
     <ClInclude Include="include\eeInputDevice.h">
-      <Filter>include\Inputs</Filter>
+      <Filter>include\Interfaces\Inputs</Filter>
     </ClInclude>
     <ClInclude Include="include\eeGamepadDevice.h">
-      <Filter>include\Inputs</Filter>
+      <Filter>include\Interfaces\Inputs</Filter>
     </ClInclude>
     <ClInclude Include="include\eeCLight.h">
       <Filter>include\SceneGraph\Components</Filter>
     </ClInclude>
     <ClInclude Include="include\eeAudio.h">
-      <Filter>include\Audio</Filter>
+      <Filter>include\Interfaces\Audio</Filter>
     </ClInclude>
     <ClInclude Include="include\eeAudioManager.h">
-      <Filter>include\Audio</Filter>
+      <Filter>include\Interfaces\Audio</Filter>
     </ClInclude>
     <ClInclude Include="include\eeSound.h">
-      <Filter>include\Audio</Filter>
+      <Filter>include\Interfaces\Audio</Filter>
     </ClInclude>
     <ClInclude Include="include\eeGraficsApi.h">
-      <Filter>include\Graphics</Filter>
+      <Filter>include\Interfaces\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="include\eeEvent.h">
-      <Filter>include\Inputs</Filter>
-    </ClInclude>
-    <ClInclude Include="include\eeDomainShader.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\eeHullShader.h">
-      <Filter>include</Filter>
+      <Filter>include\Interfaces\Inputs</Filter>
     </ClInclude>
     <ClInclude Include="include\eeResource.h" />
     <ClInclude Include="include\eeAudioChannel.h" />
     <ClInclude Include="include\eeOmniverseManager.h">
-      <Filter>include\Omniverse</Filter>
+      <Filter>include\Interfaces\Omniverse</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeDomainShader.h">
+      <Filter>include\Interfaces\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeHullShader.h">
+      <Filter>include\Interfaces\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eeWindow.h">
+      <Filter>include\Interfaces\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -9,5 +9,8 @@ serializeString(File& oFile, const String& stringToSerialize);
 EE_UTILITY_EXPORT void
 loadSerializedString(File& iFile, String& stringToLoad, uint8 sizeOfSizeT);
 EE_UTILITY_EXPORT void
-getFileName(WString filePath, String& fileName);
+getFileName(WString filePath,
+            String& fileName,
+            String* fileFolder = nullptr,
+            String* fileExtension = nullptr);
 }

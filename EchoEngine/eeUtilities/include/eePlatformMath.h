@@ -480,7 +480,37 @@ public:
    * The result of the square root.
    */
   static FORCEINLINE float
-  sqrt(const float& _val);
+  sqrtf(float _val);
+  /**
+   * @brief
+   * The square root operation.
+   *
+   * @description
+   * Returns the square root of the value.
+   *
+   * @param _val
+   * The value for the square root.
+   *
+   * @return
+   * The result of the square root.
+   */
+  static FORCEINLINE double
+  sqrt(double _val);
+  /**
+   * @brief
+   * The square root operation.
+   *
+   * @description
+   * Returns the square root of the value.
+   *
+   * @param _val
+   * The value for the square root.
+   *
+   * @return
+   * The result of the square root.
+   */
+  static FORCEINLINE long double
+  sqrtl(long double _val);
   /**
    * @brief
    * The power operation.
@@ -497,7 +527,58 @@ public:
    * The result of the power operation.
    */
   static FORCEINLINE float
-  pow(const float& _base, const float& _power);
+  powf(float _base, float _power);
+  /**
+   * @brief
+   * The power operation.
+   *
+   * @description
+   * Returns the power of a number to its exponent.
+   *
+   * @param _base
+   * The number to be powered.
+   * @param _power
+   * The exponent of the base.
+   *
+   * @return
+   * The result of the power operation.
+   */
+  static FORCEINLINE double
+  pow(double _base, double _power);
+  /**
+   * @brief
+   * The power operation.
+   *
+   * @description
+   * Returns the power of a number to its exponent.
+   *
+   * @param _base
+   * The number to be powered.
+   * @param _power
+   * The exponent of the base.
+   *
+   * @return
+   * The result of the power operation.
+   */
+  static FORCEINLINE long double
+  powl(long double _base, long double _power);
+  /**
+   * @brief
+   * The logarithmic operation.
+   *
+   * @description
+   * Returns the logarithm of a number with a base.
+   *
+   * @param _value
+   * The number to be log.
+   * @param _base
+   * The base of the log.
+   *
+   * @return
+   * The result of the logarthmic operation.
+   */
+  static FORCEINLINE float
+  log(float _value, float _base = kEuler);
 
   /**
    * @brief
@@ -514,7 +595,7 @@ public:
    * The number rounded.
    */
   static FORCEINLINE float
-  round(const float _val);
+  round(float _val);
   /**
    * @brief
    * Rounds a value.
@@ -530,7 +611,7 @@ public:
    * The number rounded.
    */
   static FORCEINLINE float
-  floor(const float _val);
+  floor(float _val);
   /**
    * @brief
    * Rounds a value.
@@ -546,7 +627,7 @@ public:
    * The number rounded.
    */
   static FORCEINLINE float
-  ceil(const float _val);
+  ceil(float _val);
   /**
    * @brief
    * The absolute value.
@@ -561,7 +642,7 @@ public:
    * The absolute value.
    */
   static FORCEINLINE float
-  abs(const float _val);
+  absf(float _val);
   /**
    * @brief
    * The absolute value.
@@ -576,7 +657,7 @@ public:
    * The absolute value.
    */
   static FORCEINLINE double
-  absd(const double _val);
+  abs(double _val);
   /**
    * @brief
    * The absolute value.
@@ -591,7 +672,7 @@ public:
    * The absolute value.
    */
   static FORCEINLINE long double
-  absld(const long double _val);
+  absl(long double _val);
   /**
    * @brief
    * The sign of a value.
@@ -606,7 +687,7 @@ public:
    * The sign value.
    */
   static FORCEINLINE float
-  sign(const float _val);
+  signf(float _val);
   /**
    * @brief
    * The sign of a value.
@@ -621,7 +702,7 @@ public:
    * The sign value.
    */
   static FORCEINLINE double
-  signd(const double _val);
+  sign(double _val);
   /**
    * @brief
    * The sign of a value.
@@ -636,25 +717,7 @@ public:
    * The sign value.
    */
   static FORCEINLINE long double
-  signld(const long double _val);
-  /**
-   * @brief
-   * Returns a number with a needed sign.
-   *
-   * @description
-   * Composes a floating point value with the magnitude of mag and the sign of
-   * sgn.
-   *
-   * @param _mag
-   * The number to apply the sign.
-   * @param _sgn
-   * The number to get the sign.
-   *
-   * @return
-   * The absolute value.
-   */
-  static FORCEINLINE float
-  copysign(float _mag, float _sgn);
+  signl(long double _val);
   /**
    * @brief
    * Returns a number with a needed sign.
@@ -708,24 +771,6 @@ public:
    * The absolute value.
    */
   static FORCEINLINE long double
-  copysign(long double _mag, long double _sgn);
-  /**
-   * @brief
-   * Returns a number with a needed sign.
-   *
-   * @description
-   * Composes a floating point value with the magnitude of mag and the sign of
-   * sgn.
-   *
-   * @param _mag
-   * The number to apply the sign.
-   * @param _sgn
-   * The number to get the sign.
-   *
-   * @return
-   * The absolute value.
-   */
-  static FORCEINLINE long double
   copysignl(long double _mag, long double _sgn);
   /**
    * @brief
@@ -742,8 +787,9 @@ public:
    * @return
    * The maximum value between the first and the second value.
    */
-  static FORCEINLINE float
-  max(const float _val1, const float _val2);
+  template<typename T>
+  static FORCEINLINE T
+  max(const T& _val1, const T& _val2);
   /**
    * @brief
    * The minimum value.
@@ -759,8 +805,9 @@ public:
    * @return
    * The minimum value between the first and the second value.
    */
-  static FORCEINLINE float
-  min(const float _val1, const float _val2);
+  template<typename T>
+  static FORCEINLINE T
+  min(const T& _val1, const T& _val2);
   /**
    * @brief
    * Check if two floats are nearly equal.
@@ -777,9 +824,9 @@ public:
    * If the two floats differ by less than the value of the gap.
    */
   static FORCEINLINE bool
-  checkFloatsEqual(const float _val1,
-                   const float _val2,
-                   const float _gap = kFLOAT_EQUAL_SMALL_DIFFERENCE);
+  checkFloatsEqual(float _val1,
+                   float _val2,
+                   float _gap = kFLOAT_EQUAL_SMALL_DIFFERENCE);
   /**
    * @brief
    * Check if the value has the flag.
@@ -797,7 +844,7 @@ public:
    */
   template<typename V, typename F>
   static FORCEINLINE bool
-  hasFlag(V _val, F _flag);
+  hasFlag(const V& _val, const F& _flag);
 
   /***************************************************************************/
   /*                                                                         */
@@ -1406,107 +1453,124 @@ PlatformMath::fmod(const float& _lval, const float& _rval)
   return _lval - static_cast<float>(static_cast<int32>(_lval / _rval)) * _rval;
 }
 FORCEINLINE float 
-PlatformMath::sqrt(const float& _val)
+PlatformMath::sqrtf(float _val)
 {
-  return pow(_val, 0.5f);
+  return powf(_val, 0.5f);
+}
+FORCEINLINE double 
+PlatformMath::sqrt(double _val)
+{
+  return pow(_val, 0.5);
+}
+FORCEINLINE long double
+PlatformMath::sqrtl(long double _val)
+{
+  return powl(_val, 0.5L);
 }
 FORCEINLINE float 
-PlatformMath::pow(const float& _base, const float& _power)
+PlatformMath::powf(float _base, float _power)
 {
   return std::powf(_base, _power);
 }
+FORCEINLINE double 
+PlatformMath::pow(double _base, double _power)
+{
+  return std::pow(_base, _power);
+}
+FORCEINLINE long double
+PlatformMath::powl(long double _base, long double _power)
+{
+  return std::powl(_base, _power);
+}
 FORCEINLINE float 
-PlatformMath::round(const float _val)
+PlatformMath::log(float _value, float _base)
+{
+  return std::log(_value) / std::log(_base);
+}
+FORCEINLINE float 
+PlatformMath::round(float _val)
 {
   return static_cast<float>(static_cast<int32>(_val + 0.5f));
 }
 FORCEINLINE float 
-PlatformMath::floor(const float _val)
+PlatformMath::floor(float _val)
 {
   return static_cast<float>(static_cast<int32>(_val));
 }
 FORCEINLINE float 
-PlatformMath::ceil(const float _val)
+PlatformMath::ceil(float _val)
 {
   return (_val - static_cast<int32>(_val)) > 0
        ? static_cast<float>(static_cast<int32>(_val + 1))
        : _val;
 }
 FORCEINLINE float 
-PlatformMath::abs(const float _val)
+PlatformMath::absf(float _val)
 {
-  return sqrt(_val * _val);
+  return sqrtf(_val * _val);
 }
 FORCEINLINE double
-PlatformMath::absd(const double _val)
+PlatformMath::abs(double _val)
 {
   return sqrt(_val * _val);
 }
 FORCEINLINE long double
-PlatformMath::absld(const long double _val)
+PlatformMath::absl(long double _val)
 {
-  return sqrt(_val * _val);
+  return sqrtl(_val * _val);
 }
 FORCEINLINE float
-PlatformMath::sign(const float _val)
+PlatformMath::signf(float _val)
 {
-  return abs(_val) / _val;
+  return absf(_val) / _val;
 }
 FORCEINLINE double
-PlatformMath::signd(const double _val)
+PlatformMath::sign(double _val)
 {
   return abs(_val) / _val;
 }
 FORCEINLINE long double
-PlatformMath::signld(const long double _val)
+PlatformMath::signl(long double _val)
 {
-  return abs(_val) / _val;
-}
-FORCEINLINE float
-PlatformMath::copysign(float _mag, float _sgn)
-{
-  return abs(_mag) * sign(_sgn);
+  return absl(_val) / _val;
 }
 FORCEINLINE float
 PlatformMath::copysignf(float _mag, float _sgn)
 {
-  return copysign(_mag, _sgn);
+  return absf(_mag) * signf(_sgn);
 }
 FORCEINLINE double
 PlatformMath::copysign(double _mag, double _sgn)
 {
-  return static_cast<double>(absd(_mag) * signd(_sgn));
-}
-FORCEINLINE long double
-PlatformMath::copysign(long double _mag, long double _sgn)
-{
-  return static_cast<long double>(absld(_mag) * signld(_sgn));
+  return abs(_mag) * sign(_sgn);
 }
 FORCEINLINE long double
 PlatformMath::copysignl(long double _mag, long double _sgn)
 {
-  return static_cast<long double>(absld(_mag) * signld(_sgn));
+  return absl(_mag) * signl(_sgn);
 }
-FORCEINLINE float
-PlatformMath::max(const float _val1, const float _val2)
+template<typename T>
+FORCEINLINE T
+PlatformMath::max(const T& _val1, const T& _val2)
 {
   return _val1 > _val2 ? _val1 : _val2;
 }
-FORCEINLINE float
-PlatformMath::min(const float _val1, const float _val2)
+template<typename T>
+FORCEINLINE T
+PlatformMath::min(const T& _val1, const T& _val2)
 {
   return _val1 < _val2 ? _val1 : _val2;
 }
 FORCEINLINE bool
-PlatformMath::checkFloatsEqual(const float _val1,
-                               const float _val2,
-                               const float _gap)
+PlatformMath::checkFloatsEqual(float _val1,
+                               float _val2,
+                               float _gap)
 {
   return abs(_val1 - _val2) <= _gap;
 }
 template<typename V, typename F>
 FORCEINLINE bool
-PlatformMath::hasFlag(V _val, F _flag)
+PlatformMath::hasFlag(const V& _val, const F& _flag)
 {
   return (_val & _flag) == _flag;
 }

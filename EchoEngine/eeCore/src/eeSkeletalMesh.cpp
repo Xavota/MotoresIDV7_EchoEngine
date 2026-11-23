@@ -59,15 +59,18 @@ SkeletalMesh::loadFromMeshes(const Vector<BoneMesh>& meshes,
 
   auto& resourseManager = ResourceManager::instance();
 
+  m_meshes.clear();
+  m_dirtyMatFlags.clear();
   for (const auto& m : meshes) {
     m_meshes.emplace_back
     (
-      Pair<BoneMesh/*<V, I>*/, WPtr<Material>>
+      Pair<BoneMesh, WPtr<Material>>
       (
         m,
         resourseManager.getResourceMaterial("Default_mat")
       )
     );
+    m_dirtyMatFlags.emplace_back(Pair<bool, String>(true, "Default_mat"));
   }
 
   m_skeleton = skeleton;
@@ -92,6 +95,18 @@ SkeletalMesh::loadFromMeshes(const Vector<Pair<BoneMesh, WPtr<Material>>>& meshe
   }
 
   m_meshes = meshes;
+  m_dirtyMatFlags.clear();
+  SIZE_T meshesCount = m_meshes.size();
+  m_dirtyMatFlags.resize(meshesCount);
+  for (SIZE_T i = 0; i < meshesCount; ++i) {
+    m_dirtyMatFlags[i].first = true;
+    if (!m_meshes[i].second.expired()) {
+      m_dirtyMatFlags[i].second = m_meshes[i].second.lock()->getResourceName();
+    }
+    else {
+      m_dirtyMatFlags[i].second = "Default_mat";
+    }
+  }
 
   m_skeleton = skeleton;
 
@@ -120,6 +135,13 @@ void
 SkeletalMesh::setTexture(WPtr<Material> texture, uint32 index)
 {
   if (static_cast<uint32>(m_meshes.size()) > index) {
+    m_dirtyMatFlags[index].first = true;
+    if (!m_meshes[index].second.expired()) {
+      m_dirtyMatFlags[index].second = m_meshes[index].second.lock()->getResourceName();
+    }
+    else {
+      m_dirtyMatFlags[index].second = "Default_mat";
+    }
     m_meshes[index].second = texture;
   }
 }

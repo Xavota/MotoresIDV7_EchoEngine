@@ -143,7 +143,7 @@ BaseApp::initSystems(void* callback)
   }
 
   
-  DLLDynamics omniverseManager;
+  /*DLLDynamics omniverseManager;
   omniverseManager.initialize(eeConfigurations::omniverseManagerName
                             + eeConfigurations::platformConfigPrefix
                             + eeConfigurations::dynamicLibSuffix);
@@ -154,7 +154,7 @@ BaseApp::initSystems(void* callback)
   }
   if (OmniverseManager::isStarted()) {
     OmniverseManager::instance().init(eeConfigurations::omniverseLiveEdit);
-  }
+  }*/
 
 
   ResourceManager::instance().loadAllSerialized();

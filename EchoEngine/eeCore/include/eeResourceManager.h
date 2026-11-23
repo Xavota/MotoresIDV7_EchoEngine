@@ -668,6 +668,15 @@ class EE_CORE_EXPORT ResourceManager : public Module<ResourceManager>
 
   /**
    * @brief
+   * Deserialize and store a resource files.
+   *
+   * @description
+   * Deserialize and store a resource files.
+   */
+  void
+  loadSerializedFile(const WString& filePath);
+  /**
+   * @brief
    * Deserialize and store all the resources files.
    *
    * @description

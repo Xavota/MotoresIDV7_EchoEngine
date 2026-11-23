@@ -236,6 +236,10 @@ class EE_CORE_EXPORT SkeletalMesh : public Resource
   const BoxAAB&
   getBoundingBox();
 
+  /**
+   * The vector of dirty flags for the materials. For Omniverse use. TODO
+   */
+  Vector<Pair<bool, String>> m_dirtyMatFlags;
  private:
   /**
    * The vector of pairs of meshes and texture indices.

@@ -267,7 +267,7 @@ loadSerializedAnimComp(File& loadFile,
 void
 loadSerializedBoundsComp(File& loadFile,
                          WPtr<Actor> compActor,
-                         uint8 sizeTSize)
+                         uint8 /*sizeTSize*/)
 {
   auto cmp = compActor.lock()->addComponent<CBounds>().lock();
 
@@ -281,7 +281,7 @@ loadSerializedBoundsComp(File& loadFile,
 void
 loadSerializedCamComp(File& loadFile,
                       WPtr<Actor> compActor,
-                      uint8 sizeTSize)
+                      uint8 /*sizeTSize*/)
 {
   auto cmp = compActor.lock()->addComponent<CCamera>().lock();
 
@@ -304,7 +304,7 @@ loadSerializedCamComp(File& loadFile,
 void
 loadSerializedLightComp(File& loadFile,
                         WPtr<Actor> compActor,
-                        uint8 sizeTSize)
+                        uint8 /*sizeTSize*/)
 {
   auto cmp = compActor.lock()->addComponent<CLight>().lock();
 
@@ -330,7 +330,7 @@ loadSerializedLightComp(File& loadFile,
 void
 loadSerializedRenderComp(File& loadFile,
                          WPtr<Actor> compActor,
-                         uint8 sizeTSize)
+                         uint8 /*sizeTSize*/)
 {
   auto cmp = compActor.lock()->addComponent<CRender>().lock();
 
@@ -383,7 +383,7 @@ loadSerializedSTMeshComp(File& loadFile,
 void
 loadSerializedTransComp(File& loadFile,
                         WPtr<Actor> compActor,
-                        uint8 sizeTSize)
+                        uint8 /*sizeTSize*/)
 {
   auto cmp = compActor.lock()->addComponent<CTransform>().lock();
 
@@ -409,8 +409,6 @@ loadSerializedComponent(File& loadFile,
                         WPtr<Actor> compActor,
                         uint8 sizeTSize)
 {
-  auto& memoryMan = MemoryManager::instance();
-
   auto cmpType = 0;
   loadFile.readBytes(reinterpret_cast<Byte*>(&cmpType), sizeof(uint8));
 
@@ -473,8 +471,6 @@ loadSerializedActor(File& loadFile,
                     WPtr<Actor> parentActor,
                     uint8 sizeTSize)
 {
-  auto& memoryMan = MemoryManager::instance();
-
   uint8 versionNum = 0;
   loadFile.readBytes(reinterpret_cast<Byte*>(&versionNum), sizeof(uint8));
 

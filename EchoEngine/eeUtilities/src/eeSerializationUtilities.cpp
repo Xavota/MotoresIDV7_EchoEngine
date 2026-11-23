@@ -50,24 +50,38 @@ loadSerializedString(File& iFile, String& stringToLoad, uint8 sizeOfSizeT)
   }
 }
 void
-getFileName(WString filePath, String& fileName)
+getFileName(WString filePath,
+            String& fileName,
+            String* fileFolder,
+            String* fileExtension)
 {
   String pathW2S = eeWStringtoString(filePath);
   bool readingName = false;
-  auto pathSize = static_cast<int64>(pathW2S.size());
-  for (int64 i = pathSize - 1; i >= 0; --i) {
+  SIZE_T pathSize = pathW2S.size();
+  SIZE_T lastIndex = 0;
+  for (SIZE_T i = pathSize - 1; i >= 0; --i) {
     if (!readingName) {
       if (pathW2S[i] == '.') {
+        if (fileExtension) *fileExtension = pathW2S[i] + *fileExtension;
         readingName = true;
+      }
+      else if (fileExtension) {
+        *fileExtension = pathW2S[i] + *fileExtension;
       }
     }
     else {
       if (pathW2S[i] == '/' || pathW2S[i] == '\\') {
+        lastIndex = i + 1;
         break;
       }
       //resourceName.insert(resourceName.end() - 1, pathW2S[i]);
       fileName = pathW2S[i] + fileName;
     }
+  }
+
+  if (fileFolder) {
+    fileFolder->resize(lastIndex);
+    memcpy(fileFolder->data(), pathW2S.data(), lastIndex);
   }
 }
 }

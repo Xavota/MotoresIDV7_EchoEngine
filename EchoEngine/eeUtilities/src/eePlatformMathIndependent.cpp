@@ -68,7 +68,7 @@ PlatformMath::sphereIntersectsPlanePoint(const Sphere& s,
   float d = planeDistance(p, s.getCenter());
   Vector3f proj = p.getNormal() * d;
   *point = s.getCenter() - proj;
-  *radius = sqrt(max(s.getRadious() * s.getRadious() - d * d, 0));
+  *radius = sqrtf(max(s.getRadious() * s.getRadious() - d * d, 0.0f));
   return abs(d) <= s.getRadious();
 }
 bool 
@@ -338,7 +338,7 @@ PlatformMath::intersectionCapsulePoint(const Capsule& _capsule,
   Vector3f d = _point - center;
   float h = d.getMagnitude();
   float a = d.dot(Vector3f::kUP);
-  float distance = sqrt(h*h - a*a);
+  float distance = sqrtf(h*h - a*a);
 
   if (distance <= r && _point.y <= cA.y && _point.y >= cB.y) {
     return true;
@@ -402,7 +402,7 @@ PlatformMath::intersectionCapsuleSphere(const Capsule& _capsule,
   Vector3f d = _sphere.getCenter() - center;
   float h = d.getMagnitude();
   float a = d.dot(Vector3f::kUP);
-  float distance = sqrt(h * h - a * a);
+  float distance = sqrtf(h * h - a * a);
 
   if (distance <= r + _sphere.getRadious() 
    && sCenter.y <= cA.y 
@@ -455,7 +455,7 @@ PlatformMath::intersectionCapsuleCapsule(const Capsule& _capsule1,
   Vector3f d = center2 - center1;
   float h = d.getMagnitude();
   float a = d.dot(Vector3f::kUP);
-  float distance = sqrt(h * h - a * a);
+  float distance = sqrtf(h * h - a * a);
 
   if (distance <= r1 + r2 && cA2.y >= cB1.y && cB2.y <= cA1.y) {
     return true;

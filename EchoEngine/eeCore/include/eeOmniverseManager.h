@@ -40,6 +40,9 @@ class EE_CORE_EXPORT OmniverseManager : public Module<OmniverseManager>
   */
   virtual bool
   init(bool /*doLiveEdit*/) { return false; }
+  
+  virtual String
+  kritaInit(bool /*doLiveEdit*/) { return "Not initialized"; }
 
   /**
   * @brief
@@ -143,11 +146,29 @@ class EE_CORE_EXPORT OmniverseManager : public Module<OmniverseManager>
   * @description
   * Returns the user local folder path for the omniverse storage.
   *
+  * @param ipAdrees
+  * The IP address where the located Omniverse Api is.
+  *
   * @return
   * The user local folder path for the omniverse storage.
   */
   virtual String
-  getUserLocalPath() { return ""; }
+  getUserLocalPath(const String& /*ipAddress*/) { return ""; }
+  /**
+  * @brief
+  * Gets the name of the connected user.
+  *
+  * @description
+  * Returns the name of the connected user.
+  *
+  * @param ipAdrees
+  * The IP address where the located Omniverse Api is.
+  *
+  * @return
+  * The user name of the connected user.
+  */
+  virtual String
+  getConnectedUser(const String& /*ipAddress*/) { return ""; }
 
   /**
   * @brief
@@ -247,6 +268,21 @@ class EE_CORE_EXPORT OmniverseManager : public Module<OmniverseManager>
   */
   virtual const String&
   getActiveSessionName() { return ""; }
+
+  /**
+  * @brief
+  * Copy a file.
+  *
+  * @description
+  * Copy a given file to the destination directory.
+  *
+  * @param src
+  * The directory of the file to copy.
+  * @param src
+  * The directory for the file to be copy to.
+  */
+  virtual void
+  copyFileToDest(const String& /*src*/, const String& /*dest*/) {}
 
 protected:
   /**

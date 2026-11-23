@@ -149,6 +149,7 @@ DeferredRenderer::DeferredRenderer()
   resourceManager.loadPixelShaderFromFile(L"Shaders/DirectionalSpecularLightsPS.hlsl",
                                           "main", {},
                                           "DirectionalSpecularLightsPS");
+
   resourceManager.loadVertexShaderFromFile(L"Shaders/PointDiffuseLightsVS.hlsl",
                                            "main", {},
                                            "PointDiffuseLightsVS");
@@ -161,6 +162,20 @@ DeferredRenderer::DeferredRenderer()
   resourceManager.loadPixelShaderFromFile(L"Shaders/PointSpecularLightsPS.hlsl",
                                           "main", {},
                                           "PointSpecularLightsPS");
+
+  resourceManager.loadVertexShaderFromFile(L"Shaders/SpotDiffuseLightsVS.hlsl",
+                                           "main", {},
+                                           "SpotDiffuseLightsVS");
+  resourceManager.loadPixelShaderFromFile(L"Shaders/SpotDiffuseLightsPS.hlsl",
+                                          "main", {},
+                                          "SpotDiffuseLightsPS");
+  resourceManager.loadVertexShaderFromFile(L"Shaders/SpotSpecularLightsVS.hlsl",
+                                           "main", {},
+                                           "SpotSpecularLightsVS");
+  resourceManager.loadPixelShaderFromFile(L"Shaders/SpotSpecularLightsPS.hlsl",
+                                          "main", {},
+                                          "SpotSpecularLightsPS");
+
   resourceManager.loadVertexShaderFromFile(L"Shaders/LightsVS.hlsl",
                                            "main", {},
                                            "LightsVS");
@@ -219,6 +234,12 @@ DeferredRenderer::DeferredRenderer()
 
   m_dirLightBuffer = graphicsApi.createConstantBufferPtr();
   m_dirLightBuffer->initData(sizeof(float) * 8, sizeof(float), nullptr);
+
+  m_pointLightBuffer = graphicsApi.createConstantBufferPtr();
+  m_pointLightBuffer->initData(sizeof(float) * 8, sizeof(float), nullptr);
+
+  m_spotLightBuffer = graphicsApi.createConstantBufferPtr();
+  m_spotLightBuffer->initData(sizeof(float) * 12, sizeof(float), nullptr);
 
   Vector<float> vieportRect =
   {
@@ -912,59 +933,59 @@ DeferredRenderer::onRender()
   graphicsApi.unsetVSConstantBuffers(3u, 0u);
   
   
-  // Load shaders
-  graphicsApi.setShaderPrograms(resourceManager.getResourceVertexShader("TestVS"),
-                                resourceManager.getResourceHullShader("TestHS"),
-                                resourceManager.getResourceDomainShader("TestDS"),
-                                resourceManager.getResourcePixelShader("TestPS"));
-  
-  m_rasterizerBezier->use();
-  graphicsApi.setPrimitiveTopology(ePRIMITIVE_TOPOLOGY::ControlPontPatchlist16);
-  
-  
-  Matrix4f view = Matrix4f::kIDENTITY;
-  view = sMainCam->getViewMatrix().getTranspose();
-  Matrix4f proj = Matrix4f::kIDENTITY;
-  proj = sMainCam->getProjectionMatrix().getTranspose();
-  Matrix4f modl = Matrix4f::translationMatrix(Vector3f{2.0f, 0.0f, 0.0f});
-  Matrix4f viewProj = proj * view;
-  Vector3f camPos = sMainCam->getEyePosition();
-  
-  BezierData bdata{};
-  bdata.viewProj = viewProj;
-  bdata.camPos = camPos;
-  bdata.tess = 8.0f;
-  
-  m_bezierBuffer->updateData(reinterpret_cast<Byte*>(&bdata));
-  
-  // Set constant buffers
-  graphicsApi.setHSConstantBuffers
-  (
-    { m_bezierBuffer },
-    0u
-  );
-  graphicsApi.setDSConstantBuffers
-  (
-    { m_bezierBuffer },
-    0u
-  );
-  graphicsApi.setPSConstantBuffers
-  (
-    { m_bezierBuffer },
-    0u
-  );
-  
-  graphicsApi.drawMeshControlPoints(
-  resourceManager.getResourceStaticMesh("MorbiusStripMesh").lock()->getMeshes()[0].first);
-  
-  
-  graphicsApi.unsetHSConstantBuffers(1u, 0u);
-  graphicsApi.unsetDSConstantBuffers(1u, 0u);
-  graphicsApi.unsetPSConstantBuffers(1u, 0u);
-  
-  
-  graphicsApi.setPrimitiveTopology(ePRIMITIVE_TOPOLOGY::kTrianglelist);
-  m_solidCCWRasterizer->use();
+  //// Load shaders
+  //graphicsApi.setShaderPrograms(resourceManager.getResourceVertexShader("TestVS"),
+  //                              resourceManager.getResourceHullShader("TestHS"),
+  //                              resourceManager.getResourceDomainShader("TestDS"),
+  //                              resourceManager.getResourcePixelShader("TestPS"));
+  //
+  //m_rasterizerBezier->use();
+  //graphicsApi.setPrimitiveTopology(ePRIMITIVE_TOPOLOGY::ControlPontPatchlist16);
+  //
+  //
+  //Matrix4f view = Matrix4f::kIDENTITY;
+  //view = sMainCam->getViewMatrix().getTranspose();
+  //Matrix4f proj = Matrix4f::kIDENTITY;
+  //proj = sMainCam->getProjectionMatrix().getTranspose();
+  //Matrix4f modl = Matrix4f::translationMatrix(Vector3f{2.0f, 0.0f, 0.0f});
+  //Matrix4f viewProj = proj * view;
+  //Vector3f camPos = sMainCam->getEyePosition();
+  //
+  //BezierData bdata{};
+  //bdata.viewProj = viewProj;
+  //bdata.camPos = camPos;
+  //bdata.tess = 8.0f;
+  //
+  //m_bezierBuffer->updateData(reinterpret_cast<Byte*>(&bdata));
+  //
+  //// Set constant buffers
+  //graphicsApi.setHSConstantBuffers
+  //(
+  //  { m_bezierBuffer },
+  //  0u
+  //);
+  //graphicsApi.setDSConstantBuffers
+  //(
+  //  { m_bezierBuffer },
+  //  0u
+  //);
+  //graphicsApi.setPSConstantBuffers
+  //(
+  //  { m_bezierBuffer },
+  //  0u
+  //);
+  //
+  //graphicsApi.drawMeshControlPoints(
+  //resourceManager.getResourceStaticMesh("MorbiusStripMesh").lock()->getMeshes()[0].first);
+  //
+  //
+  //graphicsApi.unsetHSConstantBuffers(1u, 0u);
+  //graphicsApi.unsetDSConstantBuffers(1u, 0u);
+  //graphicsApi.unsetPSConstantBuffers(1u, 0u);
+  //
+  //
+  //graphicsApi.setPrimitiveTopology(ePRIMITIVE_TOPOLOGY::kTrianglelist);
+  //m_solidCCWRasterizer->use();
 
   graphicsApi.unsetRenderTargets();
 
@@ -1034,6 +1055,10 @@ DeferredRenderer::onRender()
   resourceManager.getResourceVertexShader("PointDiffuseLightsVS");
   WPtr<PixelShader> pointDiffLightPS =
   resourceManager.getResourcePixelShader("PointDiffuseLightsPS");
+  WPtr<VertexShader> spotDiffLightVS =
+  resourceManager.getResourceVertexShader("SpotDiffuseLightsVS");
+  WPtr<PixelShader> spotDiffLightPS =
+  resourceManager.getResourcePixelShader("SpotDiffuseLightsPS");
   
   
   graphicsApi.clearRenderTargets({ m_tempDiffLightsTexture }, colorBlack);
@@ -1088,8 +1113,26 @@ DeferredRenderer::onRender()
         lightPos.x, lightPos.y, lightPos.z, sLight->getIntensity(),
         lightColor.r, lightColor.g, lightColor.b, lightColor.a
       };
-      m_dirLightBuffer->updateData(reinterpret_cast<Byte*>(dirLightBufferData.data()));
-      graphicsApi.setPSConstantBuffers({ m_dirLightBuffer }, 0u);
+      m_pointLightBuffer->updateData(reinterpret_cast<Byte*>(dirLightBufferData.data()));
+      graphicsApi.setPSConstantBuffers({ m_pointLightBuffer }, 0u);
+    }
+    else if (sLight->getLightType() == eLIGHT_TYPE::kSpot) {
+      // Load shaders
+      graphicsApi.setShaderPrograms(spotDiffLightVS,
+                                    {}, {},
+                                    spotDiffLightPS);
+  
+      Vector3f lightPos = sLight->getPosition();
+      Vector3f lightDir = sLight->getDirection();
+      Color lightColor = sLight->getColor();
+      dirLightBufferData =
+      {
+        lightPos.x, lightPos.y, lightPos.z, sLight->getIntensity(),
+        lightDir.x, lightDir.y, lightDir.z, sLight->getInnerAngle(),
+        lightColor.r, lightColor.g, lightColor.b, lightColor.a,
+      };
+      m_spotLightBuffer->updateData(reinterpret_cast<Byte*>(dirLightBufferData.data()));
+      graphicsApi.setPSConstantBuffers({ m_spotLightBuffer }, 0u);
     }
     
     
@@ -1143,6 +1186,10 @@ DeferredRenderer::onRender()
   resourceManager.getResourceVertexShader("PointSpecularLightsVS");
   WPtr<PixelShader> pointSpecLightPS =
   resourceManager.getResourcePixelShader("PointSpecularLightsPS");
+  WPtr<VertexShader> spotSpecLightVS =
+  resourceManager.getResourceVertexShader("SpotSpecularLightsVS");
+  WPtr<PixelShader> spotSpecLightPS =
+  resourceManager.getResourcePixelShader("SpotSpecularLightsPS");
   
   
   graphicsApi.clearRenderTargets({ m_tempSpecLightsTexture }, colorBlack);
@@ -1191,8 +1238,26 @@ DeferredRenderer::onRender()
         lightPos.x, lightPos.y, lightPos.z, sLight->getIntensity(),
         lightColor.r, lightColor.g, lightColor.b, lightColor.a
       };
-      m_dirLightBuffer->updateData(reinterpret_cast<Byte*>(dirLightBufferData.data()));
-      graphicsApi.setPSConstantBuffers({ m_dirLightBuffer }, 0u);
+      m_pointLightBuffer->updateData(reinterpret_cast<Byte*>(dirLightBufferData.data()));
+      graphicsApi.setPSConstantBuffers({ m_pointLightBuffer }, 0u);
+    }
+    else if (sLight->getLightType() == eLIGHT_TYPE::kSpot) {
+      // Load shaders
+      graphicsApi.setShaderPrograms(spotSpecLightVS,
+                                    {}, {},
+                                    spotSpecLightPS);
+  
+      Vector3f lightPos = sLight->getPosition();
+      Vector3f lightDir = sLight->getDirection();
+      Color lightColor = sLight->getColor();
+      dirLightBufferData =
+      {
+        lightPos.x, lightPos.y, lightPos.z, sLight->getIntensity(),
+        lightDir.x, lightDir.y, lightDir.z, sLight->getInnerAngle(),
+        lightColor.r, lightColor.g, lightColor.b, lightColor.a,
+      };
+      m_spotLightBuffer->updateData(reinterpret_cast<Byte*>(dirLightBufferData.data()));
+      graphicsApi.setPSConstantBuffers({ m_spotLightBuffer }, 0u);
     }
   
   

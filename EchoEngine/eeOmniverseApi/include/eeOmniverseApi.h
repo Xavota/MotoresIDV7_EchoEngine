@@ -15,74 +15,6 @@
 
 #include <eeOmniverseManager.h>
 
-#include "xformUtils.h"
-#include "primUtils.h"
-
-#include <chrono>
-#include <cctype>
-#include <iostream>
-#include <string>
-#include <sstream>
-#include <thread>
-#include <vector>
-#include <cassert>
-#include <stdio.h>
-#include <stdlib.h>
-#include <iostream>
-#ifdef _WIN32
-#include <conio.h>
-#include <windows.h>
-#include <filesystem>
-namespace fs = std::filesystem;
-#else
-#include <limits.h>
-#include <unistd.h>     //readlink
-#include <experimental/filesystem>
-namespace fs = std::experimental::filesystem;
-#endif
-
-#include <fstream>
-#include <mutex>
-#include <memory>
-#include <map>
-#include <condition_variable>
-
-#include "OmniClient.h"
-#include "OmniUsdResolver.h"
-#include "OmniChannel.h"
-#include "LiveSessionInfo.h"
-#include "LiveSessionConfigFile.h"
-#include "pxr/usd/usd/stage.h"
-#include "pxr/usd/usdGeom/mesh.h"
-#include "pxr/usd/usdGeom/metrics.h"
-#include <pxr/base/gf/matrix4f.h>
-#include "pxr/base/gf/vec2f.h"
-#include <pxr/base/plug/registry.h>
-#include <pxr/usd/usdUtils/pipeline.h>
-#include <pxr/usd/usdUtils/sparseValueWriter.h>
-#include <pxr/usd/usdShade/material.h>
-#include "pxr/usd/usd/prim.h"
-#include "pxr/usd/usd/primRange.h"
-#include "pxr/usd/usdGeom/primvar.h"
-#include <pxr/usd/usdShade/input.h>
-#include <pxr/usd/usdShade/output.h>
-#include <pxr/usd/usdGeom/xform.h>
-#include <pxr/usd/usdGeom/cube.h>
-#include <pxr/usd/usdShade/materialBindingAPI.h>
-#include <pxr/usd/usdLux/distantLight.h>
-#include <pxr/usd/usdLux/domeLight.h>
-#include <pxr/usd/usdShade/shader.h>
-#include <pxr/usd/usd/modelAPI.h>
-
-// Physics includes, note that usdPhysics is now part of USD itself, 
-// in newer USD versions these includes will be replaced by pxr official usdPhysics schema
-#include <usdPhysics/scene.h>
-#include <usdPhysics/rigidBodyAPI.h>
-#include <usdPhysics/collisionAPI.h>
-#include <usdPhysics/meshCollisionAPI.h>
-
-PXR_NAMESPACE_USING_DIRECTIVE
-
 #include <eeTransform.h>
 
 
@@ -114,6 +46,9 @@ class EE_OMNIVERSE_EXPORT OmniverseApi : public OmniverseManager
   */
   bool
   init(bool doLiveEdit) override;
+  
+  String
+  kritaInit(bool doLiveEdit) override;
 
   /**
   * @brief
@@ -151,10 +86,7 @@ class EE_OMNIVERSE_EXPORT OmniverseApi : public OmniverseManager
   * If the stage is opened.
   */
   bool
-  stageIsOpen() override
-  {
-    return m_stage != nullptr;
-  }
+  stageIsOpen() override;
 
   /**
   * @brief
@@ -209,11 +141,29 @@ class EE_OMNIVERSE_EXPORT OmniverseApi : public OmniverseManager
   * @description
   * Returns the user local folder path for the omniverse storage.
   *
+  * @param ipAdrees
+  * The IP address where the located Omniverse Api is.
+  *
   * @return
   * The user local folder path for the omniverse storage.
   */
   String
-  getUserLocalPath() override;
+  getUserLocalPath(const String& ipAddress) override;
+  /**
+  * @brief
+  * Gets the name of the connected user.
+  *
+  * @description
+  * Returns the name of the connected user.
+  *
+  * @param ipAdrees
+  * The IP address where the located Omniverse Api is.
+  *
+  * @return
+  * The user name of the connected user.
+  */
+  String
+  getConnectedUser(const String& ipAddress) override;
 
   /**
   * @brief
@@ -267,12 +217,7 @@ class EE_OMNIVERSE_EXPORT OmniverseApi : public OmniverseManager
   * The names of the existing live sessions.
   */
   Vector<String>
-  getExisitingSessionNames() override
-  {
-    String sessionFolderForStage = m_liveSessionInfo.GetSessionFolderPathForStage();
-    Vector<String> sessionList = m_liveSessionInfo.GetLiveSessionList();
-    return sessionList;
-  }
+  getExisitingSessionNames() override;
   /**
   * @brief
   * Join an existing session.
@@ -322,20 +267,23 @@ class EE_OMNIVERSE_EXPORT OmniverseApi : public OmniverseManager
     return m_activeSessionName;
   }
 
+  /**
+  * @brief
+  * Copy a file.
+  *
+  * @description
+  * Copy a given file to the destination directory.
+  *
+  * @param src
+  * The directory of the file to copy.
+  * @param src
+  * The directory for the file to be copy to.
+  */
+  void
+  copyFileToDest(const String& src, const String& dest) override;
+
 
  private:
-  /**
-  * Globals for Omniverse Connection and base Stage
-  */
-  UsdStageRefPtr m_stage;
-  /**
-  * The root path of the stage
-  */
-  SdfPath m_rootPrimPath;
-  /**
-  * The information for the life session of the Omniverse api
-  */
-  LiveSessionInfo m_liveSessionInfo;
   /**
   * The current active session name.
   */

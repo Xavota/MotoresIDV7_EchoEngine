@@ -241,17 +241,19 @@ WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
   case WM_SIZE:
   {
-    static bool _first = true;
-    if (!_first) {
-      int width = 0, height = 0;
-      RECT rc;
-      GetClientRect(reinterpret_cast<HWND>(GraphicsApi::instance().getMainWindow().lock()->getWindowPtr()), &rc);
-      width = rc.right - rc.left;
-      height = rc.bottom - rc.top;
-      GraphicsApi::instance().resizeWindow(Point2D{ static_cast<uint32>(width),
-                                                    static_cast<uint32>(height) });
+    if (GraphicsApi::isStarted()) {
+      static bool _first = true;
+      if (!_first) {
+        int width = 0, height = 0;
+        RECT rc;
+        GetClientRect(reinterpret_cast<HWND>(GraphicsApi::instance().getMainWindow().lock()->getWindowPtr()), &rc);
+        width = rc.right - rc.left;
+        height = rc.bottom - rc.top;
+        GraphicsApi::instance().resizeWindow(Point2D{ static_cast<uint32>(width),
+                                                      static_cast<uint32>(height) });
+      }
+      _first = false;
     }
-    _first = false;
   }
   break;
 
@@ -304,21 +306,23 @@ loadFileDialog()
 HRESULT
 InitImgUI()
 {
-  auto& graphicsApi = GraphicsApi::instance();
-
-  // Setup Dear ImGui context
-  IMGUI_CHECKVERSION();
-  ImGui::CreateContext();
-
-  // Setup Dear ImGui style
-  ImGui::StyleColorsDark();
-
-  const auto* basics =
-  reinterpret_cast<const eeEngineSDK::DX11Basics*>(graphicsApi.getBasics());
-
-  // Setup Platform/Renderer back ends
-  ImGui_ImplDX11_Init(basics->m_device, basics->m_deviceContext);
-  ImGui_ImplWin32_Init(graphicsApi.getMainWindow().lock()->getWindowPtr());
+  if (GraphicsApi::isStarted()) {
+    auto& graphicsApi = GraphicsApi::instance();
+    
+    // Setup Dear ImGui context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    
+    // Setup Dear ImGui style
+    ImGui::StyleColorsDark();
+    
+    const auto* basics =
+    reinterpret_cast<const eeEngineSDK::DX11Basics*>(graphicsApi.getBasics());
+    
+    // Setup Platform/Renderer back ends
+    ImGui_ImplDX11_Init(basics->m_device, basics->m_deviceContext);
+    ImGui_ImplWin32_Init(graphicsApi.getMainWindow().lock()->getWindowPtr());
+  }
 
   return S_OK;
 }
@@ -511,32 +515,72 @@ DrawStaticMeshCmp(WPtr<CStaticMesh> staticMesh, int32& uniqueId)
   }
   ImGui::PopID();
 
-  String staticMeshName;
-  if (!sStaticMesh->getStaticMesh().expired()) {
-    staticMeshName = sStaticMesh->getStaticMesh().lock()->getResourceName();
-  }
-  Map<String, SPtr<StaticMesh>> staticMeshes =
-  ResourceManager::instance().getAllStaticMeshResources();
-  int32 staticMeshIndex = 0;
-  int32 tempIndex = 0;
-  Vector<const char*> names;
-  names.push_back("none");
-  for (auto& m : staticMeshes) {
-    names.push_back(m.first.c_str());
-    if (m.first == staticMeshName) {
-      staticMeshIndex = tempIndex + 1;
+  {
+    String staticMeshName;
+    if (!sStaticMesh->getStaticMesh().expired()) {
+      staticMeshName = sStaticMesh->getStaticMesh().lock()->getResourceName();
     }
-    tempIndex++;
+    Map<String, SPtr<StaticMesh>> staticMeshes =
+    ResourceManager::instance().getAllStaticMeshResources();
+    int32 staticMeshIndex = 0;
+    int32 tempIndex = 0;
+    Vector<const char*> names;
+    names.push_back("none");
+    for (auto& m : staticMeshes) {
+      names.push_back(m.first.c_str());
+      if (m.first == staticMeshName) {
+        staticMeshIndex = tempIndex + 1;
+      }
+      tempIndex++;
+    }
+    ImGui::PushID(uniqueId++);
+    if (ImGui::Combo("Static Mesh Resource",
+                     &staticMeshIndex,
+                     names.data(),
+                     static_cast<uint32>(names.size()))) {
+      sStaticMesh->setStaticMesh(
+      ResourceManager::instance().getResourceStaticMesh(names[staticMeshIndex]));
+    }
+    ImGui::PopID();
   }
+
   ImGui::PushID(uniqueId++);
-  if (ImGui::Combo("Static Mesh Resource",
-                   &staticMeshIndex,
-                   names.data(),
-                   static_cast<uint32>(names.size()))) {
-    sStaticMesh->setStaticMesh(
-    ResourceManager::instance().getResourceStaticMesh(names[staticMeshIndex]));
+  if (ImGui::CollapsingHeader("Materials")) {
+    ImGui::PopID();
+    const auto& materials = sStaticMesh->getStaticMesh().lock()->getTextures();
+    SIZE_T matCount = materials.size();
+    for (SIZE_T i = 0; i < matCount; ++i) {
+      String matMeshName;
+      auto mat = materials[i];
+      if (!mat.expired()) {
+        matMeshName = mat.lock()->getResourceName();
+      }
+      Map<String, SPtr<Material>> materialsRes =
+      ResourceManager::instance().getAllMaterialResources();
+      int32 matIndex = 0;
+      int32 tempIndex = 0;
+      Vector<const char*> names;
+      names.push_back("none");
+      for (auto& m : materialsRes) {
+        names.push_back(m.first.c_str());
+        if (m.first == matMeshName) {
+          matIndex = tempIndex + 1;
+        }
+        tempIndex++;
+      }
+      ImGui::PushID(uniqueId++);
+      if (ImGui::Combo(("Material Resource " + eeEngineSDK::eeToString(i)).c_str(),
+                       &matIndex,
+                       names.data(),
+                       static_cast<uint32>(names.size()))) {
+        sStaticMesh->getStaticMesh().lock()->setTexture(materialsRes[names[matIndex]], i);
+      }
+      ImGui::PopID();
+    }
   }
-  ImGui::PopID();
+  else {
+    ImGui::PopID();
+  }
 }
 
 void
@@ -764,8 +808,9 @@ UIRender()
     bool added = false;
     static char name[255];
     if (NewSceneWindow(added, name)) {
-      if (added && name != "") {
-        sceneManager.getScene(AddingActorScene).lock()->addActor(name);
+      String strName = name;
+      if (added && !strName.empty()) {
+        sceneManager.getScene(AddingActorScene).lock()->addActor(strName);
       }
       AddingActor = false;
     }
@@ -930,7 +975,19 @@ UIRender()
   if (eeEngineSDK::OmniverseManager::isStarted()) {
     static auto& omniverseMan = OmniverseManager::instance();
 
-    static String localPath;
+    static char localPath[255];
+    static bool initLocalPath = true;
+    static String localPathStr = omniverseMan.getUserLocalPath("localhost");
+    if (initLocalPath) {
+      SIZE_T localPathSize = localPathStr.size();
+
+      for (SIZE_T i = 0; i < localPathSize; ++i) {
+        localPath[i] = localPathStr[i];
+      }
+      localPath[localPathSize] = 0;
+
+      initLocalPath = false;
+    }
     static Vector<String> sessionNames;
     static String activeSessionName;
 
@@ -940,17 +997,20 @@ UIRender()
 
     if (openingOmniStage) {
       if (ImGui::Begin("Opening Stage")) {
-        ImGui::Text(("Admin path: " + localPath).c_str());
+        //ImGui::Text(("Admin path: " + localPath).c_str());
+        ImGui::InputText("Admin path: ", localPath, 255);
         static char stageName[64];
         ImGui::InputText("Stage Name", stageName, 64);
 
         if (ImGui::Button("Open Stage")) {
-          omniverseMan.openStage(localPath + "/" + stageName);
+          localPathStr = localPath;
+          omniverseMan.openStage(localPathStr + "/" + stageName);
           omniverseMan.getScenegraphFromStage(sceneManager.getActiveScene());
           openingOmniStage = false;
         }
         if (ImGui::Button("Create Stage")) {
-          omniverseMan.createStage(localPath + "/" + stageName);
+          localPathStr = localPath;
+          omniverseMan.createStage(localPathStr + "/" + stageName);
           omniverseMan.setScenegraphOnStage(sceneManager.getActiveScene());
           openingOmniStage = false;
         }
@@ -968,7 +1028,7 @@ UIRender()
           sessionNamesChr.push_back(sessionNames[i].c_str());
         }
 
-        ImGui::Combo("Existing sessions names", &sessionIndex, sessionNamesChr.data(), sessionNamesChr.size());
+        ImGui::Combo("Existing sessions names", &sessionIndex, sessionNamesChr.data(), static_cast<int>(sessionNamesChr.size()));
 
         if (ImGui::Button("Join Session")) {
           if (omniverseMan.joinSession(sessionNames[sessionIndex])) {
@@ -1005,7 +1065,6 @@ UIRender()
       if (ImGui::Begin("Omniverse Manager")) {
         if (ImGui::Button("Open Stage")) {
           openingOmniStage = true;
-          localPath = omniverseMan.getUserLocalPath();
         }
         if (omniverseMan.stageIsOpen()) {
           if (ImGui::Button("Close Stage")) {
@@ -1057,10 +1116,10 @@ BaseAppTest1::run(void* /*callback*/)
 void
 BaseAppTest1::onInit()
 {
-  auto& graphicsApi = GraphicsApi::instance();
+  //auto& graphicsApi = GraphicsApi::instance();
   auto& resourceManager = ResourceManager::instance();
   auto& sceneManager = SceneManager::instance();
-  auto& memoryManager = MemoryManager::instance();
+  //auto& memoryManager = MemoryManager::instance();
 
   if (FAILED(InitImgUI())) {
     ImGui_ImplDX11_Shutdown();
@@ -1150,81 +1209,81 @@ BaseAppTest1::onInit()
   //spTempActor->getComponent<CCamera>().lock()->init(camDesc);
   //
   //
-  //resourceManager.importResourceFromFile(L"Models/arcane_jinx_sketchfab.fbx",
-  //  eeEngineSDK::IMPORT_FLAGS::kImportStaticMeshes);
-  //
-  //resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_Body_baseColor.png");
-  //resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_Body_normal.png");
-  //resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_FaceAcc_baseColor.png");
-  //resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_FaceAcc_normal.png");
-  //resourceManager.importResourceFromFile(L"Textures/Jinx/FACE_-_TEST.png");
-  //resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_Head_normal.png");
-  //
-  //texturesMap.clear();
-  //
-  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
-  //  resourceManager.getResourceTexture("F_MED_UproarBraids_Body_baseColor_tex");
-  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
-  //  resourceManager.getResourceTexture("F_MED_UproarBraids_Body_normal_tex");
-  //resourceManager.loadMaterialFromTextures(texturesMap,
-  //  "F_MED_UproarBraids_Body_baseColor_mat");
-  //
-  //texturesMap.clear();
-  //
-  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
-  //  resourceManager.getResourceTexture("F_MED_UproarBraids_FaceAcc_baseColor_tex");
-  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
-  //  resourceManager.getResourceTexture("F_MED_UproarBraids_FaceAcc_normal_tex");
-  //resourceManager.loadMaterialFromTextures(texturesMap,
-  //  "F_MED_UproarBraids_FaceAcc_baseColor_mat");
-  //
-  //texturesMap.clear();
-  //
-  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
-  //  resourceManager.getResourceTexture("FACE_-_TEST_tex");
-  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
-  //  resourceManager.getResourceTexture("F_MED_UproarBraids_Head_normal_tex");
-  //resourceManager.loadMaterialFromTextures(texturesMap,
-  //  "FACE_-_TEST_mat");
-  //
-  //pTempActor = pScene->addActor("Test");
-  //spTempActor = pTempActor.lock();
-  //spTempActor->getTransform().lock()->setScale(Vector3f{ 2.0f, 2.0f, 2.0f });
-  //spTempActor->getTransform().lock()->setPosition(Vector3f{ 3.0f, 0.0f, 0.0f });
-  //spTempActor->getTransform().lock()->setRotation(Quaternion(Vector3f{ 1.5707f, 0.0f, 0.0f }));
-  //spTempActor->addComponent<CStaticMesh>();
-  ////spTempActor->getComponent<CStaticMesh>().lock()->setMobilityType(
-  ////  eeEngineSDK::eMOBILITY_TYPE::kStatic);
-  //spTempActor->getComponent<CStaticMesh>().lock()->setStaticMesh
-  //(
-  //  resourceManager.getResourceStaticMesh("arcane_jinx_sketchfab_sm")
-  //);
-  //spTempActor->getComponent<CStaticMesh>().lock()->getStaticMesh().lock()->setTexture
-  //(
-  //  resourceManager.getResourceMaterial
-  //  (
-  //    "F_MED_UproarBraids_Body_baseColor_mat"
-  //  ),
-  //  0
-  //);
-  //spTempActor->getComponent<CStaticMesh>().lock()->getStaticMesh().lock()->setTexture
-  //(
-  //  resourceManager.getResourceMaterial
-  //  (
-  //    "F_MED_UproarBraids_FaceAcc_baseColor_mat"
-  //  ),
-  //  1
-  //);
-  //spTempActor->getComponent<CStaticMesh>().lock()->getStaticMesh().lock()->setTexture
-  //(
-  //  resourceManager.getResourceMaterial
-  //  (
-  //    "FACE_-_TEST_mat"
-  //  ),
-  //  2
-  //);
-  //spTempActor->addComponent<CBounds>();
-  //spTempActor->addComponent<CRender>();
+  resourceManager.importResourceFromFile(L"Models/arcane_jinx_sketchfab.fbx",
+    eeEngineSDK::IMPORT_FLAGS::kImportStaticMeshes);
+  
+  resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_Body_baseColor.png");
+  resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_Body_normal.png");
+  resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_FaceAcc_baseColor.png");
+  resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_FaceAcc_normal.png");
+  resourceManager.importResourceFromFile(L"Textures/Jinx/FACE_TEST.png");
+  resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_Head_normal.png");
+  
+  texturesMap.clear();
+  
+  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+    resourceManager.getResourceTexture("F_MED_UproarBraids_Body_baseColor_tex");
+  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
+    resourceManager.getResourceTexture("F_MED_UproarBraids_Body_normal_tex");
+  resourceManager.loadMaterialFromTextures(texturesMap,
+    "F_MED_UproarBraids_Body_baseColor_mat");
+  
+  texturesMap.clear();
+  
+  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+    resourceManager.getResourceTexture("F_MED_UproarBraids_FaceAcc_baseColor_tex");
+  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
+    resourceManager.getResourceTexture("F_MED_UproarBraids_FaceAcc_normal_tex");
+  resourceManager.loadMaterialFromTextures(texturesMap,
+    "F_MED_UproarBraids_FaceAcc_baseColor_mat");
+  
+  texturesMap.clear();
+  
+  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+    resourceManager.getResourceTexture("FACE_TEST_tex");
+  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
+    resourceManager.getResourceTexture("F_MED_UproarBraids_Head_normal_tex");
+  resourceManager.loadMaterialFromTextures(texturesMap,
+    "FACE_TEST_mat");
+  
+  pTempActor = pScene->addActor("Test");
+  spTempActor = pTempActor.lock();
+  spTempActor->getTransform().lock()->setScale(Vector3f{ 2.0f, 2.0f, 2.0f });
+  spTempActor->getTransform().lock()->setPosition(Vector3f{ 3.0f, 0.0f, 0.0f });
+  spTempActor->getTransform().lock()->setRotation(Quaternion(Vector3f{ 1.5707f, 0.0f, 0.0f }));
+  spTempActor->addComponent<CStaticMesh>();
+  //spTempActor->getComponent<CStaticMesh>().lock()->setMobilityType(
+  //  eeEngineSDK::eMOBILITY_TYPE::kStatic);
+  spTempActor->getComponent<CStaticMesh>().lock()->setStaticMesh
+  (
+    resourceManager.getResourceStaticMesh("arcane_jinx_sketchfab_sm")
+  );
+  spTempActor->getComponent<CStaticMesh>().lock()->getStaticMesh().lock()->setTexture
+  (
+    resourceManager.getResourceMaterial
+    (
+      "F_MED_UproarBraids_Body_baseColor_mat"
+    ),
+    0
+  );
+  spTempActor->getComponent<CStaticMesh>().lock()->getStaticMesh().lock()->setTexture
+  (
+    resourceManager.getResourceMaterial
+    (
+      "F_MED_UproarBraids_FaceAcc_baseColor_mat"
+    ),
+    1
+  );
+  spTempActor->getComponent<CStaticMesh>().lock()->getStaticMesh().lock()->setTexture
+  (
+    resourceManager.getResourceMaterial
+    (
+      "FACE_TEST_mat"
+    ),
+    2
+  );
+  spTempActor->addComponent<CBounds>();
+  spTempActor->addComponent<CRender>();
   //
   //
   //resourceManager.importResourceFromFile(L"Models/boblampclean.md5mesh");
@@ -1375,44 +1434,65 @@ BaseAppTest1::onInit()
   
   pTempActor = pScene->addActor("PointLight1");
   spTempActor = pTempActor.lock();
-  spTempActor->getTransform().lock()->setScale(Vector3f{ 0.2f, 0.2f, 0.2f });
+  spTempActor->getTransform().lock()->setPosition(Vector3f{ 3.0f, 2.0f, -0.5f });
+  spTempActor->getTransform().lock()->setScale(Vector3f{ 0.1f, 0.1f, 0.1f });
   spTempActor->addComponent<CLight>();
   spTempActor->getComponent<CLight>().lock()->setLightType(eeEngineSDK::eLIGHT_TYPE::kPoint);
   spTempActor->getComponent<CLight>().lock()->setColor(Color{ 0.0f, 0.0f, 1.0f, 1.0f });
   spTempActor->getComponent<CLight>().lock()->setIntensity(1.0f);
-  //spTempActor->addComponent<CStaticMesh>();
-  //spTempActor->getComponent<CStaticMesh>().lock()->setStaticMesh
-  //(
-  //  resourceManager.getResourceStaticMesh("Sphere")
-  //);
-  //spTempActor->addComponent<CBounds>();
-  //spTempActor->addComponent<CRender>();
+  spTempActor->addComponent<CStaticMesh>();
+  spTempActor->getComponent<CStaticMesh>().lock()->setStaticMesh
+  (
+    resourceManager.getResourceStaticMesh("Sphere")
+  );
+  spTempActor->addComponent<CBounds>();
+  spTempActor->addComponent<CRender>();
+
+
+  pTempActor = pScene->addActor("SpotLight1");
+  spTempActor = pTempActor.lock();
+  auto lightCmp = spTempActor->addComponent<CLight>().lock();
+  lightCmp->setLightType(eeEngineSDK::eLIGHT_TYPE::kSpot);
+  lightCmp->setColor(Color{ 1.0f, 1.0f, 0.0f, 1.0f });
+  lightCmp->setIntensity(1.0f);
+  lightCmp->setInnerAngle(Math::kPI * 0.25f);
+  auto transCmp = spTempActor->getTransform().lock();
+  transCmp->setScale(Vector3f{ 0.2f, 0.2f, 0.2f });
+  transCmp->setPosition(Vector3f{ 2.0f, 2.5f, 0.0f });
+  transCmp->setRotation(Quaternion(Vector3f{ 0.0f, -1.570f, 0.0f }));
+  spTempActor->addComponent<CStaticMesh>();
+  spTempActor->getComponent<CStaticMesh>().lock()->setStaticMesh
+  (
+    resourceManager.getResourceStaticMesh("Cube")
+  );
+  spTempActor->addComponent<CBounds>();
+  spTempActor->addComponent<CRender>();
   
   
   //sceneManager.partitionAllScenes();
 
 
 
-  resourceManager.importResourceFromFile(L"Models/BattleDroid.fbx",
-                                eeEngineSDK::IMPORT_FLAGS::kImportStaticMeshes);
-  resourceManager.importResourceFromFile(L"Models/Mabis.fbx",
-                                eeEngineSDK::IMPORT_FLAGS::kImportStaticMeshes);
-  resourceManager.importResourceFromFile(L"Models/Vela_v1.fbx",
-                                eeEngineSDK::IMPORT_FLAGS::kImportStaticMeshes);
+  //resourceManager.importResourceFromFile(L"Models/BattleDroid.fbx",
+  //                              eeEngineSDK::IMPORT_FLAGS::kImportStaticMeshes);
+  //resourceManager.importResourceFromFile(L"Models/Mabis.fbx",
+  //                              eeEngineSDK::IMPORT_FLAGS::kImportStaticMeshes);
+  //resourceManager.importResourceFromFile(L"Models/Vela_v1.fbx",
+  //                              eeEngineSDK::IMPORT_FLAGS::kImportStaticMeshes);
   //pScene = sceneManager.addScene("ExamBattleDroidScene").lock();
   //spTempActor = pScene->addActor("ExamBattleDroidActor").lock();
   //spTempActor->addComponent<CStaticMesh>();
 
 
 
-    //if (OmniverseManager::isStarted()) {
-    //  auto& omniverseMan = OmniverseManager::instance();
-    //  String localPath = omniverseMan.getUserLocalPath();
-    //  //omniverseMan.createStage(localPath + "/Main.usd");
-    //  //omniverseMan.setScenegraphOnStage(pScene);
-    //  //omniverseMan.openStage(localPath + "/Main.usd");
-    //  //omniverseMan.getScenegraphFromStage(pScene);
-    //}
+  if (OmniverseManager::isStarted()) {
+    auto& omniverseMan = OmniverseManager::instance();
+    String localPath = omniverseMan.getUserLocalPath("localhost");
+    omniverseMan.createStage(localPath + "/MDLTest.usd");
+    omniverseMan.setScenegraphOnStage(pScene);
+    //omniverseMan.openStage(localPath + "/Main.usd");
+    //omniverseMan.getScenegraphFromStage(pScene);
+  }
 
 
 
@@ -1526,7 +1606,7 @@ BaseAppTest1::onUpdate(float deltaTime)
 
 
   if (OmniverseManager::isStarted()
-   && omniverseMan.stageIsOpen()
+   && omniverseMan.stageIsOpen()  
    && omniverseMan.isLive()) {
     omniverseMan.saveStage(sceneManager.getActiveScene());
   }
@@ -1535,15 +1615,17 @@ BaseAppTest1::onUpdate(float deltaTime)
 void
 BaseAppTest1::onRender()
 {
-  auto& graphicsApi = GraphicsApi::instance();
-
-  auto mainWin = graphicsApi.getMainWindow().lock();
-  graphicsApi.setRenderTargets({ mainWin->getRenderTarget() },
-                               mainWin->getDepthStencil());
-
-  UIRender();
-
-  graphicsApi.unsetRenderTargets();
+  if (GraphicsApi::isStarted()) {
+    auto& graphicsApi = GraphicsApi::instance();
+    
+    auto mainWin = graphicsApi.getMainWindow().lock();
+    graphicsApi.setRenderTargets({ mainWin->getRenderTarget() },
+                                 mainWin->getDepthStencil());
+    
+    UIRender();
+    
+    graphicsApi.unsetRenderTargets();
+  }
 }
 
 void

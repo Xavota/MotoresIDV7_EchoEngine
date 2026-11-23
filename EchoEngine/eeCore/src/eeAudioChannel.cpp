@@ -120,7 +120,7 @@ void
 AudioChannel::updatePan()
 {
   double angle = pan * static_cast<double>(Math::kPI) * 0.25;
-  float sqrt_2 = Math::sqrt(2) * 0.5f;
+  float sqrt_2 = Math::sqrtf(2) * 0.5f;
   leftGain = (float)(sqrt_2 * (cos(angle) - sin(angle)));
   rightGain = (float)(sqrt_2 * (cos(angle) + sin(angle)));
 }

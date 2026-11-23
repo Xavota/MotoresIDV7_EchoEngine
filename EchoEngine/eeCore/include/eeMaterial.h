@@ -97,5 +97,15 @@ class EE_CORE_EXPORT Material : public Resource
    * The textures stored.
    */
   Map<uint32, WPtr<Texture>> m_texturesMap;
+  
+  /**
+   * Test index for omniverse file storage.
+   * // TODO: Delete this and use the name of the existing file instead
+   */
+  uint32 m_omniIndexFile = 0;
+  /**
+   * Dirty flag for any change in the material, also for omniverse use.
+   */
+  bool m_dirtyMat = true;
 };
 }

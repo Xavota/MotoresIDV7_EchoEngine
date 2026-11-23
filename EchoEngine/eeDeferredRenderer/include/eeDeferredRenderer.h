@@ -101,6 +101,14 @@ private:
   */
   SPtr<ConstantBuffer> m_dirLightBuffer = nullptr;
   /*
+  * The buffer for the point light data.
+  */
+  SPtr<ConstantBuffer> m_pointLightBuffer = nullptr;
+  /*
+  * The buffer for the spot light data.
+  */
+  SPtr<ConstantBuffer> m_spotLightBuffer = nullptr;
+  /*
   * The buffer for the SSAO data.
   */
   SPtr<ConstantBuffer> m_viewportRectDataBuffer = nullptr;

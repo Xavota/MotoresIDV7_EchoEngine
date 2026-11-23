@@ -11,10 +11,14 @@ void
 Material::createMaterial(const Map<uint32, WPtr<Texture>>& texturesMap)
 {
   m_texturesMap = texturesMap;
+
+  m_dirtyMat = true;
 }
 void
 Material::setTexture(WPtr<Texture> texture, uint32 index)
 {
   m_texturesMap[index] = texture;
+
+  m_dirtyMat = true;
 }
 }

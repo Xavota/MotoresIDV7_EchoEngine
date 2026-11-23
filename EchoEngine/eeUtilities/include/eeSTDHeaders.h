@@ -14,8 +14,6 @@
 #define STD
 //#define BOOST
 
-#include <cassert>
-
 #if defined(STD)
 #include <vector>
 #include <map>
@@ -36,9 +34,19 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <chrono>
 
 #include <filesystem>
+
+
+#include <cctype>
+#include <thread>
+#include <cassert>
+
+#include <mutex>
+#include <memory>
+#include <condition_variable>
 
 //#include <stringapiset.h>
 
@@ -165,6 +173,7 @@ using std::forward;
 using std::fstream;
 using std::ifstream;
 using std::ofstream;
+using std::stringstream;
 /*
  * @brief Variable with a key and a value
  */
@@ -190,6 +199,10 @@ using IFStream = ifstream;
  * @brief Output file stream
  */
 using OFStream = ofstream;
+/*
+ * @brief Output file stream
+ */
+using SStream = stringstream;
 
 
 

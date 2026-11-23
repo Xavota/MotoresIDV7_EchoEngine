@@ -17,12 +17,12 @@ float
 Vector2f::getDistance(const Vector2f& other) const
 {
   Vector2f d = other - *this;
-  return Math::sqrt(d.x * d.x + d.y * d.y);
+  return Math::sqrtf(d.x * d.x + d.y * d.y);
 }
 float
 Vector2f::getMagnitud() const
 {
-  return Math::sqrt(this->x * this->x + this->y * this->y);
+  return Math::sqrtf(this->x * this->x + this->y * this->y);
 }
 Vector2f
 Vector2f::getNormalize() const
@@ -221,13 +221,13 @@ float
 Vector2i::getDistance(const Vector2i& other) const
 {
   Vector2i d = other - *this;
-  return Math::sqrt(static_cast<float>(d.x * d.x)
+  return Math::sqrtf(static_cast<float>(d.x * d.x)
                   + static_cast<float>(d.y * d.y));
 }
 float
 Vector2i::getMagnitude() const
 {
-  return Math::sqrt(static_cast<float>(this->x * this->x)
+  return Math::sqrtf(static_cast<float>(this->x * this->x)
                   + static_cast<float>(this->y * this->y));
 }
 Vector2i
@@ -374,13 +374,13 @@ float
 Point2D::getDistance(const Point2D& other) const
 {
   Point2D d = other - *this;
-  return Math::sqrt(static_cast<float>(d.x * d.x)
+  return Math::sqrtf(static_cast<float>(d.x * d.x)
                   + static_cast<float>(d.y * d.y));
 }
 float
 Point2D::getMagnitud() const
 {
-  return Math::sqrt(static_cast<float>(this->x * this->x)
+  return Math::sqrtf(static_cast<float>(this->x * this->x)
                   + static_cast<float>(this->y * this->y));
 }
 Point2D
