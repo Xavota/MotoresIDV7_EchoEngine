@@ -75,10 +75,11 @@ BaseApp::initSystems(void* callback)
   ResourceManager::startUp();
   SceneManager::startUp();
 
-  sol::state lua;
+  /*sol::state lua;
   lua.open_libraries(sol::lib::base);
   lua.do_file("LUAScritps/PlatformConfigs.lua");
-  String winDisplayName = lua["getWindowDisplayName"]();
+  String winDisplayName = lua["getWindowDisplayName"]();*/
+  String winDisplayName = "Echo Engine";
   
   DLLDynamics api;
   api.initialize(eeConfigurations::graphicsApi

@@ -29,26 +29,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
@@ -179,13 +179,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\Externals\imgui\backends\imgui_impl_dx11.cpp" />
-    <ClCompile Include="..\..\..\..\Externals\imgui\backends\imgui_impl_win32.cpp" />
-    <ClCompile Include="..\..\..\..\Externals\imgui\imgui.cpp" />
-    <ClCompile Include="..\..\..\..\Externals\imgui\imgui_demo.cpp" />
-    <ClCompile Include="..\..\..\..\Externals\imgui\imgui_draw.cpp" />
-    <ClCompile Include="..\..\..\..\Externals\imgui\imgui_tables.cpp" />
-    <ClCompile Include="..\..\..\..\Externals\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="externals\imgui.cpp" />
+    <ClCompile Include="externals\imgui_demo.cpp" />
+    <ClCompile Include="externals\imgui_draw.cpp" />
+    <ClCompile Include="externals\imgui_impl_dx11.cpp" />
+    <ClCompile Include="externals\imgui_impl_win32.cpp" />
+    <ClCompile Include="externals\imgui_tables.cpp" />
+    <ClCompile Include="externals\imgui_widgets.cpp" />
     <ClCompile Include="src\eeBaseAppTest1.cpp" />
     <ClCompile Include="src\eeCoreTests.cpp" />
   </ItemGroup>

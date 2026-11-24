@@ -29,26 +29,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
@@ -110,7 +110,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Assimp/lib/$(PlatformTarget)/;$(DEVLIBS)LUA/lib/$(PlatformTarget)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>eeUtilitiesd.lib;assimp-vc142-mtd.lib;LUATestd.lib</AdditionalDependencies>
+      <AdditionalDependencies>eeUtilitiesd.lib;assimp-vc143-mtd.lib;LUATestd.lib</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -132,7 +132,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Assimp/lib/$(PlatformTarget)/;$(DEVLIBS)LUA/lib/$(PlatformTarget)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>eeUtilities.lib;assimp-vc142-mt.lib;LUATest.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>eeUtilities.lib;assimp-vc143-mt.lib;LUATest.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -150,7 +150,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Assimp/lib/$(PlatformTarget)/;$(DEVLIBS)LUA/lib/$(PlatformTarget)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>eeUtilitiesd.lib;assimp-vc142-mtd.lib;LUATestd.lib</AdditionalDependencies>
+      <AdditionalDependencies>eeUtilitiesd.lib;assimp-vc143-mtd.lib;LUATestd.lib</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -172,7 +172,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)Assimp/lib/$(PlatformTarget)/;$(DEVLIBS)LUA/lib/$(PlatformTarget)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>eeUtilities.lib;assimp-vc142-mt.lib;LUATest.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>eeUtilities.lib;assimp-vc143-mt.lib;LUATest.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>

@@ -1113,78 +1113,75 @@ BaseAppTest1::run(void* /*callback*/)
   return BaseApp::run(WndProc);
 }
 
-void
-BaseAppTest1::onInit()
+SPtr<Scene>
+LoadBasicScene(SceneManager& sceneManager, ResourceManager& resourceManager, float screenWidth, float screenHeight)
 {
-  //auto& graphicsApi = GraphicsApi::instance();
-  auto& resourceManager = ResourceManager::instance();
-  auto& sceneManager = SceneManager::instance();
-  //auto& memoryManager = MemoryManager::instance();
-
-  if (FAILED(InitImgUI())) {
-    ImGui_ImplDX11_Shutdown();
-    ImGui_ImplWin32_Shutdown();
-    ImGui::DestroyContext();
-  }
-
-  Map<uint32, WPtr<Texture>> texturesMap;
-
-  resourceManager.loadTextureFromFile(L"Textures/Defaults/DefaultDiffuse.png",
-                                 eeEngineSDK::localizeString("DefaultDiffuse"));
-  resourceManager.loadTextureFromFile(L"Textures/Defaults/DefaultNormalMap.jpg",
-                               eeEngineSDK::localizeString("DefaultNormalMap"));
-  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
-  resourceManager.getResourceTexture("DefaultDiffuse");
-  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
-  resourceManager.getResourceTexture("DefaultNormalMap");
-  resourceManager.loadMaterialFromTextures(texturesMap, "Default_mat");
-
-  Mesh::initPrimitives();
-
-
-
-  auto pScene = sceneManager.addScene("Main").lock();
+  auto pScene = sceneManager.addScene("BasicScene").lock();
   pScene->setActive(true);
-
-
 
   WPtr<Actor> pTempActor;
 
-
-
-  //resourceManager.loadStaticMeshFromMeshesArray({ Mesh::cube },
-  //                                              "Cube",
-  //                                              Math::sqrt(3),
-  //                                              Vector3f{ 1.0f, 1.0f, 1.0f },
-  //                                              Vector3f{ -1.0f, -1.0f, -1.f });
-  //resourceManager.loadStaticMeshFromMeshesArray({ Mesh::sphere },
-  //                                              "Sphere",
-  //                                              1.0f,
-  //                                              Vector3f{ 1.0f, 1.0f, 1.0f },
-  //                                              Vector3f{ -1.0f, -1.0f, -1.f });
-  //resourceManager.loadStaticMeshFromMeshesArray({ Mesh::tetrahedron },
-  //                                              "Tetrahedron",
-  //                                              Vector3f{ 1.0f, -0.54f, -0.58f },
-  //                                              Vector3f{ 1.0f, 1.09f, 1.15f },
-  //                                              Vector3f{ -1.0f, -0.54f, -0.58f });
-  
-  
-  
   CameraDesc camDesc;
   camDesc.projectionType = eeEngineSDK::eCAMERA_PROJECTION_TYPE::kPerspective;
   camDesc.fovAngleY = Math::kPI / 4.0f;
-  camDesc.viewSize = Vector2f{ static_cast<float>(screenWidth),
-                               static_cast<float>(screenHeight) };
+  camDesc.viewSize = Vector2f{ screenWidth, screenHeight };
   camDesc.nearZ = 0.01f;
   camDesc.farZ = 100.0f;
-  
+
+  pTempActor = pScene->addActor("MainCamera");
+  auto spTempActor = pTempActor.lock();
+  spTempActor->getTransform().lock()->setPosition(Vector3f{ 0.0f, 1.0f, -10.0f });
+  spTempActor->addComponent<CCamera>();
+  spTempActor->getComponent<CCamera>().lock()->init(camDesc);
+  spTempActor->getComponent<CCamera>().lock()->setMain(true);
+
+
+  pTempActor = pScene->addActor("DirLight");
+  spTempActor = pTempActor.lock();
+  spTempActor->addComponent<CLight>();
+  spTempActor->getComponent<CLight>().lock()->setColor(Color{ 1.0f, 1.0f, 1.0f, 1.0f });
+  spTempActor->getTransform().lock()->setRotation(
+    Quaternion::createFromAxisAngle(Vector3f(0.0f, 1.0f, 0.0f), -Math::kPI * 0.5f));
+
+
+  pTempActor = pScene->addActor("Cube");
+  spTempActor = pTempActor.lock();
+  auto transCmp = spTempActor->getTransform().lock();
+  transCmp->setScale(Vector3f{ 1.0f, 1.0f, 1.0f });
+  transCmp->setPosition(Vector3f{ 0.0f, 0.0f, 0.0f });
+  transCmp->setRotation(Quaternion(Vector3f{ 0.0f, 0.0f, 0.0f }));
+  spTempActor->addComponent<CStaticMesh>();
+  spTempActor->getComponent<CStaticMesh>().lock()->setStaticMesh
+  (
+    resourceManager.getResourceStaticMesh("Cube")
+  );
+  spTempActor->addComponent<CBounds>();
+  spTempActor->addComponent<CRender>();
+
+  return pScene;
+}
+
+SPtr<Scene>
+LoadMainScene(SceneManager& sceneManager, ResourceManager& resourceManager, float screenWidth, float screenHeight)
+{
+  auto pScene = sceneManager.addScene("Main").lock();
+  pScene->setActive(true);
+
+  WPtr<Actor> pTempActor;
+
+  CameraDesc camDesc;
+  camDesc.projectionType = eeEngineSDK::eCAMERA_PROJECTION_TYPE::kPerspective;
+  camDesc.fovAngleY = Math::kPI / 4.0f;
+  camDesc.viewSize = Vector2f{ screenWidth, screenHeight };
+  camDesc.nearZ = 0.01f;
+  camDesc.farZ = 100.0f;
+
   pTempActor = pScene->addActor("Player");
   auto spTempActor = pTempActor.lock();
   spTempActor->getTransform().lock()->setPosition(Vector3f{ 0.0f, 3.0f, -6.0f });
   spTempActor->addComponent<CCamera>();
   spTempActor->getComponent<CCamera>().lock()->init(camDesc);
   spTempActor->getComponent<CCamera>().lock()->setMain(true);
-
 
 
   //pTempActor = pScene->addActor("AtatchToActor");
@@ -1207,45 +1204,8 @@ BaseAppTest1::onInit()
   //spTempActor->getTransform().lock()->setScale(Vector3f{ 0.1f, 0.1f, 0.1f });
   //spTempActor->addComponent<CCamera>();
   //spTempActor->getComponent<CCamera>().lock()->init(camDesc);
-  //
-  //
-  resourceManager.importResourceFromFile(L"Models/arcane_jinx_sketchfab.fbx",
-    eeEngineSDK::IMPORT_FLAGS::kImportStaticMeshes);
-  
-  resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_Body_baseColor.png");
-  resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_Body_normal.png");
-  resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_FaceAcc_baseColor.png");
-  resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_FaceAcc_normal.png");
-  resourceManager.importResourceFromFile(L"Textures/Jinx/FACE_TEST.png");
-  resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_Head_normal.png");
-  
-  texturesMap.clear();
-  
-  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
-    resourceManager.getResourceTexture("F_MED_UproarBraids_Body_baseColor_tex");
-  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
-    resourceManager.getResourceTexture("F_MED_UproarBraids_Body_normal_tex");
-  resourceManager.loadMaterialFromTextures(texturesMap,
-    "F_MED_UproarBraids_Body_baseColor_mat");
-  
-  texturesMap.clear();
-  
-  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
-    resourceManager.getResourceTexture("F_MED_UproarBraids_FaceAcc_baseColor_tex");
-  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
-    resourceManager.getResourceTexture("F_MED_UproarBraids_FaceAcc_normal_tex");
-  resourceManager.loadMaterialFromTextures(texturesMap,
-    "F_MED_UproarBraids_FaceAcc_baseColor_mat");
-  
-  texturesMap.clear();
-  
-  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
-    resourceManager.getResourceTexture("FACE_TEST_tex");
-  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
-    resourceManager.getResourceTexture("F_MED_UproarBraids_Head_normal_tex");
-  resourceManager.loadMaterialFromTextures(texturesMap,
-    "FACE_TEST_mat");
-  
+
+
   pTempActor = pScene->addActor("Test");
   spTempActor = pTempActor.lock();
   spTempActor->getTransform().lock()->setScale(Vector3f{ 2.0f, 2.0f, 2.0f });
@@ -1284,51 +1244,8 @@ BaseAppTest1::onInit()
   );
   spTempActor->addComponent<CBounds>();
   spTempActor->addComponent<CRender>();
-  //
-  //
-  //resourceManager.importResourceFromFile(L"Models/boblampclean.md5mesh");
-  //
-  //resourceManager.importResourceFromFile(L"Textures/guard1_body.jpg");
-  //texturesMap.clear();
-  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
-  //  resourceManager.getResourceTexture("guard1_body_tex");
-  //resourceManager.loadMaterialFromTextures(texturesMap,
-  //  "guard1_body_mat");
-  //resourceManager.importResourceFromFile(L"Textures/guard1_face.jpg");
-  //texturesMap.clear();
-  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
-  //  resourceManager.getResourceTexture("guard1_face_tex");
-  //resourceManager.loadMaterialFromTextures(texturesMap,
-  //  "guard1_face_mat");
-  //resourceManager.importResourceFromFile(L"Textures/guard1_helmet.jpg");
-  //texturesMap.clear();
-  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
-  //  resourceManager.getResourceTexture("guard1_helmet_tex");
-  //resourceManager.loadMaterialFromTextures(texturesMap,
-  //  "guard1_helmet_mat");
-  //resourceManager.importResourceFromFile(L"Textures/iron_grill.jpg");
-  //texturesMap.clear();
-  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
-  //  resourceManager.getResourceTexture("iron_grill_tex");
-  //resourceManager.loadMaterialFromTextures(texturesMap,
-  //  "iron_grill_mat");
-  //resourceManager.importResourceFromFile(L"Textures/round_grill.jpg");
-  //texturesMap.clear();
-  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
-  //  resourceManager.getResourceTexture("round_grill_tex");
-  //resourceManager.loadMaterialFromTextures(texturesMap,
-  //  "round_grill_mat");
-  //
-  //SPtr<Image> tempImg = memoryManager.newPtr<Image>();
-  //tempImg->loadFromFile(L"Textures/guard1_body.jpg");
-  //
-  //SPtr<Texture> tempTex = graphicsApi.createTexturePtr();
-  //tempTex->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kShaderResource,
-  //  Point2D{ tempImg->getWidth(), tempImg->getHeight() });
-  //
-  //tempTex->loadImages({ tempImg });
-  //
-  //
+
+
   //pTempActor = pScene->addActor("AnimTest");
   //spTempActor = pTempActor.lock();
   //spTempActor->getTransform().lock()->setScale(Vector3f{ 0.03f, 0.03f, 0.03f });
@@ -1424,14 +1341,14 @@ BaseAppTest1::onInit()
   spTempActor->getComponent<CLight>().lock()->setColor(Color{ 1.0f, 0.0f, 0.0f, 1.0f });
   spTempActor->getTransform().lock()->setRotation(
     Quaternion::createFromAxisAngle(Vector3f(0.0f, 1.0f, 0.0f), -Math::kPI * 0.5f));
-  
+
   pTempActor = pScene->addActor("DirLight2");
   spTempActor = pTempActor.lock();
   spTempActor->addComponent<CLight>();
   spTempActor->getComponent<CLight>().lock()->setColor(Color{ 0.0f, 1.0f, 0.0f, 1.0f });
   spTempActor->getTransform().lock()->setRotation(
     Quaternion::createFromAxisAngle(Vector3f(0.0f, 1.0f, 0.0f), Math::kPI * 0.5f));
-  
+
   pTempActor = pScene->addActor("PointLight1");
   spTempActor = pTempActor.lock();
   spTempActor->getTransform().lock()->setPosition(Vector3f{ 3.0f, 2.0f, -0.5f });
@@ -1467,6 +1384,136 @@ BaseAppTest1::onInit()
   );
   spTempActor->addComponent<CBounds>();
   spTempActor->addComponent<CRender>();
+
+  return pScene;
+}
+
+void
+BaseAppTest1::onInit()
+{
+  //auto& graphicsApi = GraphicsApi::instance();
+  auto& resourceManager = ResourceManager::instance();
+  auto& sceneManager = SceneManager::instance();
+  //auto& memoryManager = MemoryManager::instance();
+
+  if (FAILED(InitImgUI())) {
+    ImGui_ImplDX11_Shutdown();
+    ImGui_ImplWin32_Shutdown();
+    ImGui::DestroyContext();
+  }
+
+  Map<uint32, WPtr<Texture>> texturesMap;
+
+  resourceManager.loadTextureFromFile(L"Textures/Defaults/DefaultDiffuse.png",
+                                 eeEngineSDK::localizeString("DefaultDiffuse"));
+  resourceManager.loadTextureFromFile(L"Textures/Defaults/DefaultNormalMap.jpg",
+                               eeEngineSDK::localizeString("DefaultNormalMap"));
+  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  resourceManager.getResourceTexture("DefaultDiffuse");
+  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
+  resourceManager.getResourceTexture("DefaultNormalMap");
+  resourceManager.loadMaterialFromTextures(texturesMap, "Default_mat");
+
+  Mesh::initPrimitives();
+
+  //resourceManager.loadStaticMeshFromMeshesArray({ Mesh::cube },
+  //                                              "Cube",
+  //                                              Math::sqrt(3),
+  //                                              Vector3f{ 1.0f, 1.0f, 1.0f },
+  //                                              Vector3f{ -1.0f, -1.0f, -1.f });
+  //resourceManager.loadStaticMeshFromMeshesArray({ Mesh::sphere },
+  //                                              "Sphere",
+  //                                              1.0f,
+  //                                              Vector3f{ 1.0f, 1.0f, 1.0f },
+  //                                              Vector3f{ -1.0f, -1.0f, -1.f });
+  //resourceManager.loadStaticMeshFromMeshesArray({ Mesh::tetrahedron },
+  //                                              "Tetrahedron",
+  //                                              Vector3f{ 1.0f, -0.54f, -0.58f },
+  //                                              Vector3f{ 1.0f, 1.09f, 1.15f },
+  //                                              Vector3f{ -1.0f, -0.54f, -0.58f });
+
+
+  resourceManager.importResourceFromFile(L"Models/arcane_jinx_sketchfab.fbx",
+    eeEngineSDK::IMPORT_FLAGS::kImportStaticMeshes);
+  
+  resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_Body_baseColor.png");
+  resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_Body_normal.png");
+  resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_FaceAcc_baseColor.png");
+  resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_FaceAcc_normal.png");
+  resourceManager.importResourceFromFile(L"Textures/Jinx/FACE_TEST.png");
+  resourceManager.importResourceFromFile(L"Textures/Jinx/F_MED_UproarBraids_Head_normal.png");
+  
+  texturesMap.clear();
+  
+  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+    resourceManager.getResourceTexture("F_MED_UproarBraids_Body_baseColor_tex");
+  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
+    resourceManager.getResourceTexture("F_MED_UproarBraids_Body_normal_tex");
+  resourceManager.loadMaterialFromTextures(texturesMap,
+    "F_MED_UproarBraids_Body_baseColor_mat");
+  
+  texturesMap.clear();
+  
+  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+    resourceManager.getResourceTexture("F_MED_UproarBraids_FaceAcc_baseColor_tex");
+  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
+    resourceManager.getResourceTexture("F_MED_UproarBraids_FaceAcc_normal_tex");
+  resourceManager.loadMaterialFromTextures(texturesMap,
+    "F_MED_UproarBraids_FaceAcc_baseColor_mat");
+  
+  texturesMap.clear();
+  
+  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+    resourceManager.getResourceTexture("FACE_TEST_tex");
+  texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kNormal] =
+    resourceManager.getResourceTexture("F_MED_UproarBraids_Head_normal_tex");
+  resourceManager.loadMaterialFromTextures(texturesMap,
+    "FACE_TEST_mat");
+  
+
+  //resourceManager.importResourceFromFile(L"Models/boblampclean.md5mesh");
+  //
+  //resourceManager.importResourceFromFile(L"Textures/guard1_body.jpg");
+  //texturesMap.clear();
+  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  //  resourceManager.getResourceTexture("guard1_body_tex");
+  //resourceManager.loadMaterialFromTextures(texturesMap,
+  //  "guard1_body_mat");
+  //resourceManager.importResourceFromFile(L"Textures/guard1_face.jpg");
+  //texturesMap.clear();
+  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  //  resourceManager.getResourceTexture("guard1_face_tex");
+  //resourceManager.loadMaterialFromTextures(texturesMap,
+  //  "guard1_face_mat");
+  //resourceManager.importResourceFromFile(L"Textures/guard1_helmet.jpg");
+  //texturesMap.clear();
+  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  //  resourceManager.getResourceTexture("guard1_helmet_tex");
+  //resourceManager.loadMaterialFromTextures(texturesMap,
+  //  "guard1_helmet_mat");
+  //resourceManager.importResourceFromFile(L"Textures/iron_grill.jpg");
+  //texturesMap.clear();
+  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  //  resourceManager.getResourceTexture("iron_grill_tex");
+  //resourceManager.loadMaterialFromTextures(texturesMap,
+  //  "iron_grill_mat");
+  //resourceManager.importResourceFromFile(L"Textures/round_grill.jpg");
+  //texturesMap.clear();
+  //texturesMap[eeEngineSDK::TEXTURE_TYPE_INDEX::kDiffuse] =
+  //  resourceManager.getResourceTexture("round_grill_tex");
+  //resourceManager.loadMaterialFromTextures(texturesMap,
+  //  "round_grill_mat");
+  //
+  //SPtr<Image> tempImg = memoryManager.newPtr<Image>();
+  //tempImg->loadFromFile(L"Textures/guard1_body.jpg");
+  //
+  //SPtr<Texture> tempTex = graphicsApi.createTexturePtr();
+  //tempTex->create2D(eeEngineSDK::eTEXTURE_BIND_FLAGS::kShaderResource,
+  //  Point2D{ tempImg->getWidth(), tempImg->getHeight() });
+  //
+  //tempTex->loadImages({ tempImg });
+  //
+  //
   
   
   //sceneManager.partitionAllScenes();
@@ -1484,6 +1531,12 @@ BaseAppTest1::onInit()
   //spTempActor->addComponent<CStaticMesh>();
 
 
+  auto pScene = LoadBasicScene(
+    sceneManager,
+    resourceManager,
+    static_cast<float>(screenWidth),
+    static_cast<float>(screenHeight)
+  );
 
   if (OmniverseManager::isStarted()) {
     auto& omniverseMan = OmniverseManager::instance();
@@ -1516,7 +1569,8 @@ BaseAppTest1::onUpdate(float deltaTime)
     omniverseMan.updateScenegraphFromStage(sceneManager.getActiveScene());
   }
 
-  auto scene = sceneManager.getScene("Main").lock();
+  //auto scene = sceneManager.getScene("Main").lock();
+  auto scene = sceneManager.getActiveScene().lock();
   EE_NO_EXIST_RETURN(scene);
 
   static String activePlayerName = "Player";
@@ -1542,7 +1596,19 @@ BaseAppTest1::onUpdate(float deltaTime)
 
 
   SPtr<Actor> actor = nullptr;
-  actor = scene->getActor(activePlayerName).lock();
+  //actor = scene->getActor(activePlayerName).lock();
+  auto actorList = scene->getAllActors();
+  for (auto& a : actorList) {
+    auto aPtr = a.second;
+    auto cam = aPtr->getComponent<CCamera>();
+    if (cam.expired()) {
+      continue;
+    }
+    if (cam.lock()->isMain()) {
+      actor = aPtr;
+      break;
+    }
+  }
 
   SPtr<CTransform> trans = nullptr;
   if (actor) {

@@ -21,7 +21,8 @@ DLLDynamics::initialize(const String& dllPath)
   m_dllInstance = reinterpret_cast<void*>(LoadLibraryEx(dllPath.c_str(), nullptr, LOAD_WITH_ALTERED_SEARCH_PATH));
 
   if (!m_dllInstance) {
-    Logger::instance().consoleLog("Could not load Dll");
+    DWORD error = GetLastError();
+    Logger::instance().consoleLog("Could not load Dll. Error code: " + std::to_string(error));
     return false;
   }
 
