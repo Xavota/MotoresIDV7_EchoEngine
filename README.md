@@ -6,4 +6,4 @@ https://drive.google.com/drive/folders/1nkyHxWg-buz9_Ipq5Wd7PtNLpp7CwCMU?usp=sha
 
 Sólo es copiar toda el contenido y pegarlos en la carpeta de bin.
 
-![LoadScene]([https://img.youtube.com/vi/zRo95uA8xO4/maxresdefault.jpg](https://youtu.be/zRo95uA8xO4))
+[![Load Scene](https://img.youtube.com/vi/zRo95uA8xO4/maxresdefault.jpg)](https://youtu.be/zRo95uA8xO4)
